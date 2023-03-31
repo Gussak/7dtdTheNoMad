@@ -11,20 +11,25 @@ if [[ "${1-}" == -x ]];then #help run on xterm
   exit
 fi
 
-#help WHEN FIRST ENTERING THE GAME OR AFTER YOU DIE, BE PATIENT IF YOU ARE NOT SPAWNING IN/NEAR YOUR BED (if you have NO bed placed)!
+#help When first entering the game or after you die, and if you are not spawning in your bed or near it (if you have no bed placed), be patient, this script will shortly kick in and teleport you to the sky!
 
 function FUNCtele() {
   sleep "$nWaitBeforeTeleport"
-  nWId="`xdotool search "$strWindowName" 2>/dev/null`" #this requires to run the game in Wine Desktop mode
-  xdotool windowactivate $nWId
+  nWId="`xdotool search "$strWindowName" 2>/dev/null`"&&: #this requires to run the game in Wine Desktop mode
+  xdotool windowactivate $nWId&&: # this line can fail to be compatible with xdotool-for-windows
   sleep 0.5
   echo -ne "$strTeleportCmd" |xclip -selection clipboard
-  #xdotool type --window $nWId --delay 50 "$strTeleportCmd" # 20s too slow!
-  xdotool key F1
+  #xdotool type --window $nWId --delay 50 "$strTeleportCmd"&&: # 20s too slow!
+  xdotool key F1 #this may work with xdotool-for-windows project on cygwin
   xdotool key --delay 500 ctrl+v Return F1
 }
 
-: ${strFlLog:="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pimps/7 Days To Die/Player.log"} #help
+: ${strFlLog:="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pimps/7 Days To Die/Player.log"} #help this file is essential to let this script work
+while [[ ! -f "$strFlLog" ]];do
+  echo -e "`date`:PROBLEM: the Player.log file was not created yet or strFlLog variable is not properly configured!\r"
+  sleep 3
+done
+
 : ${strWindowName:="Default - Wine desktop"} #help change this if using WM integration window mode
 : ${strTeleportCmd:="teleport offset 0 2000 0"} #help
 : ${nWaitBeforeTeleport:=5} #help increase this if your machine is slow and please WAIT the teleport happens!
