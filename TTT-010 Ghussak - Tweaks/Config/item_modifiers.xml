@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/item_modifiers">
+    <item_modifier name="modHazmatMask" installable_tags="head" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelHazmatMask"/>
+      <property name="CustomIconTint" value="100,100,100"/>
+      <property name="Material" value="MmilitaryFiber"/>
+      <property name="DescriptionKey" value="modHazmatDesc"/>
+      <effect_group tiered="false">
+        <passive_effect name="HypothermalResist" operation="base_add" value="6.5,9.5"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="6" tags="head,radiation" match_all_tags="true"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="15" tags="head,toxic" match_all_tags="true"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffRadSuitMask"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuitMask"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuit"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modHazmatBoots" installable_tags="armorFeet" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelHazmatBoots"/>
+      <property name="CustomIconTint" value="100,100,100"/>
+      <property name="Material" value="MmilitaryFiber"/>
+      <property name="DescriptionKey" value="modHazmatDesc"/>
+      <effect_group tiered="false">
+        <passive_effect name="HypothermalResist" operation="base_add" value="2.8,5.2"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="5" tags="lowerbody,feet,radiation,toxic" match_all_tags="true"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffRadSuitBoots"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuitBoots"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuit"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modHazmatGloves" installable_tags="armorHands" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelHazmatGloves"/>
+      <property name="CustomIconTint" value="100,100,100"/>
+      <property name="Material" value="MmilitaryFiber"/>
+      <property name="DescriptionKey" value="modHazmatDesc"/>
+      <effect_group tiered="false">
+        <passive_effect name="HypothermalResist" operation="base_add" value="2.8,5.2"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="10" tags="upperbody,hands,radiation,toxic" match_all_tags="true"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffRadSuitBoots"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuitBoots"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffRadSuit"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork"/>
+      </effect_group>
+    </item_modifier>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modArmorHelmetLight']/effect_group">
+    <triggered_effect trigger="onSelfItemActivate" action="ModifyCVar" target="self" cvar="bGSKEnergyHL" operation="set" value="1"/>
+    <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries99"/>
+    <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyHL" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyHL" operation="set" value="0"/>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modGunFlashlight']/effect_group">
+    <triggered_effect trigger="onSelfItemActivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="1"/>
+    <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries99"/>
+    <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
+    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+  </append>
+  <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc']/requirement[@name='RandomRoll']">
+    <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GTE" value="60"/>
+  </insertBefore>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc']">
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar="fGSKFireFuel" operation="subtract" value="60"/>
+  </append>
+  <remove xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/item_property_overrides[     @name='meleeToolRepairT1ClawHammer' or     @name='meleeWpnSledgeT1IronSledgehammer'   ]"/>
+  <!-- HELPGOOD:TODO: these are not illuminating around the player, if it is fixed just remove this patch instruction -->
+  <set xpath="/item_modifiers/item_modifier[@name='modClothingStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">3</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modClothingStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">3</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modClothingCargoStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">5</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modClothingCargoStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">5</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">6</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">6</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorDoubleStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">12</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorDoubleStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">12</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorTripleStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">18</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modArmorTripleStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">18</set>
+  <append xpath="/item_modifiers">
+    <item_modifier name="modGSKEnergyHarvest" installable_tags="armorHands" modifier_tags="harvest" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="descTeslaHarvest"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEnergyHarvestEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyHarvestEnabled"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGSKEnergyThorns" installable_tags="armor" modifier_tags="thorns" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEnergyThornsEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyThornsEnabled"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGSKEnergyShield" installable_tags="armor" modifier_tags="shield" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEnergyShieldEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyShieldEnabled"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGSKShockArrow" installable_tags="bow,crossbow,melee" modifier_tags="electric" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="dkGSKShockArrow"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGSKTeslaHero" installable_tags="armorFeet" modifier_tags="hero" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKTeslaHeroEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKTeslaHeroEnabled"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffImpactBracing"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffImpactBracing"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGSKTeslaBattery" installable_tags="armor" modifier_tags="battery" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKTeslaBatteryEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKTeslaBatteryEnabled"/>
+      </effect_group>
+    </item_modifier>
+  </append>
+</GhussakTweaks>
