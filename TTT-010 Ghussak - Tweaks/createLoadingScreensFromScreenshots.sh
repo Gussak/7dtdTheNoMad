@@ -4,7 +4,7 @@
 
 source ./gencodeInitSrcCONFIG.sh
 
-IFS=$'\n' read -d '' -r -a astrFlList < <(cd ../../Screenshots/;realpath *.jpg)
+IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd ../../Screenshots/;realpath *.jpg)
 for strFl in "${astrFlList[@]}";do
   if [[ -L "$strFl" ]];then continue;fi
   strBN="`basename "$strFl"`"
