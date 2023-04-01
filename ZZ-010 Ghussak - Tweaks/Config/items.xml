@@ -1410,8 +1410,8 @@
     <item name="GSKDbgBASE">
       <property name="CreativeMode" value="Player"/>
       <property name="HoldType" value="45"/>
-      <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
-      <property name="CustomIconTint" value="1,1,1"/>
+      <property name="CustomIcon" value="7dtdShockTip" help="was modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="128,64,64"/>
       <property name="Tags" value="junk"/>
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
@@ -1477,6 +1477,26 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.05"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss31"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTeleportFlee">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportFlee"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgParachuteSQN">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRespawnNoFallDmg"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST: PlayerSpawnedInWorld (reason: Died, position: 0, 0, 0): localplayer (this will trigger the script playerRespawnParachuteDaemon.sh)"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgParachuteSQNb">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRespawnNoFallDmgB"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST:GSKParachuteSQNb:for game event teleport"/>
       </effect_group>
     </item>
     <item name="GSKWorkAroundFixBuffs" help="some buffs may refuse to start working. this will fix them. Could this require the game engine to be stopped/exited and restarted to fix w/o usting this trick?">
@@ -2493,24 +2513,6 @@
     </effect_group>
   </append>
   <append xpath="/items">
-    <item name="GSKParachuteSQN">
-      <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="7dtdShockTip"/>
-      <property name="CraftingIngredientTime" value="2"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="EconomicValue" value="1"/>
-      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="0.5"/>
-        <property name="Use_time" value="0.5"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <effect_group name="GSKParachuteSQN" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRespawnNoFallDmg"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST: PlayerSpawnedInWorld (reason: Died, position: 0, 0, 0): localplayer (this will trigger the script playerRespawnParachuteDaemon.sh)"/>
-      </effect_group>
-    </item>
     <item name="GSKPsyonicsResist">
       <property name="Extends" value="resourceTestosteroneExtract"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>

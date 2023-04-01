@@ -3857,6 +3857,157 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath18"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKTeleportFlee" help="ISSUE: fails, nothing happens.">
+      <stack_type value="ignore"/>
+      <duration value="3"/>
+      <update_rate value="0.25"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportFlee"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportFlee"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEnterGameTeleport">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
+      </effect_group>
+      <effect_group help="TODO: detect difficulty?">
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="first spawn new game"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(1,20)"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToNormalZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEnterGameTeleport"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleportToNormalZone" help="normal difficulty spawn points">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
+      </effect_group>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport001"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport002"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport003"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="4"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport004"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport005"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="6"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport006"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="7"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport007"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="8"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport008"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="9"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport009"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport010"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="11"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport011"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="12"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport012"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="13"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport013"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="14"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport014"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport015"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="16"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport016"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="17"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport017"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="18"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport018"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="19"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport019"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="20"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport020"/>
+      </effect_group>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+    </buff>
+    <buff name="buffGSKRespawnTeleportToSky">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKParachuteRequested" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKParachuteToFirstSpawnpoint" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="Parachute: JUMP in less than 10s to activate it (CROUCH-JUMP to 1st SpawnPoint)."/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".bGSKParachuteRequested" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".bGSKParachuteToFirstSpawnpoint" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".bGSKParachuteRequested" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".bGSKParachuteToFirstSpawnpoint" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:call:eventGSKTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnTeleportToSky"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".bGSKParachuteRequested" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".bGSKParachuteToFirstSpawnpoint" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:call:eventGSKTeleport(SpawnPoint)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToNormalZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnTeleportToSky"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHazardWeatherMiasmaDirty37" description_key="buffGSKHazardWeatherMiasmaDirty5Desc" name_key="MiasmaAndDirtyEtc" help="this is also always running, so is used like a generic place for many things">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -4006,9 +4157,6 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfEnteredGame" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
-      </effect_group>
-      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomChaos">
           <requirement name="NotHasBuff" buff="buffGSKMutantRandomChaos"/>
           <requirement name="CVarCompare" cvar="fGSKMutantRandomChaos" operation="GT" value="0"/>
@@ -4039,7 +4187,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKTeleported" operation="set" value="0"/>
         <triggered_effect trigger="onSelfTeleported" action="ModifyCVar" cvar=".bGSKTeleported" operation="set" value="1"/>
         <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:buffGSKRespawnNoFallDmg:TELEPORTED!"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMin" operation="set" value="10" help="this is related to the external script playerRespawnParachuteDaemon.sh that waits 5s by default, increasing there will need increating here too"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMin" operation="set" value="10" help="this is related to the external script playerRespawnParachuteDaemon.sh that waits 5s by default, increasing there will need increasing here too"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMax" operation="set" value="120"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="add" value="0.25" help="same value of update_rate"/>
@@ -4078,6 +4226,72 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKFallProtTm"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrugOhShitzDrops"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnNoFallDmg"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKParachuteSQN" icon="ui_game_symbol_candy_oh_shitz" icon_color="128,255,255" hidden="false" remove_on_death="true" description_key="dkbuffGSKRespawnNoFallDmg" name_key="ParachuteSQN" help="this buff uses gameevents to teleport">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.25"/>
+      <display_value value=".bGSKFallProtTm"/>
+      <display_value_key value="+{0:0.00}s"/>
+      <!-- HELPGOOD: I was unable to work with _fallSpeed here as it keeps the last value after the player hits the ground. the problem is that it never (?) being 0 becomes impossible to use that as a reference variable to detect when the player stopped falling -->
+      <effect_group>
+        <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:buffGSKParachuteSQN:onSelfTeleported detected"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMin" operation="set" value="10" help="this is related to the external script playerRespawnParachuteDaemon.sh that waits 5s by default, increasing there will need increasing here too"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMax" operation="set" value="120"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtUpdateRate" operation="set" value="0.25" help="same value of update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="add" value="@.bGSKFallProtUpdateRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKHadFallImpact" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="fly speed">
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.bGSKFallProtTmMax"/>
+        <requirement name="CVarCompare" cvar=".bGSKHadFallImpact" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="GTE" value="1" help="to the sky"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="5.0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="15.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="ParachuteSQN: run to fall elsewhere, or just wait."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPseudoSlowFallTimeout" operation="subtract" value="@.bGSKFallProtUpdateRate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPseudoSlowFall">
+          <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPseudoSlowFallTimeout" operation="set" value="5">
+          <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="GTE" value="1" help="to the sky"/>
+        <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="120" help="increase this time if you have a slow machine, I think it may help"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops"/>
+      </effect_group>
+      <effect_group help="finalize thru timeout. this must be b4 the finalizations below to keep the fall dmg protection one more loop AFTER the fall impact happens to prevent death">
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GTE" value="@.bGSKFallProtTmMax"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKParachuteSQN:RmBuffs"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKFallProtTm"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrugOhShitzDrops"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKParachuteSQN"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0" help="make it ready for next time"/>
+      </effect_group>
+      <effect_group help="KEEP AFTER TIMEOUT CHECK TO HAPPEN ON NEXT LOOP. must have been teleported to the sky">
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKParachuteSQN:.bGSKTeleportedToSky=0:Did not teleport to the sky."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMax"/>
+      </effect_group>
+      <effect_group help="KEEP AFTER TIMEOUT CHECK TO HAPPEN ON NEXT LOOP. after a short time, if player hits the ground. this happens if player jumps too">
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        <triggered_effect trigger="onSelfFallImpact" action="LogMessage" message="GSK:buffGSKParachuteSQN:onSelfFallImpact:fall on ground"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKHadFallImpact" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMax"/>
+      </effect_group>
+      <effect_group help="KEEP AFTER TIMEOUT CHECK TO HAPPEN ON NEXT LOOP.">
+        <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKParachuteSQN:_crouching:therefore is on ground already"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMax"/>
       </effect_group>
     </buff>
     <buff name="buffGSKRespawnNoMadBundlesAllowCrafting" hidden="true" remove_on_death="true">

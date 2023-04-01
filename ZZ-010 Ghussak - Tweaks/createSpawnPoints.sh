@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# BSD 3-Clause License
+# 
+# Copyright (c) 2023, Gussak(github.com/Gussak,ghussak@www.nexusmods.com)
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+# 
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 
+# 3. Neither the name of the copyright holder nor the names of its
+#    contributors may be used to endorse or promote products derived from
+#    this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #PREPARE_RELEASE:REVIEWED:OK
 
 egrep "[#]help" $0
@@ -101,6 +130,16 @@ astrRectNormal=(
   -5000  5000 #top left XZ
   -2300 -2000 #bottom right XZ
 )
+function FUNCisNormalZone() {
+  if((iX > ${astrRectNormal[0]} && iX < ${astrRectNormal[2]}));then
+    if((iZ < ${astrRectNormal[1]} && iZ > ${astrRectNormal[3]}));then
+      return 0
+    fi
+  fi
+  return 1
+}
+iTeleportIndex=1
+iTeleportMaxIndex=$iTeleportIndex
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
   #iX=${astrPrefabsList[i]}
@@ -111,8 +150,9 @@ for str in "${astrPrefabsList[@]}";do
   if ! echo "$strNm" |egrep "${strAllow}";then continue;fi
   
   #NORMAL DIFFICULTY SPAWNS from -5000 5000 to -2300 -2000
+  iYOrig=$iY
   if $bParachuteMode;then iY=2000;fi 
-  : ${bUseAll:=false} #help
+  : ${bUseAll:=true} #help
   if $bUseAll;then
     astrRect=("${astrRectAll[@]}")
   else
@@ -121,16 +161,40 @@ for str in "${astrPrefabsList[@]}";do
   #declare -p iX iZ astrRect
   #set -x
   iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may bug the auto player placent. 20 will try to place player above buildings
-  if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
-    if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
+  #if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
+    #if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
+  if $bUseAll || FUNCisNormalZone;then
       strPos="$((iX+iDisplacementXZ)),$((iY+2)),$((iZ+iDisplacementXZ))"
-      strTeleport="teleport $iX $iY $iZ"
-      echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strNm} iRot=$iRot ${strTeleport}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
-    fi
+      strTeleport="teleport $iX $((iYOrig+2)) $iZ"
+      echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strNm} ${strTeleport}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
   fi
+  if FUNCisNormalZone;then #create initial spawns to teleport to
+    strTeleportIndex="`printf %03d $iTeleportIndex`"
+    strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
+    echo '      <!-- '"${strMsg}"' -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'"/>
+      </effect_group>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+    echo '      <!-- '"${strMsg}"' -->
+    <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
+      <property name="target_position" value="'"${strPos}"'" help="'"${strNm} ${strTeleport}"'"/>
+    </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+    iTeleportMaxIndex=$iTeleportIndex
+    ((iTeleportIndex++))&&:
+  fi
+    #fi
+  #fi
 done
 strSorted="`cat "${strFlGenSpa}${strGenTmpSuffix}" |sort`"
 echo "$strSorted" >"${strFlGenSpa}${strGenTmpSuffix}"
 cat "${strFlGenSpa}${strGenTmpSuffix}"
 
 ./gencodeApply.sh "${strFlGenSpa}${strGenTmpSuffix}" "${strFlGenSpa}"
+./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
+
+#xmlstarlet ed -L -d "//triggered_effect[@help='SPAWNPOINT_RANDOM_AUTOMATIC']" "${strFlGenBuf}"
+trash "${strFlGenBuf}${strGenTmpSuffix}"
+echo '        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(1,'"${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
