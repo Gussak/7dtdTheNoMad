@@ -7,6 +7,7 @@
 
 strScriptScale="(gimp-image-scale-full image 160 160 INTERPOLATION-CUBIC)"
 
+# https://stackoverflow.com/a/5846727/1422630
 gimp -n -i -b - <<EOF
 (let* ( (file's (cadr (file-glob "*.xcf" 1))) (filename "") (image 0) (layer 0) )
   (while (pair? file's) 
