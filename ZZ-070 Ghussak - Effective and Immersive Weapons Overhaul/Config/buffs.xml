@@ -307,12 +307,16 @@
       <damage_type value="stun"/>
       <stack_type value="replace"/>
       <duration value="600"/>
+      <update_rate value="60"/>
       <effect_group>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75,0" duration="0,30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWInjuryStunGrenade">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>

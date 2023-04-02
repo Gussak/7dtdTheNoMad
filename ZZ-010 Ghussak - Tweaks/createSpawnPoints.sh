@@ -138,6 +138,7 @@ function FUNCisNormalZone() {
   fi
   return 1
 }
+iTeleportMaxAllowedIndex=200
 iTeleportIndex=1
 iTeleportMaxIndex=$iTeleportIndex
 for str in "${astrPrefabsList[@]}";do
@@ -163,12 +164,24 @@ for str in "${astrPrefabsList[@]}";do
   iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may bug the auto player placent. 20 will try to place player above buildings
   #if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
     #if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
-  if $bUseAll || FUNCisNormalZone;then
+  bNormalZone=false;if FUNCisNormalZone;then bNormalZone=true;fi
+  if $bUseAll || $bNormalZone;then
       strPos="$((iX+iDisplacementXZ)),$((iY+2)),$((iZ+iDisplacementXZ))"
       strTeleport="teleport $iX $((iYOrig+2)) $iZ"
       echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strNm} ${strTeleport}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
   fi
-  if FUNCisNormalZone;then #create initial spawns to teleport to
+  
+  bCreateAutoTeleport=false
+  : ${bUseOnlyNormalDifficultySpawns:=false} #help
+#  if $bUseOnlyNormalDifficultySpawns && $bNormalZone;then bCreateAutoTeleport=true;fi
+  if $bUseOnlyNormalDifficultySpawns;then
+    if $bNormalZone;then
+      bCreateAutoTeleport=true
+    fi
+  else # allow all spawns everywhere
+    bCreateAutoTeleport=true 
+  fi
+  if $bCreateAutoTeleport;then #create initial spawns to teleport to
     strTeleportIndex="`printf %03d $iTeleportIndex`"
     strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
     echo '      <!-- '"${strMsg}"' -->
@@ -181,6 +194,7 @@ for str in "${astrPrefabsList[@]}";do
       <property name="target_position" value="'"${strPos}"'" help="'"${strNm} ${strTeleport}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
     iTeleportMaxIndex=$iTeleportIndex
+    if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
     ((iTeleportIndex++))&&:
   fi
     #fi

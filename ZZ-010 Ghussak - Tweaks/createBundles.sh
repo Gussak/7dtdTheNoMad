@@ -52,18 +52,22 @@ strDKCraftAvailableBundles=""
 astrCraftBundleNameList=()
 
 function FUNCcraftBundle() {
+  local lbLightColor=false;if [[ "$1" == "--lightcolor" ]];then lbLightColor=true;shift;fi
+  local lbSchematic=false;if [[ "$1" == "--schematic" ]];then lbSchematic=true;shift;fi
   local lstrBundleID="$1";shift
   local lstrBundleShortName="$1";shift
   local lstrIcon="$1";shift
+  local lstrType="$1";shift
   
+  local lstrColor="64,64,64";if $lbLightColor;then lstrColor="64,64,220";fi
   local lstrCvar="bGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   local lstrCraftBundleID="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
     <item name="'"${lstrCraftBundleID}"'" help="on death free items helper">
       <property name="Extends" value="GSKTRBaseBundle" />
-      <property name="CustomIcon" value="'"${lstrIcon}"'" />
-      <property name="CustomIconTint" value="64,64,64" />
+      <property name="CustomIcon" value="'"${lstrIcon}"'" />'"${lstrType}"'
+      <property name="CustomIconTint" value="'"${lstrColor}"'" />
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle" />
       <property class="Action0">
         <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="Equals" value="1" />
@@ -87,7 +91,11 @@ function FUNCcraftBundle() {
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${lstrCraftBundleID},\"${strModName}CB:${lstrBundleShortName}\"")
-  astrCBItemsLeastLastOne+=("${lstrCraftBundleID}" 1)
+  if $lbSchematic;then
+    astrBundlesSchematics+=("${lstrCraftBundleID}" 1)
+  else
+    astrCBItemsLeastLastOne+=("${lstrCraftBundleID}" 1)
+  fi
 }
 
 function FUNCspecificItemsCode() {
@@ -139,6 +147,8 @@ function FUNCcreateBundlePart() {
   local lstrBundleDesc="$1";shift
   local lastrItemAndCountList=("$@")
   
+  local lastrOpt=()
+  
   if [[ "${lstrBundleName}" =~ .*\ .* ]];then
     echo "ERROR: cant have spaces lstrBundleName='$lstrBundleName'"
     exit 1
@@ -172,7 +182,9 @@ function FUNCcreateBundlePart() {
   if [[ "$lstrBundlePartName" == "$strSchematics" ]];then
     #lstrIcon="bundleBooks"
     lstrType='<property name="ItemTypeIcon" value="book" />'
-    astrBundlesSchematics+=("$lstrBundleID" 1)
+    #astrBundlesSchematics+=("$lstrBundleID" 1)
+    lastrOpt+=(--lightcolor)
+    lastrOpt+=(--schematic)
   else
     astrBundlesItemsLeastLastOne+=("$lstrBundleID" 1)
     #astrCBItemsLeastLastOne
@@ -200,7 +212,7 @@ function FUNCcreateBundlePart() {
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
-    FUNCcraftBundle "${lstrBundleID}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}"
+    FUNCcraftBundle ${lastrOpt[*]} "${lstrBundleID}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}"
   fi
 }
 
@@ -304,8 +316,10 @@ astr=( #TEMPLATE
 );FUNCcreateBundles "CombatArmor" "bundleArmorLight" "use this if you are taking too much damage. You should use this anyway otherwise ranged raiders become unreasonable difficult." "${astr[@]}"
 
 astr=(
+  GSKTeslaTeleport 1
   modGSKEnergyThorns     1
   NightVisionBattery    16
+  NightVisionBatteryStrong 2
   NVBatteryCreate 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   batterybankSchematic 1
@@ -316,6 +330,7 @@ astr=(
 
 astr=(
   bucketRiverWater 1
+  drinkJarGrandpasMoonshine 1
   drinkJarPureMineralWater 20
   drugAntibiotics 4
   drugPainkillers 1
@@ -332,7 +347,8 @@ astr=(
   medicalSplint 10
   potionRespec 3
   toolBeaker 1
-  treePlantedMountainPine1m 28
+  treePlantedMountainPine1m 16
+  foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookWasteTreasuresHoney 1
   bookWasteTreasuresWater 1
