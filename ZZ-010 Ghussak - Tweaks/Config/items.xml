@@ -10,6 +10,75 @@
         </requirements>
         <requirements>
 -->
+  <append xpath="/items">
+    <item name="GSKBaseActivator">
+      <property name="NoScrapping" value="true"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="7dtdShockTip" help="was modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="128,128,128"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapIron"/>
+      <property name="Stacknumber" value="10000"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="0"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="junk"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <!-- HELPGOOD: Action0 and Action1 can have only specific properties customized on extenders, like you could just change the Delay time! these below are the safest defaults having also properties not used by Melee class... -->
+      <property class="Action0">
+        <property name="Class" value="Melee"/>
+        <property name="Delay" value="0.1"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+        <property name="Use_time" value="..."/>
+      </property>
+      <property class="Action1" help="the secondary melee action cannot be used from inventory, must be in hand">
+        <property name="Class" value="Melee"/>
+        <property name="Delay" value="0.1"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+        <property name="Use_time" value="..."/>
+      </property>
+    </item>
+    <item name="GSKBaseActivatorConsumableSlow">
+      <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property class="Action0">
+        <property name="Class" value="Eat" help="Could be also class Activate?"/>
+        <property name="Delay" value="1.0"/>
+      </property>
+      <!-- HELPGOOD: disabed this because it would just destroy the item if there is no onSelfSecondaryActionEnd implemented
+      <property class="Action1">
+        <property name="Class" value="Eat" />
+        <property name="Delay" value="1.0" />
+        <property name="Use_time" value="..." />
+        <property name="Sound_start" value="nightvision_toggle" />
+      </property>
+-->
+    </item>
+    <item name="GSKBaseActivatorReqMeleeFast">
+      <property name="Extends" value="GSKBaseActivator"/>
+    </item>
+    <item name="GSKBaseActivatorReqMeleeSlow">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be even"/>
+    </item>
+    <item name="GSKBaseActivatorReqMeleeConfiguratorFast">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast" help="because is much less trouble than specifically create_item for OpenBundle class"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab" help="quick animation"/>
+    </item>
+  </append>
   <append xpath="/items/item[       starts-with(@name, 'meleeWpnBladeT1HuntingKnife') or       starts-with(@name, 'meleeWpnKnucklesT1IronKnuckles') or       starts-with(@name, 'meleeWpnSledgeT1IronSledgehammer') or       starts-with(@name, 'meleeWpnSpearT1IronSpear') or       starts-with(@name, 'meleeToolAxeT1IronFireaxe') or       starts-with(@name, 'meleeToolFarmT1IronHoe') or       starts-with(@name, 'meleeToolPickT1IronPickaxe') or       starts-with(@name, 'meleeToolShovelT1IronShovel') or       starts-with(@name, 'meleeToolRepairT1ClawHammer') or       starts-with(@name, 'armorIron')     ]">
     <property name="RepairTools" value="resourceForgedIron"/>
   </append>
@@ -62,13 +131,15 @@
         <property name="Create_item" value="resourceWood"/>
         <property name="Create_item_count" value="0"/>
       </property>
+      <!-- HELPGOOD: disabled to avoid destroying the item
       <property class="Action1">
-        <property name="Class" value="OpenBundle"/>
-        <property name="Delay" value="0"/>
-        <property name="Use_time" value="0"/>
-        <property name="Create_item" value="resourceWood"/>
-        <property name="Create_item_count" value="0"/>
+        <property name="Class" value="OpenBundle" />
+        <property name="Delay" value="0" />
+        <property name="Use_time" value="0" />
+        <property name="Create_item" value="resourceWood" />
+        <property name="Create_item_count" value="0" />
       </property>
+-->
     </item>
     <item name="GSKNoteBase">
       <property name="Extends" value="blankNoteMaster"/>
@@ -263,6 +334,7 @@
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="DescriptionKey" value="dkGSKStarterKit"/>
       <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKFreeBundlesRemaining" operation="GT" value="0"/>
         <property name="Create_item" value="GSKTheNoMadOverhaulBundle"/>
         <property name="Create_item_count" value="1"/>
       </property>
@@ -376,8 +448,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTeslaEnergyBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 4 diff items" value="modGSKEnergyThorns,NightVisionBattery,NightVisionBatteryStrong,NVBatteryCreate"/>
-        <property name="Create_item_count" value="1,16,2,1"/>
+        <property name="Create_item" help="it has 6 diff items" value="GSKTeslaTeleport,GSKTeslaTeleportToSky,modGSKEnergyThorns,NightVisionBattery,NightVisionBatteryStrong,NVBatteryCreate"/>
+        <property name="Create_item_count" value="1,1,1,16,2,1"/>
       </property>
     </item>
     <!-- HELPGOOD:GENCODE:createBundles.sh: TeslaEnergy Schematics -->
@@ -823,6 +895,7 @@
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="60"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
         <property name="Create_item" value="NVBatteryCreate,NightVisionBattery"/>
         <property name="Create_item_count" value="1,1"/>
         <property name="Delay" value="0.25"/>
@@ -831,6 +904,7 @@
       </property>
       <property class="Action1">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
         <property name="Create_item" value="NVBatteryCreate,NightVisionBatteryStrong"/>
         <property name="Create_item_count" value="1,1"/>
         <property name="Delay" value="1.0"/>
@@ -1138,6 +1212,7 @@
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
     <item name="NightVisionBattery">
+      <property name="DescriptionKey" value="dkNightVisionBattery"/>
       <property name="HoldType" value="31"/>
       <property name="CustomIcon" value="carBattery"/>
       <property name="CustomIconTint" value="00ff00"/>
@@ -1162,6 +1237,7 @@
       </effect_group>
     </item>
     <item name="NightVisionBatteryStrong">
+      <property name="DescriptionKey" value="dkNightVisionBatteryStrong"/>
       <property name="CustomIcon" value="carBattery"/>
       <property name="CustomIconTint" value="0,255,255"/>
       <property name="Tags" value="junk"/>
@@ -1265,25 +1341,9 @@
   </append>
   <append xpath="/items">
     <item name="NPCConsumableBase">
-      <property name="HoldType" value="45"/>
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property name="CustomIconTint" value="0000ff"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="30"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="0.5"/>
-        <property name="Use_time" value="0.5"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
     </item>
     <item name="GSKNPCHiredGetsPowerArmor">
       <property name="Extends" value="NPCConsumableBase"/>
@@ -1418,25 +1478,25 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKCalcLightsPercRound"/>
       </effect_group>
     </item>
+    <item name="GSKCFGRespawnFreeBundlesLimit">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKRespawnFreeBundlesLimitCfg"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKFreeBundlesRemaining" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKTeslaTeleport">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="DescriptionKey" value="dkGSKTeslaTeleport"/>
-      <property name="CreativeMode" value="Player"/>
-      <property name="HoldType" value="45"/>
-      <property name="CustomIcon" value="7dtdShockTip" help="was modMeleeStunBatonRepulsor"/>
-      <property name="CustomIconTint" value="128,180,180"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10000"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="128,128,128"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
         <requirement name="NotHasBuff" buff="buffGSKTeslaTeleport"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
@@ -1445,50 +1505,76 @@
       <property class="Action1">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
         <requirement name="NotHasBuff" buff="buffGSKTeslaTeleport"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="1" help="In front"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleport"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="9" help="up">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="1" help="PRIMARY: In front">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="10" help="down">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="11" help="PRIMARY: tele 0,0,0">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKTeleExplodeAroundExtra" help="PRIMARY: just disintegrate around player">
+          <requirement name="NotHasBuff" buff="buffGSKTeslaHero"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKTeleExplodeAroundHeroExtra" help="PRIMARY: just disintegrate around player">
+          <requirement name="HasBuff" buff="buffGSKTeslaHero"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleport"/>
+        <!-- HELPGOOD: SECONDARY -->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="9" help="SECONDARY: up">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="10" help="SECONDARY: down">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleport"/>
       </effect_group>
     </item>
-    <item name="GSKDbgBASE">
-      <property name="CreativeMode" value="Player"/>
-      <property name="HoldType" value="45"/>
-      <property name="CustomIcon" value="7dtdShockTip" help="was modMeleeStunBatonRepulsor"/>
-      <property name="CustomIconTint" value="128,64,64"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10000"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
+    <item name="GSKTeslaTeleportToSky">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="DescriptionKey" value="dkGSKTeslaTeleportToSky"/>
+      <property name="CustomIcon" value="7dtdTeleport" help="was modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="128,128,180"/>
       <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleport"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleport"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="1000" help="1st: sky above"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="2000" help="2nd: sky at random spawn location at sky">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="2001" help="2nd: sky at PREVIOUS random spawn location at sky">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgBASE">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIconTint" value="128,64,64"/>
     </item>
     <item name="GSKDbgToggle">
       <property name="Extends" value="GSKDbgBASE"/>
@@ -1529,6 +1615,41 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmDur" operation="set" value="0"/>
       </effect_group>
     </item>
+    <item name="GSKDbgTestClearAllHarmAndDebuffs">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <!-- HELPGOOD: mainly for things that may take too long to end... -->
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="RemoveBuff" buff="buffGSKTeslaTeleport"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffShockedDuration" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="RemoveBuff" buff="buffShocked"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestTeslaTeleportRandomMayhem">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportRandomMayhem"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestTeslaMaxAll">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="set" value="99999"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTA" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTB" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTH" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTP" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTR" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTS" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEnergyLvlTT" operation="set" value="5"/>
+      </effect_group>
+    </item>
     <item name="GSKDbgTestProperSwim">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
@@ -1542,21 +1663,21 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss31"/>
       </effect_group>
     </item>
+    <item name="GSKDbgTeleportDir">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(1,10)"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportDir"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKPseudoSlowFall01"/>
+      </effect_group>
+    </item>
     <item name="GSKDbgTeleportFlee">
       <property name="Extends" value="GSKDbgBASE"/>
       <property name="DescriptionKey" value="dkGSKTeleFlee"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportFlee"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportDirection"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Direction: {cvar(iGSKTeleFleeDir:0)}"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleportFleeUp"/>
-      </effect_group>
-    </item>
-    <item name="GSKCFGRespawnFreeBundlesLimit">
-      <property name="DescriptionKey" value="dkGSKRespawnFreeBundlesLimitCfg"/>
-      <property name="Extends" value="GSKDbgBASE"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKRespawnFreeBundlesMax" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKRespawnFreeBundlesMax" operation="subtract" value="1"/>
       </effect_group>
     </item>
     <item name="GSKDbgTeleportFleeCFG">
@@ -1635,7 +1756,7 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST: PlayerSpawnedInWorld (reason: Died, position: 0, 0, 0): localplayer (this will trigger the script playerRespawnParachuteDaemon.sh)"/>
       </effect_group>
     </item>
-    <item name="GSKDbgParachuteSQNbuffGSKParachuteSQN">
+    <item name="GSKDbgParachuteSQNbuffGSKParachuteSQNEvent">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKParachuteSQN"/>
@@ -1659,7 +1780,7 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork12"/>
       </effect_group>
     </item>
-    <item name="GSKTestRagdollAIsToEasyCPU">
+    <item name="GSKTestRagdollAIsToEasyCPU" help="makes no difference..">
       <property name="CreativeMode" value="Player"/>
       <property name="HoldType" value="45"/>
       <property name="CustomIcon" value="resourcePaper"/>
@@ -1684,41 +1805,10 @@
       </effect_group>
     </item>
     <item name="GSKTeslaHeroToggle">
-      <property name="NoScrapping" value="true"/>
-      <property name="HoldType" value="45"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
       <property name="DescriptionKey" value="dkGSKTeslaHeroToggle"/>
       <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
       <property name="CustomIconTint" value="255,255,0"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="1"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
-      <property class="Action0">
-        <property name="Class" value="Melee"/>
-        <property name="Delay" value="0.1"/>
-        <property name="Range" value="0"/>
-        <property name="Sphere" value="0"/>
-        <property name="Block_range" value="0"/>
-        <property name="DamageEntity" value="0"/>
-        <property name="DamageBlock" value="0"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <property class="Action1">
-        <property name="Class" value="Melee"/>
-        <property name="Delay" value="0.1"/>
-        <property name="Range" value="0"/>
-        <property name="Sphere" value="0"/>
-        <property name="Block_range" value="0"/>
-        <property name="DamageEntity" value="0"/>
-        <property name="DamageBlock" value="0"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaHero">
           <requirement name="HasBuff" buff="buffGSKTeslaHeroEnabled"/>
@@ -1726,83 +1816,13 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeslaHero"/>
       </effect_group>
     </item>
-    <item name="toggleTeslaHeroGrenGSK">
-      <property name="HoldType" value="45"/>
-      <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
-      <property name="CustomIconTint" value="255,255,0"/>
-      <property name="ItemTypeIcon" value="explosion"/>
-      <property name="Tags" value="junk"/>
-      <property name="Class" value="ItemClassTimeBomb"/>
-      <property name="Meshfile" value="#Other/Items?Weapons/Ranged/Grenade/GrenadePrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="UMA.Overlay0Tint" value="0,255,255"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10000"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
-      <property name="Explosion.ParticleIndex" value="13"/>
-      <property name="Explosion.RadiusBlocks" value="4"/>
-      <property name="Explosion.RadiusEntities" value="5"/>
-      <property name="Explosion.DamageBonus.earth" value="0"/>
-      <property name="Explosion.DamageBonus.water" value="0"/>
-      <property name="Explosion.BlastPower" value="0"/>
-      <property name="FuseTime" value="1000"/>
-      <property name="FusePrimeOnActivate" value="true"/>
-      <property name="ExplodeOnHit" value="true"/>
-      <property name="StickPercent" value=".5"/>
-      <property name="ThrowableDecoy" value="true"/>
-      <property class="Action0">
-        <property name="Class" value="ThrowAway"/>
-        <property name="Delay" value="1.2"/>
-        <property name="Throw_strength_default" value="8"/>
-        <property name="Throw_strength_max" value="50"/>
-        <property name="Max_strain_time" value="1.25"/>
-        <property name="Sound_start" value="grenade_throw"/>
-        <property name="Gravity" value="-5"/>
-        <requirement name="CVarCompare" cvar="_underwater" operation="LT" value=".98"/>
-      </property>
-      <property class="Action1">
-        <property name="Class" value="Activate"/>
-        <property name="Delay" value="1"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <effect_group tiered="false">
-        <passive_effect name="BlockDamage" operation="base_set" value="0"/>
-        <passive_effect name="EntityDamage" operation="base_set" value="0"/>
-        <display_value name="dExRadius" value="5"/>
-        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKShockArrowEnabled"/>
-        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKShockArrowEnabled"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaHeroToggle">
-          <requirement name="HasBuff" buff="buffGSKTeslaHeroEnabled"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Origin" localPos="0,0,0" localRot="0,0,0">
-          <requirement name="HasBuff" buff="buffGSKTeslaHero"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemovePart" part="Sparks">
-          <requirement name="!HasBuff" buff="buffGSKTeslaHero"/>
-        </triggered_effect>
-      </effect_group>
-    </item>
     <item name="GSKRepairTeslaBase">
-      <property name="HoldType" value="45"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
       <property name="CustomIconTint" value="0,200,200"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
       <property name="DescriptionKey" value="dkModUpgOrFixInfo"/>
-      <property name="Stacknumber" value="60"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="30"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
       <property class="Action0">
-        <property name="Class" value="Melee" help="just to prevent player destroying it before using to craft specific object"/>
+        <property name="Class" value="Melee" help="melee just to prevent player destroying it before using to craft specific object"/>
         <property name="Range" value="0"/>
         <property name="Sphere" value="0"/>
         <property name="Block_range" value="0"/>
@@ -1876,6 +1896,22 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="subtract" value="0.10"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTP">
+      <property name="Extends" value="GSKRepTeslaParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="0,150,150"/>
+      <property class="Action0">
+        <property name="Class" value="Activate"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="0.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
@@ -2072,6 +2108,45 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKUpgradeTP">
+      <property name="Extends" value="GSKUpgTeslaParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="250,200,100"/>
+      <property class="Action0">
+        <property name="Class" value="Activate"/>
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKUpgradeTR">
       <property name="Extends" value="GSKUpgTeslaParts"/>
       <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
@@ -2165,7 +2240,7 @@
   <append xpath="/items/item[         @name='ammoArrowIron'         or          @name='ammoArrowSteelAP'      or          @name='ammoCrossbowBoltIron'  or          @name='ammoCrossbowBoltSteelAP' or         @name='toggleTeslaHeroGrenGSK' or         (           contains(@name,'melee') and (             contains(@name,'Steel')         or              contains(@name,'Iron' )         or             contains(@name,'HuntingKnife' ) or             contains(@name,'Machete' )      or             contains(@name,'Baton' )        or             contains(@name,'ImpactDriver' ) or             contains(@name,'Ratchet' )      or             contains(@name,'Wrench' )       or             contains(@name,'Nailgun' )      or             contains(@name,'ClawHammer' )   or             contains(@name,'Auger' )        or             contains(@name,'Flashlight' )   or             contains(@name,'Chainsaw' )           )         )       ]">
     <effect_group name="shock arrows" tiered="false">
       <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-      <requirement name="HasBuff" buff="buffGSKShockArrowEnabled"/>
+      <requirement name="HasBuff" buff="buffGSKTeslaShockArrowEnabled"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffShockedPerkLvl0">
         <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="Equals" value="0"/>
       </triggered_effect>

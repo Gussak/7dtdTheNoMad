@@ -3,6 +3,15 @@
   <!-- HELPGOOD: to have nothing to click on first spawn and remove that context text for this mod 'lore' -->
   <remove xpath="/gameevents/action_sequence/action[@class='AddJournalTip']"/>
   <append xpath="/gameevents">
+    <action_sequence name="eventGSKTeleportMayhemKillsPlayer">
+      <action class="Explode">
+        <property name="blast_power" value="75"/>
+        <property name="block_damage" value="99999"/>
+        <property name="block_radius" value="10"/>
+        <property name="entity_damage" value="99999"/>
+        <property name="entity_radius" value="16"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAround">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaHero"/>
@@ -29,18 +38,25 @@
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="99999"/>
-        <property name="entity_radius" value="3" param1="iXplodRangeEnt"/>
+        <property name="entity_radius" value="4" param1="iXplodRangeEnt"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAroundHero" template="eventGSKTeleExplodeAround">
-      <variable name="piXplodRangeBlock" value="3"/>
+      <variable name="iXplodRangeBlock" value="4"/>
       <variable name="iXplodRangeEnt" value="8"/>
-      <variable name="bChkHeroBuff" value="false"/>
+      <variable name="bChkHeroBuff" value="false" help="invert=false means do explode if has hero buff"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleport">
+    <action_sequence name="eventGSKTeleExplodeAroundExtra" template="eventGSKTeleExplodeAroundHero">
+    </action_sequence>
+    <action_sequence name="eventGSKTeleExplodeAroundHeroExtra" template="eventGSKTeleExplodeAround">
+      <variable name="iXplodRangeBlock" value="8"/>
+      <variable name="iXplodRangeEnt" value="12"/>
+      <variable name="bChkHeroBuff" value="false" help="invert=false means do explode if has hero buff"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTele">
       <action class="Teleport">
         <property name="phase" value="7"/>
-        <property name="target_position" value="0,0,7" param1="v3dDirection"/>
+        <property name="target_position" value="0,0,7" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
       <action class="CallGameEvent">
@@ -52,126 +68,91 @@
         <property name="game_events" value="eventGSKTeleExplodeAroundHero" param1="xplod" help="only activates on teslaHero mode"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleportInFront" template="eventGSKTeslaTeleport">
-      <variable name="v3dDirection" value="0,0,7" help="North is always in front of the player"/>
+    <action_sequence name="eventGSKTeslaTeleNo" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,0,7"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleportUp" template="eventGSKTeslaTeleport">
-      <variable name="v3dDirection" value="0,7,0"/>
+    <action_sequence name="eventGSKTeslaTeleSo" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,0,-7"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleportDown" template="eventGSKTeslaTeleport">
-      <variable name="v3dDirection" value="0,-7,0"/>
+    <action_sequence name="eventGSKTeslaTeleWe" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-7,0,0"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFlee" help="ISSUE: not working">
+    <action_sequence name="eventGSKTeslaTeleEa" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="7,0,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNW" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,0,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNE" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,0,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSW" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,0,-6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSE" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,0,-6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,-7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleInFront" template="eventGSKTeslaTeleNo" help="North is always in front of the player"/>
+    <action_sequence name="eventGSKBaseTele">
       <action class="Delay">
-        <property name="time" value="1.5"/>
-      </action>
-      <action class="RandomTeleport">
-        <property name="min_distance" value="10"/>
-        <property name="max_distance" value="15"/>
-      </action>
-    </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeUp">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
+        <property name="phase" value="10"/>
+        <property name="time" value="2.0" param1="fDelay"/>
       </action>
       <action class="Teleport">
-        <property name="target_position" value="0,7,0"/>
+        <property name="phase" value="20"/>
+        <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeDown">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="0,-7,0"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleNo" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="0,0,7"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeN">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="0,3,7"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleSo" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="0,0,-7"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeS">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="0,3,-7"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleWe" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="-7,0,0"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeW">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="-7,3,0"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleEa" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="7,0,0"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeE">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="7,3,0"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleNW" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="-6,0,6"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeNW">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="-6,3,6"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleNE" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="6,0,6"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeNE">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="6,3,6"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleSW" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="-6,0,-6"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeSW">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="-6,3,-6"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleSE" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="6,0,-6"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleportFleeSE">
-      <action class="Delay">
-        <property name="time" value="2.0"/>
-      </action>
-      <action class="Teleport">
-        <property name="target_position" value="6,3,-6"/>
-        <property name="offset_type" value="Relative"/>
-      </action>
+    <action_sequence name="eventGSKTeleUp" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="0,7,0"/>
     </action_sequence>
-    <action_sequence name="eventGSKPseudoSlowFall">
+    <action_sequence name="eventGSKTeleDn" template="eventGSKBaseTele">
+      <variable name="v3Dir" value="0,-7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTele1BlkUp">
       <action class="Teleport">
         <property name="target_position" value="0, 1, 0"/>
         <property name="offset_type" value="Relative"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKPseudoSlowFall0">
+    <action_sequence name="eventGSKTeleZero">
       <action class="Teleport">
         <property name="target_position" value="0, 0, 0"/>
         <property name="offset_type" value="Relative"/>
       </action>
     </action_sequence>
+    <action_sequence name="eventGSKPseudoSlowFall" template="eventGSKTele1BlkUp"/>
     <action_sequence name="eventGSKPseudoSlowFall01">
       <action class="Teleport">
         <property name="target_position" value="0, 0.1, 0"/>

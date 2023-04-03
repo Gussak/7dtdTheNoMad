@@ -88,6 +88,16 @@
   <set xpath="/item_modifiers/item_modifier[@name='modArmorTripleStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">18</set>
   <set xpath="/item_modifiers/item_modifier[@name='modArmorTripleStoragePocket']/effect_group/display_value[@name='dCarryCapacity']/@value">18</set>
   <append xpath="/item_modifiers">
+    <item_modifier name="modGSKTeslaTeleport" installable_tags="armor" modifier_tags="teleport" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="dkGSKModTeslaTeleport"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEnergyTeleportEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyTeleportEnabled"/>
+      </effect_group>
+    </item_modifier>
     <item_modifier name="modGSKEnergyHarvest" installable_tags="armorHands" modifier_tags="harvest" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
@@ -116,14 +126,14 @@
         <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyShieldEnabled"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modGSKShockArrow" installable_tags="bow,crossbow,melee" modifier_tags="electric" blocked_tags="noMods" type="attachment">
+    <item_modifier name="modGSKTeslaShockArrow" installable_tags="bow,crossbow,melee" modifier_tags="electric" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
       <property name="CustomIconTint" value="0,200,200"/>
       <property name="DescriptionKey" value="dkGSKShockArrow"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKShockArrowEnabled"/>
-        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKTeslaShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKTeslaShockArrowEnabled"/>
         <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>

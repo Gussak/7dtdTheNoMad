@@ -59,7 +59,8 @@ function FUNCcraftBundle() {
   local lstrIcon="$1";shift
   local lstrType="$1";shift
   
-  local lstrColor="64,64,64";if $lbLightColor;then lstrColor="64,64,220";fi
+  local lstrColor="64,64,64";if $lbLightColor;then lstrColor="90,90,90";fi
+  local lstrColor="64,64,64";if $lbSchematic;then lstrColor="64,64,220";fi
   local lstrCvar="bGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   local lstrCraftBundleID="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
@@ -317,6 +318,7 @@ astr=( #TEMPLATE
 
 astr=(
   GSKTeslaTeleport 1
+  GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
   NightVisionBattery    16
   NightVisionBatteryStrong 2
