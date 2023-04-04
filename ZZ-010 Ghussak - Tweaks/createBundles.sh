@@ -317,9 +317,12 @@ astr=( #TEMPLATE
 );FUNCcreateBundles "CombatArmor" "bundleArmorLight" "use this if you are taking too much damage. You should use this anyway otherwise ranged raiders become unreasonable difficult." "${astr[@]}"
 
 astr=(
+  ammoJunkTurretRegular 200
+  gunBotT2JunkTurret 1
   GSKTeslaTeleport 1
   GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
+  modGSKTeslaTeleport 1
   NightVisionBattery    16
   NightVisionBatteryStrong 2
   NVBatteryCreate 1
