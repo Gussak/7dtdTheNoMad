@@ -31,11 +31,12 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-set -Eeu
-trap 'read -p ERROR_HitAKeyToContinue -n 1' ERR
-trap 'echo WARN_CtrlC_Pressed_ABORTING;exit 1' INT
+#set -Eeu
+#trap 'read -p ERROR_HitAKeyToContinue -n 1' ERR
+#trap 'echo WARN_CtrlC_Pressed_ABORTING;exit 1' INT
+source ./srcCfgGenericToImport.sh
 
-egrep "[#]help" $0
+#egrep "[#]help" $0
 
 function FUNCerrorExit() {
   read -p ERROR_HitAKeyToExit -n 1
@@ -43,7 +44,7 @@ function FUNCerrorExit() {
 }
 
 strSubTokenId=""
-if [[ "$1" == "--subTokenId" ]];then #help <strSubTokenId> will be used on the same file to match another section on it
+if [[ "${1-}" == "--subTokenId" ]];then #help <strSubTokenId> will be used on the same file to match another section on it
   shift
   strSubTokenId="$1";shift
   if ! [[ "$strSubTokenId" =~ ^[A-Z0-9]*$ ]];then echo "ERROR: invalid strSubTokenId='$strSubTokenId'";fi

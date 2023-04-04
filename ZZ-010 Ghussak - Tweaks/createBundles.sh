@@ -31,9 +31,9 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-strScriptName="`basename "$0"`"
+#strScriptName="`basename "$0"`"
 
-source ./gencodeInitSrcCONFIG.sh
+source ./srcCfgGenericToImport.sh
 
 #strModName="The NoMad"
 #strModNameForIDs="TheNoMadOverhaul"

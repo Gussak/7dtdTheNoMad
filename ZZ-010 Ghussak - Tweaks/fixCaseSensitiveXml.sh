@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # BSD 3-Clause License
 # 
@@ -28,26 +29,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#this is a config file
-
 #PREPARE_RELEASE:REVIEWED:OK
 
-strModName="[NoMad]" #as short as possible
-strModNameForIDs="TheNoMadOverhaul"
+source ./srcCfgGenericToImport.sh
 
-strFlGenLoc="Config/Localization.txt"
-strFlGenLoa="Config/loadingscreen.xml"
-strFlGenEve="Config/gameevents.xml"
-strFlGenRec="Config/recipes.xml"
-strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml"
-strFlGenBuf="Config/buffs.xml"
+#TODO read all correct case sensitive things from vanilla xml cfg files and use them here in a loop!
 
-strGenTmpSuffix=".GenCode.UpdateSection.TMP"
+egrep '" *[!]hasbuff *"' * -iRnIw --include="*.xml"
+IFS=$'\n' read -d '' -r -a astrFlList < <(egrep '" *[!]hasbuff *"' * -iRnIw --include="*.xml" -c |egrep -v :0 |cut -f1 -d:)&&:
+for strFl in "${astrFlList[@]}";do
+  trash "${strFl}.${strScriptName}.NEW"
+  sed -r -e 's@" *[!]hasbuff *"@"NotHasBuff"@gi' "$strFl" >>"${strFl}.${strScriptName}.NEW"
+  echo "WARN: Hit ctrl+c to end meld and stop this script if you do not like the results."
+  meld "${strFl}" "${strFl}.${strScriptName}.NEW"
+done
+exit
 
-trash "${strFlGenLoc}${strGenTmpSuffix}"&&:
-trash "${strFlGenLoa}${strGenTmpSuffix}"&&:
-trash "${strFlGenEve}${strGenTmpSuffix}"&&:
-trash "${strFlGenRec}${strGenTmpSuffix}"&&:
-trash "${strFlGenXml}${strGenTmpSuffix}"&&:
-trash "${strFlGenBuf}${strGenTmpSuffix}"&&:
-echo "" #this is to prevent error value returned from missing files to be trashed above
+if SECFUNCexecA -ce egrep '[!]hasbuff' * -iRnIw --include="*.xml";then
+  echoc -p "FilesAbove:wrongly coded NotHasBuff. coding like '!HasBuff' may fail sometimes (like at items.xml GSKTeslaTeleport)"
+  bNeedsFixing=true
+fi
+if SECFUNCexecA -ce egrep 'addbuff' * -iRnIw --include="*.xml" |egrep -wv "AddBuff";then
