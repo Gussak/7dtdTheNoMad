@@ -3941,6 +3941,9 @@
         <!-- HELPGOOD: can be configured in-game using special items -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="3"/>
       </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKTeslaTeleport" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
       <stack_type value="ignore"/>
@@ -4084,7 +4087,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleDn">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="10" help="downwards"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleZero">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaExplodeExtra">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="11"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele00">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="11" help="tele 0,0,0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)"/>
@@ -4100,6 +4106,16 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDir"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeslaExplodeExtra">
+      <stack_type value="replace"/>
+      <duration value="30" help="should never take so long, unless the PC is slow?"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaExplodeExtra">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="NotEquals" value="11"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffNVBatteryCreateConsumeEnergy">
@@ -5026,6 +5042,16 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyHL" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyWL" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyNV" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKTeslaHero"/>
       </effect_group>

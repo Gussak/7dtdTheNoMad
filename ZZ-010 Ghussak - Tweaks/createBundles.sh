@@ -59,8 +59,10 @@ function FUNCcraftBundle() {
   local lstrIcon="$1";shift
   local lstrType="$1";shift
   
-  local lstrColor="64,64,64";if $lbLightColor;then lstrColor="90,90,90";fi
-  local lstrColor="64,64,64";if $lbSchematic;then lstrColor="64,64,220";fi
+  local liR=90 liG=90 liB=90
+  if $lbLightColor;then ((liR+=20,liG+=20,liB+=20))&&:;fi
+  if $lbSchematic;then ((liB+=130));fi
+  local lstrColor="$liR,$liG,$liB"
   local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   local lstrCraftBundleID="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
@@ -88,7 +90,7 @@ function FUNCcraftBundle() {
   strXmlCraftBundleCreateBuffsXml+='
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. So you wont need to rush respawn in your bed near the backpack. Read the description before opening the bundle, try to open only when you need it. These are the remaining amount you can open for each: Main={cvar(iGSKFreeBundlesRemaining:0)}, '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After u die, '"'"'CB:'"'"' items can be crafted for free. U dont need to rush to your dropped backpack. Open each bundle only when u need it. Respawning adds 1 to the remaining bundles u can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${lstrCraftBundleID},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -361,7 +363,7 @@ astr=(
   drugHerbalAntibioticsSchematic 1
   foodBoiledMeatBundleSchematic 1
   foodBoiledMeatSchematic 1
-);FUNCcreateBundles "Healing" "bundleFarm" "use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, dont wait too much tho..." "${astr[@]}"
+);FUNCcreateBundles "Healing" "bundleFood" "use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, dont wait too much tho..." "${astr[@]}"
 
 astr=(
   farmPlotBlockVariantHelper 13
@@ -382,7 +384,7 @@ astr=(
   resourceWood 31
   drinkCanEmpty 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles "BasicCampingKit" "bundleFarm" "some basic things to quickly set a tiny camp with shelter and cook a bit" "${astr[@]}"
+);FUNCcreateBundles "BasicCampingKit" "bundleTraps" "some basic things to quickly set a tiny camp with shelter and cook a bit" "${astr[@]}"
 
 astr=(
   bedrollBlue 1

@@ -12,10 +12,10 @@
         <property name="entity_radius" value="16"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleExplodeAround">
+    <action_sequence name="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaHero"/>
-        <property name="invert" value="true" param1="bChkHeroBuff"/>
+        <property name="invert" value="true" param1="bNotHasHeroBuff" help="true means NotHasBuff buffGSKTeslaHero, false means HasBuff buffGSKTeslaHero"/>
       </requirement>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
@@ -27,7 +27,7 @@
         <property name="phase" value="20"/>
         <property name="blast_power" value="75"/>
         <property name="block_damage" value="99999"/>
-        <property name="block_radius" value="2" param1="iXplodRangeBlock"/>
+        <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
         <property name="entity_damage" value="0"/>
         <property name="entity_radius" value="0"/>
       </action>
@@ -38,20 +38,44 @@
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="99999"/>
-        <property name="entity_radius" value="4" param1="iXplodRangeEnt"/>
+        <property name="entity_radius" value="2" param1="iXplodRangeEnt"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleExplodeAroundHero" template="eventGSKTeleExplodeAround">
+    <action_sequence name="eventGSKTeleExplodeAround" template="eventGSKTeleExplodeAroundBase">
+      <requirement class="HasBuff">
+        <property name="buff_name" value="buffGSKTeslaExplodeExtra"/>
+        <property name="invert" value="true"/>
+      </requirement>
+      <variable name="iXplodRangeBlock" value="2"/>
+      <variable name="iXplodRangeEnt" value="4"/>
+      <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleExplodeAroundExtra" template="eventGSKTeleExplodeAroundBase">
+      <requirement class="HasBuff">
+        <property name="buff_name" value="buffGSKTeslaExplodeExtra"/>
+        <property name="invert" value="false"/>
+      </requirement>
+      <variable name="iXplodRangeBlock" value="3"/>
+      <variable name="iXplodRangeEnt" value="6"/>
+      <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleExplodeAroundHero" template="eventGSKTeleExplodeAroundBase">
+      <requirement class="HasBuff">
+        <property name="buff_name" value="buffGSKTeslaExplodeExtra"/>
+        <property name="invert" value="true"/>
+      </requirement>
       <variable name="iXplodRangeBlock" value="4"/>
       <variable name="iXplodRangeEnt" value="8"/>
-      <variable name="bChkHeroBuff" value="false" help="invert=false means do explode if has hero buff"/>
+      <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKTeslaHero"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleExplodeAroundExtra" template="eventGSKTeleExplodeAroundHero">
-    </action_sequence>
-    <action_sequence name="eventGSKTeleExplodeAroundHeroExtra" template="eventGSKTeleExplodeAround">
+    <action_sequence name="eventGSKTeleExplodeAroundHeroExtra" template="eventGSKTeleExplodeAroundBase">
+      <requirement class="HasBuff">
+        <property name="buff_name" value="buffGSKTeslaExplodeExtra"/>
+        <property name="invert" value="false"/>
+      </requirement>
       <variable name="iXplodRangeBlock" value="8"/>
       <variable name="iXplodRangeEnt" value="12"/>
-      <variable name="bChkHeroBuff" value="false" help="invert=false means do explode if has hero buff"/>
+      <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKTeslaHero"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTele">
       <action class="Teleport">
@@ -64,8 +88,16 @@
         <property name="game_events" value="eventGSKTeleExplodeAround" param1="xplod" help="only activates on non-teslaHero mode"/>
       </action>
       <action class="CallGameEvent">
-        <property name="phase" value="11"/>
+        <property name="phase" value="10"/>
+        <property name="game_events" value="eventGSKTeleExplodeAroundExtra" param1="xplod" help="only activates on non-teslaHero mode"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="15"/>
         <property name="game_events" value="eventGSKTeleExplodeAroundHero" param1="xplod" help="only activates on teslaHero mode"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="16"/>
+        <property name="game_events" value="eventGSKTeleExplodeAroundHeroExtra" param1="xplod" help="only activates on teslaHero mode"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleNo" template="eventGSKTeslaTele">
@@ -97,6 +129,9 @@
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele">
       <variable name="v3Dir" value="0,-7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTele00" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,0,0"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleInFront" template="eventGSKTeslaTeleNo" help="North is always in front of the player"/>
     <action_sequence name="eventGSKBaseTele">
