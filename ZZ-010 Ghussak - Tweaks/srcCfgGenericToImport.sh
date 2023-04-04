@@ -32,33 +32,49 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-strScriptName="`basename "$0"`";declare -p strScriptName >&2 #do not export this var in case one script calls another
+export strScriptName="`basename "$0"`";declare -p strScriptName >&2 #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -exec bash`
 
 bNoChkErrOnExitPls=false
-function FUNCshowHelp() { 
-  echo "HELP for ${strScriptName}:" >&2
+function CFGFUNCshowHelp() { 
+  echo "(CFG)HELP for ${strScriptName}:" >&2
   egrep "[#]help" $0 -wn >&2 &&:
-};export -f FUNCshowHelp
-function FUNCerrorChk() {
+};export -f CFGFUNCshowHelp
+function CFGFUNCerrorChk() {
   if $bNoChkErrOnExitPls;then return;fi
   if(($?!=0));then
-    echo "ERROR: the above message may contain the line where the error happened, read below on the help if it is there."
-    read -p 'WARN: Hit a key to show the help.' -n 1&&:
-    FUNCshowHelp
+    echo "(CFG)ERROR: the above message may contain the line where the error happened, read below on the help if it is there."
+    read -p '(CFG)WARN: Hit a key to show the help.' -n 1&&:
+    CFGFUNCshowHelp
   fi
-};export -f FUNCerrorChk
-function FUNCtrash() {
+};export -f CFGFUNCerrorChk
+function CFGFUNCtrash() {
   if [[ -f "${1-}" ]];then trash "$1";fi
-};export -f FUNCtrash
-echo "Use --help alone to show this script help." >&2
-if [[ "${1-}" == --help ]];then FUNCshowHelp;exit 0;fi
+};export -f CFGFUNCtrash
+function CFGFUNCmeld() { 
+  local lbSIGINTonMeld=false
+  trap 'lbSIGINTonMeld=true' INT
+  echo "(CFG)WARN: hit ctrl+c to abort, closing meld will accept the patch!!!" >&2
+  meld "$@"&&:;local lnRet=$?
+  if((lnRet!=0));then #help (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
+    echo "(CFG)ERROR=$lnRet: meld $@" >&2
+    return 1;
+  fi
+  if $lbSIGINTonMeld;then
+    echo "(CFG)WARN: Ctrl+c pressed while running: meld $@" >&2
+    return 1;
+  fi
+  echo "(CFG)AcceptingChanges: meld $@" >&2
+  return 0
+};export -f CFGFUNCmeld
+echo "(CFG)Use --help alone to show this script help." >&2
+if [[ "${1-}" == --help ]];then CFGFUNCshowHelp;exit 0;fi
 
 if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
   
-  trap 'read -p "ERROR=$?: Hit a key to continue" -n 1&&:;bNoChkErrOnExitPls=true;exit' ERR
-  trap 'echo "Ctrl+c pressed...";exit' INT
-  trap 'FUNCerrorChk' EXIT
+  trap 'read -p "(CFG)TRAP:ERROR=$?: Hit a key to continue" -n 1&&:;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'echo "(CFG)TRAP:WARN:Ctrl+c pressed...";exit' INT
+  trap 'CFGFUNCerrorChk' EXIT
   
   export strModName="[NoMad]" #as short as possible
   export strModNameForIDs="TheNoMadOverhaul"
@@ -72,15 +88,21 @@ if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];t
 
   export strGenTmpSuffix=".GenCode.UpdateSection.TMP"
 
-  FUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
-  FUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
-  FUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
-  FUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
-  FUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
-  FUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
-
+  CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
+  CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
+  CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
+  CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
+  CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
+  CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
+  
+  export strCfgFlDBToImportOnChildShellFunctions="`mktemp`" #help this contains all arrays marked to export. PUT ALL SUCH ARRAYS BEFORE including/loading this cfg file!
+  strTmp345987623="`export |egrep "[-][aA]x"`"&&:
+  if [[ -n "$strTmp345987623" ]];then
+    echo "$strTmp345987623" >>"$strCfgFlDBToImportOnChildShellFunctions"
+  fi
+  
   export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
 fi
 
 # keep at the end
-echo -n "" #this is to prevent error value returned from missing files to be trashed above or anything else irrelevant
+echo -n "" >&2 #this is to prevent error value returned from missing files to be trashed above or anything else irrelevant

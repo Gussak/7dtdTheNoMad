@@ -31,7 +31,7 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ./gencodeInitSrcCONFIG.sh
+source ./srcCfgGenericToImport.sh
 
 IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd ../../Screenshots/;realpath *.jpg)
 for strFl in "${astrFlList[@]}";do

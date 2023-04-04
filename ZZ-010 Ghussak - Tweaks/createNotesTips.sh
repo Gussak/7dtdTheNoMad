@@ -31,12 +31,11 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-set -Eeu
-
-strScriptName="`basename "$0"`"
+#set -Eeu
+#strScriptName="`basename "$0"`"
 
 #strModName="The NoMad"
-source ./gencodeInitSrcCONFIG.sh
+source ./srcCfgGenericToImport.sh
 
 #help first run w/o params and make it sure all is ok
 #help then run each param alone to get the code to place where it is required

@@ -376,7 +376,7 @@ astr=(
   cntSecureStorageChest 1
   meleeToolRepairT0StoneAxe 1
   resourceRockSmall 10
-  resourceWood 30
+  resourceWood 31
   drinkCanEmpty 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCcreateBundles "BasicCampingKit" "bundleFarm" "some basic things to quickly set a tiny camp with shelter and cook a bit" "${astr[@]}"

@@ -39,7 +39,7 @@ source ./srcCfgGenericToImport.sh
 #egrep "[#]help" $0
 
 function FUNCerrorExit() {
-  read -p ERROR_HitAKeyToExit -n 1
+  read -p "FUNCerrorExit: HitAKeyToExit" -n 1
   exit $1
 }
 
@@ -129,8 +129,8 @@ tail -n +$((nTail+1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l
 if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
   : ${bSkipMeld:=false} #help
   if ! $bSkipMeld;then 
-    echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
-    if ! meld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+    #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
+    if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
       echo "ERROR: aborted."
       FUNCerrorExit 1
     fi
