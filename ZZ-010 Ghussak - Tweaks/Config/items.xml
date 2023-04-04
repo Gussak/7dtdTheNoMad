@@ -330,7 +330,7 @@
       <property name="CustomIconTint" value="128,150,150"/>
       <property name="DescriptionKey" value="dkGSKNoteInfoDevice"/>
     </item>
-    <item name="startNewGameItemsByGussak" help="will enable CraftBundles cvars once. WORKAROUND: this one is important on a just started game, to let the big inventory 160 slots be synchronized preventing new items from being dropped randomly">
+    <item name="GSKTRFirstSpawnBundle" help="will enable CraftBundles cvars once. WORKAROUND: this one is important on a just started game, to let the big inventory 160 slots be synchronized preventing new items from being dropped randomly">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="DescriptionKey" value="dkGSKStarterKit"/>
       <property class="Action0">
@@ -448,8 +448,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTeslaEnergyBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 6 diff items" value="GSKTeslaTeleport,GSKTeslaTeleportToSky,modGSKEnergyThorns,NightVisionBattery,NightVisionBatteryStrong,NVBatteryCreate"/>
-        <property name="Create_item_count" value="1,1,1,16,2,1"/>
+        <property name="Create_item" help="it has 9 diff items" value="ammoJunkTurretRegular,gunBotT2JunkTurret,GSKTeslaTeleport,GSKTeslaTeleportToSky,modGSKEnergyThorns,modGSKTeslaTeleport,NightVisionBattery,NightVisionBatteryStrong,NVBatteryCreate"/>
+        <property name="Create_item_count" value="200,1,1,1,1,1,16,2,1"/>
       </property>
     </item>
     <!-- HELPGOOD:GENCODE:createBundles.sh: TeslaEnergy Schematics -->
@@ -879,19 +879,13 @@
     </item>
   </append>
   <append xpath="/items">
-    <item name="NVBatteryCreate" help="lvl1 car battery will let u create 2 strong NV (40 weak nv). lvl6 will be 4 strong nv.">
+    <item name="GSKDbgNVBatteryCreate" help="lvl1 car battery with full energy using the charger post will let u create 2 strong NV (40 weak nv). lvl6 will be 4 strong nv.">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
       <property name="CustomIcon" value="carBattery"/>
-      <property name="CustomIconTint" value="ffff00"/>
-      <property name="CreativeMode" value="Player"/>
-      <property name="CustomIconTint" value="180,255,120"/>
-      <property name="CreativeMode" value="Player"/>
-      <property name="DescriptionKey" value="dkNVBatteryCreate"/>
+      <property name="CustomIconTint" value="60,120,40"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreateDbg"/>
       <property name="Stacknumber" value="1"/>
-      <property name="NoScrapping" value="true"/>
-      <property name="SellableToTrader" value="false"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="60"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="1200"/>
@@ -918,6 +912,49 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
       </effect_group>
     </item>
+    <item name="NVBatteryCreate">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="60,120,40"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreate"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="60"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NVBatteryCreate,NightVisionBattery"/>
+        <property name="Create_item_count" value="1,1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+      </effect_group>
+    </item>
+    <item name="NVBatteryCreateStrong">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="60,120,100"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreateStrong"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NVBatteryCreate,NightVisionBatteryStrong"/>
+        <property name="Create_item_count" value="1,1"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="1200"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+      </effect_group>
+    </item>
     <item name="GSKTheNoMadCreateRespawnBundle" help="on death free item's helper">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
@@ -942,7 +979,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKForgeCraftingSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -950,7 +987,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKExploringBundle -->
@@ -960,7 +997,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperExploring" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperExploring" operation="GT" value="0"/>
         <property name="Create_item" value="GSKExploringBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -968,7 +1005,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperExploring" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploring" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKExploringSchematicsBundle -->
@@ -979,7 +1016,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperExploringSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperExploringSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKExploringSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -987,7 +1024,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperExploringSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploringSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKCombatWeaponsBundle -->
@@ -997,7 +1034,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperCombatWeapons" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="GT" value="0"/>
         <property name="Create_item" value="GSKCombatWeaponsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1005,7 +1042,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperCombatWeapons" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKCombatWeaponsSchematicsBundle -->
@@ -1016,7 +1053,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKCombatWeaponsSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1024,7 +1061,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKCombatArmorBundle -->
@@ -1034,7 +1071,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperCombatArmor" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="GT" value="0"/>
         <property name="Create_item" value="GSKCombatArmorBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1042,7 +1079,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperCombatArmor" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKTeslaEnergyBundle -->
@@ -1052,7 +1089,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperTeslaEnergy" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperTeslaEnergy" operation="GT" value="0"/>
         <property name="Create_item" value="GSKTeslaEnergyBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1060,7 +1097,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperTeslaEnergy" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperTeslaEnergy" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKTeslaEnergySchematicsBundle -->
@@ -1071,7 +1108,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKTeslaEnergySchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1079,7 +1116,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKHealingBundle -->
@@ -1089,7 +1126,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperHealing" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperHealing" operation="GT" value="0"/>
         <property name="Create_item" value="GSKHealingBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1097,7 +1134,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperHealing" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealing" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKHealingSchematicsBundle -->
@@ -1108,7 +1145,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperHealingSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperHealingSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKHealingSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1116,7 +1153,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperHealingSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKFarmingBundle -->
@@ -1126,7 +1163,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperFarming" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperFarming" operation="GT" value="0"/>
         <property name="Create_item" value="GSKFarmingBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1134,7 +1171,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperFarming" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperFarming" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKFarmingSchematicsBundle -->
@@ -1145,7 +1182,7 @@
       <property name="CustomIconTint" value="64,64,220"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperFarmingSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperFarmingSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKFarmingSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1153,7 +1190,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperFarmingSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperFarmingSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKBasicCampingKitBundle -->
@@ -1163,7 +1200,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperBasicCampingKit" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperBasicCampingKit" operation="GT" value="0"/>
         <property name="Create_item" value="GSKBasicCampingKitBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1171,7 +1208,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperBasicCampingKit" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperBasicCampingKit" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKMinimalSurvivalKitBundle -->
@@ -1181,7 +1218,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="GT" value="0"/>
         <property name="Create_item" value="GSKMinimalSurvivalKitBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1189,7 +1226,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKSomeSchematicsBundle -->
@@ -1199,7 +1236,7 @@
       <property name="CustomIconTint" value="64,64,64"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="bGSKRespawnItemsBundleHelperSomeSchematics" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperSomeSchematics" operation="GT" value="0"/>
         <property name="Create_item" value="GSKSomeSchematicsBundle"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
@@ -1207,15 +1244,14 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="bGSKRespawnItemsBundleHelperSomeSchematics" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperSomeSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-    <item name="NightVisionBattery">
-      <property name="DescriptionKey" value="dkNightVisionBattery"/>
+    <item name="NightVisionBatteryBase">
       <property name="HoldType" value="31"/>
       <property name="CustomIcon" value="carBattery"/>
-      <property name="CustomIconTint" value="00ff00"/>
+      <property name="CustomIconTint" value="0,255,0"/>
       <property name="Tags" value="junk"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
@@ -1232,33 +1268,29 @@
         <property name="Use_time" value="0.25"/>
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
+    </item>
+    <item name="NightVisionBattery">
+      <property name="Extends" value="NightVisionBatteryBase"/>
+      <property name="DescriptionKey" value="dkNightVisionBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryCharge"/>
       </effect_group>
     </item>
     <item name="NightVisionBatteryStrong">
+      <property name="Extends" value="NightVisionBatteryBase"/>
       <property name="DescriptionKey" value="dkNightVisionBatteryStrong"/>
-      <property name="CustomIcon" value="carBattery"/>
       <property name="CustomIconTint" value="0,255,255"/>
-      <property name="Tags" value="junk"/>
-      <property name="HoldType" value="31"/>
-      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapLeadLarge"/>
-      <property name="Stacknumber" value="60"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="30"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="0.5"/>
-        <property name="Use_time" value="0.5"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeStrong"/>
+      </effect_group>
+    </item>
+    <item name="NightVisionBatterySuperOvercharge">
+      <property name="Extends" value="NightVisionBatteryBase"/>
+      <property name="DescriptionKey" value="dkNightVisionBatterySuperOvercharge"/>
+      <property name="CustomIconTint" value="220,255,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeSuperOvercharge"/>
       </effect_group>
     </item>
   </append>
@@ -1483,7 +1515,7 @@
       <property name="DescriptionKey" value="dkGSKRespawnFreeBundlesLimitCfg"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="subtract" value="1">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKFreeBundlesRemaining" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>

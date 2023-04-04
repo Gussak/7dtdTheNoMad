@@ -61,7 +61,7 @@ function FUNCcraftBundle() {
   
   local lstrColor="64,64,64";if $lbLightColor;then lstrColor="90,90,90";fi
   local lstrColor="64,64,64";if $lbSchematic;then lstrColor="64,64,220";fi
-  local lstrCvar="bGSKRespawnItemsBundleHelper${lstrBundleShortName}"
+  local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   local lstrCraftBundleID="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
@@ -71,7 +71,7 @@ function FUNCcraftBundle() {
       <property name="CustomIconTint" value="'"${lstrColor}"'" />
       <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle" />
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="Equals" value="1" />
+        <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="GT" value="0" />
         <property name="Create_item" value="'"${lstrBundleID}"'" />
         <property name="Create_item_count" value="1" />
         <property name="Delay" value="0.25" />
@@ -79,16 +79,16 @@ function FUNCcraftBundle() {
         <property name="Sound_start" value="nightvision_toggle" />
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="'"${lstrCvar}"'" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="'"${lstrCvar}"'" operation="add" value="-1"/>
       </effect_group>
     </item>'
   strXmlCraftBundleCreateRecipesXml+='
     <recipe name="'"${lstrCraftBundleID}"'" count="1"></recipe>'
   # not using onSelfDied anymore, unnecessary
   strXmlCraftBundleCreateBuffsXml+='
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="set" value="1"/>'
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, this can be crafted for free (search for '"'"'CB:'"'"')and opened once (once per death), so you will not need to rush respawn in your bed to be near your dropped backpack, be careful when trying to recover it to not die again. If you think that opening this full kit again will make things too easy, just do not open it (or at least do not open all the sub-bundles if this is the top bundle). These bundles (=1) were not opened yet this life: '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. So you wont need to rush respawn in your bed near the backpack. Read the description before opening the bundle, try to open only when you need it. These are the remaining amount you can open for each: Main={cvar(iGSKFreeBundlesRemaining:0)}, '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${lstrCraftBundleID},\"${strModName}CB:${lstrBundleShortName}\"")
