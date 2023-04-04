@@ -34,12 +34,14 @@
 #set -Eeu
 #trap 'read -p ERROR_HitAKeyToContinue -n 1' ERR
 #trap 'echo WARN_CtrlC_Pressed_ABORTING;exit 1' INT
+#if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
 source ./srcCfgGenericToImport.sh
+#fi
 
 #egrep "[#]help" $0
 
 function FUNCerrorExit() {
-  read -p "FUNCerrorExit: HitAKeyToExit" -n 1
+  read -p "FUNCerrorExit:${strScriptName}: HitAKeyToExit" -n 1
   exit $1
 }
 
@@ -55,7 +57,9 @@ fi
 strFlPatch="$1";shift #help file containing only the changes section to be updated, only the contents between the begin/end tokens. will be consumed (trashed) after used.
 strFlToPatch="$1";shift #help file to be patched
 #strComment="$1";shift #he lp 
-ls -l "$strFlPatch" "$strFlToPatch"
+if ! ls -l "$strFlPatch" "$strFlToPatch";then
+  echo "InputFilesMissing.";FUNCerrorExit 1
+fi
 
 strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
 if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";FUNCerrorExit 1;fi

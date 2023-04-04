@@ -32,6 +32,8 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+#: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
+export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
 export strScriptName="`basename "$0"`";declare -p strScriptName >&2 #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -exec bash`
 
 bNoChkErrOnExitPls=false
@@ -48,7 +50,10 @@ function CFGFUNCerrorChk() {
   fi
 };export -f CFGFUNCerrorChk
 function CFGFUNCtrash() {
-  if [[ -f "${1-}" ]];then trash "$1";fi
+  if [[ -f "${1-}" ]];then 
+    echo "(CFG)TRASHING: $1" >&2
+    trash "$1";
+  fi
 };export -f CFGFUNCtrash
 function CFGFUNCmeld() { 
   local lbSIGINTonMeld=false
@@ -66,10 +71,22 @@ function CFGFUNCmeld() {
   echo "(CFG)AcceptingChanges: meld $@" >&2
   return 0
 };export -f CFGFUNCmeld
-echo "(CFG)Use --help alone to show this script help." >&2
-if [[ "${1-}" == --help ]];then CFGFUNCshowHelp;exit 0;fi
 
-if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
+echo "(CFG)PARAMS: $@"
+#if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;fi #help
+#echo "(CFG)Use --help alone to show this script help." >&2
+
+ps -o ppid,pid,cmd
+declare -p strScriptName strScriptParentList
+#if [[ -n "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
+  #ps -o ppid,pid,cmd
+  ##pstree -p $$
+  #echo "(CFG)WARNING: calling this script '${strScriptName}' (strScriptParentList='$strScriptParentList') that also uses the CFG file!!!" >&2
+  ##echo "(CFG)ERROR: if calling another script that also uses the CFG file, it must be called in a subshell!" >&2
+  ##exit 1
+#fi
+
+#if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
   
   trap 'read -p "(CFG)TRAP:ERROR=$?: Hit a key to continue" -n 1&&:;bNoChkErrOnExitPls=true;exit' ERR
@@ -87,22 +104,26 @@ if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];t
   export strFlGenBuf="Config/buffs.xml"
 
   export strGenTmpSuffix=".GenCode.UpdateSection.TMP"
-
-  CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
-  CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
-  CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
-  CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
-  CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
-  CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
   
-  export strCfgFlDBToImportOnChildShellFunctions="`mktemp`" #help this contains all arrays marked to export. PUT ALL SUCH ARRAYS BEFORE including/loading this cfg file!
+  if [[ "${1-}" == --gencodeTrashLast ]];then
+    CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
+  fi
+  
+  if [[ ! -f "${strCfgFlDBToImportOnChildShellFunctions-}" ]];then
+    export strCfgFlDBToImportOnChildShellFunctions="`mktemp`" #help this contains all arrays marked to export. PUT ALL SUCH ARRAYS BEFORE including/loading this cfg file!
+  fi
   strTmp345987623="`export |egrep "[-][aA]x"`"&&:
   if [[ -n "$strTmp345987623" ]];then
     echo "$strTmp345987623" >>"$strCfgFlDBToImportOnChildShellFunctions"
   fi
   
-  export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
-fi
+  #export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
+#fi
 
 # keep at the end
 echo -n "" >&2 #this is to prevent error value returned from missing files to be trashed above or anything else irrelevant

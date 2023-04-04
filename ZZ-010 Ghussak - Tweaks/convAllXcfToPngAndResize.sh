@@ -8,7 +8,7 @@
 function FUNCconv() {
   strScriptScale="(gimp-image-scale-full image 160 160 INTERPOLATION-CUBIC)"
 
-  # this code was copied from https://stackoverflow.com/a/5846727/1422630 and adapted to fit here. it may have an update there!
+  # https://stackoverflow.com/a/5846727/1422630 (that code was adapted to fit here)
   gimp -n -i -b - <<EOF
   (let* ( (file's (cadr (file-glob "*.xcf" 1))) (filename "") (image 0) (layer 0) )
     (while (pair? file's) 

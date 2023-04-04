@@ -35,16 +35,23 @@
 #strScriptName="`basename "$0"`"
 
 #strModName="The NoMad"
-source ./srcCfgGenericToImport.sh
-
-#help first run w/o params and make it sure all is ok
-#help then run each param alone to get the code to place where it is required
+#echo $LINENO
+#if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
+source ./srcCfgGenericToImport.sh --gencodeTrashLast
+#source ./srcCfgGenCodeInitToImport.sh
+#fi
+#echo $LINENO
+#he lp first run w/o params and make it sure all is ok
+#he lp then run each param alone to get the code to place where it is required
 
 : ${bRomanTitleIndex:=true} #help
 
 #export bShowFullFold=true
 bGenAll=true #help will run all options in a good order and exit, just run this script w/o parameter for this to kick in
-if [[ "${1-}" == "--help" ]];then egrep "[#]help" $0;exit;fi #help w/o params will generate them all in a loop
+#if [[ "${1-}" == "--help" ]];then egrep "[#]help" $0;exit;fi #h elp w/o params will generate them all in a loop
+#declare -p LINENO
+if [[ "${1-}" == "--help" ]];then CFGFUNCshowHelp;exit 0;fi #help w/o params will generate them all in a loop
+#declare -p LINENO
 : ${bDebug:=false} #help
 export bDebug
 if [[ "${1-}" == "-D" ]];then bDebug=true;fi #help show debug info
