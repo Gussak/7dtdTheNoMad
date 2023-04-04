@@ -134,7 +134,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="addBuff" buff="buffRainScrEffect"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
@@ -197,7 +197,7 @@
   </append>
   <append xpath="/buffs/buff[       @name='buffInjuryAbrasion' or       @name='buffInjuryBleeding' or       @name='buffInjuryConcussion' or       @name='buffInjuryCrippled01' or       @name='buffInjuryKnockdown01' or       @name='buffInjuryKnockdown02' or       @name='buffInjuryStunned00' or       @name='buffInjuryStunned01' or       @name='buffInjuryStunned02' or       @name='buffInjuryStunned03' or       @name='buffInjuryUnconscious'     ]">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffStart" action="addBuff" buff="buffHiredNPCdamageArmor81">
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffHiredNPCdamageArmor81">
         <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
@@ -217,8 +217,8 @@
         <requirement name="HasBuff" buff="buffRadSuitLegs"/>
         <requirement name="HasBuff" buff="buffRadSuitMask"/>
       </requirements>
-      <triggered_effect trigger="onSelfBuffStart" action="addBuff" buff="buffGSKDmgHazmatSuit1"/>
-      <triggered_effect trigger="onSelfBuffStack" action="addBuff" buff="buffGSKDmgHazmatSuit1"/>
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKDmgHazmatSuit1"/>
+      <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKDmgHazmatSuit1"/>
     </effect_group>
   </append>
   <append xpath="/buffs">
@@ -541,7 +541,7 @@
       </effect_group>
     </buff>
     <buff name="buffGSKPlayerTooManyHiredNPCsSlowDown" hidden="true">
-      <damage_type value="stun"/>
+      <damage_type value="Stun"/>
       <stack_type value="replace"/>
       <duration value="6"/>
       <effect_group>
@@ -1643,7 +1643,7 @@
       </effect_group>
       <effect_group>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="@fGSKShieldDmgResAdd"/>
-        <passive_effect name="ElementalDamageResist" operation="base_add" value="@fGSKShieldDmgResAdd" tags="electrical"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="@fGSKShieldDmgResAdd" tags="Electrical"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyThornsEnabled" hidden="true" remove_on_death="false">
@@ -2053,7 +2053,7 @@
         <requirement name="CVarCompare" cvar="iGSKCalcPRCtrlWork" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPercShortTmpOUT" operation="set" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPercToShortTmpIN" operation="set" value="@fGSKNPCarmorDmgPercent"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="addBuff" buff="buffGetPercRound"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGetPercRound"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCalcPRCtrlWork" operation="set" value="1"/>
       </effect_group>
       <effect_group>
@@ -2083,7 +2083,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKCalcPRCtrlGlobal" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKCalcPRCtrlWork" operation="Equals" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="addBuff" buff="buffGSKCalcPercRoundNPC_fGSKNPCarmorDmgPercent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcPercRoundNPC_fGSKNPCarmorDmgPercent"/>
       </effect_group>
     </buff>
     <buff name="buffGetPercRound" hidden="true" remove_on_death="false">
@@ -2783,7 +2783,7 @@
   </append>
   <append xpath="/buffs">
     <buff name="buffNVBattChargerPost" description_key="dkbuffNVBattChargerPost" tooltip_key="tkbuffNVBattChargerPost" icon="ui_game_symbol_electric_power" name_key="nkbuffNVBattChargerPost" icon_color="0,255,0">
-      <damage_type value="electrical"/>
+      <damage_type value="Electrical"/>
       <stack_type value="ignore"/>
       <duration value="0.05" help="min real delay to block buff seems 0.5s?"/>
       <effect_group>
@@ -3037,7 +3037,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathMiasmaLvl" operation="set" value="5">
           <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="6400"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="addBuff" buff="buffDysenteryCatchDrink">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDysenteryCatchDrink">
           <requirement name="!HasBuff" buff="buffDysenteryMain"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKNearDeathMiasmaLvl"/>
         </triggered_effect>
@@ -3352,12 +3352,12 @@
   </append>
   <append xpath="/buffs/buff[@name='buffInjuryConcussion']">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffStart" action="addBuff" buff="buffGSKStrongDmgHeadHL"/>
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKStrongDmgHeadHL"/>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffArmSprainedCHTrigger']">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffStart" action="addBuff" buff="buffGSKStrongDmgArmWL"/>
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKStrongDmgArmWL"/>
     </effect_group>
   </append>
   <append xpath="/buffs">
@@ -3480,7 +3480,7 @@
       </effect_group>
     </buff>
     <buff name="buffGSKPlantSpikes" icon="ui_game_symbol_critical" icon_color="255,0,0" icon_blink="true">
-      <damage_type value="bloodloss"/>
+      <damage_type value="BloodLoss"/>
       <damage_source value="Internal"/>
       <stack_type value="ignore"/>
       <duration value="1"/>
@@ -3574,7 +3574,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistDur" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="addBuff" buff="buffGSKRadResistWork12"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRadResistWork12"/>
       </effect_group>
     </buff>
     <buff name="buffGSKRadResistWork12" icon="7dtdRadShield" name_key="RadiationResistance" description_key="RadiationResistanceDesc" remove_on_death="false">
@@ -3842,7 +3842,7 @@
       <update_rate value="1"/>
       <!-- HELPGOOD: these buffs change the near death levels -->
       <effect_group help="hazard blood loss">
-        <triggered_effect trigger="onSelfBuffUpdate" action="addBuff" buff="buffGSKHazardousWBloodLoss31">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss31">
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.14"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="0.0000002" help="it is like about 1.73 percent per day (0.0000002*3600*24), natural regeneration"/>
