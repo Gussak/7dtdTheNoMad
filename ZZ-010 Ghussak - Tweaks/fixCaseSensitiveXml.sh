@@ -367,7 +367,7 @@ for str in "${astrActions[@]}";do astrRegexAndFixList+=("$str" "$str");done
 for str in "${astrReqs[@]}";do astrRegexAndFixList+=("$str" "$str");done
 for str in "${astrETC[@]}";do astrRegexAndFixList+=("$str" "$str");done
 
-source ./srcCfgGenericToImport.sh --gencodeTrashLast #place exported arrays above this include
+source ./libSrcCfgGenericToImport.sh --gencodeTrashLast #place exported arrays above this include
 
 #TODO read all correct case sensitive things from vanilla xml cfg files and use them here in a loop!
 

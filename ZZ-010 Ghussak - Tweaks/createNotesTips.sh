@@ -37,8 +37,8 @@
 #strModName="The NoMad"
 #echo $LINENO
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
-source ./srcCfgGenericToImport.sh --gencodeTrashLast
-#source ./srcCfgGenCodeInitToImport.sh
+source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+#source ./libSrcCfgGenericToImport.sh
 #fi
 #echo $LINENO
 #he lp first run w/o params and make it sure all is ok
@@ -145,7 +145,7 @@ bDontIncTitleIndexOnce=true
 #trash "${strFlGenLoc}${strGenTmpSuffix}"&&:
 #trash "${strFlGenRec}${strGenTmpSuffix}"&&:
 #trash "${strFlGenXml}${strGenTmpSuffix}"&&:
-#source ./gencodeInitSrcCONFIG.sh
+#source ./libSrcCfgGenericToImport.sh
 
 function FUNCfinishPreviousNote() {
   if $bDebug;then echo "$FUNCNAME()";fi

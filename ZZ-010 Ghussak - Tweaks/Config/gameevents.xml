@@ -34,7 +34,7 @@
       <action class="Explode">
         <property name="phase" value="25"/>
         <property name="target_group" value="gnHostiles"/>
-        <property name="blast_power" value="75"/>
+        <property name="blast_power" value="150" param1="iBlastPower"/>
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="99999"/>
@@ -47,7 +47,7 @@
         <property name="invert" value="true"/>
       </requirement>
       <variable name="iXplodRangeBlock" value="2"/>
-      <variable name="iXplodRangeEnt" value="4"/>
+      <variable name="iXplodRangeEnt" value="2" help="was 4 but is too easy"/>
       <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
     </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAroundExtra" template="eventGSKTeleExplodeAroundBase">
@@ -55,10 +55,12 @@
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
         <property name="invert" value="false"/>
       </requirement>
-      <variable name="iXplodRangeBlock" value="3"/>
-      <variable name="iXplodRangeEnt" value="6"/>
+      <variable name="iXplodRangeBlock" value="2" help="was 3 but is too easy or messy for normal usage"/>
+      <variable name="iXplodRangeEnt" value="2" help="was 6 but is too easy"/>
+      <variable name="iBlastPower" value="350"/>
       <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
     </action_sequence>
+    <!-- HELPGOOD: hero mode is intended to be chaotic -->
     <action_sequence name="eventGSKTeleExplodeAroundHero" template="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
@@ -66,6 +68,7 @@
       </requirement>
       <variable name="iXplodRangeBlock" value="4"/>
       <variable name="iXplodRangeEnt" value="8"/>
+      <variable name="iBlastPower" value="550"/>
       <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKTeslaHero"/>
     </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAroundHeroExtra" template="eventGSKTeleExplodeAroundBase">
@@ -75,6 +78,7 @@
       </requirement>
       <variable name="iXplodRangeBlock" value="8"/>
       <variable name="iXplodRangeEnt" value="12"/>
+      <variable name="iBlastPower" value="850"/>
       <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKTeslaHero"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTele">
@@ -85,11 +89,11 @@
       </action>
       <action class="CallGameEvent">
         <property name="phase" value="10"/>
-        <property name="game_events" value="eventGSKTeleExplodeAround" param1="xplod" help="only activates on non-teslaHero mode"/>
+        <property name="game_events" value="eventGSKTeleExplodeAround" param1="xplod" help="only activates on NON-teslaHero mode"/>
       </action>
       <action class="CallGameEvent">
-        <property name="phase" value="10"/>
-        <property name="game_events" value="eventGSKTeleExplodeAroundExtra" param1="xplod" help="only activates on non-teslaHero mode"/>
+        <property name="phase" value="11"/>
+        <property name="game_events" value="eventGSKTeleExplodeAroundExtra" param1="xplod" help="only activates on NON-teslaHero mode"/>
       </action>
       <action class="CallGameEvent">
         <property name="phase" value="15"/>

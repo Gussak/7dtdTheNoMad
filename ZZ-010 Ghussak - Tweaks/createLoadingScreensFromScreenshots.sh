@@ -31,7 +31,7 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ./srcCfgGenericToImport.sh
+source ./libSrcCfgGenericToImport.sh
 
 IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd ../../Screenshots/;realpath *.jpg)
 for strFl in "${astrFlList[@]}";do

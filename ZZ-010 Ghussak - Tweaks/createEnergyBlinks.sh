@@ -49,7 +49,7 @@ egrep "[#]help" $0
 #trash "${strFlGenRec}${strGenTmpSuffix}"&&:
 #trash "${strFlGenXml}${strGenTmpSuffix}"&&:
 #trash "${strFlGenBuf}${strGenTmpSuffix}"&&:
-source ./srcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
 strFl="./Config/buffs.xml"
 astrGetVarValueList=(

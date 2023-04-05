@@ -28,7 +28,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#this is a config file
+#this is a config file and a import library
 
 #PREPARE_RELEASE:REVIEWED:OK
 
@@ -73,7 +73,7 @@ function CFGFUNCmeld() {
 };export -f CFGFUNCmeld
 
 echo "(CFG)PARAMS: $@"
-#if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;fi #help
+if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;exit 1;fi #help show help info. And this exits with error to prevent calling scripts to continue!
 #echo "(CFG)Use --help alone to show this script help." >&2
 
 ps -o ppid,pid,cmd
@@ -94,8 +94,19 @@ declare -p strScriptName strScriptParentList
   trap 'CFGFUNCerrorChk' EXIT
   
   export strModName="[NoMad]" #as short as possible
-  export strModNameForIDs="TheNoMadOverhaul"
-
+  export strModNameForIDs="TheNoMadOverhaul" #and for backup filenames, must contain only a-zA-Z_
+  if ! [[ "$strModNameForIDs" =~ ^[a-zA-Z0-9_]*$ ]];then echo "(CFG)ERROR: invalid chars at strModNameForIDs='$strModNameForIDs'";exit 1;fi
+  
+  #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh
+  
+  : ${strCFGGameFolder:="`cd ../..;pwd`"} #help configure the game folder
+  
+  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"} #help
+  export strCFGGeneratedWorldsFolder
+  : ${strCFGGeneratedWorldTNM:="East Nikazohi Territory"} #help
+  export strCFGGeneratedWorldTNM
+  export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
+  
   export strFlGenLoc="Config/Localization.txt"
   export strFlGenLoa="Config/loadingscreen.xml"
   export strFlGenEve="Config/gameevents.xml"

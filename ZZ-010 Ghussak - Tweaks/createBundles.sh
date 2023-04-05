@@ -33,7 +33,7 @@
 
 #strScriptName="`basename "$0"`"
 
-source ./srcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
 #strModName="The NoMad"
 #strModNameForIDs="TheNoMadOverhaul"

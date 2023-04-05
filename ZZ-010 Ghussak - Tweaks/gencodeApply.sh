@@ -35,7 +35,7 @@
 #trap 'read -p ERROR_HitAKeyToContinue -n 1' ERR
 #trap 'echo WARN_CtrlC_Pressed_ABORTING;exit 1' INT
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
-source ./srcCfgGenericToImport.sh
+source ./libSrcCfgGenericToImport.sh
 #fi
 
 #egrep "[#]help" $0

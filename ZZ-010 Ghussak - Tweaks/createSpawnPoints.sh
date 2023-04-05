@@ -37,7 +37,7 @@ egrep "[#]help" $0
 
 #help after death, player seems to respawn always on the nearest spawnpoints.xml if having no bed placed
 
-source ./gencodeInitSrcCONFIG.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
 strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
