@@ -77,6 +77,7 @@ astrBuffBNList=(
   "buffGSKRadRemover"
   "buffGSKRadResistWork"
   "buffGSKSnakePoisonWork"
+  "buffGSKTeslaExplodeExtra"
   "buffGSKTeslaOverchargeDmg"
   "buffGSKWornArmor"
   "buffHiredNPCdamageArmor"

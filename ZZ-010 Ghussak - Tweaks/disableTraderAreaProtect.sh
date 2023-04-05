@@ -6,8 +6,8 @@ IFS=$'\n' read -d '' -r -a astrFlList < <(ls ../../Data/Prefabs/POIs/trader_*.xm
 for strFl in "${astrFlList[@]}";do
   strFlBkp="${strFl}.`date +'%Y_%m_%d-%H_%M_%S'`.bkp"
   cp -v "$strFl" "$strFlBkp"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaProtect']/@value" -v "1,0,1" "$strFl"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportSize']/@value" -v "1,1,1" "$strFl"
+  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaProtect']/@value" -v "0,0,0" "$strFl"
+  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportSize']/@value" -v "0,0,0" "$strFl"
   xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportCenter']/@value" -v "0,0,0" "$strFl"
   colordiff "$strFlBkp" "$strFl"
 done
