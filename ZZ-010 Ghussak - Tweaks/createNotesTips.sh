@@ -138,15 +138,30 @@ iNormalNoteCount=0
 iAllNewNoteTot=0
 bDontIncTitleIndexOnce=true
 
+strNewJournalEntry=""
+iJournalEntryIndex=1
+astrJournalEntryIDList=()
+
 #strFlGenLoc="Config/Localization.txt"
-#strFlGenXml="Config/items.xml"
+#strFlGenIte="Config/items.xml"
 #strFlGenRec="Config/recipes.xml"
 #strGenTmpSuffix=".GenCode.TMP"
 #trash "${strFlGenLoc}${strGenTmpSuffix}"&&:
 #trash "${strFlGenRec}${strGenTmpSuffix}"&&:
-#trash "${strFlGenXml}${strGenTmpSuffix}"&&:
+#trash "${strFlGenIte}${strGenTmpSuffix}"&&:
 #source ./libSrcCfgGenericToImport.sh
 
+function FUNCfinishPreviousJournalEntry() {
+  if [[ -n "$strTitle" ]];then
+    local lstrID="jeGSKTRTNMNewGameTip${iJournalEntryIndex}"
+    echo "${lstrID}_title,\"${strModName}JN:${strTitle}\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
+    echo "${lstrID},\"${strNewJournalEntry}\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
+    astrJournalEntryIDList+=("$lstrID")
+  fi
+  # init next
+  strNewJournalEntry=""
+  ((iJournalEntryIndex++))&&:
+}
 function FUNCfinishPreviousNote() {
   if $bDebug;then echo "$FUNCNAME()";fi
   #local lbResetTitleIndex="$1"
@@ -193,7 +208,7 @@ function FUNCfinishPreviousNote() {
       <!-- HELPGOOD:GENCODE:${strScriptName}: $strNewNoteName -->
       <property name=\"Extends\" value=\"GSKNoteSNGBase\" />
       <property name=\"DescriptionKey\" value=\"dk${strNewNoteID}\" />
-    </item>"  |tee -a "${strFlGenXml}${strGenTmpSuffix}"
+    </item>"  |tee -a "${strFlGenIte}${strGenTmpSuffix}"
     fi
     if $bDebug || $bGenRec;then
       echo "    <recipe name=\"${strNewNoteID}\" count=\"1\"/>" |tee -a "${strFlGenRec}${strGenTmpSuffix}"
@@ -231,6 +246,7 @@ for strFullLine in "${astrFullLineList[@]}";do
     if $bDebug;then declare -p astrSpecialNoteNames;fi
     if $bDebug;then declare -p astrNormalNoteNames;fi
     #declare -p astrNormalNoteNames astrSpecialNoteNames
+    FUNCfinishPreviousJournalEntry
     FUNCfinishPreviousNote
     #declare -p astrNormalNoteNames astrSpecialNoteNames
     
@@ -253,6 +269,7 @@ for strFullLine in "${astrFullLineList[@]}";do
     #strTitle="${strFullLine:1}"
   else
     if [[ "${strFullLine}" =~ .*\".* ]];then echo "${strFullLine}. ERROR: invalid character found on description's text: \"";exit 1;fi
+    strNewJournalEntry+="${strFullLine}\n"
     IFS=$'\n' read -d '' -r -a astrFoldLineList < <(echo "$strFullLine" |fold -s -w $nWidth)&&:
     if(( (iLineCount+"${#astrFoldLineList[@]}") > nMaxLines ));then # look ahead if will overlow the note limit
       FUNCfinishPreviousNote
@@ -273,6 +290,7 @@ for strFullLine in "${astrFullLineList[@]}";do
   fi
   #declare -p astrNormalNoteNames astrSpecialNoteNames
 done
+FUNCfinishPreviousJournalEntry
 FUNCfinishPreviousNote #finishes last note
 #FUNCinitNextNote false
 #declare -p astrNormalNoteNames astrSpecialNoteNames
@@ -287,7 +305,7 @@ if $bGenXml;then
         <property name="Create_item" help="it has '"${iNormalNoteCount}"' notes" value="'"${strNormalNoteIDs}"'" />
         <property name="Create_item_count" value="'"${strNormalNoteCounts}"'" />
       </property>
-    </item>' |tee -a "${strFlGenXml}${strGenTmpSuffix}"
+    </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   echo '    <!-- HELPGOOD:GENCODE:'"${strScriptName}"' -->
     <item name="GSKTRSpecialNotesBundle">
       <property name="Extends" value="GSKTRBaseBundle" />
@@ -297,7 +315,7 @@ if $bGenXml;then
         <property name="Create_item" help="it has '"${iSpecialNoteCount}"' notes" value="'"${strSpecialNoteIDs}"'" />
         <property name="Create_item_count" value="'"${strSpecialNoteCounts}"'" />
       </property>
-    </item>' |tee -a "${strFlGenXml}${strGenTmpSuffix}"
+    </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
 fi
 
 function FUNCnoteTitlesUnique() {
@@ -342,7 +360,12 @@ if $bGenLoc;then
   ./gencodeApply.sh "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 fi 
 if $bGenXml;then
-  ./gencodeApply.sh "${strFlGenXml}${strGenTmpSuffix}" "${strFlGenXml}"
+  ./gencodeApply.sh "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+  
+  for strJournalEntryID in "${astrJournalEntryIDList[@]}";do
+    echo '    <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddJournalEntry" journal="'"${strJournalEntryID}"'"/>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
+  done
+  ./gencodeApply.sh --subTokenId "JOURNALENTRIES" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 fi 
 if $bGenRec;then
   ./gencodeApply.sh "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
