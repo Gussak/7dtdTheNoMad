@@ -36,6 +36,8 @@ egrep "[#]help" $0
 #set -x
 set -Eeu
 
+source ./libSrcCfgGenericToImport.sh
+
 : ${strPathToUserData:="./_7DaysToDie.UserData"} #help relative to game folder (just put a symlink to it there)
 strModPath="`pwd`"
 strBN="$strModPath/.`basename "$0"`.TMP."
@@ -272,7 +274,7 @@ if [[ "$strResp" == y ]];then
   (
     cd ../..;
     ls -l "$strFlGenPrefabsOrig" "$strFlPatched"
-    cp -v "$strFlGenPrefabsOrig" "${strFlGenPrefabsOrig}.`date +'%Y_%m_%d-%H_%M_%S_%N'`.bkp"
+    cp -v "$strFlGenPrefabsOrig" "${strFlGenPrefabsOrig}.`date +"${strCFGDtFmt}"`.bkp"
     cp -vf "$strFlPatched" "$strFlGenPrefabsOrig"
     trash -v "$strFlPatched"
   )

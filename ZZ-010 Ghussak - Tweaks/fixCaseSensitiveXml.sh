@@ -407,7 +407,7 @@ function FUNCfix() {
     declare -p lstrFl lstrFlNew
     #echo "INFO: lastrCmdSed: ${lastrCmdSed[@]}" >&2
     if CFGFUNCmeld "${lstrFl}" "$lstrFlNew";then
-      mv -v "${lstrFl}" "${lstrFl}.`date +"%Y_%m_%d-%H_%M_%S_%N"`.bkp"
+      mv -v "${lstrFl}" "${lstrFl}.`date +"${strCFGDtFmt}"`.bkp"
       mv -v "$lstrFlNew" "${lstrFl}"
     fi
   else

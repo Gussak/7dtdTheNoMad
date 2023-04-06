@@ -31,19 +31,37 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh
 
-#set -x
-#IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
-IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
-for strFl in "${astrFlList[@]}";do
-  if [[ -L "$strFl" ]];then continue;fi
-  strBN="`basename "$strFl"`"
-  if ! ln -sf "$strFl" "LoadingScreens/$strBN";then
-    cp -f "$strFl" "LoadingScreens/$strBN"
+function FUNCunin() {
+  local lstrFlOrigBkp="$1"
+  CFGFUNCinfo " ====================== Working with: ${lstrFlOrigBkp} ======================"
+  local lstrFlDest="${lstrFlOrigBkp%${strCFGOriginalBkpSuffix}}"
+  if [[ -f "${lstrFlDest}" ]];then
+    CFGFUNCinfo "Uninstalling modded file: ${lstrFlDest}"
+    local lstrFlDestTmp="${lstrFlDest}.ThisModFileWillBeSentToTrashBy_${strModNameForIDs}.tmp"
+    CFGFUNCexec cp -v "${lstrFlDest}" "$lstrFlDestTmp"
+    #CFGFUNCexec rm -v "${lstrFlDest}"
+  else
+    CFGFUNCinfo "This file should exist: ${lstrFlDest}. No problem tho, restoring the original backup now."
   fi
-  echo '      <tex file="@modfolder:LoadingScreens/'"$strBN"'" />' >>"${strFlGenLoa}${strGenTmpSuffix}"
-  echo -n .
-done
+  CFGFUNCexec cp -vf "${lstrFlOrigBkp}" "${lstrFlDest}"
+  #CFGFUNCexec mv -v "${lstrFlOrigBkp}" "${lstrFlDest}"
+  CFGFUNCtrash "${lstrFlOrigBkp}" "$lstrFlDestTmp"
+};export -f FUNCunin
 
-./gencodeApply.sh "${strFlGenLoa}${strGenTmpSuffix}" "${strFlGenLoa}"
+CFGFUNCinfo "If nothing shows below, it means nothing was found to be uninstalled (reverted to original/pre-existing)."
+find "${strCFGGameFolder}/" \
+  -iname "*${strCFGOriginalBkpSuffix}" -exec bash -c 'FUNCunin "{}"' \;
+find "${strCFGGeneratedWorldsFolder}/" \
+  -iname "*${strCFGOriginalBkpSuffix}" -exec bash -c 'FUNCunin "{}"' \;
+
+
+
+
+
+
+
+
+
+

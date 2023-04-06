@@ -141,7 +141,7 @@ if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
   fi
   # "overwrite" the old with new file
   #trash "${strFlToPatch}.OLD"&&:
-  mv -v "${strFlToPatch}" "${strFlToPatch}.`date +'%Y_%m_%d-%H_%M_%S'`.OLD"
+  mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
   mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
   echo "PATCHING expectedly WORKED! now test it!"
 else
