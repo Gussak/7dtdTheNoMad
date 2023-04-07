@@ -21,7 +21,6 @@
         <property name="phase" value="10"/>
         <property name="group_name" value="gnHostiles"/>
         <property name="max_distance" value="3" param1="iXplodRangeEnt" help="equal entity_radius with entity_damage GT 0"/>
-        <property name="y_height" value="5"/>
       </action>
       <action class="Explode" help="disintegrates blocks to let a safe teleport, but to be fun also! xD">
         <property name="phase" value="20"/>
@@ -38,24 +37,24 @@
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="99999"/>
-        <property name="entity_radius" value="2" param1="iXplodRangeEnt"/>
+        <property name="entity_radius" value="1" param1="iXplodRangeEnt"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAround" template="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
-        <property name="invert" value="true"/>
+        <property name="invert" value="true" help="NotHasBuff buffGSKTeslaExplodeExtra2"/>
       </requirement>
-      <variable name="iXplodRangeBlock" value="2"/>
-      <variable name="iXplodRangeEnt" value="2" help="was 4 but is too easy"/>
+      <variable name="iXplodRangeBlock" value="1"/>
+      <variable name="iXplodRangeEnt" value="1" help="was 4 but is too easy"/>
       <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
     </action_sequence>
     <action_sequence name="eventGSKTeleExplodeAroundExtra" template="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
-        <property name="invert" value="false"/>
+        <property name="invert" value="false" help="HasBuff buffGSKTeslaExplodeExtra2"/>
       </requirement>
-      <variable name="iXplodRangeBlock" value="2" help="was 3 but is too easy or messy for normal usage"/>
+      <variable name="iXplodRangeBlock" value="1" help="was 3 but is too easy or messy for normal usage"/>
       <variable name="iXplodRangeEnt" value="2" help="was 6 but is too easy"/>
       <variable name="iBlastPower" value="350"/>
       <variable name="bNotHasHeroBuff" value="true" help="true means NotHasBuff buffGSKTeslaHero"/>
@@ -64,7 +63,7 @@
     <action_sequence name="eventGSKTeleExplodeAroundHero" template="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
-        <property name="invert" value="true"/>
+        <property name="invert" value="true" help="NotHasBuff buffGSKTeslaExplodeExtra2"/>
       </requirement>
       <variable name="iXplodRangeBlock" value="4"/>
       <variable name="iXplodRangeEnt" value="8"/>
@@ -74,34 +73,77 @@
     <action_sequence name="eventGSKTeleExplodeAroundHeroExtra" template="eventGSKTeleExplodeAroundBase">
       <requirement class="HasBuff">
         <property name="buff_name" value="buffGSKTeslaExplodeExtra2"/>
-        <property name="invert" value="false"/>
+        <property name="invert" value="false" help="HasBuff buffGSKTeslaExplodeExtra2"/>
       </requirement>
       <variable name="iXplodRangeBlock" value="8"/>
       <variable name="iXplodRangeEnt" value="12"/>
       <variable name="iBlastPower" value="850"/>
       <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKTeslaHero"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTele">
+    <action_sequence name="_eventGSKTeslaTele">
       <action class="Teleport">
         <property name="phase" value="7"/>
         <property name="target_position" value="0,0,7" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
-      <action class="CallGameEvent">
-        <property name="phase" value="10"/>
+      <action class="Explode" help="disintegrates blocks to let a safe teleport, but to be fun also! xD">
+        <property name="phase" value="8"/>
+        <property name="blast_power" value="75"/>
+        <property name="block_damage" value="99999"/>
+        <property name="block_radius" value="1"/>
+        <property name="entity_damage" value="0"/>
+        <property name="entity_radius" value="0"/>
+      </action>
+      <!-- HELPGOOD: testing if the above explosion is called faster? uncomment this if not!
+      <action class="CallGameEvent">   <property name="phase" value="10" />
         <property name="game_events" value="eventGSKTeleExplodeAround" param1="xplod" help="only activates on NON-teslaHero mode"/>
       </action>
-      <action class="CallGameEvent">
-        <property name="phase" value="11"/>
+      <action class="CallGameEvent">   <property name="phase" value="11" />
         <property name="game_events" value="eventGSKTeleExplodeAroundExtra" param1="xplod" help="only activates on NON-teslaHero mode"/>
       </action>
-      <action class="CallGameEvent">
-        <property name="phase" value="15"/>
+      <action class="CallGameEvent">   <property name="phase" value="15" />
         <property name="game_events" value="eventGSKTeleExplodeAroundHero" param1="xplod" help="only activates on teslaHero mode"/>
       </action>
-      <action class="CallGameEvent">
-        <property name="phase" value="16"/>
+      <action class="CallGameEvent">   <property name="phase" value="16" />
         <property name="game_events" value="eventGSKTeleExplodeAroundHeroExtra" param1="xplod" help="only activates on teslaHero mode"/>
+      </action>
+-->
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTele">
+      <action class="Teleport">
+        <property name="phase" value="1"/>
+        <property name="target_position" value="0,0,7" param1="v3Dir"/>
+        <property name="offset_type" value="Relative"/>
+      </action>
+      <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL. disintegrates blocks to let a safe teleport">
+        <property name="phase" value="2"/>
+        <property name="blast_power" value="75"/>
+        <property name="block_damage" value="99999"/>
+        <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
+        <property name="entity_damage" value="0"/>
+        <property name="entity_radius" value="0"/>
+      </action>
+      <action class="AddEntitiesToGroup">
+        <property name="phase" value="3"/>
+        <property name="group_name" value="gnHostiles"/>
+        <property name="max_distance" value="2" param1="iXplodRangeEnt"/>
+      </action>
+      <action class="Explode" help="kill any hostile entity at teleport destination">
+        <property name="phase" value="4"/>
+        <property name="target_group" value="gnHostiles"/>
+        <property name="blast_power" value="0"/>
+        <property name="block_damage" value="0"/>
+        <property name="block_radius" value="0"/>
+        <property name="entity_damage" value="99999"/>
+        <property name="entity_radius" value="33" help="will only affect selected gnHostiles tho"/>
+      </action>
+      <action class="Explode" help="this is like a sonic damage">
+        <property name="phase" value="5"/>
+        <property name="blast_power" value="500" param1="iBlastPower"/>
+        <property name="block_damage" value="0"/>
+        <property name="block_radius" value="0"/>
+        <property name="entity_damage" value="30"/>
+        <property name="entity_radius" value="5"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleNo" template="eventGSKTeslaTele">
@@ -128,16 +170,64 @@
     <action_sequence name="eventGSKTeslaTeleSE" template="eventGSKTeslaTele">
       <variable name="v3Dir" value="6,0,-6"/>
     </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNoUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,7,7"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSoUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,7,-7"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleWeUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-7,7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleEaUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="7,7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNWUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,7,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNEUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,7,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSWUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,7,-6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSEUp" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,7,-6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNoDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,-7,7"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSoDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,-7,-7"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleWeDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-7,-7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleEaDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="7,-7,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNWDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,-7,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleNEDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,-7,6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSWDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="-6,-7,-6"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleSEDw" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="6,-7,-6"/>
+    </action_sequence>
     <action_sequence name="eventGSKTeslaTeleUp" template="eventGSKTeslaTele">
       <variable name="v3Dir" value="0,7,0"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele">
       <variable name="v3Dir" value="0,-7,0"/>
     </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleInFront" template="eventGSKTeslaTeleNo" help="North is always in front of the player, this is special because is the most used"/>
     <action_sequence name="eventGSKTeslaTele00" template="eventGSKTeslaTele">
       <variable name="v3Dir" value="0,0,0"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleInFront" template="eventGSKTeslaTeleNo" help="North is always in front of the player"/>
     <action_sequence name="eventGSKBaseTele">
       <action class="Delay">
         <property name="phase" value="10"/>

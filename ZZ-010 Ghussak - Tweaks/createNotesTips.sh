@@ -240,7 +240,7 @@ for strFullLine in "${astrFullLineList[@]}";do
   if [[ "${strFullLine:0:1}" == "#"   ]];then continue;fi #skip empty lines
   if [[ "${strFullLine}" =~ ^\ *$     ]];then continue;fi #skip empty lines
   
-  if [[ "${strFullLine}" =~ ^\ *_\ *$ ]];then strFullLine="\n";fi #single underscore alone becomes newline
+  if [[ "${strFullLine}" =~ ^\ *_\ *$ ]];then strFullLine="\n";fi #single underscore alone becomes newline TODO: this is not working well for journal entries! becomes \n\n (see below *1). Notes are bugging like that too!
   if $bDebug;then echo "strFullLine='$strFullLine'";fi
   if [[ "${strFullLine:0:1}" == "+" ]];then #title indicator
     if $bDebug;then declare -p astrSpecialNoteNames;fi
@@ -269,7 +269,10 @@ for strFullLine in "${astrFullLineList[@]}";do
     #strTitle="${strFullLine:1}"
   else
     if [[ "${strFullLine}" =~ .*\".* ]];then echo "${strFullLine}. ERROR: invalid character found on description's text: \"";exit 1;fi
-    strNewJournalEntry+="${strFullLine}\n"
+    strNewJournalEntry+="${strFullLine}\n" #TODO problem: becomes \n\n (see above *1)
+    #if ! [[ "${strFullLine}" =~ ^[\\]n$ ]];then
+      #strNewJournalEntry+="\n"
+    #fi
     IFS=$'\n' read -d '' -r -a astrFoldLineList < <(echo "$strFullLine" |fold -s -w $nWidth)&&:
     if(( (iLineCount+"${#astrFoldLineList[@]}") > nMaxLines ));then # look ahead if will overlow the note limit
       FUNCfinishPreviousNote

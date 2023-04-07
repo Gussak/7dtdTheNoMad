@@ -101,20 +101,26 @@ function CFGFUNCechoLog() {
   echo "$*" >&2
   echo "$* (Stack ${FUNCNAME[@]})" >>"$strCFGScriptLog"
 };export -f CFGFUNCechoLog
-function CFGFUNCmeld() { #helpf <meldParams>
+function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
   local lbSIGINTonMeld=false
   trap 'lbSIGINTonMeld=true' INT
-  CFGFUNCcleanEcho "WARN: hit ctrl+c to abort, closing meld will accept the patch!!!"
-  meld "$@"&&:;local lnRet=$?
-  if((lnRet!=0));then # (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
-    CFGFUNCechoLog "ERROR=$lnRet: meld $@"
-    return 1;
+  : ${strCFGCompareApp:="meld"} #help here you can configure another app to show differences
+  if which "${strCFGCompareApp}";then
+    CFGFUNCcleanEcho "WARN: hit ctrl+c to abort, closing '${strCFGCompareApp}' will accept the patch!!!"
+    "${strCFGCompareApp}" "$@"&&:;local lnRet=$?
+    if((lnRet!=0));then # (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
+      CFGFUNCechoLog "ERROR=$lnRet: '${strCFGCompareApp}' $@"
+      return 1;
+    fi
+  else
+    colordiff "$@"&&:
+    CFGFUNCprompt -q "WARN: hit ctrl+c to abort, or continue to accept the patch!!!"
   fi
   if $lbSIGINTonMeld;then
-    CFGFUNCcleanEcho "WARN: Ctrl+c pressed while running: meld $@"
+    CFGFUNCcleanEcho "WARN: Ctrl+c pressed while running: '${strCFGCompareApp}' $@"
     return 1;
   fi
-  CFGFUNCcleanEcho "AcceptingChanges: meld $@"
+  CFGFUNCcleanEcho "AcceptingChanges: '${strCFGCompareApp}' $@"
   return 0
 };export -f CFGFUNCmeld
 function CFGFUNCerrorExit() { #helpf [msg]

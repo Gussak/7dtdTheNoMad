@@ -3996,7 +3996,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDir">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1"/>
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LTE" value="11"/>
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="1000"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -4028,7 +4028,13 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportDir"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(1,10)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(1,8)" help="around directions"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="set" value="randomInt(0,2)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTeslaTeleDirUpDownAdd" help="100 is above directions. 200 is below directions"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(0,2)" help="same elevation is +0 = 1 to 8. if it is 8: +1 will become 9 = up dir, +2 will be 10 = down dir">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="100" help="less than 100 is no elevation changes, and will then have this chance to tele just directly above or below."/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="set" value="randomInt(2,10)"/>
@@ -4048,7 +4054,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Tesla Teleport Device mod was too damaged, and exploded!!!"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportDir" remove_on_death="true" hidden="true">
+    <buff name="buffGSKTeslaTeleportDir" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
       <stack_type value="ignore"/>
       <duration value="1.0"/>
       <update_rate value="0.05"/>
@@ -4059,8 +4065,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="0" help="the mayhem loop shall just deplet the battery"/>
         </triggered_effect>
+        <!-- HELPGOOD: Directions around player -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleInFront">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="1" help="North"/>
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="1" help="eventGSKTeslaTeleNo = North"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNE">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="2"/>
@@ -4092,7 +4099,57 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaExplodeExtra2">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="11" help="tele 0,0,0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)"/>
+        <!-- HELPGOOD: Directions around player UP -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNoUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="101"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNEUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="102"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleEaUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="103"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSEUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="104"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSoUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="105"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSWUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="106"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleWeUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="107"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNWUp">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="108"/>
+        </triggered_effect>
+        <!-- HELPGOOD: Directions around player DOWN -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNoDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="201"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNEDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="202"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleEaDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="203"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSEDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="204"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSoDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="205"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleSWDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="206"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleWeDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="207"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNWDw">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="208"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)" help="5 to 10% dmg"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10000"/>
         <!-- HELPGOOD: this always give max float 0.10, why?
@@ -4100,6 +4157,9 @@
 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKDmgTmpTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1000"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
         </triggered_effect>
@@ -5159,7 +5219,7 @@
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPseudoSlowFallTimeout" operation="set" value="3">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPseudoSlowFallTimeout" operation="set" value="3" help="test results provided 50 blocks falldown in 3s">
           <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
