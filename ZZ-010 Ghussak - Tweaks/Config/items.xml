@@ -456,6 +456,20 @@
         <property name="Create_item_count" value="1,1"/>
       </property>
     </item>
+    <!-- HELPGOOD:GENCODE:createBundles.sh: CombatArmorHelmet  -->
+    <item name="GSKCombatArmorHelmetBundle">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="bundleArmorLight"/>
+      <property name="CustomIconTint" value="192,192,192"/>
+      <property name="DescriptionKey" value="dkGSKCombatArmorHelmetBundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourcePaper"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Random_item" value="armorFirefightersHelmet,armorFootballHelmet,armorMilitaryHelmet,armorSwatHelmet"/>
+        <property name="Random_item_count" value="1,1,1,1"/>
+        <property name="Random_count" value="1"/>
+      </property>
+    </item>
     <!-- HELPGOOD:GENCODE:createBundles.sh: CombatArmor  -->
     <item name="GSKCombatArmorBundle">
       <property name="Extends" value="GSKTRBaseBundle"/>
@@ -463,8 +477,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKCombatArmorBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 5 diff items" value="armorSteelHelmet,armorClothJacket,armorClothGloves,armorClothPants,armorClothBoots"/>
-        <property name="Create_item_count" value="1,1,1,1,1"/>
+        <property name="Create_item" help="it has 7 diff items" value="GSKTheNoMadCreateRespawnBundleCombatArmorHelmet,armorClothJacket,armorClothGloves,armorClothPants,armorClothBoots,RepairColdProt,RepairHeatProt"/>
+        <property name="Create_item_count" value="1,1,1,1,1,10,10"/>
       </property>
     </item>
     <!-- HELPGOOD:GENCODE:createBundles.sh: TeslaEnergy  -->
@@ -1099,6 +1113,24 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="-1"/>
       </effect_group>
     </item>
+    <!-- HELPGOOD:Respawn:CreateBundle:GSKCombatArmorHelmetBundle -->
+    <item name="GSKTheNoMadCreateRespawnBundleCombatArmorHelmet" help="on death free items helper">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="bundleArmorLight"/>
+      <property name="CustomIconTint" value="90,90,90"/>
+      <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="GT" value="0"/>
+        <property name="Create_item" value="GSKCombatArmorHelmetBundle"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="-1"/>
+      </effect_group>
+    </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKCombatArmorBundle -->
     <item name="GSKTheNoMadCreateRespawnBundleCombatArmor" help="on death free items helper">
       <property name="Extends" value="GSKTRBaseBundle"/>
@@ -1637,10 +1669,30 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportDebuff"/>
       </effect_group>
     </item>
+    <item name="GSKTeslaSlowFall">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKSlowFallConsumeEnergy"/>
+        <requirement name="CVarCompare" cvar=".bGSKSimpleSlowFall" operation="Equals" value="0"/>
+        <requirement name="NotHasBuff" buff="buffGSKParachuteSQN"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".bGSKSimpleSlowFall" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin" help="to start slow fall gameevents quickly"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="subtract" value="2" help="player has 2s to jump"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKParachuteSQN"/>
+      </effect_group>
+    </item>
     <item name="GSKTeslaTeleportToSky">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="DescriptionKey" value="dkGSKTeslaTeleportToSky"/>
-      <property name="CustomIcon" value="7dtdTeleport" help="was modMeleeStunBatonRepulsor"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
       <property name="CustomIconTint" value="128,180,220"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
@@ -1856,6 +1908,839 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST: PlayerSpawnedInWorld (reason: Died, position: 0, 0, 0): localplayer (this will trigger the script playerRespawnParachuteDaemon.sh)"/>
       </effect_group>
     </item>
+    <!-- HELPGOOD:_AUTOGENCODE_CREATESCREENEFFECTTESTERS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createScreenEffectTesters.sh ===== -->
+    <!-- HELPGOOD: effect: Blur -->
+    <item name="GSKDbgTestScreenEffectBlur">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBlur" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBlur" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Blur"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffBlur"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBlur" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBlur" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Blur"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffBlur"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBlur" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Bright -->
+    <item name="GSKDbgTestScreenEffectBright">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBright" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBright" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Bright"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffBright"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBright" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffBright" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Bright"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffBright"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffBright" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Cold2 -->
+    <item name="GSKDbgTestScreenEffectCold2">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffCold2" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffCold2" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Cold2"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffCold2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffCold2" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffCold2" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Cold2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffCold2"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffCold2" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Dark -->
+    <item name="GSKDbgTestScreenEffectDark">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDark" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDark" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Dark"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDark"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDark" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDark" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Dark"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDark"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDark" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Distortion -->
+    <item name="GSKDbgTestScreenEffectDistortion">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDistortion" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDistortion" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Distortion"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDistortion"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDistortion" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDistortion" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Distortion"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDistortion"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDistortion" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Drunk -->
+    <item name="GSKDbgTestScreenEffectDrunk">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDrunk" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDrunk" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Drunk"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDrunk"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDrunk" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffDrunk" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Drunk"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffDrunk"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffDrunk" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Greyscale -->
+    <item name="GSKDbgTestScreenEffectGreyscale">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffGreyscale" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffGreyscale" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Greyscale"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffGreyscale"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffGreyscale" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffGreyscale" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Greyscale"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffGreyscale"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffGreyscale" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Hot -->
+    <item name="GSKDbgTestScreenEffectHot">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Hot"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffHot"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Hot"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffHot"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Hot2 -->
+    <item name="GSKDbgTestScreenEffectHot2">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot2" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot2" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Hot2"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffHot2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot2" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffHot2" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Hot2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffHot2"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffHot2" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Infected -->
+    <item name="GSKDbgTestScreenEffectInfected">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffInfected" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffInfected" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Infected"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffInfected"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffInfected" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffInfected" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Infected"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffInfected"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffInfected" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: NightVision -->
+    <item name="GSKDbgTestScreenEffectNightVision">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffNightVision" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffNightVision" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:NightVision"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffNightVision"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffNightVision" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffNightVision" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:NightVision"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffNightVision"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffNightVision" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Radiation -->
+    <item name="GSKDbgTestScreenEffectRadiation">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffRadiation" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffRadiation" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Radiation"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffRadiation"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffRadiation" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffRadiation" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Radiation"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffRadiation"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffRadiation" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Stealth -->
+    <item name="GSKDbgTestScreenEffectStealth">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffStealth" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffStealth" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Stealth"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffStealth"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffStealth" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffStealth" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Stealth"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffStealth"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffStealth" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: Vibrant -->
+    <item name="GSKDbgTestScreenEffectVibrant">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrant" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrant" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:Vibrant"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffVibrant"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrant" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrant" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:Vibrant"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffVibrant"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrant" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: effect: VibrantDeSat -->
+    <item name="GSKDbgTestScreenEffectVibrantDeSat">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrantDeSat" operation="add" value="0.20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrantDeSat" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:ScrEff:VibrantDeSat"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffVibrantDeSat"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrantDeSat" operation="subtract" value="0.20"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKDbgScrEffVibrantDeSat" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="LogMessage" message="GSK:ScrEff:VibrantDeSat"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CVarLogValue" cvar=".fGSKDbgScrEffVibrantDeSat"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".20" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".40" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".60" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity=".80" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value=".80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="1.00" fade="0.1">
+          <requirement name="CVarCompare" cvar=".fGSKDbgScrEffVibrantDeSat" operation="Equals" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD: ResetAllEffects -->
+    <item name="GSKDbgTestScreenEffectResetAllEffects">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Bright" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Cold2" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Dark" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Greyscale" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Hot2" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Stealth" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="0.1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="0.1"/>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD:_AUTOGENCODE_CREATESCREENEFFECTTESTERS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createScreenEffectTesters.sh ===== -->
     <item name="GSKDbgParachuteSQNbuffGSKParachuteSQNEvent">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
@@ -3267,6 +4152,12 @@
   <append xpath="/items/item[not(contains(@name,'Master')) and (starts-with(@name,'armorSteel') or starts-with(@name,'armorIron') or starts-with(@name,'armorScrap'))]">
     <effect_group tiered="false">
       <passive_effect name="HypothermalResist" operation="base_add" value="-2"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[not(contains(@name,'Master')) and starts-with(@name,'armorScrap')]" help="to make crafting iron armor interesting">
+    <effect_group name="scrap armor">
+      <passive_effect name="NoiseMultiplier" operation="perc_add" value=".5"/>
+      <display_value name="dNoiseMultiplier" value=".5"/>
     </effect_group>
   </append>
   <!-- HELPGOOD: CODEGEN:createTeslaShieldMultPerArmor.sh -->

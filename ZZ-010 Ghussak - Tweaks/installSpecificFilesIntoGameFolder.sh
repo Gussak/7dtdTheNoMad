@@ -160,6 +160,8 @@ FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/spawn
 echo >&2
 CFGFUNCinfo "=========================== RUNNING PATCHERS ============================="
 if ! CFGFUNCprompt -q "The next steps will run scripts to patch files. Do you want to continue?";then
+  CFGFUNCinfo "The patches can be specifically undone by passing a filter like: ./uninstallByRestoringOriginalFilesBackups.sh trader #this would undo the trader's patch below"
+  CFGFUNCinfo "The patches can be undone manually too by trashing the replaced file and removing from the backup files the added suffix: ${strCFGOriginalBkpSuffix}"
   bCFGDryRun=true
   bCFGInteractive=false
 fi

@@ -7,6 +7,8 @@ But it is already playable, and if you would like to help (new things or patches
 .
 ##############################  OVERHAUL(WIP) ##############################    
 This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (difficult, or insanely difficult but not impossible) gameplay.    
+This mod is intended for players that are used with the vanilla gameplay already and want an extra challenge.
+Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.
 Please follow the server configs below and look for tactical hints on in-game notes on how to survive (but I may have left something in text files or config files' comments inside help="..." properties on xml files).    
 .    
 ############################## MOD FEATURES OVERVIEW: ##############################   
@@ -97,6 +99,10 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
         It controls the mouse and move all items in a single row.  
         I dont think it will run in cygwin as it needs to use `xdotool`.  
         So if someone knows how to implement these commands on windows, your contribution will be welcome :)  
+.  
+    XML tweaking:
+.  
+      This buff 'buffGSKConfigGeneric' has several settings that may have an in-game activator to configure. If not, you may try changing values there directly, but do that with caution (search the logic context they are used at to tweak the values properly). If you think things improved, propose a patch for review :).
 .  
 .  
 .  

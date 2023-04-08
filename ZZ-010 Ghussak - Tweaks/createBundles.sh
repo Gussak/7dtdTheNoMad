@@ -51,9 +51,14 @@ strXmlCraftBundleCreateBuffsXml=""
 strDKCraftAvailableBundles=""
 astrCraftBundleNameList=()
 
-function FUNCcraftBundle() {
-  local lbLightColor=false;if [[ "$1" == "--lightcolor" ]];then lbLightColor=true;shift;fi
-  local lbSchematic=false;if [[ "$1" == "--schematic" ]];then lbSchematic=true;shift;fi
+function FUNCprepareCraftBundle() {
+  local lbLightColor=false
+  local lbSchematic=false
+  while [[ "${1:0:2}" == "--" ]];do
+    if [[ "$1" == "--lightcolor" ]];then lbLightColor=true;shift;fi
+    if [[ "$1" == "--schematic" ]];then lbSchematic=true;shift;fi
+  done
+  local lbIgnTopList="$1";shift
   local lstrBundleID="$1";shift
   local lstrBundleShortName="$1";shift
   local lstrIcon="$1";shift
@@ -64,10 +69,10 @@ function FUNCcraftBundle() {
   if $lbSchematic;then ((liB+=130));fi
   local lstrColor="$liR,$liG,$liB"
   local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
-  local lstrCraftBundleID="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
+  strFUNCprepareCraftBundle_CraftBundleID_OUT="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
-    <item name="'"${lstrCraftBundleID}"'" help="on death free items helper">
+    <item name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" help="on death free items helper">
       <property name="Extends" value="GSKTRBaseBundle" />
       <property name="CustomIcon" value="'"${lstrIcon}"'" />'"${lstrType}"'
       <property name="CustomIconTint" value="'"${lstrColor}"'" />
@@ -85,7 +90,7 @@ function FUNCcraftBundle() {
       </effect_group>
     </item>'
   strXmlCraftBundleCreateRecipesXml+='
-    <recipe name="'"${lstrCraftBundleID}"'" count="1"></recipe>'
+    <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"></recipe>'
   # not using onSelfDied anymore, unnecessary
   strXmlCraftBundleCreateBuffsXml+='
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
@@ -93,24 +98,26 @@ function FUNCcraftBundle() {
     strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After u die, '"'"'CB:'"'"' items can be crafted for free. U dont need to rush to your dropped backpack. Open each bundle only when u need it. Respawning adds 1 to the remaining bundles u can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
-  astrCraftBundleNameList+=("${lstrCraftBundleID},\"${strModName}CB:${lstrBundleShortName}\"")
+  astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
   if $lbSchematic;then
-    astrBundlesSchematics+=("${lstrCraftBundleID}" 1)
+    astrBundlesSchematics+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT}" 1)
   else
-    astrCBItemsLeastLastOne+=("${lstrCraftBundleID}" 1)
+    if ! $lbIgnTopList;then
+      astrCBItemsLeastLastOne+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT}" 1)
+    fi
   fi
 }
 
-function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT vars are to avoid subshell. if the bundle contains any of these items, specific code shall be added
+function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT vars are to avoid subshell. if the bundle contains any of these items, specific code shall be added
   local strItemID="$1"
   
-  strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT=""
+  strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
   #strFUNCspecificItemsCode_AddDesc=""
   
   local fDmg=0.75
   if [[ "$strItemID" == "apparelNightvisionGoggles" ]];then
-    bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
+    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="'$fDmg'" />
@@ -122,8 +129,8 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
       </effect_group>'
   fi
   if [[ "$strItemID" == "meleeToolFlashlight02" ]];then
-    bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
+    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0" >
           <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="'$fDmg'" />
@@ -143,8 +150,8 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
       </effect_group>'
   fi
   if [[ "$strItemID" == "GSKTeslaTeleport" ]];then
-    bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
+    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
@@ -157,14 +164,16 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
   fi
   
   #if [[ "$strItemID" == "GSKTheNoMadOverhaulBundleNoteBkp" ]];then
-    #strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: allows opening the CreateBundle items -->
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: allows opening the CreateBundle items -->
       #<effect_group name="allows opening the CreateBundle items, hint item: '"$strItemID"'" tiered="false">
         #<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRespawnNoMadBundlesAllowCrafting"/>
       #</effect_group>'
   #fi
 }
 
-function FUNCcreateBundlePart() {
+function FUNCprepareBundlePart() {
+  local lbIgnTopList="$1";shift
+  local lbRnd="$1";shift
   local lstrBundleName="$1";shift
   local lstrBundlePartName="$1";shift
   local lstrIcon="$1";shift
@@ -180,11 +189,11 @@ function FUNCcreateBundlePart() {
     exit 1
   fi
   
-  local lstrBundleID="GSK${lstrBundleName}${lstrBundlePartName}Bundle"
-  astrDKAndDescList+=("${lstrBundleID},\"${strModName}BD:${lstrBundleName} ${lstrBundlePartName}\"")
+  strFUNCprepareBundlePart_BundleID_OUT="GSK${lstrBundleName}${lstrBundlePartName}Bundle"
+  astrDKAndDescList+=("${strFUNCprepareBundlePart_BundleID_OUT},\"${strModName}BD:${lstrBundleName} ${lstrBundlePartName}\"")
   
-  bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT=false
-  strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT=""
+  bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=false
+  strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
   local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode=""
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
     if((i>0));then lstrSep=",";fi;
@@ -193,8 +202,8 @@ function FUNCcreateBundlePart() {
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
     lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lastrItemAndCountList[i]} ${lastrItemAndCountList[i+1]}"
-    FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "${lastrItemAndCountList[i]}"
-    lstrSpecifiItemsCode+="${strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT}"
+    FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "${lastrItemAndCountList[i]}"
+    lstrSpecifiItemsCode+="${strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT}"
     #if [[ "${lstrBundleDesc:0:2}" != "dk" ]];then
       #if [[ -n "${strFUNCspecificItemsCode_AddDesc}" ]];then
         #: 
@@ -202,11 +211,11 @@ function FUNCcreateBundlePart() {
     #fi
   done;
   local lstrAddDesc=""
-  if $bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT;then
+  if $bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT;then
     lstrAddDesc+="\n The devices in this bundle are damaged but still usable."
   fi
   
-  local lstrBundleDK="dk${lstrBundleID}"
+  local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
   if [[ "${lstrBundleDesc}" == "--autoDK" ]];then
     lstrBundleDesc="$lstrBundleDK"
   fi
@@ -228,11 +237,13 @@ function FUNCcreateBundlePart() {
   if [[ "$lstrBundlePartName" == "$strSchematics" ]];then
     #lstrIcon="bundleBooks"
     lstrType='<property name="ItemTypeIcon" value="book" />'
-    #astrBundlesSchematics+=("$lstrBundleID" 1)
+    #astrBundlesSchematics+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
     lastrOpt+=(--lightcolor)
     lastrOpt+=(--schematic)
   else
-    astrBundlesItemsLeastLastOne+=("$lstrBundleID" 1)
+    if ! $lbIgnTopList;then
+      astrBundlesItemsLeastLastOne+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
+    fi
     #astrCBItemsLeastLastOne
   fi
   if [[ -z "${lstrIcon}" ]];then
@@ -246,25 +257,45 @@ function FUNCcreateBundlePart() {
     #strIcon="cntStorageGeneric"
   #fi
   echo '    <!-- HELPGOOD:GENCODE:'"${strScriptName}: ${lstrBundleName} ${lstrBundlePartName}"' -->
-    <item name="'"${lstrBundleID}"'">
+    <item name="'"${strFUNCprepareBundlePart_BundleID_OUT}"'">
       <property name="Extends" value="GSKTRBaseBundle" />
       <property name="CustomIcon" value="'"${lstrIcon}"'" />'"${lstrType}"'
       <property name="CustomIconTint" value="'"$lstrColor"'" />
       <property name="DescriptionKey" value="'"${lstrBundleDK}"'" />
-      <property class="Action0">
-        <property name="Create_item" help="it has '$((${#lastrItemAndCountList[@]}/2))' diff items" value="'"${lstrItems}"'" />
-        <property name="Create_item_count" value="'"${lstrCounts}"'" />
+      <property class="Action0">' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
+  if $lbRnd;then
+    #TODO: the Create_item seems required to not cause problems?
+    echo '
+        <property name="Create_item" value="resourcePaper" />
+        <property name="Create_item_count" value="0" />
+        <property name="Random_item" value="'"${lstrItems}"'" />
+        <property name="Random_item_count" value="'"${lstrCounts}"'" />
+        <property name="Random_count" value="1" />' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
+  else
+    echo '
+        <property name="Create_item" help="it has '"$((${#lastrItemAndCountList[@]}/2))"' diff items" value="'"${lstrItems}"'" />
+        <property name="Create_item_count" value="'"${lstrCounts}"'" />' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
+  fi
+  echo '
       </property>'"${lstrSpecifiItemsCode}"'
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
-    FUNCcraftBundle ${lastrOpt[*]} "${lstrBundleID}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}"
+    FUNCprepareCraftBundle ${lastrOpt[*]} "$lbIgnTopList" "${strFUNCprepareBundlePart_BundleID_OUT}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}"
   fi
 }
 
-function FUNCcreateBundles() {
-  local lbCB=true;if [[ "$1" == --noCB ]];then shift;lbCB=false;fi
-  local lstrColor="192,192,192";if [[ "$1" == --color ]];then shift;lstrColor="$1";shift;fi #help <lstrColor>
+function FUNCprepareBundles() {
+  local lbRnd=false
+  local lbCB=true
+  local lstrColor="192,192,192"
+  local lbIgnTopList=false
+  while [[ "${1:0:2}" == "--" ]];do
+    if [[ "$1" == --ignoreTopList ]];then shift;lbIgnTopList=true;fi
+    if [[ "$1" == --choseRandom ]];then shift;lbRnd=true;fi
+    if [[ "$1" == --noCB ]];then shift;lbCB=false;fi
+    if [[ "$1" == --color ]];then shift;lstrColor="$1";shift;fi #help <lstrColor>
+  done
   
   local lstrBundleName="$1";shift
   local lstrIcon="$1";shift
@@ -276,25 +307,25 @@ function FUNCcreateBundles() {
   declare -p lastrItemAndCountList |tr '[' '\n'
   
   strNextPartName=""
-  astrPart=()
+  local lastrItemAndCountListPart=()
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
     strNm="${lastrItemAndCountList[i]}"
     #declare -p strNm
     if [[ "${strNm}" =~ ^${strPartToken}.* ]];then
-      if((${#astrPart[*]}>0));then
-        FUNCcreateBundlePart "$lstrBundleName" "" "${lastrParams[@]}" "${astrPart[@]}"
+      if((${#lastrItemAndCountListPart[*]}>0));then
+        FUNCprepareBundlePart "$lbIgnTopList" "$lbRnd" "$lstrBundleName" "" "${lastrParams[@]}" "${lastrItemAndCountListPart[@]}"
       fi
       # init next part
-      astrPart=()
+      lastrItemAndCountListPart=()
       strNextPartName="`echo "$strNm" |cut -d: -f2`"
       continue
     fi
     local liItemCount="${lastrItemAndCountList[i+1]}"
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
-    astrPart+=("${lastrItemAndCountList[i]}" "${liItemCount}")
+    lastrItemAndCountListPart+=("${lastrItemAndCountList[i]}" "${liItemCount}")
   done
-  if [[ -n "$strNextPartName" ]] && ((${#astrPart[*]}>0));then
-    FUNCcreateBundlePart "$lstrBundleName" "${strNextPartName}" "${lastrParams[@]}" "${astrPart[@]}"
+  if [[ -n "$strNextPartName" ]] && ((${#lastrItemAndCountListPart[*]}>0));then
+    FUNCprepareBundlePart "$lbIgnTopList" "$lbRnd" "$lstrBundleName" "${strNextPartName}" "${lastrParams[@]}" "${lastrItemAndCountListPart[@]}"
   fi
 }
 
@@ -306,7 +337,7 @@ function FUNCcreateBundles() {
 
 #astr=( #TEMPLATE
 #  "$strSCHEMATICS_BEGIN_TOKEN" 0
-#);FUNCcreateBundles "" "${astr[@]}"
+#);FUNCprepareBundles "" "${astr[@]}"
 
 astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
@@ -315,7 +346,7 @@ astr=(
   toolAnvilSchematic 1 
   toolBellowsSchematic 1 
   toolForgeCrucibleSchematic 1 
-);FUNCcreateBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
+);FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
 
 astr=(
   apparelNightvisionGoggles 1
@@ -341,7 +372,7 @@ astr=(
   modGunFlashlightSchematic 1
   vehicleBicycleChassisSchematic 1
   vehicleBicycleHandlebarsSchematic 1
-);FUNCcreateBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho). Some of these equipment are severely damaged and wont last long w/o repairs tho." "${astr[@]}"
+);FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho). Some of these equipment are severely damaged and wont last long w/o repairs tho." "${astr[@]}"
 
 astr=( #TEMPLATE
   ammo9mmBulletBall 998
@@ -356,19 +387,34 @@ astr=( #TEMPLATE
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookRangersExplodingBolts 1
   thrownDynamiteSchematic 1
-);FUNCcreateBundles "CombatWeapons" "bundleMachineGun" "use this if you are not having a reasonable chance against mobs" "${astr[@]}"
+);FUNCprepareBundles "CombatWeapons" "bundleMachineGun" "use this if you are not having a reasonable chance against mobs" "${astr[@]}"
 
+strCombatArmorHelp="Use this if you are taking too much damage."
+astrCombatArmorCreateBundleList=()
 astr=( #TEMPLATE
-  armorSteelHelmet 1
-  #armorClothHat 1
+  #armorMiningHelmet 1 #not good as will give a easy headlight...
+  armorFirefightersHelmet 1
+  armorFootballHelmet 1
+  armorMilitaryHelmet 1
+  armorSwatHelmet 1 # a good helmet is essential against ranged raiders
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles --ignoreTopList --choseRandom "CombatArmorHelmet" "bundleArmorLight" "${strCombatArmorHelp} You should use this anyway otherwise ranged raiders become unreasonably difficult." "${astr[@]}";astrCombatArmorCreateBundleList+=("$strFUNCprepareCraftBundle_CraftBundleID_OUT" 1)
+astr=( #TEMPLATE
+  "${astrCombatArmorCreateBundleList[@]}"
+  ##armorSteelHelmet 1
+  ##armorMilitaryHelmet 1
+  #armorSwatHelmet 1 # a good helmet is essential against ranged raiders
+  ##armorClothHat 1
   armorClothJacket 1
   armorClothGloves 1
   #armorScrapGloves 1
   #armorScrapLegs 1
   armorClothPants 1
   armorClothBoots 1
+  RepairColdProt 10
+  RepairHeatProt 10
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles "CombatArmor" "bundleArmorLight" "Use this if you are taking too much damage. You should use this anyway otherwise ranged raiders become unreasonable difficult." "${astr[@]}"
+);FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
 astr=(
   ammoJunkTurretRegular 200
@@ -387,7 +433,7 @@ astr=(
   bookTechJunkie5Repulsor 1
   generatorbankSchematic 1
   gunBotT2JunkTurretSchematic 1
-);FUNCcreateBundles "TeslaEnergy" "bundleBatteryBank" "Use this if want to start using and crafting tesla mods, this will increase your combat survival chances." "${astr[@]}"
+);FUNCprepareBundles "TeslaEnergy" "bundleBatteryBank" "Use this if want to start using and crafting tesla mods, this will increase your combat survival chances." "${astr[@]}"
 
 astr=(
   bucketRiverWater 1
@@ -417,7 +463,7 @@ astr=(
   drugHerbalAntibioticsSchematic 1
   foodBoiledMeatBundleSchematic 1
   foodBoiledMeatSchematic 1
-);FUNCcreateBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
+);FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
 
 astr=(
   farmPlotBlockVariantHelper 13
@@ -426,7 +472,7 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   plantedBlueberry1Schematic 1
   plantedMushroom1Schematic 1
-);FUNCcreateBundles "Farming" "bundleFarm" "Use this if you need to be able to harvest and craft antibiotics." "${astr[@]}"
+);FUNCprepareBundles "Farming" "bundleFarm" "Use this if you need to be able to harvest and craft antibiotics." "${astr[@]}"
 
 astr=(
   bedrollBlue 1
@@ -438,7 +484,7 @@ astr=(
   resourceWood 31
   drinkCanEmpty 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles "BasicCampingKit" "bundleTraps" "Some basic things to quickly set a tiny camp with shelter and cook a bit." "${astr[@]}"
+);FUNCprepareBundles "BasicCampingKit" "bundleTraps" "Some basic things to quickly set a tiny camp with shelter and cook a bit." "${astr[@]}"
 
 astr=(
   bedrollBlue 1
@@ -455,12 +501,12 @@ astr=(
   meleeToolTorch 1
   resourceRockSmall    15
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}"
+);FUNCprepareBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}"
 
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles "SomeSchematics" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
+);FUNCprepareBundles "SomeSchematics" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 
 ###################################### KEEP AS LAST ONE!!! ##############################
 astr=(
@@ -480,7 +526,7 @@ astr=(
   "${astrCBItemsLeastLastOne[@]}"
   
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCcreateBundles --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
+);FUNCprepareBundles --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
 
 ################## DESCRIPTIONS ####################
 echo

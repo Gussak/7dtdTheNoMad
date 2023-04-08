@@ -43,7 +43,7 @@ for strFl in "${astrFlList[@]}";do
   #strFlBkp="${strFl}${strCFGOriginalBkpSuffix}"
   #cp -v "$strFl" "$strFlBkp"
   CFGFUNCcreateBackup "${strFl}"
-  #this would make trader non interactive... even the newly spawned ones using the dll: xmlstarlet ed -P -L -u "/prefab/property[@name='TraderArea']/@value" -v "False" "$strFl"
+  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderArea']/@value" -v "False" "$strFl" #TODO ? this would make trader non interactive... even the newly spawned ones using the dll: 
   xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaProtect']/@value" -v "1,1,1" "$strFl"
   xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportSize']/@value" -v "1,1,1" "$strFl"
   #xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportCenter']/@value" -v "0,0,0" "$strFl"
