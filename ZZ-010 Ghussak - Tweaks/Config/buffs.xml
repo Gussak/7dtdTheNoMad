@@ -3321,7 +3321,7 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.30"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.30"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.15"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.20" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
       </effect_group>
@@ -3334,7 +3334,7 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.45"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.45"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.2"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.88" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.40" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
       </effect_group>
@@ -3347,7 +3347,7 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.25"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.92" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
       </effect_group>
@@ -3359,7 +3359,7 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.33"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.96" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="5.0"/>
       </effect_group>
@@ -4323,6 +4323,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDebuff"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaDisableAll" help="this is important because the slow fall trick makes it too difficult to use the inventory"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportToSky"/>
       </effect_group>
     </buff>
@@ -5185,6 +5186,24 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyHL" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyWL" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyNV" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTeslaHero"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKParachuteSQN" icon="ui_game_symbol_candy_oh_shitz" icon_color="128,255,255" hidden="false" remove_on_death="true" description_key="dkbuffGSKRespawnNoFallDmg" name_key="ParachuteSQN" help="this buff uses gameevents to teleport">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -5238,15 +5257,20 @@
       <effect_group help="fall dmg prot">
         <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
         <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="GTE" value="1" help="to the sky"/>
-        <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="@.bGSKFallProtTmMax"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="@.bGSKFallProtTmMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="finalize thru timeout. this must be b4 the finalizations below to keep the fall dmg protection one more loop AFTER the fall impact happens to prevent death">
         <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GTE" value="@.bGSKFallProtTmMax"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKParachuteSQN:RmBuffs"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKFallProtTm"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrugOhShitzDrops"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="10">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="GT" value="10"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKParachuteSQN"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0" help="make it ready for next time"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKSimpleSlowFall" operation="set" value="0" help="make it ready for next time"/>
