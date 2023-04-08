@@ -337,7 +337,7 @@ if $bGenLoc;then
   
   echo "GSKTRNotesBundle,\"${strModName}NT:Survival Notes bundle\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
 #  echo "dkGSKTRNotesBundle,\"Reading them will help you:\n - survive the first week\n - understand the new world\n - understand how to use the new items\nTotal notes: ${iNormalNoteCount}. Notes' names: `FUNCnoteTitlesUnique "${astrNormalNoteNames[@]}"`\nObs.: You dont need to open this bundle, each note can be crafted at anytime or just read at crafting menu, or only open this if you have many free inventory slots or are in a really good safe place.\nPS.: If you ignore these notes, it may become unreasonably difficult to survive. If that happens, restart and read at least combat, explore and defense notes for a better experience!\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
-  echo "dkGSKTRNotesBundle,\"Reading them will help you:\n - survive the first week\n - understand the new world\n - understand how to use the new items\nTotal notes: ${iNormalNoteCount}.\nObs.: You don't need to open this bundle, each note can just be read at crafting menu.\nPS.: I recommend reading at least combat, explore and defense notes for a better experience!\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
+  echo "dkGSKTRNotesBundle,\"Reading them will help you:\n - survive the first week\n - understand the new world\n - understand how to use the new items\nTotal notes: ${iNormalNoteCount}.\nObs.: You don't need to open this bundle, each note can just be read at crafting menu or at journal tips.\nPS.: I recommend reading at least combat, explore and defense notes for a better experience!\"" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
   
   ##INFO Device
      ##|sed -r 's@(\{cvar\()(.*)(:.*\)\})@\2=\1\2\3, @'   \

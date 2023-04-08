@@ -624,6 +624,16 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKRespawnPreventWaterBkp1"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKShowWaterBkp1" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
+      <duration value="0"/>
+      <display_value value="fGSKWaterPercBkp"/>
+      <display_value_key value="{0:0.00}"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp1">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@fGSKWaterPercBkp"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKBkpWaterVal52" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -979,6 +989,10 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3.0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaOverchargeDmg53"/>
+      </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKBattMaxChargeCurrent" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
@@ -1411,9 +1425,9 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaLog"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattAutoUnglitchChance" operation="set" value="0"/>
@@ -3226,6 +3240,8 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <display_value value="iGSKNearDeath"/>
+      <display_value_key value="{0:0.0}/5"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
@@ -3947,20 +3963,20 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleport" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
+    <buff name="buffGSKTeslaTeleportDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <display_value value=".fGSKTeleportDebuffTm"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleport"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportDebuff"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKTeleportDebuffTm" operation="set" value="randomInt(30,90)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="10" help="damages the player when used. The debuffs to speed and jump only happen if duration is &gt;= 4"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="add" value="randomInt(4,6)" help="damages the player when used. The debuffs to speed and jump only happen if duration is &gt;= 4"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffShocked" target="self"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKQuickShock" operation="add" value="0.05">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
@@ -3976,6 +3992,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKQuickShock" operation="set" value="0"/>
       </effect_group>
       <effect_group name="CHECK random teleport">
+        <requirement name="CVarCompare" cvar="iGSKTeleportToSkyCount" operation="GT" value="0" help="protects 1st sky teleport only"/>
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="1000" help="tele relative direction nearby"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="@fGSKDmgSafePercTP" help="u can still trust it up to that dmg limit"/>
@@ -3990,13 +4007,11 @@
       </effect_group>
       <effect_group name="TELEPORT">
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="1000" help="tele relative direction nearby"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportRandomMayhem">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="0" help="Random Mayhem"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDir">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1"/>
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="1000"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -4005,11 +4020,14 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="GTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleport">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,50" operation="LTE" value="@iGSKperkElectrLvl" help="2% chance per perk lvl"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleport">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
           <requirement name="CVarCompare" cvar=".fGSKTeleportDebuffTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0" help="device was unequiped"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -4027,7 +4045,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(1,8)" help="around directions"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="set" value="randomInt(0,2)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="multiply" value="100"/>
@@ -4035,7 +4053,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(0,2)" help="same elevation is +0 = 1 to 8. if it is 8: +1 will become 9 = up dir, +2 will be 10 = down dir">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="100" help="less than 100 is no elevation changes, and will then have this chance to tele just directly above or below."/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="set" value="randomInt(2,10)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="Teleport Mayhem, unequip Teleport mod now!!!"/>
@@ -4054,17 +4072,20 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Tesla Teleport Device mod was too damaged, and exploded!!!"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportDir" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
+    <buff name="buffGSKTeslaTeleportFinalize" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
       <stack_type value="ignore"/>
       <duration value="1.0"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@iGSKTeslaTeleportEnergy"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="0" help="the mayhem loop shall just deplet the battery"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="1000"/>
         <!-- HELPGOOD: Directions around player -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleInFront">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="1" help="eventGSKTeslaTeleNo = North"/>
@@ -4149,6 +4170,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleNWDw">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="208"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)" help="5 to 10% dmg"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10000"/>
@@ -4158,13 +4181,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1000"/>
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1000" help="sky teleports destroy the mod device"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaExplodeExtra2">
@@ -4188,7 +4211,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKNVBatteryCreateConsumeEnergy"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeleportDirection">
+    <buff name="buffGSKTeleportFleeDirection">
       <stack_type value="ignore"/>
       <duration value="3"/>
       <update_rate value="0.25"/>
@@ -4227,7 +4250,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleFleeDir" operation="set" value="0">
           <requirement name="CVarCompare" cvar=".bGSKTeleFleeDirRnd" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportDirection"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportFleeDirection"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDetectEnterGame">
@@ -4251,9 +4274,13 @@
       <duration value="1.0"/>
       <update_rate value="0.05"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1000"/>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="2000"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="2001" help="use previous"/>
@@ -4275,8 +4302,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin" help="this is to initialize the 'flying' trick as soon as possible">
           <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.bGSKFallProtTmMin"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDebuff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleport"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportToSky"/>
       </effect_group>
     </buff>
@@ -4354,6 +4382,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
       <effect_group>
@@ -5218,6 +5247,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPseudoSlowFall" help="this also grants onSelfFallImpact will happen even if player dont jump after falling below the ground on a not ready terrain and being teleportet by the engine exactly to the ground level">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>
+          <requirement name="IsAlive"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKPseudoSlowFallTimeout" operation="set" value="3" help="test results provided 50 blocks falldown in 3s">
           <requirement name="CVarCompare" cvar=".fGSKPseudoSlowFallTimeout" operation="LTE" value="0"/>

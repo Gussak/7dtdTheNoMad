@@ -33,15 +33,22 @@
 
 source ./libSrcCfgGenericToImport.sh
 
+if ! CFGFUNCprompt -q "TODO: find a way to let trader area be both destructible and have an interactive trader. This is still not working, patch anyway (you can try some values on the script before applying the patch also)?";then 
+  exit 0
+fi
+
 IFS=$'\n' read -d '' -r -a astrFlList < <(ls "${strCFGGameFolder}/Data/Prefabs/POIs/trader_"*".xml")&&:
 for strFl in "${astrFlList[@]}";do
   #strFlBkp="${strFl}.`date +"${strCFGDtFmt}"`.bkp"
   #strFlBkp="${strFl}${strCFGOriginalBkpSuffix}"
   #cp -v "$strFl" "$strFlBkp"
   CFGFUNCcreateBackup "${strFl}"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderArea']/@value" -v "False" "$strFl"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaProtect']/@value" -v "0,0,0" "$strFl"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportSize']/@value" -v "0,0,0" "$strFl"
-  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportCenter']/@value" -v "0,0,0" "$strFl"
+  #this would make trader non interactive... even the newly spawned ones using the dll: xmlstarlet ed -P -L -u "/prefab/property[@name='TraderArea']/@value" -v "False" "$strFl"
+  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaProtect']/@value" -v "1,1,1" "$strFl"
+  xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportSize']/@value" -v "1,1,1" "$strFl"
+  #xmlstarlet ed -P -L -u "/prefab/property[@name='TraderAreaTeleportCenter']/@value" -v "0,0,0" "$strFl"
+  #xmlstarlet ed -P -L -u "/prefab/property[@name='PrefabSize']/@value" -v "1,1,1" "$strFl"
   CFGFUNCdiffFromBkp "$strFl"
 done
+
+CFGFUNCinfo "to undo just this patch run: ./uninstallByRestoringOriginalFilesBackups.sh trader_"

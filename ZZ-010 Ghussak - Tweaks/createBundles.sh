@@ -118,6 +118,7 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="'$fDmg'">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="0.01" />
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
   if [[ "$strItemID" == "meleeToolFlashlight02" ]];then
@@ -137,6 +138,8 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="'$fDmg'" >
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="0.01" />
         </triggered_effect>
+        
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
   if [[ "$strItemID" == "GSKTeslaTeleport" ]];then
@@ -149,6 +152,7 @@ function FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT va
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="'$fDmg'">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
   
@@ -181,17 +185,19 @@ function FUNCcreateBundlePart() {
   
   bFUNCcreateBundlePart_specificItemsChk_HasDmgDevs_OUT=false
   strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT=""
-  strItems="";strCounts="";strSep="";strSpecifiItemsCode=""
+  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode=""
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
-    if((i>0));then strSep=",";fi;
-    strItems+="$strSep${lastrItemAndCountList[i]}"
-    strCounts+="$strSep${lastrItemAndCountList[i+1]}";
+    if((i>0));then lstrSep=",";fi;
+    lstrItems+="$lstrSep${lastrItemAndCountList[i]}"
+    local liItemCount="${lastrItemAndCountList[i+1]}"
+    if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
+    lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lastrItemAndCountList[i]} ${lastrItemAndCountList[i+1]}"
     FUNCcreateBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "${lastrItemAndCountList[i]}"
-    strSpecifiItemsCode+="${strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT}"
+    lstrSpecifiItemsCode+="${strFUNCcreateBundlePart_specificItemsChk_AddCode_OUT}"
     #if [[ "${lstrBundleDesc:0:2}" != "dk" ]];then
       #if [[ -n "${strFUNCspecificItemsCode_AddDesc}" ]];then
-        #: todoa
+        #: 
       #fi
     #fi
   done;
@@ -215,8 +221,8 @@ function FUNCcreateBundlePart() {
     fi
   fi
   
-  strDK=""
-  astrDescriptionKeyList+=()
+  #strDK=""
+  #astrDescriptionKeyList+=()
   #dkGSKstartNewGameItemsBundle
   local lstrType=""
   if [[ "$lstrBundlePartName" == "$strSchematics" ]];then
@@ -246,9 +252,9 @@ function FUNCcreateBundlePart() {
       <property name="CustomIconTint" value="'"$lstrColor"'" />
       <property name="DescriptionKey" value="'"${lstrBundleDK}"'" />
       <property class="Action0">
-        <property name="Create_item" help="it has '$((${#lastrItemAndCountList[@]}/2))' diff items" value="'"${strItems}"'" />
-        <property name="Create_item_count" value="'"${strCounts}"'" />
-      </property>'"${strSpecifiItemsCode}"'
+        <property name="Create_item" help="it has '$((${#lastrItemAndCountList[@]}/2))' diff items" value="'"${lstrItems}"'" />
+        <property name="Create_item_count" value="'"${lstrCounts}"'" />
+      </property>'"${lstrSpecifiItemsCode}"'
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
@@ -283,12 +289,20 @@ function FUNCcreateBundles() {
       strNextPartName="`echo "$strNm" |cut -d: -f2`"
       continue
     fi
-    astrPart+=("${lastrItemAndCountList[i]}" "${lastrItemAndCountList[i+1]}")
+    local liItemCount="${lastrItemAndCountList[i+1]}"
+    if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
+    astrPart+=("${lastrItemAndCountList[i]}" "${liItemCount}")
   done
   if [[ -n "$strNextPartName" ]] && ((${#astrPart[*]}>0));then
     FUNCcreateBundlePart "$lstrBundleName" "${strNextPartName}" "${lastrParams[@]}" "${astrPart[@]}"
   fi
 }
+
+#function CFGFUNCchkNumber() {
+  #if ! [[ "${1-}" =~ ^[0-9]*$ ]];then
+    #CFGFUNCerrorExit "invalid '${1-}', should be a positive integer";fi
+  #fi
+#}
 
 #astr=( #TEMPLATE
 #  "$strSCHEMATICS_BEGIN_TOKEN" 0
@@ -358,7 +372,9 @@ astr=( #TEMPLATE
 
 astr=(
   ammoJunkTurretRegular 200
+  armorClothHat 1 # this is to be able to install one of the mods
   gunBotT2JunkTurret 1
+  GSKNoteTeslaTeleporToSkyFirstTime 1
   GSKTeslaTeleport 1
   GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
@@ -457,7 +473,7 @@ astr=(
   startNewGameOasisHint 1
   
   #vanilla
-  keystoneBlock 1 
+  #keystoneBlock 1 
   
   #all previous bundles
   # this is not good, it should be controlled by the respawn cvar "${astrBundlesItemsLeastLastOne[@]}"

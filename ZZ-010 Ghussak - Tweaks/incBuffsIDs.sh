@@ -76,6 +76,7 @@ astrBuffBNList=(
   "buffGSKRadLowerSlow"
   "buffGSKRadRemover"
   "buffGSKRadResistWork"
+  "buffGSKShowWaterBkp"
   "buffGSKSnakePoisonWork"
   "buffGSKTeslaExplodeExtra"
   "buffGSKTeslaOverchargeDmg"

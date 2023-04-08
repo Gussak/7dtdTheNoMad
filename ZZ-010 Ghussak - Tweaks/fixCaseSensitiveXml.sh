@@ -414,7 +414,12 @@ function FUNCfix() {
     echo "MSG: nothing changed." >&2
   fi
 };export -f FUNCfix
-find -iname "*.xml" -exec bash -c 'FUNCfix "{}"' \;
+
+IFS=$'\n' read -d '' -r -a astrFlList < <(find -iname "*.xml")&&:
+for strFl in "${astrFlList[@]}";do
+  FUNCfix "$strFl"
+done
+
 #trash "$strFlDB"
 #exit ##################################################################3
 

@@ -33,6 +33,8 @@
 
 source ./libSrcCfgGenericToImport.sh
 
+strFileFilter="${1-}" #help use this to uninstall specific files only (between quotes) like ex.: "trader_*"
+
 function FUNCunin() {
   local lstrFlOrigBkp="$1"
   CFGFUNCinfo " ====================== Working with: ${lstrFlOrigBkp} ======================"
@@ -51,10 +53,17 @@ function FUNCunin() {
 };export -f FUNCunin
 
 CFGFUNCinfo "If nothing shows below, it means nothing was found to be uninstalled (reverted to original/pre-existing)."
-find "${strCFGGameFolder}/" \
-  -iname "*${strCFGOriginalBkpSuffix}" -exec bash -c 'FUNCunin "{}"' \;
-find "${strCFGGeneratedWorldsFolder}/" \
-  -iname "*${strCFGOriginalBkpSuffix}" -exec bash -c 'FUNCunin "{}"' \;
+
+IFS=$'\n' read -d '' -r -a astrFlList < <(find "${strCFGGameFolder}/"            -iname "${strFileFilter}*${strCFGOriginalBkpSuffix}")&&:
+for strFl in "${astrFlList[@]}";do FUNCunin "$strFl";done
+
+IFS=$'\n' read -d '' -r -a astrFlList < <(find "${strCFGGeneratedWorldsFolder}/" -iname "${strFileFilter}*${strCFGOriginalBkpSuffix}")&&:
+for strFl in "${astrFlList[@]}";do FUNCunin "$strFl";done
+
+#find "${strCFGGameFolder}/" \
+  #-iname "${strFileFilter}*${strCFGOriginalBkpSuffix}" -e xec bash -c 'FUNCunin "{}"' \;
+#find "${strCFGGeneratedWorldsFolder}/" \
+  #-iname "${strFileFilter}*${strCFGOriginalBkpSuffix}" -e xec bash -c 'FUNCunin "{}"' \;
 
 
 

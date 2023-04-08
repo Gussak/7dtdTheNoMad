@@ -133,7 +133,7 @@ function CFGFUNCDevMeErrorExit() { #helpf <msg>
 };export -f CFGFUNCDevMeErrorExit
 function CFGFUNCDryRunMsg() { 
   if $bCFGDryRun;then echo "<DryRun>";fi
-};export -f CFGFUNCDevMeErrorExit
+};export -f CFGFUNCDryRunMsg
 function CFGFUNCexec() { #helpf <<acmd>>
   CFGFUNCcleanEcho " (((EXEC`CFGFUNCDryRunMsg`))) $*"
   if ! $bCFGDryRun;then
@@ -249,7 +249,7 @@ function CFGFUNCdiffFromBkp() { #helpf <strFl>
 
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
-export strScriptName="`basename "$0"`" #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -exec bash`
+export strScriptName="`basename "$0"`" #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -e xec bash`
 export strCFGScriptName="$strScriptName" #TODO update all scripts with this new var name
 #declare -p strScriptName strScriptParentList >&2 
 
