@@ -3747,8 +3747,9 @@
     <buff name="buffGSKRadiationAura">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="10"/>
+      <update_rate value="2.5"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,2.50)" target="selfAOE" range="8" target_tags="player">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
           <requirement name="!IsBloodMoon"/>
@@ -3765,11 +3766,23 @@
           <requirement name="!HasBuff" buff="buffRadiatedRegenBlock" help="if self regen is blocked wont regen others."/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="timeout control">
+        <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="10">
+          <requirement name="!InBiome" biome="3" help="not at pineforest (all monsters thrive more difficultly)"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="7.5">
+          <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="add" value="-2.5"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKMutantRabbits">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="10"/>
+      <update_rate value="2.5"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantBunnyMode" operation="set" value="randomint(1,2)"/>
       </effect_group>
@@ -3793,6 +3806,18 @@
         <!-- HELPGOOD: it is the sum for all distances on nearest -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="15" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="30" target_tags="player"/>
+      </effect_group>
+      <effect_group help="timeout control">
+        <requirement name="CVarCompare" cvar=".iGSKMutantRabbits" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="set" value="10">
+          <requirement name="!InBiome" biome="3" help="not at pineforest (all monsters thrive more difficultly)"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="set" value="7.5">
+          <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMiasmaEffectWeak" icon_blink="true" icon="7dtdGskMiasma" icon_color="250,100,0" hidden="false">
@@ -4297,7 +4322,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1000"/>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="2000"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <effect_group>
@@ -4348,8 +4373,8 @@
         <requirement name="CVarCompare" cvar=".bGSKParachuteRequested" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".bGSKParachuteToFirstSpawnpoint" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:call:eventGSKTeleportToSky"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:call:eventGSKTeleportToSkyVeryHighAbove"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnTeleportToSky"/>
       </effect_group>
       <effect_group>
@@ -5209,7 +5234,7 @@
       <duration value="0"/>
       <update_rate value="0.25"/>
       <display_value value=".bGSKFallProtTm"/>
-      <display_value_key value="+{0:0.00}s"/>
+      <display_value_key value="+{0:0.00}/300s" help="keep in sync with .bGSKFallProtTmMax !"/>
       <!-- HELPGOOD: I was unable to work with _fallSpeed here as it keeps the last value after the player hits the ground. the problem is that it never (?) being 0 becomes impossible to use that as a reference variable to detect when the player stopped falling -->
       <effect_group>
         <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:buffGSKParachuteSQN:onSelfTeleported detected"/>

@@ -131,3 +131,5 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 .  
+###FileDescription:###
+WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).
