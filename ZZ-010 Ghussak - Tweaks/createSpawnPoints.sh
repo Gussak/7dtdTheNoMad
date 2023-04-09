@@ -31,7 +31,7 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-egrep "[#]help" $0
+#egrep "[#]help" $0
 
 : ${bParachuteMode:=true} #help bParachuteMode=false to spawn on the ground. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least
 

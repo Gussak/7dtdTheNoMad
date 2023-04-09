@@ -105,16 +105,21 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
   local lbSIGINTonMeld=false
   trap 'lbSIGINTonMeld=true' INT
   : ${strCFGCompareApp:="meld"} #help here you can configure another app to show differences
+  if ! which "${strCFGCompareApp}";then # a helper for windows users on cygwin
+    if which winmerge;then
+      strCFGCompareApp="winmerge"
+    fi
+  fi
   if which "${strCFGCompareApp}";then
     CFGFUNCcleanEcho "WARN: hit ctrl+c to abort, closing '${strCFGCompareApp}' will accept the patch!!!"
-    "${strCFGCompareApp}" "$@"&&:;local lnRet=$?
+    "${strCFGCompareApp}" "$@"&&:;local lnRet=$? # it is expected that the merger app will not be a detached child process otherwise this wont work!
     if((lnRet!=0));then # (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
       CFGFUNCechoLog "ERROR=$lnRet: '${strCFGCompareApp}' $@"
       return 1;
     fi
   else
     colordiff "$@"&&:
-    CFGFUNCprompt -q "WARN: hit ctrl+c to abort, or continue to accept the patch!!!"
+    CFGFUNCprompt -q "WARN: hit ctrl+c to abort, or continue to accept the patch!!! Obs.: you can configure a merger app like meld or winmerge for better viewing."
   fi
   if $lbSIGINTonMeld;then
     CFGFUNCcleanEcho "WARN: Ctrl+c pressed while running: '${strCFGCompareApp}' $@"
