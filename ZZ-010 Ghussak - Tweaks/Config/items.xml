@@ -1562,10 +1562,9 @@
     </item>
   </append>
   <append xpath="/items">
-    <item name="RepairHL">
+    <item name="RepairBase">
       <property name="HoldType" value="45"/>
-      <property name="CustomIcon" value="modArmorHelmetLight"/>
-      <property name="CustomIconTint" value="00ff00"/>
+      <property name="CustomIconTint" value="0,255,0"/>
       <property name="Tags" value="junk"/>
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
@@ -1577,11 +1576,17 @@
       <property name="Group" value="Resources,Chemicals"/>
       <property name="DegradationBreaksAfter" value="false"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="GT" value="0"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
         <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="RepairHL">
+      <property name="Extends" value="RepairBase"/>
+      <property name="CustomIcon" value="modArmorHelmetLight"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="GT" value="0"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgPercHL" operation="subtract" value="0.10"/>
@@ -1589,25 +1594,10 @@
       </effect_group>
     </item>
     <item name="RepairWL">
-      <property name="HoldType" value="45"/>
+      <property name="Extends" value="RepairBase"/>
       <property name="CustomIcon" value="modGunFlashlight"/>
-      <property name="CustomIconTint" value="00ff00"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="30"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="GT" value="0"/>
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="1.0"/>
-        <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgPercWL" operation="subtract" value="0.10"/>
@@ -1615,25 +1605,10 @@
       </effect_group>
     </item>
     <item name="RepairNV">
-      <property name="HoldType" value="45"/>
+      <property name="Extends" value="RepairBase"/>
       <property name="CustomIcon" value="apparelNightvisionGoggles"/>
-      <property name="CustomIconTint" value="00ff00"/>
-      <property name="Tags" value="junk"/>
-      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
-      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="Weight" value="1"/>
-      <property name="EconomicValue" value="30"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Resources,Chemicals"/>
-      <property name="DegradationBreaksAfter" value="false"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="GT" value="0"/>
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="1.0"/>
-        <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgPercNV" operation="subtract" value="0.10"/>
@@ -1643,6 +1618,7 @@
     <item name="GSKCFGTeslaTeleportDistIndex">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportDistIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
       <effect_group tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="1"/>
