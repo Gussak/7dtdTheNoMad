@@ -373,3 +373,5 @@ fi
 if $bGenRec;then
   ./gencodeApply.sh "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 fi 
+
+./gencodeApply.sh --cleanChkDupTokenFiles

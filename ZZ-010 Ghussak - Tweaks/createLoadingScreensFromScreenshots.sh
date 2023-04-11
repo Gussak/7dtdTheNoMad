@@ -47,3 +47,5 @@ for strFl in "${astrFlList[@]}";do
 done
 
 ./gencodeApply.sh "${strFlGenLoa}${strGenTmpSuffix}" "${strFlGenLoa}"
+
+./gencodeApply.sh --cleanChkDupTokenFiles

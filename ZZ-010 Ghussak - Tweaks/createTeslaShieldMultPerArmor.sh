@@ -99,3 +99,5 @@ done
 #./gencodeApply.sh "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 ./gencodeApply.sh "${strFlGenXml}${strGenTmpSuffix}" "${strFlGenXml}"
 #./gencodeApply.sh "AUTO_GENERATED_CODE" "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
+
+./gencodeApply.sh --cleanChkDupTokenFiles

@@ -41,7 +41,7 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
 strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
-trash "${strFlGenSpa}${strGenTmpSuffix}"
+CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
@@ -138,9 +138,11 @@ function FUNCisNormalZone() {
   fi
   return 1
 }
-iTeleportMaxAllowedIndex=200
-iTeleportIndex=1
+iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleIniSkyRandomSpawn
+iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
+iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
+iTeleportIndexFirst=-1
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
   #iX=${astrPrefabsList[i]}
@@ -182,6 +184,8 @@ for str in "${astrPrefabsList[@]}";do
     bCreateAutoTeleport=true 
   fi
   if $bCreateAutoTeleport;then #create initial spawns to teleport to
+    ((iTeleportIndex++))&&:
+    if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
     strTeleportIndex="`printf %03d $iTeleportIndex`"
     strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
     echo '      <!-- '"${strMsg}"' -->
@@ -195,7 +199,7 @@ for str in "${astrPrefabsList[@]}";do
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
     iTeleportMaxIndex=$iTeleportIndex
     if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
-    ((iTeleportIndex++))&&:
+    #((iTeleportIndex++))&&:
   fi
     #fi
   #fi
@@ -209,6 +213,8 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
 #xmlstarlet ed -L -d "//triggered_effect[@help='SPAWNPOINT_RANDOM_AUTOMATIC']" "${strFlGenBuf}"
-trash "${strFlGenBuf}${strGenTmpSuffix}"
-echo '        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(1,'"${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"
+echo '        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+
+./gencodeApply.sh --cleanChkDupTokenFiles

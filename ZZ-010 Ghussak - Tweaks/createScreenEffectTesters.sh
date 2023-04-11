@@ -117,12 +117,4 @@ echo "$strCodeResetAll" >>"${strFlGenIte}${strGenTmpSuffix}"
 
 ./gencodeApply.sh "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
-
-
-
-
-
-
-
-
-
+./gencodeApply.sh --cleanChkDupTokenFiles

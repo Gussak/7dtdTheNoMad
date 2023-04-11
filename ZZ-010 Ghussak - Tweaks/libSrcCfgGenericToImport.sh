@@ -92,7 +92,9 @@ function CFGFUNCtrash() { #helpf <file>
   while [[ -f "${1-}" ]];do
     CFGFUNCcleanEcho " (CFG)TRASHING`CFGFUNCDryRunMsg`: $1"
     if ! $bCFGDryRun;then
-      trash "$1"&&:
+      #trash -v "$1"&&:
+      #trash -v "$1" 2>&1 |egrep "^trash: '" &&:
+      trash -v "$1" 2>&1 |egrep "`basename "$1"`" &&:
     fi
     shift&&:
   done
@@ -271,7 +273,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   set -Eeu
   
   export bCFGHelpMode=false
-  trap 'if ! $bCFGHelpMode;then read -p " (CFG)TRAP:ERROR=$?: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd;read -p " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed...";exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   

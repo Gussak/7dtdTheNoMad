@@ -558,3 +558,4 @@ for strDKCraftBundleName in "${astrCraftBundleNameList[@]}";do
 done
 ./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 
+./gencodeApply.sh --cleanChkDupTokenFiles

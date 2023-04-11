@@ -142,3 +142,5 @@ cat "$strFlOut"
 #fi
 
 #trash "$strFlOut"
+
+./gencodeApply.sh --cleanChkDupTokenFiles

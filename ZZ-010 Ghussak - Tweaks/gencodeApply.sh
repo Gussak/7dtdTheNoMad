@@ -53,6 +53,15 @@ if [[ "${1-}" == "--subTokenId" ]];then #help <strSubTokenId> will be used on th
   strSubTokenId="_${strSubTokenId}"
 fi
 
+strTmpPath="./_tmp/"
+strChkDup="GenCodeCheckDupToken"
+if [[ "${1-}" == "--cleanChkDupTokenFiles" ]];then #help shall be used on all scripts calling this one, but at the end
+  shift
+  CFGFUNCtrash "${strTmpPath}/${strChkDup}"*
+  exit 0
+fi
+
+
 #strToken="$1";shift #he lp token marking begin and end lines
 strFlPatch="$1";shift #help file containing only the changes section to be updated, only the contents between the begin/end tokens. will be consumed (trashed) after used.
 strFlToPatch="$1";shift #help file to be patched
@@ -63,8 +72,23 @@ fi
 
 strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
 if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit;fi
-strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
 declare -p strCallerScript
+strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
+
+strFinalToken="${strCallerAsTokenID}${strSubTokenId}"
+
+strFlChkDupToken="${strChkDup}.${PPID}.${strCallerScript}.${strFlToPatch}.${strFinalToken}"
+#strFlChkDupToken="`echo "$strFlChkDupToken" |tr "/." "__"`" #prevent messed filename
+strFlChkDupToken="`echo "$strFlChkDupToken" |sed -r 's@[^a-zA-Z0-9_]@_@g'`" #prevent messed filename
+strFlChkDupToken="${strTmpPath}/${strFlChkDupToken}.tmp"
+
+if [[ -f "${strFlChkDupToken}" ]];then
+  ls -l "$strFlChkDupToken"
+  if ! CFGFUNCprompt -q "The above token was already used on this session, this means the caller script may have been misconfigured and provided a duplicated token to apply a new patch on the same file sector. Continue anyway?";then
+    CFGFUNCerrorExit
+  fi
+fi
+echo -n "pseudo lock" >"${strFlChkDupToken}"
 
 strFileType=""
 if [[ "${strFlToPatch}" =~ .*[.]txt$ ]];then
@@ -77,8 +101,8 @@ fi
 
 #strCodeTokenBegin="${strToken}_BEGIN"
 #strCodeTokenEnd="${strToken}_END"
-strCodeTokenBegin="_AUTOGENCODE_${strCallerAsTokenID}${strSubTokenId}_BEGIN"
-strCodeTokenEnd="_AUTOGENCODE_${strCallerAsTokenID}${strSubTokenId}_END"
+strCodeTokenBegin="_AUTOGENCODE_${strFinalToken}_BEGIN"
+strCodeTokenEnd="_AUTOGENCODE_${strFinalToken}_END"
 declare -p strCodeTokenBegin strCodeTokenEnd
 strMsgDoNotModify="===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: ${strCallerScript} ====="
 
@@ -105,7 +129,7 @@ nHead="`egrep "${strCodeTokenBegin}" "${strFlToPatch}" -ni |cut -d: -f1`"
 nTail="`egrep "${strCodeTokenEnd}"   "${strFlToPatch}" -ni |cut -d: -f1`"
 declare -p nHead nTail
 # create the new file to check
-trash "${strFlToPatch}.GENCODENEWFILE"&&:
+CFGFUNCtrash "${strFlToPatch}.GENCODENEWFILE"&&:
 
 # copy before begin token
 head -n $((nHead-1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
@@ -119,7 +143,7 @@ fi
 # copy updated sector
 wc -l "$strFlPatch"
 cat "$strFlPatch" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
-trash "$strFlPatch"
+CFGFUNCtrash "$strFlPatch"
 # copy after end token
 if [[ "${strFileType}" == ftTXT ]];then
   echo "${strCodeTokenEnd},\"ABOVE:${strMsgDoNotModify}\"" >>"${strFlToPatch}.GENCODENEWFILE"
@@ -142,7 +166,7 @@ if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
     fi
   fi
   # "overwrite" the old with new file
-  #trash "${strFlToPatch}.OLD"&&:
+  #CFGFUNCtrash "${strFlToPatch}.OLD"&&:
   mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
   mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
   echo "PATCHING expectedly WORKED! now test it!"
@@ -150,4 +174,4 @@ else
   echo "WARN: nothing changed"
 fi
 
-#trash "$strFlPatch"&&:
+#CFGFUNCtrash "$strFlPatch"&&:

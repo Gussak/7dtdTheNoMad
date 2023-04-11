@@ -110,13 +110,17 @@
 -->
     </action_sequence>
     <action_sequence name="eventGSKTeslaTele">
+      <action class="TeleportToSpecial">
+        <property name="phase" value="7"/>
+        <property name="special_type" value="DUMMY_IGNORED" param1="strBeacon" help="Bedroll Landclaim Backpack, works better with v3Dir 0,0,0 or 0,1,0"/>
+      </action>
       <action class="Teleport">
-        <property name="phase" value="1"/>
+        <property name="phase" value="10"/>
         <property name="target_position" value="0,0,7" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
       <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL. disintegrates blocks to let a safe teleport">
-        <property name="phase" value="2"/>
+        <property name="phase" value="20"/>
         <property name="blast_power" value="75"/>
         <property name="block_damage" value="99999"/>
         <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
@@ -124,12 +128,12 @@
         <property name="entity_radius" value="0"/>
       </action>
       <action class="AddEntitiesToGroup">
-        <property name="phase" value="3"/>
+        <property name="phase" value="30"/>
         <property name="group_name" value="gnHostiles"/>
         <property name="max_distance" value="2" param1="iXplodRangeEnt"/>
       </action>
       <action class="Explode" help="kill any hostile entity at teleport destination">
-        <property name="phase" value="4"/>
+        <property name="phase" value="40"/>
         <property name="target_group" value="gnHostiles"/>
         <property name="blast_power" value="0"/>
         <property name="block_damage" value="0"/>
@@ -138,91 +142,13 @@
         <property name="entity_radius" value="33" help="will only affect selected gnHostiles tho"/>
       </action>
       <action class="Explode" help="this is like a sonic damage">
-        <property name="phase" value="5"/>
+        <property name="phase" value="50"/>
         <property name="blast_power" value="500" param1="iBlastPower"/>
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="30"/>
         <property name="entity_radius" value="5"/>
       </action>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNo" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,0,7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSo" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,0,-7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleWe" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-7,0,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleEa" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="7,0,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNW" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,0,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNE" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,0,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSW" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,0,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSE" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,0,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNoUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,7,7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSoUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,7,-7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleWeUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-7,7,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleEaUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="7,7,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNWUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,7,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNEUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,7,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSWUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,7,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSEUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,7,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNoDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,-7,7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSoDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,-7,-7"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleWeDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-7,-7,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleEaDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="7,-7,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNWDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,-7,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleNEDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,-7,6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSWDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="-6,-7,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleSEDw" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="6,-7,-6"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleUp" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,7,0"/>
-    </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,-7,0"/>
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
     <!-- HELPGOOD: nRange=7 strEl=Dn -->
@@ -712,752 +638,752 @@
       </action>
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
-    <action_sequence name="eventGSKTeleport001">
+    <action_sequence name="eventGSKTeleport50001">
       <action class="Teleport">
         <property name="target_position" value="3446,2002,-1306" help="part_trailer_empty teleport 3426 38 -1326"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport002">
+    <action_sequence name="eventGSKTeleport50002">
       <action class="Teleport">
         <property name="target_position" value="2504,2002,-554" help="house_old_gambrel_03 teleport 2484 18 -574"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport003">
+    <action_sequence name="eventGSKTeleport50003">
       <action class="Teleport">
         <property name="target_position" value="2536,2002,-710" help="house_old_ranch_06 teleport 2516 39 -730"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport004">
+    <action_sequence name="eventGSKTeleport50004">
       <action class="Teleport">
         <property name="target_position" value="896,2002,-510" help="house_old_mansard_02 teleport 876 0 -530"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport005">
+    <action_sequence name="eventGSKTeleport50005">
       <action class="Teleport">
         <property name="target_position" value="965,2002,-591" help="house_old_ranch_08 teleport 945 3 -611"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport006">
+    <action_sequence name="eventGSKTeleport50006">
       <action class="Teleport">
         <property name="target_position" value="965,2002,-503" help="house_old_ranch_09 teleport 945 3 -523"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport007">
+    <action_sequence name="eventGSKTeleport50007">
       <action class="Teleport">
         <property name="target_position" value="965,2002,-653" help="house_modern_05 teleport 945 4 -673"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport008">
+    <action_sequence name="eventGSKTeleport50008">
       <action class="Teleport">
         <property name="target_position" value="1039,2002,-741" help="house_old_tudor_04 teleport 1019 3 -761"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport009">
+    <action_sequence name="eventGSKTeleport50009">
       <action class="Teleport">
         <property name="target_position" value="665,2002,-741" help="house_old_bungalow_11 teleport 645 -13 -761"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport010">
+    <action_sequence name="eventGSKTeleport50010">
       <action class="Teleport">
         <property name="target_position" value="739,2002,-591" help="house_old_victorian_01 teleport 719 -3 -611"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport011">
+    <action_sequence name="eventGSKTeleport50011">
       <action class="Teleport">
         <property name="target_position" value="739,2002,-510" help="house_old_ranch_10 teleport 719 2 -530"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport012">
+    <action_sequence name="eventGSKTeleport50012">
       <action class="Teleport">
         <property name="target_position" value="814,2002,3400" help="cabin_04 teleport 794 40 3380"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport013">
+    <action_sequence name="eventGSKTeleport50013">
       <action class="Teleport">
         <property name="target_position" value="4214,2002,4271" help="abandoned_house_08 teleport 4194 36 4251"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport014">
+    <action_sequence name="eventGSKTeleport50014">
       <action class="Teleport">
         <property name="target_position" value="808,2002,3221" help="abandoned_house_07 teleport 788 41 3201"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport015">
+    <action_sequence name="eventGSKTeleport50015">
       <action class="Teleport">
         <property name="target_position" value="3199,2002,-3226" help="cabin_08 teleport 3179 50 -3246"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport016">
+    <action_sequence name="eventGSKTeleport50016">
       <action class="Teleport">
         <property name="target_position" value="-1149,2002,-1737" help="cabin_01 teleport -1169 38 -1757"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport017">
+    <action_sequence name="eventGSKTeleport50017">
       <action class="Teleport">
         <property name="target_position" value="2388,2002,-4284" help="abandoned_house_04 teleport 2368 38 -4304"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport018">
+    <action_sequence name="eventGSKTeleport50018">
       <action class="Teleport">
         <property name="target_position" value="-500,2002,156" help="abandoned_house_01 teleport -520 38 136"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport019">
+    <action_sequence name="eventGSKTeleport50019">
       <action class="Teleport">
         <property name="target_position" value="4064,2002,4064" help="cabin_11 teleport 4044 26 4044"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport020">
+    <action_sequence name="eventGSKTeleport50020">
       <action class="Teleport">
         <property name="target_position" value="-1884,2002,4359" help="abandoned_house_02 teleport -1904 39 4339"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport021">
+    <action_sequence name="eventGSKTeleport50021">
       <action class="Teleport">
         <property name="target_position" value="4205,2002,1219" help="abandoned_house_03 teleport 4185 69 1199"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport022">
+    <action_sequence name="eventGSKTeleport50022">
       <action class="Teleport">
         <property name="target_position" value="-4489,2002,4454" help="abandoned_house_05 teleport -4509 51 4434"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport023">
+    <action_sequence name="eventGSKTeleport50023">
       <action class="Teleport">
         <property name="target_position" value="-72,2002,-3265" help="cabin_13 teleport -92 28 -3285"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport024">
+    <action_sequence name="eventGSKTeleport50024">
       <action class="Teleport">
         <property name="target_position" value="4487,2002,-4148" help="cabin_12 teleport 4467 42 -4168"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport025">
+    <action_sequence name="eventGSKTeleport50025">
       <action class="Teleport">
         <property name="target_position" value="-1770,2002,916" help="cabin_09 teleport -1790 43 896"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport026">
+    <action_sequence name="eventGSKTeleport50026">
       <action class="Teleport">
         <property name="target_position" value="13,2002,-2152" help="cabin_15 teleport -7 36 -2172"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport027">
+    <action_sequence name="eventGSKTeleport50027">
       <action class="Teleport">
         <property name="target_position" value="-1813,2002,-3976" help="cabin_03 teleport -1833 41 -3996"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport028">
+    <action_sequence name="eventGSKTeleport50028">
       <action class="Teleport">
         <property name="target_position" value="826,2002,504" help="house_old_tudor_01 teleport 806 9 484"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport029">
+    <action_sequence name="eventGSKTeleport50029">
       <action class="Teleport">
         <property name="target_position" value="-343,2002,-350" help="cabin_07 teleport -363 41 -370"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport030">
+    <action_sequence name="eventGSKTeleport50030">
       <action class="Teleport">
         <property name="target_position" value="2342,2002,-1680" help="cabin_02 teleport 2322 44 -1700"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport031">
+    <action_sequence name="eventGSKTeleport50031">
       <action class="Teleport">
         <property name="target_position" value="-2303,2002,3813" help="cabin_06 teleport -2323 47 3793"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport032">
+    <action_sequence name="eventGSKTeleport50032">
       <action class="Teleport">
         <property name="target_position" value="1172,2002,-910" help="cabin_05 teleport 1152 42 -930"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport033">
+    <action_sequence name="eventGSKTeleport50033">
       <action class="Teleport">
         <property name="target_position" value="-689,2002,976" help="cabin_14 teleport -709 36 956"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport034">
+    <action_sequence name="eventGSKTeleport50034">
       <action class="Teleport">
         <property name="target_position" value="1531,2002,1108" help="abandoned_house_06 teleport 1511 38 1088"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport035">
+    <action_sequence name="eventGSKTeleport50035">
       <action class="Teleport">
         <property name="target_position" value="1221,2002,-1304" help="cabin_10 teleport 1201 32 -1324"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport036">
+    <action_sequence name="eventGSKTeleport50036">
       <action class="Teleport">
         <property name="target_position" value="-4516,2002,-676" help="house_old_victorian_03 teleport -4536 39 -696"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport037">
+    <action_sequence name="eventGSKTeleport50037">
       <action class="Teleport">
         <property name="target_position" value="3134,2002,54" help="house_modern_18 teleport 3114 23 34"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport038">
+    <action_sequence name="eventGSKTeleport50038">
       <action class="Teleport">
         <property name="target_position" value="4097,2002,3239" help="house_old_spanish_01 teleport 4077 24 3219"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport039">
+    <action_sequence name="eventGSKTeleport50039">
       <action class="Teleport">
         <property name="target_position" value="-392,2002,4246" help="house_construction_01 teleport -412 38 4226"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport040">
+    <action_sequence name="eventGSKTeleport50040">
       <action class="Teleport">
         <property name="target_position" value="-1079,2002,4331" help="house_modern_09 teleport -1099 35 4311"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport041">
+    <action_sequence name="eventGSKTeleport50041">
       <action class="Teleport">
         <property name="target_position" value="1593,2002,-3952" help="house_old_bungalow_01 teleport 1573 33 -3972"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport042">
+    <action_sequence name="eventGSKTeleport50042">
       <action class="Teleport">
         <property name="target_position" value="1656,2002,4438" help="house_old_gambrel_02 teleport 1636 42 4418"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport043">
+    <action_sequence name="eventGSKTeleport50043">
       <action class="Teleport">
         <property name="target_position" value="647,2002,3514" help="remnant_house_05 teleport 627 40 3494"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport044">
+    <action_sequence name="eventGSKTeleport50044">
       <action class="Teleport">
         <property name="target_position" value="-753,2002,1767" help="remnant_house_06 teleport -773 199 1747"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport045">
+    <action_sequence name="eventGSKTeleport50045">
       <action class="Teleport">
         <property name="target_position" value="-4500,2002,1051" help="remnant_house_17 teleport -4520 56 1031"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport046">
+    <action_sequence name="eventGSKTeleport50046">
       <action class="Teleport">
         <property name="target_position" value="476,2002,3727" help="house_old_modular_06 teleport 456 36 3707"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport047">
+    <action_sequence name="eventGSKTeleport50047">
       <action class="Teleport">
         <property name="target_position" value="-733,2002,4357" help="house_old_ranch_05 teleport -753 39 4337"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport048">
+    <action_sequence name="eventGSKTeleport50048">
       <action class="Teleport">
         <property name="target_position" value="4199,2002,-303" help="house_old_modular_02 teleport 4179 70 -323"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport049">
+    <action_sequence name="eventGSKTeleport50049">
       <action class="Teleport">
         <property name="target_position" value="-4079,2002,1493" help="house_old_ranch_01 teleport -4099 26 1473"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport050">
+    <action_sequence name="eventGSKTeleport50050">
       <action class="Teleport">
         <property name="target_position" value="-329,2002,-613" help="remnant_house_14 teleport -349 39 -633"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport051">
+    <action_sequence name="eventGSKTeleport50051">
       <action class="Teleport">
         <property name="target_position" value="-2665,2002,1882" help="house_old_bungalow_07 teleport -2685 33 1862"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport052">
+    <action_sequence name="eventGSKTeleport50052">
       <action class="Teleport">
         <property name="target_position" value="-494,2002,414" help="house_old_tudor_06 teleport -514 34 394"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport053">
+    <action_sequence name="eventGSKTeleport50053">
       <action class="Teleport">
         <property name="target_position" value="1531,2002,-606" help="house_old_mansard_04 teleport 1511 16 -626"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport054">
+    <action_sequence name="eventGSKTeleport50054">
       <action class="Teleport">
         <property name="target_position" value="2281,2002,3146" help="house_old_victorian_08 teleport 2261 43 3126"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport055">
+    <action_sequence name="eventGSKTeleport50055">
       <action class="Teleport">
         <property name="target_position" value="-4254,2002,4188" help="remnant_house_03 teleport -4274 36 4168"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport056">
+    <action_sequence name="eventGSKTeleport50056">
       <action class="Teleport">
         <property name="target_position" value="861,2002,4340" help="house_burnt_06 teleport 841 16 4320"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport057">
+    <action_sequence name="eventGSKTeleport50057">
       <action class="Teleport">
         <property name="target_position" value="3217,2002,2075" help="house_modern_17 teleport 3197 42 2055"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport058">
+    <action_sequence name="eventGSKTeleport50058">
       <action class="Teleport">
         <property name="target_position" value="-4486,2002,3966" help="house_old_victorian_09 teleport -4506 43 3946"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport059">
+    <action_sequence name="eventGSKTeleport50059">
       <action class="Teleport">
         <property name="target_position" value="-2634,2002,-1001" help="house_modern_23 teleport -2654 35 -1021"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport060">
+    <action_sequence name="eventGSKTeleport50060">
       <action class="Teleport">
         <property name="target_position" value="-1466,2002,-3533" help="house_modern_22 teleport -1486 38 -3553"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport061">
+    <action_sequence name="eventGSKTeleport50061">
       <action class="Teleport">
         <property name="target_position" value="-1936,2002,-1396" help="remnant_house_16 teleport -1956 37 -1416"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport062">
+    <action_sequence name="eventGSKTeleport50062">
       <action class="Teleport">
         <property name="target_position" value="-3315,2002,1981" help="house_old_bungalow_06 teleport -3335 36 1961"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport063">
+    <action_sequence name="eventGSKTeleport50063">
       <action class="Teleport">
         <property name="target_position" value="-2551,2002,-2865" help="house_old_modular_08 teleport -2571 40 -2885"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport064">
+    <action_sequence name="eventGSKTeleport50064">
       <action class="Teleport">
         <property name="target_position" value="3461,2002,1815" help="house_old_bungalow_05 teleport 3441 26 1795"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport065">
+    <action_sequence name="eventGSKTeleport50065">
       <action class="Teleport">
         <property name="target_position" value="-2175,2002,-1147" help="house_country_01 teleport -2195 39 -1167"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport066">
+    <action_sequence name="eventGSKTeleport50066">
       <action class="Teleport">
         <property name="target_position" value="-3132,2002,-4313" help="remnant_house_11 teleport -3152 92 -4333"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport067">
+    <action_sequence name="eventGSKTeleport50067">
       <action class="Teleport">
         <property name="target_position" value="-1583,2002,3616" help="house_old_cottage_01_sleeper teleport -1603 31 3596"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport068">
+    <action_sequence name="eventGSKTeleport50068">
       <action class="Teleport">
         <property name="target_position" value="-774,2002,-2614" help="house_old_victorian_05 teleport -794 38 -2634"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport069">
+    <action_sequence name="eventGSKTeleport50069">
       <action class="Teleport">
         <property name="target_position" value="255,2002,1312" help="house_burnt_02 teleport 235 47 1292"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport070">
+    <action_sequence name="eventGSKTeleport50070">
       <action class="Teleport">
         <property name="target_position" value="1164,2002,7" help="house_modern_14 teleport 1144 24 -13"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport071">
+    <action_sequence name="eventGSKTeleport50071">
       <action class="Teleport">
         <property name="target_position" value="-1009,2002,-1773" help="house_old_cottage_01_path teleport -1029 38 -1793"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport072">
+    <action_sequence name="eventGSKTeleport50072">
       <action class="Teleport">
         <property name="target_position" value="2579,2002,665" help="remnant_house_18 teleport 2559 154 645"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport073">
+    <action_sequence name="eventGSKTeleport50073">
       <action class="Teleport">
         <property name="target_position" value="-901,2002,-2774" help="house_old_victorian_12 teleport -921 36 -2794"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport074">
+    <action_sequence name="eventGSKTeleport50074">
       <action class="Teleport">
         <property name="target_position" value="-916,2002,-1780" help="house_old_bungalow_12 teleport -936 34 -1800"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport075">
+    <action_sequence name="eventGSKTeleport50075">
       <action class="Teleport">
         <property name="target_position" value="-1375,2002,-1321" help="house_old_modular_05 teleport -1395 40 -1341"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport076">
+    <action_sequence name="eventGSKTeleport50076">
       <action class="Teleport">
         <property name="target_position" value="125,2002,-1436" help="house_old_gambrel_01 teleport 105 37 -1456"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport077">
+    <action_sequence name="eventGSKTeleport50077">
       <action class="Teleport">
         <property name="target_position" value="570,2002,77" help="trailer_01 teleport 550 37 57"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport078">
+    <action_sequence name="eventGSKTeleport50078">
       <action class="Teleport">
         <property name="target_position" value="1853,2002,-3421" help="house_modern_02 teleport 1833 40 -3441"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport079">
+    <action_sequence name="eventGSKTeleport50079">
       <action class="Teleport">
         <property name="target_position" value="-590,2002,-3132" help="house_old_tudor_03 teleport -610 24 -3152"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport080">
+    <action_sequence name="eventGSKTeleport50080">
       <action class="Teleport">
         <property name="target_position" value="1060,2002,3202" help="house_old_mansard_06 teleport 1040 38 3182"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport081">
+    <action_sequence name="eventGSKTeleport50081">
       <action class="Teleport">
         <property name="target_position" value="-2629,2002,618" help="house_old_victorian_10 teleport -2649 51 598"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport082">
+    <action_sequence name="eventGSKTeleport50082">
       <action class="Teleport">
         <property name="target_position" value="742,2002,-2125" help="house_modern_21 teleport 722 37 -2145"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport083">
+    <action_sequence name="eventGSKTeleport50083">
       <action class="Teleport">
         <property name="target_position" value="895,2002,351" help="trailer_03 teleport 875 37 331"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport084">
+    <action_sequence name="eventGSKTeleport50084">
       <action class="Teleport">
         <property name="target_position" value="4349,2002,-3993" help="house_modern_20 teleport 4329 33 -4013"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport085">
+    <action_sequence name="eventGSKTeleport50085">
       <action class="Teleport">
         <property name="target_position" value="4116,2002,3343" help="house_old_bungalow_10 teleport 4096 41 3323"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport086">
+    <action_sequence name="eventGSKTeleport50086">
       <action class="Teleport">
         <property name="target_position" value="-3541,2002,3388" help="house_old_bungalow_02 teleport -3561 34 3368"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport087">
+    <action_sequence name="eventGSKTeleport50087">
       <action class="Teleport">
         <property name="target_position" value="3529,2002,2695" help="house_old_victorian_13 teleport 3509 39 2675"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport088">
+    <action_sequence name="eventGSKTeleport50088">
       <action class="Teleport">
         <property name="target_position" value="3185,2002,-1169" help="house_modern_07 teleport 3165 38 -1189"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport089">
+    <action_sequence name="eventGSKTeleport50089">
       <action class="Teleport">
         <property name="target_position" value="-3426,2002,2276" help="house_burnt_05 teleport -3446 38 2256"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport090">
+    <action_sequence name="eventGSKTeleport50090">
       <action class="Teleport">
         <property name="target_position" value="4159,2002,-3030" help="house_old_victorian_04 teleport 4139 22 -3050"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport091">
+    <action_sequence name="eventGSKTeleport50091">
       <action class="Teleport">
         <property name="target_position" value="3339,2002,3235" help="remnant_house_02 teleport 3319 41 3215"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport092">
+    <action_sequence name="eventGSKTeleport50092">
       <action class="Teleport">
         <property name="target_position" value="-631,2002,3052" help="house_old_victorian_11 teleport -651 36 3032"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport093">
+    <action_sequence name="eventGSKTeleport50093">
       <action class="Teleport">
         <property name="target_position" value="-2931,2002,-786" help="house_modern_10 teleport -2951 34 -806"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport094">
+    <action_sequence name="eventGSKTeleport50094">
       <action class="Teleport">
         <property name="target_position" value="-436,2002,-476" help="remnant_house_12 teleport -456 34 -496"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport095">
+    <action_sequence name="eventGSKTeleport50095">
       <action class="Teleport">
         <property name="target_position" value="1769,2002,577" help="remnant_house_10 teleport 1749 38 557"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport096">
+    <action_sequence name="eventGSKTeleport50096">
       <action class="Teleport">
         <property name="target_position" value="1882,2002,-4122" help="remnant_house_07 teleport 1862 37 -4142"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport097">
+    <action_sequence name="eventGSKTeleport50097">
       <action class="Teleport">
         <property name="target_position" value="3953,2002,-322" help="house_old_gambrel_04 teleport 3933 153 -342"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport098">
+    <action_sequence name="eventGSKTeleport50098">
       <action class="Teleport">
         <property name="target_position" value="-21,2002,-3907" help="trailer_04 teleport -41 33 -3927"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport099">
+    <action_sequence name="eventGSKTeleport50099">
       <action class="Teleport">
         <property name="target_position" value="-2647,2002,-2191" help="house_modern_19 teleport -2667 41 -2211"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport100">
+    <action_sequence name="eventGSKTeleport50100">
       <action class="Teleport">
         <property name="target_position" value="310,2002,347" help="house_modern_01 teleport 290 40 327"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport101">
+    <action_sequence name="eventGSKTeleport50101">
       <action class="Teleport">
         <property name="target_position" value="-3076,2002,3786" help="house_old_tudor_02 teleport -3096 38 3766"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport102">
+    <action_sequence name="eventGSKTeleport50102">
       <action class="Teleport">
         <property name="target_position" value="-1181,2002,-844" help="remnant_house_08 teleport -1201 38 -864"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport103">
+    <action_sequence name="eventGSKTeleport50103">
       <action class="Teleport">
         <property name="target_position" value="2875,2002,-1017" help="house_old_modular_01 teleport 2855 52 -1037"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport104">
+    <action_sequence name="eventGSKTeleport50104">
       <action class="Teleport">
         <property name="target_position" value="-891,2002,3545" help="house_old_bungalow_04 teleport -911 44 3525"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport105">
+    <action_sequence name="eventGSKTeleport50105">
       <action class="Teleport">
         <property name="target_position" value="4388,2002,356" help="house_old_ranch_03 teleport 4368 37 336"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport106">
+    <action_sequence name="eventGSKTeleport50106">
       <action class="Teleport">
         <property name="target_position" value="883,2002,-1671" help="house_burnt_04 teleport 863 34 -1691"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport107">
+    <action_sequence name="eventGSKTeleport50107">
       <action class="Teleport">
         <property name="target_position" value="3774,2002,-1370" help="house_construction_02 teleport 3754 38 -1390"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport108">
+    <action_sequence name="eventGSKTeleport50108">
       <action class="Teleport">
         <property name="target_position" value="-1734,2002,2251" help="house_old_victorian_06 teleport -1754 30 2231"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport109">
+    <action_sequence name="eventGSKTeleport50109">
       <action class="Teleport">
         <property name="target_position" value="-879,2002,2332" help="remnant_house_15 teleport -899 12 2312"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport110">
+    <action_sequence name="eventGSKTeleport50110">
       <action class="Teleport">
         <property name="target_position" value="-904,2002,-1026" help="house_modern_12 teleport -924 34 -1046"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport111">
+    <action_sequence name="eventGSKTeleport50111">
       <action class="Teleport">
         <property name="target_position" value="2037,2002,773" help="house_modern_03 teleport 2017 46 753"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport112">
+    <action_sequence name="eventGSKTeleport50112">
       <action class="Teleport">
         <property name="target_position" value="727,2002,-1354" help="house_old_pyramid_03 teleport 707 39 -1374"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport113">
+    <action_sequence name="eventGSKTeleport50113">
       <action class="Teleport">
         <property name="target_position" value="1552,2002,4607" help="house_modern_13 teleport 1532 37 4587"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport114">
+    <action_sequence name="eventGSKTeleport50114">
       <action class="Teleport">
         <property name="target_position" value="3262,2002,-3331" help="house_old_pyramid_05 teleport 3242 40 -3351"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport115">
+    <action_sequence name="eventGSKTeleport50115">
       <action class="Teleport">
         <property name="target_position" value="-1447,2002,315" help="trailer_park_01 teleport -1467 36 295"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport116">
+    <action_sequence name="eventGSKTeleport50116">
       <action class="Teleport">
         <property name="target_position" value="2048,2002,1846" help="house_old_ranch_02 teleport 2028 34 1826"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport117">
+    <action_sequence name="eventGSKTeleport50117">
       <action class="Teleport">
         <property name="target_position" value="492,2002,-2142" help="house_modern_11 teleport 472 43 -2162"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport118">
+    <action_sequence name="eventGSKTeleport50118">
       <action class="Teleport">
         <property name="target_position" value="741,2002,2769" help="house_old_mansard_05 teleport 721 40 2749"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport119">
+    <action_sequence name="eventGSKTeleport50119">
       <action class="Teleport">
         <property name="target_position" value="-207,2002,4498" help="house_old_pyramid_04 teleport -227 35 4478"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport120">
+    <action_sequence name="eventGSKTeleport50120">
       <action class="Teleport">
         <property name="target_position" value="-316,2002,4418" help="house_old_bungalow_03 teleport -336 41 4398"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport121">
+    <action_sequence name="eventGSKTeleport50121">
       <action class="Teleport">
         <property name="target_position" value="4388,2002,2070" help="house_old_victorian_02 teleport 4368 34 2050"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport122">
+    <action_sequence name="eventGSKTeleport50122">
       <action class="Teleport">
         <property name="target_position" value="2250,2002,-4298" help="house_old_pyramid_01 teleport 2230 37 -4318"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport123">
+    <action_sequence name="eventGSKTeleport50123">
       <action class="Teleport">
         <property name="target_position" value="3900,2002,-3028" help="house_modern_16 teleport 3880 36 -3048"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport124">
+    <action_sequence name="eventGSKTeleport50124">
       <action class="Teleport">
         <property name="target_position" value="-4046,2002,894" help="house_burnt_01 teleport -4066 36 874"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport125">
+    <action_sequence name="eventGSKTeleport50125">
       <action class="Teleport">
         <property name="target_position" value="1210,2002,3170" help="house_old_ranch_11 teleport 1190 47 3150"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport126">
+    <action_sequence name="eventGSKTeleport50126">
       <action class="Teleport">
         <property name="target_position" value="-4146,2002,2965" help="house_old_modular_07 teleport -4166 32 2945"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport127">
+    <action_sequence name="eventGSKTeleport50127">
       <action class="Teleport">
         <property name="target_position" value="-4359,2002,-3890" help="house_old_mansard_01 teleport -4379 51 -3910"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport128">
+    <action_sequence name="eventGSKTeleport50128">
       <action class="Teleport">
         <property name="target_position" value="4330,2002,4234" help="remnant_house_20 teleport 4310 31 4214"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport129">
+    <action_sequence name="eventGSKTeleport50129">
       <action class="Teleport">
         <property name="target_position" value="-90,2002,43" help="remnant_house_01 teleport -110 38 23"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport130">
+    <action_sequence name="eventGSKTeleport50130">
       <action class="Teleport">
         <property name="target_position" value="3375,2002,-2056" help="remnant_house_09 teleport 3355 39 -2076"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport131">
+    <action_sequence name="eventGSKTeleport50131">
       <action class="Teleport">
         <property name="target_position" value="-2417,2002,-1687" help="house_old_ranch_07 teleport -2437 101 -1707"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport132">
+    <action_sequence name="eventGSKTeleport50132">
       <action class="Teleport">
         <property name="target_position" value="-774,2002,-632" help="house_old_mansard_03 teleport -794 34 -652"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport133">
+    <action_sequence name="eventGSKTeleport50133">
       <action class="Teleport">
         <property name="target_position" value="876,2002,4180" help="cabin_16 teleport 856 38 4160"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport134">
+    <action_sequence name="eventGSKTeleport50134">
       <action class="Teleport">
         <property name="target_position" value="-1181,2002,3133" help="house_old_cottage_01_detail teleport -1201 38 3113"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport135">
+    <action_sequence name="eventGSKTeleport50135">
       <action class="Teleport">
         <property name="target_position" value="-5,2002,-1637" help="house_old_pyramid_02 teleport -25 18 -1657"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport136">
+    <action_sequence name="eventGSKTeleport50136">
       <action class="Teleport">
         <property name="target_position" value="4298,2002,4332" help="remnant_house_13 teleport 4278 35 4312"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport137">
+    <action_sequence name="eventGSKTeleport50137">
       <action class="Teleport">
         <property name="target_position" value="-2220,2002,-2965" help="house_old_modular_03 teleport -2240 41 -2985"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport138">
+    <action_sequence name="eventGSKTeleport50138">
       <action class="Teleport">
         <property name="target_position" value="-868,2002,3993" help="trailer_02 teleport -888 39 3973"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport139">
+    <action_sequence name="eventGSKTeleport50139">
       <action class="Teleport">
         <property name="target_position" value="-2554,2002,-1280" help="house_old_tudor_05 teleport -2574 47 -1300"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport140">
+    <action_sequence name="eventGSKTeleport50140">
       <action class="Teleport">
         <property name="target_position" value="-2083,2002,2404" help="house_old_ranch_04 teleport -2103 39 2384"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport141">
+    <action_sequence name="eventGSKTeleport50141">
       <action class="Teleport">
         <property name="target_position" value="-3922,2002,223" help="remnant_house_04 teleport -3942 37 203"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport142">
+    <action_sequence name="eventGSKTeleport50142">
       <action class="Teleport">
         <property name="target_position" value="-2809,2002,-2805" help="house_old_victorian_07 teleport -2829 46 -2825"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport143">
+    <action_sequence name="eventGSKTeleport50143">
       <action class="Teleport">
         <property name="target_position" value="2357,2002,1895" help="house_modern_04 teleport 2337 37 1875"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport144">
+    <action_sequence name="eventGSKTeleport50144">
       <action class="Teleport">
         <property name="target_position" value="2123,2002,-848" help="house_old_bungalow_09 teleport 2103 34 -868"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport145">
+    <action_sequence name="eventGSKTeleport50145">
       <action class="Teleport">
         <property name="target_position" value="1090,2002,-4231" help="house_modern_06 teleport 1070 44 -4251"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport146">
+    <action_sequence name="eventGSKTeleport50146">
       <action class="Teleport">
         <property name="target_position" value="-1810,2002,3844" help="house_modern_08 teleport -1830 40 3824"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport147">
+    <action_sequence name="eventGSKTeleport50147">
       <action class="Teleport">
         <property name="target_position" value="2079,2002,-559" help="house_modern_15 teleport 2059 39 -579"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport148">
+    <action_sequence name="eventGSKTeleport50148">
       <action class="Teleport">
         <property name="target_position" value="1804,2002,835" help="house_old_bungalow_08 teleport 1784 40 815"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport149">
+    <action_sequence name="eventGSKTeleport50149">
       <action class="Teleport">
         <property name="target_position" value="-1265,2002,2021" help="house_burnt_03 teleport -1285 40 2001"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeleport150">
+    <action_sequence name="eventGSKTeleport50150">
       <action class="Teleport">
         <property name="target_position" value="3353,2002,2913" help="house_old_modular_04 teleport 3333 27 2893"/>
       </action>

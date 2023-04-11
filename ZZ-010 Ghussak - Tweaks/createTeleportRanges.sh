@@ -56,8 +56,6 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 : ${nBaseDist:=7} #help the minimum distance to teleport
 : ${nOptsMax:=5} #help the optional distances amount you can choose in-game
 
-#TODO update iGSKTeslaTeleportDistIndexMax=${nOptsMax} at buffs generic cfg thru xmlstarlet
-
 if((nBaseDist<1));then CFGFUNCerrorExit "invalid nBaseDist<1";fi
 if((nOptsMax<1));then CFGFUNCerrorExit "invalid nOptsMax<1";fi
 
@@ -186,6 +184,10 @@ echo "$strGenCodeItemTeleCvarRanges" >>"${strFlGenIte}${strGenTmpSuffix}"
 
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONS" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
+echo '<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+./gencodeApply.sh --subTokenId "TELEDIRECTIONSTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+
 echo "$strGenCodeItemTeleCvarRangesUpDn" >>"${strFlGenIte}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONSUPDOWN" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
+./gencodeApply.sh --cleanChkDupTokenFiles
