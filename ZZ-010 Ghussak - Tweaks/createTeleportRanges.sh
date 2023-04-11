@@ -54,7 +54,7 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
       #<action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"',0"/></action_sequence>
       
 : ${nBaseDist:=7} #help the minimum distance to teleport
-: ${nOptsMax:=5} #help the optional distances amount you can choose in-game
+: ${nOptsMax:=5} #help the optional distances amount you can choose in-game that multiplies nBaseDist for final dist calc
 
 if((nBaseDist<1));then CFGFUNCerrorExit "invalid nBaseDist<1";fi
 if((nOptsMax<1));then CFGFUNCerrorExit "invalid nOptsMax<1";fi
@@ -68,21 +68,35 @@ astrElevationList=("Dn" "" "Up")
 declare -p astrElevationList
 iEl=0
 
-iCVarIndexRangeIni=100
-iCVarIndexRangeMaxVal=100
+iCVarIndexIni=100
+iCVarIndexRange=100
 
 astrDirList=(
-  No "North"
-  NE "Nort East"
-  Ea "East"
-  SE "South East"
-  So "South"
-  SW "South West"
-  We "West"
-  NW "North West"
+  No "North"        #1
+  NE "Nort East"    #2
+  Ea "East"         #3
+  SE "South East"   #4
+  So "South"        #5
+  SW "South West"   #6
+  We "West"         #7
+  NW "North West"   #8
+  #9 is Down(9) or Up(29) (19 would be no elevation so is ignored)
 )
 
-: ${bUseDummyIncrement:=true} #help this is useful to make it easier to understand the directions vs cvar values
+#: ${bUseDummyIncrement:=true} #h elp this is useful to make it easier to understand the directions vs cvar values
+#: ${iDummyRange:=10} #h elp around directions are 1to8
+
+strMayhemRnd='
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"${iCVarIndexRange}"'"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,'"${nOptsMax}"')" help="distances"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
+  <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
+    <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
+    <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
+  </triggered_effect>'
 
 strGenCodeItemTeleCvarRanges=""
 strGenCodeEventUpDown=""
@@ -96,11 +110,11 @@ for iIndex in "${!anRangeList[@]}";do
   #nRng45="`bc <<< "scale=0;${nRange}-(${nRange}*0.15)"`" # +- dist at 45 degrees around
   nRng45="`bc <<< "scale=0;((${nRange}-(${nRange}*0.13))*100)/100"`" # +- dist at 45 degrees around (this is a bc trunc trick) TODO proper calc sin cos etc...
   if((nRng45==nRange));then nRng45=$((nRange-1))&&:;fi
-  iCV=$((iCVarIndexRangeIni+(iIndex*iCVarIndexRangeMaxVal)))&&: #only increment this at event code gen lines!
+  iCV=$((iCVarIndexIni+(iIndex*iCVarIndexRange)))&&: #only increment this at event code gen lines!
   for((nYRng=-nRange;nYRng<=nRange;nYRng+=nRange));do
     strEl="${astrElevationList[iEl]}"
     
-    if $bUseDummyIncrement;then
+    #if $bUseDummyIncrement;then
       if [[ "$strEl" == "Dn" ]];then
         :
       elif [[ -z "$strEl" ]];then # no elevation
@@ -108,7 +122,7 @@ for iIndex in "${!anRangeList[@]}";do
       elif [[ "$strEl" == "Up" ]];then
         ((iCV+=2))&&:
       fi
-    fi
+    #fi
     
     declare -p nRange nRng45 nYRng iEl strEl
     echo '        <!-- HELPGOOD: nRange='"${nRange}"' strEl='"${strEl}"' -->' >>"${strFlGenEve}${strGenTmpSuffix}"
@@ -183,9 +197,10 @@ echo "$strGenCodeItemTeleCvarRanges" >>"${strFlGenIte}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONS" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONS" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-
 echo '<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONSTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+echo "$strMayhemRnd" >>"${strFlGenBuf}${strGenTmpSuffix}"
+./gencodeApply.sh --subTokenId "TELEDIRECTIONSMAYHEMRND" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 echo "$strGenCodeItemTeleCvarRangesUpDn" >>"${strFlGenIte}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TELEDIRECTIONSUPDOWN" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"

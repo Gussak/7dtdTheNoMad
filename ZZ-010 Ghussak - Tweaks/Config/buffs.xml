@@ -4117,15 +4117,28 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="add" value="-1"/>
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="5">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportFinalize"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(1,8)" help="around directions"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="set" value="randomInt(0,2)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDirUpDownAdd" operation="multiply" value="100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTeslaTeleDirUpDownAdd" help="100 is above directions. 200 is below directions"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(0,2)" help="same elevation is +0 = 1 to 8. if it is 8: +1 will become 9 = up dir, +2 will be 10 = down dir">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="100" help="less than 100 is no elevation changes, and will then have this chance to tele just directly above or below."/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSMAYHEMRND_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,5)" help="distances"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
+          <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
         </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSMAYHEMRND_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="set" value="randomInt(2,10)"/>
@@ -4551,6 +4564,18 @@
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="529"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBeacon">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBeacon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBackpack">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBackpack"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBedroll">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBedroll"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleLandclaim">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialLandClaim"/>
+        </triggered_effect>
         <!-- HELPGOOD: Directions around player -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaExplodeExtra2">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialZero" help="tele 0,0,0"/>
