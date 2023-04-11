@@ -40,10 +40,10 @@ source ./libSrcCfgGenericToImport.sh
 
 #egrep "[#]help" $0
 
-function FUNCerrorExit() {
-  read -p "FUNCerrorExit:${strScriptName}: HitAKeyToExit" -n 1
-  exit $1
-}
+#function FUNCerrorExit() {
+  #read -p "FUNCerrorExit:${strScriptName}: HitAKeyToExit" -n 1
+  #exit $1
+#}
 
 strSubTokenId=""
 if [[ "${1-}" == "--subTokenId" ]];then #help <strSubTokenId> will be used on the same file to match another section on it
@@ -58,11 +58,11 @@ strFlPatch="$1";shift #help file containing only the changes section to be updat
 strFlToPatch="$1";shift #help file to be patched
 #strComment="$1";shift #he lp 
 if ! ls -l "$strFlPatch" "$strFlToPatch";then
-  echo "InputFilesMissing.";FUNCerrorExit 1
+  echo "InputFilesMissing.";CFGFUNCerrorExit
 fi
 
 strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
-if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";FUNCerrorExit 1;fi
+if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit;fi
 strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
 declare -p strCallerScript
 
@@ -72,7 +72,7 @@ if [[ "${strFlToPatch}" =~ .*[.]txt$ ]];then
 elif [[ "${strFlToPatch}" =~ .*[.]xml$ ]];then
   strFileType=ftXML
 else
-  echo "Unsupported filetype.";FUNCerrorExit 1
+  echo "Unsupported filetype.";CFGFUNCerrorExit
 fi
 
 #strCodeTokenBegin="${strToken}_BEGIN"
@@ -85,8 +85,8 @@ strMsgDoNotModify="===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: ${strCallerScri
 strMsgErrTokenMiss="token missing, you must place it manually initially (each token must be in a single whole line)!"
 strTokenHelperXml="\n<!-- $strCodeTokenBegin -->\n<!-- $strCodeTokenEnd -->"
 strTokenHelperTxt="$strCodeTokenBegin,\"\"\n$strCodeTokenEnd,\"\""
-#if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";FUNCerrorExit 1;fi
-#if ! egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni;then echo -e "ERROR: end   $strMsgErrTokenMiss${strTokenHelper}"  ;FUNCerrorExit 1;fi
+#if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";CFGFUNCerrorExit;fi
+#if ! egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni;then echo -e "ERROR: end   $strMsgErrTokenMiss${strTokenHelper}"  ;CFGFUNCerrorExit;fi
 if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd" "$strFlToPatch" -ni;then
   echo "ERROR: $strMsgErrTokenMiss"
   if [[ "${strFileType}" == ftTXT ]];then
@@ -94,8 +94,10 @@ if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd
   elif [[ "${strFileType}" == ftXML ]];then
     echo -e "$strTokenHelperXml"
   fi
-  FUNCerrorExit 1
+  CFGFUNCerrorExit
 fi
+if((`egrep "$strCodeTokenBegin" "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenBegin";fi
+if((`egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenEnd";fi
 
 # apply patch (recreated code)
 # find begin and end of the patch
@@ -112,7 +114,7 @@ if [[ "${strFileType}" == ftTXT ]];then
 elif [[ "${strFileType}" == ftXML ]];then
   echo "<!-- HELPGOOD:${strCodeTokenBegin} BELOW:${strMsgDoNotModify} -->" >>"${strFlToPatch}.GENCODENEWFILE"
 else
-  echo "Unsupported filetype.";FUNCerrorExit 1
+  echo "Unsupported filetype.";CFGFUNCerrorExit
 fi
 # copy updated sector
 wc -l "$strFlPatch"
@@ -124,7 +126,7 @@ if [[ "${strFileType}" == ftTXT ]];then
 elif [[ "${strFileType}" == ftXML ]];then
   echo "<!-- HELPGOOD:${strCodeTokenEnd} ABOVE:${strMsgDoNotModify} -->" >>"${strFlToPatch}.GENCODENEWFILE"
 else
-  echo "Unsupported filetype.";FUNCerrorExit 1
+  echo "Unsupported filetype.";CFGFUNCerrorExit
 fi
 
 tail -n +$((nTail+1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
@@ -136,7 +138,7 @@ if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
     #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
     if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
       echo "ERROR: aborted."
-      FUNCerrorExit 1
+      CFGFUNCerrorExit
     fi
   fi
   # "overwrite" the old with new file

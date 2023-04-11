@@ -56,6 +56,8 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 : ${nBaseDist:=7} #help the minimum distance to teleport
 : ${nOptsMax:=5} #help the optional distances amount you can choose in-game
 
+#TODO update iGSKTeslaTeleportDistIndexMax=${nOptsMax} at buffs generic cfg thru xmlstarlet
+
 if((nBaseDist<1));then CFGFUNCerrorExit "invalid nBaseDist<1";fi
 if((nOptsMax<1));then CFGFUNCerrorExit "invalid nOptsMax<1";fi
 
@@ -68,40 +70,122 @@ astrElevationList=("Dn" "" "Up")
 declare -p astrElevationList
 iEl=0
 
-strCodeUpDown=""
+iCVarIndexRangeIni=100
+iCVarIndexRangeMaxVal=100
+
+astrDirList=(
+  No "North"
+  NE "Nort East"
+  Ea "East"
+  SE "South East"
+  So "South"
+  SW "South West"
+  We "West"
+  NW "North West"
+)
+
+: ${bUseDummyIncrement:=true} #help this is useful to make it easier to understand the directions vs cvar values
+
+strGenCodeItemTeleCvarRanges=""
+strGenCodeEventUpDown=""
+strGenCodeItemTeleCvarRangesUpDn=""
+strGenCodeBuffDirs=""
 #for nRange in "${anRangeList[@]}";do
 for iIndex in "${!anRangeList[@]}";do
   nRange="${anRangeList[iIndex]}"
-  strIndex=$((iIndex+1))&&: # this is the distance index that the user will choose in-game
+  nUserIndex=$((iIndex+1))&&: # this is the distance index that the user will choose in-game
   echo
   #nRng45="`bc <<< "scale=0;${nRange}-(${nRange}*0.15)"`" # +- dist at 45 degrees around
   nRng45="`bc <<< "scale=0;((${nRange}-(${nRange}*0.13))*100)/100"`" # +- dist at 45 degrees around (this is a bc trunc trick) TODO proper calc sin cos etc...
   if((nRng45==nRange));then nRng45=$((nRange-1))&&:;fi
+  iCV=$((iCVarIndexRangeIni+(iIndex*iCVarIndexRangeMaxVal)))&&: #only increment this at event code gen lines!
   for((nYRng=-nRange;nYRng<=nRange;nYRng+=nRange));do
     strEl="${astrElevationList[iEl]}"
+    
+    if $bUseDummyIncrement;then
+      if [[ "$strEl" == "Dn" ]];then
+        :
+      elif [[ -z "$strEl" ]];then # no elevation
+        ((iCV+=1))&&:
+      elif [[ "$strEl" == "Up" ]];then
+        ((iCV+=2))&&:
+      fi
+    fi
+    
     declare -p nRange nRng45 nYRng iEl strEl
-    echo '      <!-- HELPGOOD: nRange='"${nRange}"' strEl='"${strEl}"' -->
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'No'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'So'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,'"${nYRng}"',-'"${nRange}"'"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'We'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRange}"','"${nYRng}"',0"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'Ea'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRange}"','"${nYRng}"',0"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'NW'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'NE'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'SW'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"'SE'"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
-      ' >>"${strFlGenEve}${strGenTmpSuffix}"
+    echo '        <!-- HELPGOOD: nRange='"${nRange}"' strEl='"${strEl}"' -->' >>"${strFlGenEve}${strGenTmpSuffix}"
+    #for strDir in "${astrDirList[@]}";do
+    for((iDir=0;iDir<${#astrDirList[@]};iDir+=2));do
+      strDir="${astrDirList[$iDir]}"
+      echo '  <action_sequence name="eventGSKTeslaTele'"${nUserIndex}${strDir}${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele'"${nUserIndex}${strDir}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+      if [[ "$strDir" == "No" ]];then
+        nUpDown=0;if [[ "$strEl" == "Dn" ]];then nUpDown=-1;fi;if [[ "$strEl" == "Up" ]];then nUpDown=1;fi
+        strGenCodeItemTeleCvarRanges+='
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"${iCV}"'" help="'"$nUserIndex: ${astrDirList[$((iDir+1))]} $strEl"'">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportMixUpDown" operation="Equals" value="'"${nUpDown}"'" />
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
+        </triggered_effect>'
+      fi
+    done
+    
+    #echo '<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'No'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'NE'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'Ea'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRange}"','"${nYRng}"',0"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'SE'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'So'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',-'"${nRange}"'"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'SW'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'We'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRange}"','"${nYRng}"',0"/></action_sequence>
+      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'NW'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
+      #' >>"${strFlGenEve}${strGenTmpSuffix}"
+    #strGenCodeItemTeleCvarRanges+='
+  #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"$((iCV+1))"'" help="North">
+    #<requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+    #<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
+  #</triggered_effect>
+    #'
       
     if((nYRng!=0));then
-      strCodeUpDown+='
-      <action_sequence name="eventGSKTeslaTele'"${strIndex}"''"${strEl}"'" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,'"${nYRng}"',0"/></action_sequence>'
+      #if((nYRng<0));then
+      if [[ "$strEl" == "Dn" ]];then
+        #iCVud=$((iCV+9))&&: #down
+        iCrouch=1
+      elif [[ "$strEl" == "Up" ]];then
+        #iCVud=$((iCV+10))&&: #up
+        iCrouch=0
+      fi
+      strGenCodeEventUpDown+='
+      <action_sequence name="eventGSKTeslaTele'"${nUserIndex}${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',0"/></action_sequence>'
+      strGenCodeItemTeleCvarRangesUpDn+='
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"$((iCV))"'">
+        <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="'"${iCrouch}"'" />
+      </triggered_effect>'
+      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele'"${nUserIndex}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
     fi
     
     ((iEl++))&&:
     if((iEl>=${#astrElevationList[*]}));then iEl=0;fi
+    
+    #if $bUseDummyIncrement;then
+      #((iCV+=1))&&:
+    #fi
   done
 done
-
 echo "<!-- HELPGOOD: straight up and down -->" >>"${strFlGenEve}${strGenTmpSuffix}"
-echo "${strCodeUpDown}" >>"${strFlGenEve}${strGenTmpSuffix}"
-
+echo "${strGenCodeEventUpDown}" >>"${strFlGenEve}${strGenTmpSuffix}"
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
+
+#echo '    <!-- HELPGOOD: indexes 1 to '"${nOptsMax}"' -->
+#' >>"${strFlGenIte}${strGenTmpSuffix}"
+#./gencodeApply.sh --subTokenId "CONFIGURATORS" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+
+echo "$strGenCodeItemTeleCvarRanges" >>"${strFlGenIte}${strGenTmpSuffix}"
+./gencodeApply.sh --subTokenId "TELEDIRECTIONS" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+
+./gencodeApply.sh --subTokenId "TELEDIRECTIONS" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+
+echo "$strGenCodeItemTeleCvarRangesUpDn" >>"${strFlGenIte}${strGenTmpSuffix}"
+./gencodeApply.sh --subTokenId "TELEDIRECTIONSUPDOWN" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+
