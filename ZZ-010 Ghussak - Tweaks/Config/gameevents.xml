@@ -110,16 +110,12 @@
 -->
     </action_sequence>
     <action_sequence name="eventGSKTeslaTele">
-      <action class="TeleportToSpecial">
-        <property name="phase" value="7"/>
-        <property name="special_type" value="DUMMY_FORCE_IGNORE_VALUE" param1="strBeacon" help="Bedroll Landclaim Backpack, works better with v3Dir 0,0,0 or 0,1,0"/>
-      </action>
       <action class="Teleport">
         <property name="phase" value="10"/>
-        <property name="target_position" value="0,0,7" param1="v3Dir"/>
+        <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
-      <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL. disintegrates blocks to let a safe teleport">
+      <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
         <property name="phase" value="20"/>
         <property name="blast_power" value="75"/>
         <property name="block_damage" value="99999"/>
@@ -150,21 +146,57 @@
         <property name="entity_radius" value="5"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleBeacon" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,1,0"/>
-      <variable name="strBeacon" value="Backpack"/>
+    <action_sequence name="eventGSKTeslaTeleBeacon">
+      <action class="TeleportToSpecial">
+        <property name="phase" value="10"/>
+        <property name="special_type" value="Backpack"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="20"/>
+        <property name="game_events" value="eventGSKTeslaTele" help="to create the default tele explosions"/>
+      </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleBackpack" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,1,0"/>
-      <variable name="strBeacon" value="Backpack"/>
+    <action_sequence name="eventGSKTeslaTeleBackpack">
+      <action class="TeleportToSpecial">
+        <property name="phase" value="10"/>
+        <property name="special_type" value="Backpack"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="20"/>
+        <property name="game_events" value="eventGSKTeslaTele" help="to create the default tele explosions"/>
+      </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleBedroll" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,1,0"/>
-      <variable name="strBeacon" value="Bedroll"/>
+    <action_sequence name="eventGSKTeslaTeleBedroll">
+      <action class="TeleportToSpecial">
+        <property name="phase" value="10"/>
+        <property name="special_type" value="Bedroll"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="20"/>
+        <property name="game_events" value="eventGSKTeslaTele" help="to create the default tele explosions"/>
+      </action>
     </action_sequence>
-    <action_sequence name="eventGSKTeslaTeleLandclaim" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,1,0"/>
-      <variable name="strBeacon" value="Landclaim"/>
+    <action_sequence name="eventGSKTeslaTeleLandclaim">
+      <action class="TeleportToSpecial">
+        <property name="phase" value="10"/>
+        <property name="special_type" value="Landclaim"/>
+      </action>
+      <action class="CallGameEvent">
+        <property name="phase" value="20"/>
+        <property name="game_events" value="eventGSKTeslaTele" help="to create the default tele explosions"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaTeleToGround" help="trick to use the engine auto placement if outside the world below">
+      <action class="Teleport">
+        <property name="target_position" value="0,-65000,0"/>
+        <property name="offset_type" value="Relative"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeslaSpawnBeacon">
+      <action class="SpawnEntity">
+        <property name="entity_names" value="Backpack"/>
+        <property name="spawn_count" value="1"/>
+      </action>
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
     <!-- HELPGOOD: nRange=7 strEl=Dn -->

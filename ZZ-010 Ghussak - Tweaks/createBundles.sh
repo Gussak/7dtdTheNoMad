@@ -114,6 +114,17 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
   strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
   #strFUNCspecificItemsCode_AddDesc=""
   
+  local lastrFlCfgChkList=(block item item_modifier)
+  local lstrFlCfgChkRegex="`echo "${lastrFlCfgChkList[@]}" |tr ' ' '|'`"
+  local lastrFlCfgChkFullPathList=()
+  for strFlCfgChk in "${lastrFlCfgChkList[@]}";do
+    lastrFlCfgChkFullPathList+=("Config/${strFlCfgChk}s.xml")
+    if [[ -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
+      lastrFlCfgChkFullPathList+=("${strCFGNewestSavePathConfigsDumpIgnorable}/${strFlCfgChk}s.xml")
+    fi
+  done
+  if ! egrep '< *('"${lstrFlCfgChkRegex}"') *name *= *"'"${strItemID}"'"' "${lastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id is missing (or was changed): ${strItemID}";fi
+  
   local fDmg=0.75
   if [[ "$strItemID" == "apparelNightvisionGoggles" ]];then
     bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
@@ -149,7 +160,7 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
-  if [[ "$strItemID" == "GSKTeslaTeleport" ]];then
+  if [[ "$strItemID" == "GSKTeslaTeleportDirection" ]];then
     bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
     strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
@@ -421,7 +432,7 @@ astr=(
   armorClothHat 1 # this is to be able to install one of the mods
   gunBotT2JunkTurret 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
-  GSKTeslaTeleport 1
+  GSKTeslaTeleportDirection 1
   GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
   modGSKTeslaTeleport 1

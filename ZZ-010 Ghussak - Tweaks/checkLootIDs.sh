@@ -31,9 +31,13 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-strSavesPath="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/East Nikazohi Territory/"
-strNewestSavePath="${strSavesPath}/`ls -1tr "$strSavesPath" |tail -n 1`"
-IFS=$'\n' read -d '' -r -a aiIdList < <(egrep 'id="[0-9]*"' "$strNewestSavePath/ConfigsDump/loot.xml" -o |egrep "[0-9]*" -o|sort -n)
+source ./libSrcCfgGenericToImport.sh
+
+#: ${strCFGSavesPath:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/East Nikazohi Territory/"} #help
+#: ${strCFGNewestSavePath:="${strCFGSavesPath}/`ls -1tr "$strCFGSavesPath" |tail -n 1`"} #help
+declare -p strCFGNewestSavePathConfigsDumpIgnorable
+IFS=$'\n' read -d '' -r -a aiIdList < <(egrep 'id="[0-9]*"' "${strCFGNewestSavePathConfigsDumpIgnorable}/loot.xml" -o |egrep "[0-9]*" -o|sort -n)&&:
+declare -p aiIdList
 
 iIdMax=1023
 iDupCount=0

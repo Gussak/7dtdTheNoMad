@@ -132,6 +132,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="1"/>
       </effect_group>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDrinkingRain" operation="Equals" value="1" help="while it is raining only. when rain stops, it begins decreasing wetness and drinking rain stops too"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
@@ -1586,6 +1587,9 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
       </effect_group>
     </buff>
@@ -1594,6 +1598,9 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
       </effect_group>
     </buff>
@@ -1606,6 +1613,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LTE" value="0.95"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
@@ -1678,6 +1688,9 @@
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.95"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
@@ -1706,6 +1719,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
@@ -1720,6 +1736,9 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaBatteryEnabled" hidden="true" remove_on_death="false">
@@ -1729,6 +1748,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg53">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyShieldDefend" hidden="true" remove_on_death="false">
@@ -3991,9 +4013,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSTOT_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="0"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsTOT_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="5"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSTOT_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsTOT_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleIniSpecial value -->
         <!-- HELPGOOD: special tele destinations, shall have no clashes with createTeleportRanges.sh max value too. can be sorted now -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleIniSpecial" operation="set" value="10000"/>
@@ -4036,19 +4062,21 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
+    <buff name="buffGSKTeslaTeleportAndDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <display_value value=".fGSKTeleportDebuffTm"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportDebuff"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportAndDebuff"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKTeleportDebuffTm" operation="set" value="randomInt(30,90)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKTeleWrongDir" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKTeleMayhem" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="add" value="randomInt(4,6)" help="damages the player when used. The debuffs to speed and jump only happen if duration is &gt;= 4"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffShocked" target="self"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKQuickShock" operation="add" value="0.05">
@@ -4065,7 +4093,6 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKQuickShock" operation="set" value="0"/>
       </effect_group>
       <effect_group name="CHECK random teleport">
-        <requirement name="CVarCompare" cvar="iGSKTeleportToSkyCount" operation="GT" value="0" help="protects 1st sky teleport only"/>
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleIniSpecial" help="tele relative direction nearby"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="@fGSKDmgSafePercTP" help="u can still trust it up to that dmg limit"/>
@@ -4073,18 +4100,25 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgPercTPx100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgPercTPx100" operation="multiply" value="100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgPercTPx100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="randomInt(0,10)" help="this will already be a random teleport, but must be from 0 because buffGSKTeslaTeleportRandomMayhem only happens with that!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleWrongDir" operation="set" value="1">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,200" operation="LTE" value="@.fGSKDmgPercTPx100" help="max dmg means 50% chance"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleMayhem" operation="set" value="1">
+          <requirement name="CVarCompare" cvar=".bGSKTeleWrongDir" operation="Equals" value="1"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection">
+          <requirement name="CVarCompare" cvar=".bGSKTeleWrongDir" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group name="TELEPORT">
-        <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportRandomMayhem">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="0" help="Random Mayhem"/>
+          <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize" help="can be the normal dir or the wrong one, but not the mayhem">
+          <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -4092,16 +4126,34 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="0.1"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="GTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
+        <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="GTE" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,50" operation="LTE" value="@iGSKperkElectrLvl" help="2% chance per perk lvl"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
           <requirement name="CVarCompare" cvar=".fGSKTeleportDebuffTm" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportDebuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0" help="device was unequiped"/>
         </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeslaTeleChoseRandomDirection" remove_on_death="true" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,5)" help="distances"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
+          <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaTeleportRandomMayhem" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleportRandomMayhem" icon_color="255,128,128">
@@ -4115,8 +4167,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="set" value="randomInt(3,13)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="add" value="-1"/>
-      </effect_group>
-      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="5">
           <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="10"/>
         </triggered_effect>
@@ -4126,19 +4176,23 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.80"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:eventGSKTeleportMayhemKillsPlayer"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportMayhemKillsPlayer"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Tesla Teleport Device mod was too damaged, and exploded!!!"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportFinalize"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSMAYHEMRND_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,5)" help="distances"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
-          <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
-        </triggered_effect>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONSMAYHEMRND_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <!-- HELPGOOD:_AUTO GENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <!-- HELPGOOD:_AUTO GENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="set" value="randomInt(2,10)"/>
@@ -4149,13 +4203,6 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportRandomMayhem">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0" help="device was unequiped"/>
         </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.80"/>
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:eventGSKTeleportMayhemKillsPlayer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportMayhemKillsPlayer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Tesla Teleport Device mod was too damaged, and exploded!!!"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaTeleportFinalize" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
@@ -4172,7 +4219,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleIniSpecial"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoDn">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="101"/>
         </triggered_effect>
@@ -4563,7 +4610,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5Up">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="529"/>
         </triggered_effect>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TELEDIRECTIONS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBeacon">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBeacon"/>
         </triggered_effect>
@@ -4599,6 +4646,7 @@
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="0" help="resets to prepare for next"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
       </effect_group>
     </buff>
@@ -4665,6 +4713,27 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportFleeDirection"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKFirstEnterGameTeleportToRandomSpawnOnGround">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPrepareRandomSpawn"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKFirstEnterGameTeleportToRandomSpawnOnGround"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPrepareRandomSpawn">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+      </effect_group>
+    </buff>
     <buff name="buffGSKDetectEnterGame">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
@@ -4687,11 +4756,11 @@
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialSkyAbove"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialSkyLastSpawn"/>
@@ -4700,9 +4769,9 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleIniSkyRandomSpawn"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)"/>
-        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPrepareRandomSpawn"/>
+        <!-- HELPGOOD:_AUTO GENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <!-- HELPGOOD:_AUTO GENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleIniSkyRandomSpawn"/>
@@ -4712,7 +4781,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin" help="this is to initialize the 'flying' trick as soon as possible">
           <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.bGSKFallProtTmMin"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportDebuff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaDisableAll" help="this is important because the slow fall trick makes it too difficult to use the inventory"/>
@@ -4786,617 +4855,479 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeleportToAnyDifficultyZone" help="all difficultyies spawn points">
+    <buff name="buffGSKTeleportToAnyDifficultyZone" help="all difficultyies spawn points. easiest to hardest: desert,forest,snow,wasteland">
       <stack_type value="ignore"/>
-      <duration value="1.0"/>
+      <duration value="10" help="is removed on last phase tho"/>
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleDifZonePhase" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleDifZonePhase" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="1"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50001">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50001"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50002">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50002"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50003">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50003"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50004">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50004"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50005">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50005"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50006">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50006"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50007">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50007"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50008">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50008"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50009">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50009"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50010">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50010"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50011">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50011"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50012">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50012"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50013">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50013"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50014">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50014"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50015">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50015"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50016">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50016"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50017">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50017"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50018">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50018"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50019">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50019"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50020">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50020"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50021">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50021"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50022">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50022"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50023">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50023"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50024">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50024"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50025">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50025"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50026">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50026"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50027">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50027"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50028">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50028"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50029">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50029"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50030">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50030"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50031">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50031"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50032">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50032"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50033">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50033"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50034">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50034"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50035">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50035"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50036">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50036"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50037">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50037"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50038">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50038"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50039">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50039"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50040">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50040"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50041">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50041"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50042">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50042"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50043">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50043"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50044">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50044"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50045">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50045"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50046">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50046"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50047">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50047"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50048">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50048"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50049">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50049"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50050">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50050"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50051">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50051"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50052">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50052"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50053">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50053"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50054">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50054"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50055">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50055"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50056">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50056"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50057">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50057"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50058">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50058"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50059">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50059"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50060">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50060"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50061">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50061"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50062">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50062"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50063">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50063"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50064">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50064"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50065">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50065"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50066">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50066"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50067">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50067"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50068">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50068"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50069">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50069"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50070">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50070"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50071">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50071"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50072">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50072"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50073">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50073"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50074">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50074"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50075">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50075"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50076">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50076"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50077">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50077"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50078">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50078"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50079">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50079"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50080">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50080"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50081">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50081"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50082"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50083">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50083"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50084">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50084"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50085">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50085"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50086">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50086"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50087">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50087"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50088">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50088"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50089">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50089"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50090">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50090"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50091">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50091"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50092">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50092"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50093">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50093"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50094">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50094"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50095">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50095"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50096">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50096"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50097">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50097"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50098">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50098"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50099">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50099"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50100">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50100"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50101">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50101"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50102">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50102"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50103">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50103"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50104">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50104"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50105">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50105"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50106">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50106"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50107">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50107"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50108">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50108"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50109">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50109"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50110">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50110"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50111">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50111"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50112">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50112"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50113">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50113"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50114">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50114"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50115">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50115"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50116">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50116"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50117">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50117"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50118">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50118"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50119">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50119"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50120">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50120"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50121">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50121"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50122">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50122"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50123">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50123"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50124">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50124"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50125">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50125"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50126">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50126"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50127">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50127"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50128">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50128"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50129">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50129"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50130">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50130"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50131">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50131"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50132">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50132"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50133">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50133"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50134">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50134"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50135">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50135"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50136">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50136"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50137">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50137"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50138">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50138"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50139">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50139"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50140">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50140"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50141">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50141"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50142">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50142"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50143">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50143"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50144">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50144"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50145">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50145"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50146">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50146"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50147">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50147"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50148">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50148"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50149">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50149"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50150">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50150"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="2"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleToGround"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
       </effect_group>
-      <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50001"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50001"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50002"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50002"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50003"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50003"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50004"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50004"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50005"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50005"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50006"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50006"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50007"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50007"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50008"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50008"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50009"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50009"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50010"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50010"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50011"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50011"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50012"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50012"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50013"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50013"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50014"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50014"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50015"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50015"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50016"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50016"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50017"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50017"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50018"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50018"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50019"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50019"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50020"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50020"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50021"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50021"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50022"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50022"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50023"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50023"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50024"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50024"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50025"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50025"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50026"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50026"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50027"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50027"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50028"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50028"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50029"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50029"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50030"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50030"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50031"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50031"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50032"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50032"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50033"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50033"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50034"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50034"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50035"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50035"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50036"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50036"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50037"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50037"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50038"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50038"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50039"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50039"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50040"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50040"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50041"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50041"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50042"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50042"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50043"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50043"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50044"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50044"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50045"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50045"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50046"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50046"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50047"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50047"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50048"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50048"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50049"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50049"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50050"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50050"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50051"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50051"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50052"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50052"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50053"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50053"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50054"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50054"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50055"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50055"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50056"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50056"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50057"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50057"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50058"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50058"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50059"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50059"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50060"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50060"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50061"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50061"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50062"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50062"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50063"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50063"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50064"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50064"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50065"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50065"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50066"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50066"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50067"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50067"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50068"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50068"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50069"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50069"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50070"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50070"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50071"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50071"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50072"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50072"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50073"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50073"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50074"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50074"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50075"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50075"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50076"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50076"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50077"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50077"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50078"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50078"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50079"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50079"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50080"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50080"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50081"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50081"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50082"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50082"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50083"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50083"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50084"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50084"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50085"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50085"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50086"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50086"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50087"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50087"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50088"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50088"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50089"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50089"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50090"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50090"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50091"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50091"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50092"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50092"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50093"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50093"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50094"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50094"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50095"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50095"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50096"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50096"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50097"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50097"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50098"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50098"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50099"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50099"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50100"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50101"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50101"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50102"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50102"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50103"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50103"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50104"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50104"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50105"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50105"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50106"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50106"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50107"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50107"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50108"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50108"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50109"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50109"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50110"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50110"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50111"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50111"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50112"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50112"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50113"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50113"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50114"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50114"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50115"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50115"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50116"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50116"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50117"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50117"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50118"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50118"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50119"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50119"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50120"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50120"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50121"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50121"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50122"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50122"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50123"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50123"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50124"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50124"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50125"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50125"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50126"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50126"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50127"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50127"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50128"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50128"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50129"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50129"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50130"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50130"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50131"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50131"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50132"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50132"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50133"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50133"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50134"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50134"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50135"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50135"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50136"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50136"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50137"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50137"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50138"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50138"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50139"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50139"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50140"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50140"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50141"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50141"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50142"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50142"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50143"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50143"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50144"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50144"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50145"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50145"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50146"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50146"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50147"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50147"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50148"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50148"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50149"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50149"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50150"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50150"/>
-      </effect_group>
-      <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
     </buff>
     <buff name="buffGSKHazardWeatherMiasmaDirty38" description_key="buffGSKHazardWeatherMiasmaDirty5Desc" name_key="MiasmaAndDirtyEtc" help="this is also always running, so is used like a generic place for many things">
       <stack_type value="replace"/>
@@ -5596,6 +5527,23 @@
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTeslaHero"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKSlowFallSimple">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKSimpleSlowFall" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".fGSKSlowFallDelay" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="subtract" value="@.fGSKSlowFallDelay"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKParachuteSQN" icon="ui_game_symbol_candy_oh_shitz" icon_color="128,255,255" hidden="false" remove_on_death="true" description_key="dkbuffGSKRespawnNoFallDmg" name_key="ParachuteSQN" help="this buff uses gameevents to teleport">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -5607,7 +5555,9 @@
         <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:buffGSKParachuteSQN:onSelfTeleported detected"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMin" operation="set" value="10"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTmMax" operation="set" value="300" help="increase this time if you have a slow machine, I think it may help"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin" help="this allows configuring less kick-in time delay">
+          <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKFallProtUpdateRate" operation="set" value="0.25" help="same value of update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="add" value="@.bGSKFallProtUpdateRate"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKHadFallImpact" operation="set" value="0"/>
@@ -5666,6 +5616,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKParachuteSQN"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0" help="make it ready for next time"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKSimpleSlowFall" operation="set" value="0" help="make it ready for next time"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="0" help="make it ready for next time"/>
       </effect_group>
       <effect_group help="KEEP AFTER TIMEOUT CHECK TO HAPPEN ON NEXT LOOP. must have been teleported to the sky or enabled other way">
         <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="GT" value="@.bGSKFallProtTmMin"/>
@@ -5780,7 +5731,7 @@
     </triggered_effect>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKDancingZombies">
+    <buff name="buffGSKDancingZombies" help="TODO: this seems to only make zombies go ragdoll?">
       <stack_type value="ignore"/>
       <duration value="10"/>
       <effect_group>

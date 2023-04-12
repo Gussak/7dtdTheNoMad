@@ -154,7 +154,7 @@ for str in "${astrPrefabsList[@]}";do
   
   #NORMAL DIFFICULTY SPAWNS from -5000 5000 to -2300 -2000
   iYOrig=$iY
-  if $bParachuteMode;then iY=2000;fi 
+  if $bParachuteMode;then iY=2000;fi #help the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
   : ${bUseAll:=true} #help
   if $bUseAll;then
     astrRect=("${astrRectAll[@]}")
@@ -189,10 +189,9 @@ for str in "${astrPrefabsList[@]}";do
     strTeleportIndex="`printf %03d $iTeleportIndex`"
     strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
     echo '      <!-- '"${strMsg}"' -->
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'"/>
-      </effect_group>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
+        </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
     echo '      <!-- '"${strMsg}"' -->
     <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
       <property name="target_position" value="'"${strPos}"'" help="'"${strNm} ${strTeleport}"'"/>
@@ -214,7 +213,7 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 
 #xmlstarlet ed -L -d "//triggered_effect[@help='SPAWNPOINT_RANDOM_AUTOMATIC']" "${strFlGenBuf}"
 CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"
-echo '        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+echo '        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 ./gencodeApply.sh --cleanChkDupTokenFiles

@@ -278,7 +278,12 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   trap 'CFGFUNCerrorChk' EXIT
   
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
-
+  
+  : ${strCFGSavesPathIgnorable:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/East Nikazohi Territory/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/ConfigsDump/"}&&: #help
+  export strCFGSavesPathIgnorable
+  export strCFGNewestSavePathConfigsDumpIgnorable
+  
   mkdir -vp _log
   export strCFGScriptLog="`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
   #declare -p strCFGScriptLog
@@ -317,7 +322,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   export strCFGOriginalBkpSuffix=".OriginalOrExistingFile.BakupMadeBy_${strModNameForIDs}.bkp"
   
-  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"} #help
+  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
   export strCFGGeneratedWorldsFolder
   export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
   
