@@ -362,7 +362,7 @@ astr=(
 astr=(
   apparelNightvisionGoggles 1
   bedrollBlue 103
-  casinoCoin 525
+  casinoCoin 666
   drugJailBreakers 6
   GlowStickGreen       100
   GSKfireFuel 10
@@ -376,7 +376,7 @@ astr=(
   resourceFeather        1
   resourceLockPick 1
   resourceRockSmall    208
-  resourceWood         526
+  resourceWood         666
   resourceYuccaFibers  31
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorHelmetLightSchematic 1
@@ -386,7 +386,7 @@ astr=(
 );FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho). Some of these equipment are severely damaged and wont last long w/o repairs tho." "${astr[@]}"
 
 astr=( #TEMPLATE
-  ammo9mmBulletBall 998
+  ammo9mmBulletBall 666
   ammoArrowStone 53
   gunHandgunT1PistolParts 30
   gunHandgunT3SMG5 1
@@ -455,12 +455,12 @@ astr=(
   drugSteroids  10
   drugVitamins 1
   foodHoney 1
-  GSKAntiRadiation 10
-  GSKAntiRadiationSlow 10
-  GSKAntiRadiationStrong 10
-  GSKPsyonicsResist 10
-  GSKRadiationResist 10
-  GSKsnakePoisonAntidote 10
+  drugGSKAntiRadiation 10
+  drugGSKAntiRadiationSlow 10
+  drugGSKAntiRadiationStrong 10
+  drugGSKPsyonicsResist 10
+  drugGSKRadiationResist 10
+  drugGSKsnakePoisonAntidote 10
   medicalBloodBag 10
   medicalFirstAidBandage 15
   medicalSplint 10
@@ -503,9 +503,9 @@ astr=(
   drinkJarBoiledWater 2
   drugSteroids 1
   GlowStickGreen       13
-  GSKAntiRadiationStrong 2
-  GSKPsyonicsResist 3
-  GSKsnakePoisonAntidote 2
+  drugGSKAntiRadiationStrong 2
+  drugGSKPsyonicsResist 3
+  drugGSKsnakePoisonAntidote 2
   GSKfireFuel 5
   GSKsimpleBeer        3
   medicalFirstAidBandage 3

@@ -542,7 +542,25 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWExtExplKORandomTime">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="WORKAROUND ragdoll missing for animalspider? TODO: remove this when spiders have ragdoll working see items.xml too TODO: this worked?">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bEWAllowKO" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bEWAllowKO" operation="set" value="1">
+          <requirement name="!EntityTagCompare" tags="animalSpider01"/>
+          <requirement name="!EntityTagCompare" tags="animalSpider02"/>
+          <requirement name="!EntityTagCompare" tags="animalSpider03"/>
+          <requirement name="IsAlive" target="other" help="trying to prevent disappearing animal corpses glitch TODO: this worked?"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtExplKOAdd">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWInjuryStunGrenade">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWExtExplKO">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtExplKOAdd">

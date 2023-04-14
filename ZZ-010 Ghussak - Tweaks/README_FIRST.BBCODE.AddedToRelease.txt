@@ -123,6 +123,11 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 ################## CHANGES ##############  
+--------- v0.9c -----------  
+- fixed HitpointsBlockageByChemUse
+- clearly visible HP Stamina Food and water blockage
+- new teleport activators fully working now
+
 --------- v0.9a -----------  
 - initial release.  
 - Some minor things are still missing: still needs better new item's names and descriptions and alternative icons instead of colored vanilla ones.  
@@ -131,5 +136,5 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 .  
-###FileDescription:###
+###FileDescription v0.9c:###
 WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).
