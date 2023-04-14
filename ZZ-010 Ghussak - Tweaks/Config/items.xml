@@ -1,16 +1,20 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <!-- HELPGOOD: things that do not work yet?
-  - this kind of logic will break the game: to have "and" compare within "or"
+  - this kind of logic will break the game: to have "and" compare within "or"?
     <property class="Action0">
       <requirements compare_type="or">
         <requirements>
           <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1.0" />
           <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
-        </requirements>
-        <requirements>
+        </requirements> 
+        <requirements> and...
         
-  - ShowToolbeltMessage does not accept cvars like {cvar(iGSKTeslaTeleportDistIndex:0)}
+  - ShowToolbeltMessage does not accept cvars like {cvar(iGSKTeslaTeleportDistIndex:0)} causing format errors on log
+  
+  - extends for actions do not extend requirements? therefore requirements shall be set on every extender even if identical.. better use code autogen if too many (+3).
+  
+  - explosion and decoy seem to be incompatible at GlowStickGreenDecoy2? only one or the other works, not both..
 -->
   <append xpath="/items">
     <item name="GSKBaseActivator">
@@ -293,49 +297,54 @@
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame31"/>
     </item>
     <item name="GSKNoteStartNewGame32">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Bestiary I -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Hazards V -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame32"/>
     </item>
     <item name="GSKNoteStartNewGame33">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Bestiary II -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Bestiary I -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame33"/>
     </item>
     <item name="GSKNoteStartNewGame34">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Generic equipment careful usage I -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Bestiary II -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame34"/>
     </item>
     <item name="GSKNoteStartNewGame35">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC I -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: Generic equipment careful usage I -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame35"/>
     </item>
     <item name="GSKNoteStartNewGame36">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC II -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC I -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame36"/>
     </item>
     <item name="GSKNoteStartNewGame37">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC III -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC II -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame37"/>
     </item>
     <item name="GSKNoteStartNewGame38">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS I -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: ETC III -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame38"/>
     </item>
     <item name="GSKNoteStartNewGame39">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS II -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS I -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame39"/>
     </item>
     <item name="GSKNoteStartNewGame40">
-      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS III -->
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS II -->
       <property name="Extends" value="GSKNoteSNGBase"/>
       <property name="DescriptionKey" value="dkGSKNoteStartNewGame40"/>
+    </item>
+    <item name="GSKNoteStartNewGame41">
+      <!-- HELPGOOD:GENCODE:createNotesTips.sh: T3CHN0T35/WORKAROUNDS III -->
+      <property name="Extends" value="GSKNoteSNGBase"/>
+      <property name="DescriptionKey" value="dkGSKNoteStartNewGame41"/>
     </item>
     <!-- HELPGOOD:GENCODE:createNotesTips.sh -->
     <item name="GSKTRNotesBundle">
@@ -343,8 +352,8 @@
       <property name="CustomIconTint" value="200,200,200"/>
       <property name="DescriptionKey" value="dkGSKTRNotesBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 25 notes" value="GSKNoteStartNewGame16,GSKNoteStartNewGame17,GSKNoteStartNewGame18,GSKNoteStartNewGame19,GSKNoteStartNewGame20,GSKNoteStartNewGame21,GSKNoteStartNewGame22,GSKNoteStartNewGame23,GSKNoteStartNewGame24,GSKNoteStartNewGame25,GSKNoteStartNewGame26,GSKNoteStartNewGame27,GSKNoteStartNewGame28,GSKNoteStartNewGame29,GSKNoteStartNewGame30,GSKNoteStartNewGame31,GSKNoteStartNewGame32,GSKNoteStartNewGame33,GSKNoteStartNewGame34,GSKNoteStartNewGame35,GSKNoteStartNewGame36,GSKNoteStartNewGame37,GSKNoteStartNewGame38,GSKNoteStartNewGame39,GSKNoteStartNewGame40"/>
-        <property name="Create_item_count" value="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+        <property name="Create_item" help="it has 26 notes" value="GSKNoteStartNewGame16,GSKNoteStartNewGame17,GSKNoteStartNewGame18,GSKNoteStartNewGame19,GSKNoteStartNewGame20,GSKNoteStartNewGame21,GSKNoteStartNewGame22,GSKNoteStartNewGame23,GSKNoteStartNewGame24,GSKNoteStartNewGame25,GSKNoteStartNewGame26,GSKNoteStartNewGame27,GSKNoteStartNewGame28,GSKNoteStartNewGame29,GSKNoteStartNewGame30,GSKNoteStartNewGame31,GSKNoteStartNewGame32,GSKNoteStartNewGame33,GSKNoteStartNewGame34,GSKNoteStartNewGame35,GSKNoteStartNewGame36,GSKNoteStartNewGame37,GSKNoteStartNewGame38,GSKNoteStartNewGame39,GSKNoteStartNewGame40,GSKNoteStartNewGame41"/>
+        <property name="Create_item_count" value="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
       </property>
     </item>
     <!-- HELPGOOD:GENCODE:createNotesTips.sh -->
@@ -742,7 +751,7 @@
       <property name="Stacknumber" value="100"/>
       <property name="EconomicValue" value="1"/>
       <property name="SellableToTrader" value="false"/>
-      <property name="Weight" value="0"/>
+      <property name="Weight" value="5"/>
       <property name="Explosion.Duration" value="300"/>
       <property name="Explosion.ParticleIndex" value="7"/>
       <property name="Explosion.RadiusBlocks" value="0"/>
@@ -796,6 +805,46 @@
       <effect_group name="spawnBeacon" tiered="false">
         <triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKTeslaSpawnBeacon"/>
       </effect_group>
+    </item>
+    <item name="GlowStickGreenDecoy2">
+      <property name="CustomIcon" value="7dtdGskGlowStickGreen"/>
+      <property name="DropScale" value="6"/>
+      <property name="EconomicBundleSize" value="50"/>
+      <property name="EconomicValue" value="50"/>
+      <property name="HoldType" value="40"/>
+      <property name="Material" value="MresourceRockSmall"/>
+      <property name="MeltTimePerUnit" value=".5"/>
+      <property name="ExplodeOnHit" value="false"/>
+      <property name="Explosion.Duration" value="300"/>
+      <property name="Explosion.ParticleIndex" value="7"/>
+      <property name="FuseTime" value="6"/>
+      <property name="Meshfile" value="#Other/Items?Crafting/rock_smallPrefab.prefab"/>
+      <property name="RepairAmount" value="300"/>
+      <property name="RepairTime" value=".5"/>
+      <property name="Stacknumber" value="99999"/>
+      <property name="Weight" value="5"/>
+      <property class="Action0">
+        <property name="Class" value="ThrowAway"/>
+        <property name="Delay" value="1.2"/>
+        <property name="Throw_strength_default" value="8"/>
+        <property name="Throw_strength_max" value="60"/>
+        <property name="Max_strain_time" value="1.25"/>
+        <property name="Sound_start" value="swoosh"/>
+      </property>
+      <property class="Action1">
+        <property name="Class" value="Activate"/>
+        <property name="Delay" value="1"/>
+        <property name="Sound_start" value="grenade_pullpin"/>
+      </property>
+      <property name="ThrowableDecoy" value="true"/>
+      <property name="DistractionTags" value="zombie,requires_contact"/>
+      <effect_group name="decoy" tiered="false">
+        <passive_effect name="DistractionRadius" operation="base_set" value="50"/>
+        <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
+        <passive_effect name="DistractionStrength" operation="base_set" value="100"/>
+      </effect_group>
+      <property name="Group" value="Resources"/>
+      <property name="CraftingIngredientTime" value="0"/>
     </item>
     <item name="flareFakeFlames">
       <property name="CustomIcon" value="thrownGrenadeContact"/>
@@ -1637,7 +1686,9 @@
       <property name="CustomIconTint" value="0,0,255"/>
       <effect_group tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="LT" value="@iGSKEnergyLvlTP" help="this shall change if there are more indexes"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="@iGSKTeslaTeleportDistIndexMax">
           <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="GT" value="@iGSKTeslaTeleportDistIndexMax"/>
         </triggered_effect>
@@ -1675,6 +1726,12 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 5">
           <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 6">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 6">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsCfgOptsMsgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
@@ -1738,6 +1795,16 @@
     </item>
     <item name="GSKTeslaTeleportDirection">
       <property name="Extends" value="GSKTeslaTeleportBase"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
       <effect_group tiered="false" help="Teleport in-front">
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="101" help="1: North Dn">
@@ -1815,6 +1882,21 @@
           <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="5"/>
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="601" help="6: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="611" help="6: North ">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="621" help="6: North Up">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
       <effect_group tiered="false" help="Teleport up or down">
@@ -1859,6 +1941,14 @@
           <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="5"/>
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="609">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="629">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsUPDOWN_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
       <effect_group tiered="false" help="Teleport but not">
@@ -1879,6 +1969,16 @@
     <item name="GSKTeslaTeleportToSpecial">
       <property name="Extends" value="GSKTeslaTeleportBase"/>
       <property name="DescriptionKey" value="dkGSKTeslaTeleportToSpecial"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpecialBeacon">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
@@ -1902,6 +2002,18 @@
       <property name="Extends" value="GSKTeslaTeleportBase"/>
       <property name="DescriptionKey" value="dkGSKTeslaTeleportToSky"/>
       <property name="CustomIconTint" value="128,180,220"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKTeslaTeleportEnergy"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
+      </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpecialSkyAbove"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
@@ -3036,7 +3148,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="0.01"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="subtract" value="0.10"/>
@@ -3049,7 +3161,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="0.01"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="subtract" value="0.10"/>
@@ -3062,7 +3174,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="0.01"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="subtract" value="0.10"/>
@@ -3075,7 +3187,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="modArmorImpactBracing"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="0.01"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="subtract" value="0.10"/>
@@ -3088,7 +3200,8 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="7dtdTeleport"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.01"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="subtract" value="0.10"/>
@@ -3101,7 +3214,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="0.01"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="subtract" value="0.10"/>
@@ -3114,7 +3227,7 @@
       <property name="Extends" value="GSKRepTeslaParts"/>
       <property name="CustomIcon" value="carBattery"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="0.01"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="1.0"/>
       </property>
       <effect_group tiered="false">
@@ -3134,7 +3247,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0"/>
@@ -3144,7 +3257,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="carBattery"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0"/>
@@ -3154,7 +3267,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="modArmorImpactBracing"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0"/>
@@ -3164,7 +3277,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="7dtdTeleport"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0"/>
@@ -3174,7 +3287,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0"/>
@@ -3184,7 +3297,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0"/>
@@ -3194,7 +3307,7 @@
       <property name="Extends" value="GSKReplaceTeslaMods"/>
       <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="1.0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="0.95"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0"/>

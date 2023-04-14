@@ -53,8 +53,9 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
     
       #<action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"',0"/></action_sequence>
       
-: ${nBaseDist:=7} #help the minimum distance to teleport
-: ${nOptsMax:=5} #help the optional distances amount you can choose in-game that multiplies nBaseDist for final dist calc
+: ${nBaseDist:=7} #help the minimum distance to teleport, will be multiplied by the current index limited by teleport mod level
+
+nOptsMax=6 # the optional distances amount you can choose in-game that multiplies nBaseDist for final dist calc. 6 is like teleport mod lvl 0 allows index 1... lvl5 allows index 6.
 
 if((nBaseDist<1));then CFGFUNCerrorExit "invalid nBaseDist<1";fi
 if((nOptsMax<1));then CFGFUNCerrorExit "invalid nOptsMax<1";fi
