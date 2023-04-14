@@ -454,6 +454,7 @@ astr=(
   drugPainkillers 1
   drugSteroids  10
   drugVitamins 1
+  foodHoney 1
   GSKAntiRadiation 10
   GSKAntiRadiationSlow 10
   GSKAntiRadiationStrong 10
