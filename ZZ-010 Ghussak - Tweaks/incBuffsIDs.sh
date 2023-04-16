@@ -69,6 +69,7 @@ astrBuffBNList=(
   "buffGSKHazardWWetFreezingAndHunger"
   "buffGSKHeatColdProtClothDmgAdd"
   "buffGSKHeatColdProtClothDmgKeep"
+  "buffGSKMutant_ChkAndApplyOnMobs"
   "buffGSKNearDeath"
   "buffGSKPermanentGenericCheck"
   "buffGSKProperSwimming"

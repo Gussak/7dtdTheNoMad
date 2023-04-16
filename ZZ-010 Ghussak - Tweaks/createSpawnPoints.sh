@@ -33,7 +33,7 @@
 
 #egrep "[#]help" $0
 
-: ${bParachuteMode:=true} #help bParachuteMode=false to spawn on the ground. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least
+: ${bParachuteMode:=true} #help bParachuteMode=false to spawn on the ground in the original elevation, but you may end inside the building what may not be a good idea. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least on first spawn (if the first spawn location is not modified by some buff). This is only good later when using the tele to sky feature.
 
 #help after death, player seems to respawn always on the nearest spawnpoints.xml if having no bed placed
 
