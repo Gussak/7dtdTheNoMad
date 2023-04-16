@@ -708,7 +708,7 @@
   <set xpath="/buffs/buff[@name='buffNearDeathRegen']/stack_type/@value">replace</set>
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[       @trigger='onSelfFallImpact' and        @action='AddBuff'           and        @buff='buffPlayerFallingDamage'     ]">
     <requirement name="!EntityTagCompare" tags="npc"/>
-    <requirement name="NotHasBuff" buff="god" help="only players anyway"/>
+    <requirement name="!HasBuff" buff="god" help="only players anyway"/>
   </append>
   <append xpath="/buffs">
     <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
@@ -1024,7 +1024,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyWL"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyNV"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTA"/>
+        <!-- HELPGOOD: all least the battery
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTB"/>
+-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTH"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTR"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTP"/>
@@ -1593,6 +1595,11 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1" help="auto turn on again if it is safe">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LTE" value="0.95"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg54">
           <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
         </triggered_effect>
@@ -1610,6 +1617,11 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1" help="auto turn on again if it is safe">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.95"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg54">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         </triggered_effect>
@@ -1627,9 +1639,11 @@
       <duration value="0"/>
       <update_rate value="1.0"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LTE" value="0.95"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg54">
@@ -1698,12 +1712,14 @@
       <duration value="0"/>
       <update_rate value="1.0"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1" help="auto turn on again if it is safe">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.95"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg54">
@@ -1729,9 +1745,11 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1" help="auto turn on again if it is safe">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LTE" value="0.95"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0">
@@ -3321,10 +3339,13 @@
       <display_value_key value="{0:0.0}/5"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
-        <requirement name="NotHasBuff" buff="god"/>
+        <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
       </requirements>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
         </triggered_effect>
@@ -3442,6 +3463,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="5.0"/>
       </effect_group>
       <effect_group>
+        <requirement name="!HasBuff" buff="god"/>
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fHWBlockageStam"/>
       </effect_group>
       <effect_group>
@@ -3575,6 +3597,7 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="180"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(1,2)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You slowly a good bath."/>
       </effect_group>
     </buff>
     <buff name="buffGSKTakeCatBath">
@@ -3591,6 +3614,7 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(0.33,0.66)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You slowly bath like a cat..."/>
       </effect_group>
     </buff>
     <buff name="buffGSKPlantSpikes" icon="ui_game_symbol_critical" icon_color="255,0,0" icon_blink="true">
@@ -3862,9 +3886,55 @@
     </buff>
     <buff name="buffGSKMutantZombies">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="10"/>
+      <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantRage" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRabbits"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantZombies"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantFlashSpeed" help="TODO: is this working? is there a limit to perc_add?">
+      <stack_type value="ignore"/>
+      <duration value="0.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".bGSKMutFlash" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".bGSKMutFlash"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="10"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="20"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantTeleport" help="TODO: events dont work with mobs?">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group help="random teleport in front nearby TODO: does not work on mobs?">
+        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKTeslaTele1NoMutant"/>
+      </effect_group>
+      <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
+        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant">
+          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoUpMutant">
+          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantRabbits">
@@ -3873,22 +3943,8 @@
       <update_rate value="2.5"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantBunnyMode" operation="set" value="randomint(1,2)"/>
-      </effect_group>
-      <effect_group help="random teleport in front nearby">
-        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant"/>
-      </effect_group>
-      <effect_group help="random teleport in front nearby rage">
-        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant">
-          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoUpMutant">
-          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="2"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantTeleport" help="this wont work right?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantFlashSpeed" help="workaround to not being able to teleport mobs, no explosions tho :( TODO: not working anyway.."/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKMutantBunnyMode" operation="Equals" value="1"/>
@@ -4104,13 +4160,15 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsTOT_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
-        <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleIniSpecial value -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleIniNearDirection" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleIniNearDirection"/>
+        <!-- HELPGOOD: all below are teleport sections up to integer limit 65535 -->
+        <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleNearDirectionBEGIN" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleNearDirectionBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleNearDirectionEND" operation="set" value="9999"/>
         <!-- HELPGOOD: special tele destinations, shall have no clashes with createTeleportRanges.sh max value too. can be sorted now -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleIniSpecial" operation="set" value="10000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleIniSpecial"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleIniSpecial"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBEGIN" operation="set" value="10000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleSpecialBEGIN"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBackpack" operation="set" value="@.iGSKTTStmp"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBackpack"/>
@@ -4131,18 +4189,25 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialEND"/>
         <!-- HELPGOOD: PLACE NEW SECTIONS ABOVE HERE -->
         <!-- HELPGOOD: ALL SKY SECTIONS MUST BE BELOW HERE!-->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleIniSky" operation="set" value="40000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleIniSky"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleIniSky"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyBEGIN" operation="set" value="40000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleSkyBEGIN"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialSkyLastSpawn"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyLastSpawn"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialSkyAbove" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialSkyAbove"/>
-        <!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKTeslaTeleIniSkyRandomSpawn -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleIniSkyRandomSpawn" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleIniSkyRandomSpawn"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyAbove" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyAbove"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyEND" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyEND"/>
+        <!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKTeslaTeleSpawnBEGIN -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnBEGIN" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnRANDOM" operation="set" value="@iGSKTeslaTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnRANDOM"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnEND" operation="set" value="59999"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnEND"/>
         <!-- HELPGOOD: LIMIT is 65535? -->
         <!-- HELPGOOD: can be configured in-game using special items -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="3">
@@ -4330,8 +4395,8 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="tele directions">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleIniNearDirection"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleIniSpecial"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleNearDirectionBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleNearDirectionEND"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoDn">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="101"/>
@@ -4803,7 +4868,9 @@
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
-      <effect_group>
+      <effect_group help="tele specials">
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSpecialBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleSpecialEND"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBeacon">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBeacon"/>
         </triggered_effect>
@@ -4816,11 +4883,15 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleLandclaim">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialLandClaim"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialSkyAbove"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaExplodeExtra3">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialZero" help="tele 0,0,0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="tele sky">
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleSkyEND"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="damage per use">
@@ -4833,7 +4904,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleIniSky" help="sky teleports destroy the mod device"/>
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN" help="sky teleports destroy the mod device"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
+          <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
@@ -4914,19 +4988,24 @@
       <update_rate value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPrepareRandomSpawn"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPrepareRandomSpawnAndTeleportToZone"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKFirstEnterGameTeleportToRandomSpawnOnGround"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKPrepareRandomSpawn">
+    <buff name="buffGSKPrepareRandomSpawnAndTeleportToZone">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="10.0"/>
+      <update_rate value="0.05"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKPrepareRandomSpawnAndTeleportToZone"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPrepareRandomSpawnAndTeleportToZone"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDetectEnterGame">
@@ -4953,38 +5032,34 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
-      <effect_group help="1: try last spawn">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialSkyLastSpawn"/>
+      <effect_group help="try last spawn">
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyLastSpawn"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportToSky: try last spawn"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleIniSkyRandomSpawn">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpawnRANDOM">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="0" help="has no previous"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="1: chose random spawn">
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleIniSkyRandomSpawn"/>
+      <effect_group help="chose random spawn">
+        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpawnRANDOM"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportToSky: chose random spawn"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPrepareRandomSpawn" help="sets iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPrepareRandomSpawnAndTeleportToZone"/>
         <!-- HELPGOOD:_AUTO GENCODE_CREATESPAWNPOINTS_TeleportCfgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <!-- HELPGOOD:_AUTO GENCODE_CREATESPAWNPOINTS_TeleportCfgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
       </effect_group>
-      <effect_group help="2: tele to random spawn">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleIniSkyRandomSpawn"/>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportToSky: tele to random spawn"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
-      </effect_group>
-      <effect_group help="3: tele AndOr debuff">
+      <effect_group help="tele AndOr debuff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.bGSKFallProtTmMin" help="this is to initialize the 'flying' trick as soon as possible">
           <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.bGSKFallProtTmMin"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
       </effect_group>
-      <effect_group help="4: finish">
+      <effect_group help="finish">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportToSky"/>
       </effect_group>
     </buff>
@@ -4993,12 +5068,15 @@
       <duration value="10" help="is removed on last phase tho"/>
       <update_rate value="0.05"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeleportToAnyDifficultyZone"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleDifZonePhase" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleDifZonePhase" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeleDifZonePhase"/>
       </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="1"/>
+      <effect_group help="loopPhase 2. IT WONT WORK ON BUFF START!!! ONLY FROM 1ST UPDATE ON!!!!!!">
+        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport50001">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50001"/>
@@ -5451,23 +5529,25 @@
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="50150"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent:TeleportedToSpawnPointInSky"/>
       </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="2"/>
-        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:FirstSpawnTeleportedToGroundAtRandomSpawnPoint"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleToGround"/>
-      </effect_group>
-      <effect_group>
+      <effect_group help="loopPhase 3">
         <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="3"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleToGround"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:FirstSpawnTeleportedToGroundAtRandomSpawnPointFromSky"/>
+      </effect_group>
+      <effect_group help="loopPhase 4">
+        <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="4"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:buffGSKTeleportToAnyDifficultyZone"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardWeatherMiasmaDirty39" description_key="buffGSKHazardWeatherMiasmaDirty5Desc" name_key="MiasmaAndDirtyEtc" help="this is also always running, so is used like a generic place for many things">
+    <buff name="buffGSKHazardWeatherMiasmaDirty39" description_key="buffGSKHazardWeatherMiasmaDirty5Desc" name_key="MiasmaAndDirtyEtc" help="this is also always running, so is used like a generic place for many things TODO: make a generic checker buff and put stuff there...">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group>
+      <effect_group help="add miasma">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.1)">
           <requirement name="InBiome" biome="1"/>
           <!-- HELPGOOD: snow -->
@@ -5497,7 +5577,7 @@
           <!-- HELPGOOD: caveceiling fetid gases accumulating there -->
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="bathing underwater">
         <requirements compare_type="or">
           <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
@@ -5592,7 +5672,38 @@
           <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="7200"/>
         </triggered_effect>
       </effect_group>
-      <effect_group name="onSelfDied events">
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPermanentGenericCheck1" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group help="fix the imperfect God ;). put here only what is causing trouble in god mode...">
+        <requirement name="HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="apply mutant random chaos on player">
+        <requirement name="CVarCompare" cvar="fGSKMutantRandomChaos" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomChaos">
+          <requirement name="NotHasBuff" buff="buffGSKMutantRandomChaos"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0.0,1.0" operation="LT" value="@fGSKMutantRandomChaos"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="set" value="0" help="consume"/>
+      </effect_group>
+      <effect_group help="hazard: weather apply and fix time">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather38">
+          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="onSelfDied things">
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathBloodLossLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="0"/>
@@ -5623,25 +5734,6 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKTeslaHero"/>
       </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomChaos">
-          <requirement name="NotHasBuff" buff="buffGSKMutantRandomChaos"/>
-          <requirement name="CVarCompare" cvar="fGSKMutantRandomChaos" operation="GT" value="0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0.0,1.0" operation="LT" value="@fGSKMutantRandomChaos"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="set" value="0"/>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather38">
-          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="GT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
-        </triggered_effect>
-      </effect_group>
     </buff>
     <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -5651,7 +5743,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyWL" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyNV" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
+        <!-- HELPGOOD: least the battery
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
+-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
@@ -5883,10 +5977,49 @@
       </effect_group>
     </buff>
   </append>
+  <append xpath="/buffs">
+    <buff name="buffGSKGodModeFull" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,250,155">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="god">
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,150,155">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="100"/>
+        <passive_effect name="CarryCapacity" operation="base_set" value="160"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='god']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="BUFF:GodMode:ON"/>
+      <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:GodMode:OFF"/>
+    </effect_group>
+  </append>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" tags="animalSpider01"/>
     <requirement name="!EntityTagCompare" tags="animalSpider02"/>
     <requirement name="!EntityTagCompare" tags="animalSpider03"/>
   </append>
+  <!-- HELPGOOD: alternative god mode -->
+  <set xpath="//requirement[(@name='HasBuff' or @name='!HasBuff' or @name='NotHasBuff') and @buff='god']/@buff">buffGSKGodMode</set>
 </GhussakTweaks>

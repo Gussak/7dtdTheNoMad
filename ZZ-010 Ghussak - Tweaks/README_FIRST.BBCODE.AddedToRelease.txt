@@ -1,16 +1,18 @@
-The NoMad, unforgiving lands (developer tools, WIP)
-.
+The NoMad, unforgiving lands (developer tools, WIP)  
+.  
+##############################  OVERHAUL(WIP) ##############################    
+This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very or insanely difficult but not impossible) gameplay.    
+This mod is intended for players that are used with the vanilla gameplay already and want an extra challenge.  
+Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.  
+Please follow the server configs below and look for tactical hints on in-game notes on how to survive.  
+.  
+Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles, mainly the healing bundle and use anti-radiation (all 3 of them) and psyonicResist chems, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the "teleport to sky" feature (armor mod and activator).  
+.  
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod.
-This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.
-But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), drop a pull request on github for review, thx!
-.
-##############################  OVERHAUL(WIP) ##############################    
-This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (difficult, or insanely difficult but not impossible) gameplay.    
-This mod is intended for players that are used with the vanilla gameplay already and want an extra challenge.
-Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.
-Please follow the server configs below and look for tactical hints on in-game notes on how to survive (but I may have left something in text files or config files' comments inside help="..." properties on xml files).    
-.    
+This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.  
+But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), drop a pull request on github for review, thx!  
+.  
 ############################## MOD FEATURES OVERVIEW: ##############################   
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
 The main mod (Tweak folder) has a lot of configs that one day will become minimods to let you cherry pick only what you want like:  
@@ -127,6 +129,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - fixed HitpointsBlockageByChemUse
 - clearly visible HP Stamina Food and water blockage
 - new teleport activators fully working now
+- added alternative god mode for devs. also if you use the numpad to move, this will allow you to disable dm and continue in god mode
 
 --------- v0.9a -----------  
 - initial release.  

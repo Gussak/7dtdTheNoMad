@@ -70,6 +70,7 @@ astrBuffBNList=(
   "buffGSKHeatColdProtClothDmgAdd"
   "buffGSKHeatColdProtClothDmgKeep"
   "buffGSKNearDeath"
+  "buffGSKPermanentGenericCheck"
   "buffGSKProperSwimming"
   "buffGSKProperSwimmingWork"
   "buffGSKPsyResistWork"

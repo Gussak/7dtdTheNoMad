@@ -49,6 +49,16 @@
   <append xpath="/lootcontainers/lootgroup[@name='groupZpackBoss']">
     <item group="groupMiscStuffFromNPC" loot_prob_template="medLow"/>
   </append>
+  <!-- HELPGOOD: 
+    an airdrop that feels good to reach
+    set airdrop to 7 days (or more if possible, it could be random min/max days..),
+    and disable the auto marker! tip days `for((i=1;i<100;i++));do echo -n "$((1+i*7)) ";done`: 8 15 22 29 36 43 50 57 64 71 78 85 92 99 106 113 120 127 134 141 148 155 162 169 176 183 190 197 204 211 218 225 232 239 246 253 260 267 274 281 288 295 302 309 316 323 330 337 344 351 358 365 372 379 386 393 400 407 414 421 428 435 442 449 456 463 470 477 484 491 498 505 512 519 526 533 540 547 554 561 568 575 582 589 596 603 610 617 624 631 638 645 652 659 666 673 680 687 694
+    - air drop is only after 7 days, but is more about bundles, so is quite different from other containers, so (high)
+    - crates are easy to break and there are many (very low)
+    - buried treasure has a beacon, easy to find (low)
+    - locked chests and safes are hard to open, there arent many and may not be found (high)
+    Obs.: every unlocked container should have no advantages here and follow the game config of 25% loot found.
+  -->
   <setattribute xpath="/lootcontainers/lootcontainer[contains(@name,'Crate')]" name="count">3</setattribute>
   <set xpath="/lootcontainers/lootcontainer[@name='buriedTreasure']/@count">7</set>
   <setattribute xpath="/lootcontainers/lootcontainer[       starts-with(@name,'reinforcedChest') or       starts-with(@name,'hardenedChest')     ]" name="count">15</setattribute>
@@ -56,6 +66,11 @@
   <set xpath="/lootcontainers/lootcontainer[@name='airDrop']/@destroy_on_close">false</set>
   <setattribute xpath="/lootcontainers/lootcontainer[       @name='smallSafes' or        @name='shamwaySafe' or        @name='brewSafe']" name="count">11</setattribute>
   <setattribute xpath="/lootcontainers/lootcontainer[@name='gunSafe']" name="count">15</setattribute>
+  <!-- HELPGOOD: these are things left out there, there are clearly things there, so this is to make it coherent -->
+  <setattribute xpath="/lootcontainers/lootcontainer[contains(@name,'PileSmall')]" name="count">1,2</setattribute>
+  <setattribute xpath="/lootcontainers/lootcontainer[contains(@name,'PileMed')]" name="count">4,6</setattribute>
+  <setattribute xpath="/lootcontainers/lootcontainer[contains(@name,'PileLarge')]" name="count">8,12</setattribute>
+  <!-- HELPGOOD: Larger storage craftable containers and a few others -->
   <set xpath="/lootcontainers/lootcontainer[       @name='buriedSuppliesT1' or        @name='buriedSuppliesT2' or        @name='buriedTreasure' or        @name='cntDropBag' or        @name='gunSafe' or        @name='hardenedChestT4' or        @name='hardenedChestT5' or        @name='heroChest' or        @name='playerDrawer' or        @name='prefabEditorBox' or        @name='reinforcedChestT1' or        @name='reinforcedChestT2' or        @name='reinforcedChestT3' or        @name='storageCrate' or        @name='toolTestLoot' or        @name='weaponTestLoot' or        @name='wineBarrel' or       @name='traderNPC'     ]/@size">8,12</set>
   <!-- HELPGOOD: for hirable NPCs -->
   <set xpath="/lootcontainers/lootcontainer[@name='traderNPC']/@size">8,12</set>

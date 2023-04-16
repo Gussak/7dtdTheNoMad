@@ -138,7 +138,7 @@ function FUNCisNormalZone() {
   fi
   return 1
 }
-iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleIniSkyRandomSpawn
+iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleSpawnBEGIN
 iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
 iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex

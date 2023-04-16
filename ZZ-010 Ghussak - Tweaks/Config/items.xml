@@ -2030,13 +2030,13 @@
         <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpecialSkyAbove"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSkyAbove"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
         <!-- HELPGOOD: secondary -->
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleIniSkyRandomSpawn">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpawnRANDOM">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpecialSkyLastSpawn">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSkyLastSpawn">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
@@ -2070,6 +2070,25 @@
       <property name="CustomIconTint" value="1,100,1"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKToggleDebug"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgGodMode" help="do not create a recipe for this duh. ">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <property name="DescriptionKey" value="dkbuffGSKGodMode"/>
+      <property name="CustomIconTint" value="1,100,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodMode">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodMode">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodModeFull">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodModeFull">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </item>
     <item name="GSKDbgTestMiasmaAdd">
