@@ -385,7 +385,7 @@ function FUNCfix() {
   #set -x
   echo "========================== $lstrFl ===========================" >&2
   local lstrFlNew="${lstrFl}.${strScriptName}.NEW"
-  trash "$lstrFlNew"
+  CFGFUNCtrash "$lstrFlNew"
   
   local lastrCmdSed=(sed -r)
   function FUNCsedExp() {
