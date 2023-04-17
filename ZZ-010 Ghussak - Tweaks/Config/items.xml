@@ -1972,13 +1972,13 @@
         </triggered_effect>
       </effect_group>
       <effect_group tiered="false" help="common">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
         <!-- HELPGOOD: SECONDARY -->
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="0.5"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="0.5"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
       </effect_group>
     </item>
     <item name="GSKTeslaTeleportToSpecial">
@@ -2030,7 +2030,12 @@
         <requirement name="NotHasBuff" buff="buffGSKTeslaTeleportAndDebuff"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSkyAbove"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSkyAbove">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSkyAboveButLower">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportToSky"/>
         <!-- HELPGOOD: secondary -->
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpawnRANDOM">

@@ -114,6 +114,7 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
   fi
   if which "${strCFGCompareApp}";then
     CFGFUNCcleanEcho "WARN: hit ctrl+c to abort, closing '${strCFGCompareApp}' will accept the patch!!!"
+    colordiff "$@"&&:
     "${strCFGCompareApp}" "$@"&&:;local lnRet=$? # it is expected that the merger app will not be a detached child process otherwise this wont work!
     if((lnRet!=0));then # (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
       CFGFUNCechoLog "ERROR=$lnRet: '${strCFGCompareApp}' $@"

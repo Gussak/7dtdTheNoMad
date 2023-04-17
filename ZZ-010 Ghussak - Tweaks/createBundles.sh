@@ -370,6 +370,7 @@ astr=(
   ladderWood            98
   meleeToolFlashlight02 1
   meleeToolTorch 1
+  NightVisionBattery    60
   #meleeWpnSpearT0StoneSpear 1
   resourceCloth 50
   resourceDuctTape 1

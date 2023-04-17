@@ -33,7 +33,10 @@
 
 #egrep "[#]help" $0
 
-: ${bParachuteMode:=true} #help bParachuteMode=false to spawn on the ground in the original elevation, but you may end inside the building what may not be a good idea. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least on first spawn (if the first spawn location is not modified by some buff). This is only good later when using the tele to sky feature.
+bParachuteMode=false
+#: ${bParachuteMode:=true} #h elp bParachuteMode=false to spawn on the ground in the original elevation, but you may end inside the building what may not be a good idea. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least on first spawn (if the first spawn location is not modified by some buff). This is only good later when using the tele to sky feature.
+
+bUndergroundAutoPlaceMode=true
 
 #help after death, player seems to respawn always on the nearest spawnpoints.xml if having no bed placed
 
@@ -154,7 +157,15 @@ for str in "${astrPrefabsList[@]}";do
   
   #NORMAL DIFFICULTY SPAWNS from -5000 5000 to -2300 -2000
   iYOrig=$iY
-  if $bParachuteMode;then iY=2000;fi #help the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
+  bModY=false
+  if $bParachuteMode;then iYNew=2000;bModY=true;fi #help the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
+  if $bUndergroundAutoPlaceMode;then iYNew=1;bModY=true;fi #help this will use the engine auto placement ray cast from sky
+  if $bModY;then
+    iY=$iYNew
+  else
+    iY=$((iYOrig+2))&&:;
+  fi
+  
   : ${bUseAll:=true} #help
   if $bUseAll;then
     astrRect=("${astrRectAll[@]}")
@@ -168,8 +179,8 @@ for str in "${astrPrefabsList[@]}";do
     #if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
   bNormalZone=false;if FUNCisNormalZone;then bNormalZone=true;fi
   if $bUseAll || $bNormalZone;then
-      strPos="$((iX+iDisplacementXZ)),$((iY+2)),$((iZ+iDisplacementXZ))"
-      strTeleport="teleport $iX $((iYOrig+2)) $iZ"
+      strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
+      strTeleport="original teleport $iX $iYOrig $iZ"
       echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strNm} ${strTeleport}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
   fi
   
