@@ -45,6 +45,69 @@ source ./libSrcCfgGenericToImport.sh
   #exit $1
 #}
 
+function FUNCapplyChanges() {
+  mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
+  mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
+  echo "PATCHING expectedly WORKED! now test it!"
+}
+
+function FUNCapplyChanges2() {
+  unix2dos "${strFlToPatch}.GENCODENEWFILE"
+  if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+    : ${bSkipMeld:=false} #help
+    if ! $bSkipMeld;then 
+      #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
+      if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+        echo "ERROR: aborted."
+        CFGFUNCerrorExit
+      fi
+    fi
+    # "overwrite" the old with new file
+    #CFGFUNCtrash "${strFlToPatch}.OLD"&&:
+    #mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
+    #mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
+    #echo "PATCHING expectedly WORKED! now test it!"
+    FUNCapplyChanges
+  else
+    echo "WARN: nothing changed"
+  fi
+}
+
+strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
+#if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit;fi
+declare -p strCallerScript
+
+if [[ "${1-}" == "--xmlcfg" ]];then #help <<strId> <strValue>> [[<strId> <strValue>] ...] set the value of some constant config cvar at buffs.xml
+  shift
+  astrIdVal=("$@")
+  strFlToPatch="${strFlGenBuf}"
+  cat "${strFlToPatch}" >"${strFlToPatch}.GENCODENEWFILE"
+  #for strIdVal in "${astrIdVal[@]}";do
+  astrSed=()
+  for((i=0;i<${#astrIdVal[@]};i+=2));do
+    strId="${astrIdVal[i]}"
+    strVal="${astrIdVal[i+1]}"
+    #NOT GOOD. Wont preserve some white spaces, will mess all alignment formatting white spaces for easier reading :(. #xmlstarlet ed -P -L -u "//triggered_effect[@action='ModifyCVar' and @cvar='${strId}' and @operation='set']/@value" -v "${strVal}" "${strFlToPatch}.GENCODENEWFILE"
+    strRegexBase='action="ModifyCVar" *cvar="'"${strId}"'" *operation="set"' #action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)"
+    astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(")#\1'"${strVal}"'\2#i')
+    #astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(" *helpgencode=")[^"]*(")#\1'"${strVal}"'\2''\3#i') # helpgencode becomes a token this way
+    astrSed+=(-e 's#('"${strRegexBase}"' .*helpgencode=")[^"]*(")#\1'"DO NOT MODIFY! run: ${strCallerScript}"'\2#i') #help this requires helpgencode="" to be manually set before showing it like that
+    #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBatteryEnergyMinModActivableCfgRO" operation="set" value="15" />
+  done
+  CFGFUNCexec sed -i -r "${astrSed[@]}" "${strFlToPatch}.GENCODENEWFILE" #this requires all cfg to be in a single line!!!
+  #unix2dos "${strFlToPatch}.GENCODENEWFILE"
+  #if ! colordiff "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then #has diff
+    #if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+      #echo "ERROR: aborted."
+      #CFGFUNCerrorExit
+    #fi
+    #FUNCapplyChanges
+  #fi
+  #CFGFUNCtrash "${strFlNew}"
+  FUNCapplyChanges2
+  exit
+fi
+
 strSubTokenId=""
 if [[ "${1-}" == "--subTokenId" ]];then #help <strSubTokenId> will be used on the same file to match another section on it
   shift
@@ -70,9 +133,6 @@ if ! ls -l "$strFlPatch" "$strFlToPatch";then
   echo "InputFilesMissing.";CFGFUNCerrorExit
 fi
 
-strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
-if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit;fi
-declare -p strCallerScript
 strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
 
 strFinalToken="${strCallerAsTokenID}${strSubTokenId}"
@@ -156,6 +216,7 @@ fi
 tail -n +$((nTail+1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
 
 #declare -p LINENO
+unix2dos "${strFlToPatch}.GENCODENEWFILE"
 if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
   : ${bSkipMeld:=false} #help
   if ! $bSkipMeld;then 
@@ -167,9 +228,10 @@ if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
   fi
   # "overwrite" the old with new file
   #CFGFUNCtrash "${strFlToPatch}.OLD"&&:
-  mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
-  mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
-  echo "PATCHING expectedly WORKED! now test it!"
+  #mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
+  #mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
+  #echo "PATCHING expectedly WORKED! now test it!"
+  FUNCapplyChanges
 else
   echo "WARN: nothing changed"
 fi

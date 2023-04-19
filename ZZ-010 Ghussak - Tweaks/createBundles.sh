@@ -95,7 +95,7 @@ function FUNCprepareCraftBundle() {
   strXmlCraftBundleCreateBuffsXml+='
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After u die, '"'"'CB:'"'"' items can be crafted for free. U dont need to rush to your dropped backpack. Open each bundle only when u need it. Respawning adds 1 to the remaining bundles u can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now, you can cfg this limit): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")

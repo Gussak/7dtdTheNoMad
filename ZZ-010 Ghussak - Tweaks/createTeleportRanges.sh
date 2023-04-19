@@ -205,11 +205,12 @@ echo "$strCodeCfgOpts" >>"${strFlGenIte}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TeleDirectionsCfgOptsMsgs" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
 ./gencodeApply.sh --subTokenId "TeleDirections" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-echo '
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
-  ' >>"${strFlGenBuf}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+#echo '
+  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>
+  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
+  #' >>"${strFlGenBuf}${strGenTmpSuffix}"
+#./gencodeApply.sh --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --xmlcfg iGSKTeslaTeleportDistIndexMax "${nOptsMax}" iGSKTeslaTeleportBaseDist "${nBaseDist}"
 echo "$strMayhemRnd" >>"${strFlGenBuf}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TeleDirectionsMayhemRnd" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
