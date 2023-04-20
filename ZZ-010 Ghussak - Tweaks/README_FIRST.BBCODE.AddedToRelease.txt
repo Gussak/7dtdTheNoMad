@@ -102,9 +102,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
         I dont think it will run in cygwin as it needs to use `xdotool`.  
         So if someone knows how to implement these commands on windows, your contribution will be welcome :)  
 .  
-    XML tweaking:
+    XML tweaking:  
 .  
-      This buff 'buffGSKConfigGeneric' has several settings that may have an in-game activator to configure. If not, you may try changing values there directly, but do that with caution (search the logic context they are used at to tweak the values properly). If you think things improved, propose a patch for review :).
+      This buff 'buffGSKConfigGeneric' has several settings that may have an in-game activator to configure. If not, you may try changing values there directly, but do that with caution (search the logic context they are used at to tweak the values properly). If you think things improved, propose a patch for review :).  
 .  
 .  
 .  
@@ -126,13 +126,13 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 ################## CHANGES ##############  
 --------- v0.9c -----------  
-- fixed HitpointsBlockageByChemUse
-- clearly visible HP, Stamina, Food and water blockage
-- new teleport activators fully working now
-- added alternative god mode for devs. also if you use the numpad to move, this will allow you to disable dm and continue in god mode
-- lowered drop rate for many new items
-- lowered and limited starting free bundles based on respawns
-
+- fixed HitpointsBlockageByChemUse  
+- clearly visible HP, Stamina blockage (also for Food and Water if it is working)  
+- new teleport activators fully working now with configurable distances (also to sky)  
+- added alternative god mode for devs. also if you use the numpad to move, this will allow you to console disable dm and continue in god mode  
+- lowered drop rate for many new items  
+- lowered and limited starting free bundles based on respawns  
+.  
 --------- v0.9a -----------  
 - initial release.  
 - Some minor things are still missing: still needs better new item's names and descriptions and alternative icons instead of colored vanilla ones.  
@@ -141,5 +141,6 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 .  
-###FileDescription v0.9c:###
-WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).
+###FileDescription v0.9c:###  
+WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).  
+.  
