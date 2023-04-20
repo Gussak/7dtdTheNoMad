@@ -4212,8 +4212,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyDistIndexMax" operation="set" value="6" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleportBaseToSkyDist" operation="set" value="2000"/>
       </effect_group>
       <effect_group help="all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
@@ -4448,6 +4453,10 @@
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="0" help="the mayhem loop will deplet the battery but wont cause too much trouble. will become negative only once"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="@iGSKTeslaTeleportEnergy"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKTeslaTeleportDistIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@.iGSKTTETmp"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKTTETmp"/>
       </effect_group>
       <effect_group>
@@ -4952,28 +4961,61 @@
       <effect_group help="tele sky">
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN"/>
         <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleSkyEND"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove1">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove2">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove3">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove4">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove5">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove6">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="6"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyNotSoHighAbove">
           <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAboveButLower"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="damage per use">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)" help="5 to 10% dmg"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="1500" help="15% dmg">
+          <requirement name="CVarCompare" cvar=".bGSKTTFBattGood" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="randomInt(500,1000)" help="5 to 10% dmg">
+          <requirement name="CVarCompare" cvar=".bGSKTTFBattGood" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10000"/>
-        <!-- HELPGOOD: this always give max float 0.10, why?
+        <!-- HELPGOOD: this always gives max float 0.10, why?
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.05,0.10)"/>
 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="1">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN" help="to sky teleports may destroy the mod device"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="1">
+          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.bGSKTeleportedToSky" help="to sky teleports may destroy the mod device"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="multiply" value="10">
+          <requirement name="CVarCompare" cvar=".bGSKToSkyDmtMode" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="@iGSKEnergyLvlTP">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GT" value="1.0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKDmgTmpTP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN" help="sky teleports destroy the mod device"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
-          <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="1"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
         </triggered_effect>
@@ -5599,16 +5641,22 @@
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent:TeleportedToSpawnPointInSky"/>
       </effect_group>
-      <effect_group help="loopPhase tele to ground">
+      <effect_group help="loopPhase tele to ground (is the above default spawn mode now)">
         <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="@.iGSKTDZPhaseTTGround"/>
-        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0" help="the default now is to use the engine autoplacement if player falls below ground, so spawn points are all at elevation 1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent:eventGSKTeslaTeleToGround:FirstSpawnTeleportedToGroundAtRandomSpawnPoint"/>
+        <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="0" help="the default now is to use the engine autoplacement if player falls below ground, so spawn points are all below ground"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:FirstSpawnBelowGroundAtRandomSpawnPoint"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="10">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops" help="this is to prevent damage on first spawn where player may be placed in the edge of a roof and just fall to the ground, still a random challenging start tho">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="loopPhase tele to sky">
         <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="@.iGSKTDZPhaseTTSky"/>
         <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkySpawnAbove"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent:eventGSKTeslaTeleToGround:SpawnPointOnSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeleportToAnyDifficultyZone:CallGameEvent:eventGSKTeleportToSkySpawnAbove:SpawnPointFirst_OnSkyAfter"/>
       </effect_group>
       <effect_group help="loopPhase end">
         <requirement name="CVarCompare" cvar=".iGSKTeleDifZonePhase" operation="Equals" value="@.iGSKTDZPhaseEND"/>

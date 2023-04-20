@@ -1692,6 +1692,23 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKCalcLightsPercRound"/>
       </effect_group>
     </item>
+    <item name="GSKCFGTeslaTeleportToSkyDistIndex">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToSkyDistIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="LT" value="@iGSKEnergyLvlTP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="set" value="@.iGSKTeslaTeleSkyDistMax">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="GT" value="@.iGSKTeslaTeleSkyDistMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKCFGTeslaTeleportDistIndex">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportDistIndex"/>
@@ -3973,6 +3990,63 @@
       <effect_group name="ammoNPCRocketFrag" tiered="false">
         <passive_effect name="BlockDamage" operation="base_set" value="20" tags="perkDemolitionsExpert"/>
         <passive_effect name="EntityDamage" operation="base_set" value="700" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
+        <display_value name="dExRadius" value="6"/>
+      </effect_group>
+    </item>
+    <item name="ammoNPCRocketHEFriendly">
+      <property name="Extends" value="ammoRocketHE"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="Tags" value="ammo"/>
+      <property name="DisplayType" value="ammoLauncher"/>
+      <property name="Meshfile" value="#Other/Items?Weapons/Ranged/RocketLauncher/rocketPrefab.prefab"/>
+      <property name="HoldType" value="45"/>
+      <property name="Candrop" value="false"/>
+      <property name="Canhold" value="true"/>
+      <property name="HandMeshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mlead_scrap"/>
+      <property name="Stacknumber" value="25"/>
+      <property name="EconomicValue" value="250"/>
+      <property name="Group" value="Ammo/Weapons,Ammo,Ranged Weapons"/>
+      <property class="Action1">
+        <property name="Class" value="Projectile"/>
+        <property name="Explosion.ParticleIndex" value="5"/>
+        <property name="Explosion.RadiusBlocks" value="5"/>
+        <property name="Explosion.RadiusEntities" value="4"/>
+        <property name="Explosion.DamageBonus.water" value="0"/>
+        <property name="Gravity" value="-6"/>
+        <property name="FlyTime" value=".2"/>
+        <property name="LifeTime" value="20"/>
+        <property name="Explosion.BlockDamage" value="2500"/>
+        <property name="Explosion.EntityDamage" value="10"/>
+      </property>
+      <effect_group name="ammoRocketHE" tiered="false">
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50"/>
+        <display_value name="dExRadius" value="5"/>
+      </effect_group>
+      <effect_group name="ammoNPCRocketHEFriendly" tiered="false">
+        <passive_effect name="EntityDamage" operation="base_set" value="442" tags="perkDemolitionsExpert">
+          <requirement name="!EntityTagCompare" tags="player" target="other"/>
+        </passive_effect>
+      </effect_group>
+    </item>
+    <item name="ammoNPCRocketFragFriendly">
+      <property name="Extends" value="ammoNPCRocketHEFriendly"/>
+      <property class="Action1">
+        <property name="Explosion.RadiusBlocks" value="3"/>
+        <property name="Explosion.RadiusEntities" value="6"/>
+        <property name="Explosion.DamageBonus.stone" value=".1"/>
+        <property name="Explosion.DamageBonus.metal" value=".05"/>
+        <property name="Explosion.DamageBonus.earth" value="0"/>
+        <property name="Explosion.DamageBonus.wood" value=".5"/>
+        <property name="Explosion.DamageBonus.water" value="0"/>
+      </property>
+      <effect_group name="ammoNPCRocketFragFriendly" tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="20" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="700" tags="perkDemolitionsExpert">
+          <requirement name="!EntityTagCompare" tags="player" target="other"/>
+        </passive_effect>
         <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
         <display_value name="dExRadius" value="6"/>
       </effect_group>
