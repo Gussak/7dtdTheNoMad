@@ -4198,8 +4198,8 @@
     <buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
-      <effect_group help="TODO: all these pseudo constants should not be saved adding a dot in front of their names">
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportEnergy" operation="set" value="420" help="7 batteries"/>
+      <effect_group help="TODO: most of these pseudo constants dont need to be saved. so add a dot in front of their names and update everywhere">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportEnergy" operation="set" value="420" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
@@ -4214,7 +4214,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
-        <!-- HELPGOOD: all below are teleport sections up to integer limit 65535 -->
+      </effect_group>
+      <effect_group help="all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleNearDirectionBEGIN" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleNearDirectionBEGIN"/>
@@ -4266,8 +4267,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnEND" operation="set" value="59999"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnEND"/>
         <!-- HELPGOOD: LIMIT is 65535? -->
-        <!-- HELPGOOD: can be configured in-game using special items -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="3">
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="2" help="can be configured in-game using special items">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s">
@@ -5082,6 +5085,7 @@
       <duration value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnFreeBundlesLimit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
       </effect_group>
     </buff>
@@ -5959,23 +5963,36 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnItemsBundleHelper" operation="set" value="1"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploring" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeslaEnergy" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperHealing" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperHealingSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperHealingSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperFarming" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperFarmingSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperFarmingSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperBasicCampingKit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperSomeSchematics" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperSomeSchematicBundles" operation="add" value="1"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantRandomChaos" icon="7dtdMutantRabbit" icon_blink="true" description_key="buffGSKMutantRandomChaosDesc" remove_on_death="true">

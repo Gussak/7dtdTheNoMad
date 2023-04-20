@@ -127,9 +127,11 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 ################## CHANGES ##############  
 --------- v0.9c -----------  
 - fixed HitpointsBlockageByChemUse
-- clearly visible HP Stamina Food and water blockage
+- clearly visible HP, Stamina, Food and water blockage
 - new teleport activators fully working now
 - added alternative god mode for devs. also if you use the numpad to move, this will allow you to disable dm and continue in god mode
+- lowered drop rate for many new items
+- lowered and limited starting free bundles based on respawns
 
 --------- v0.9a -----------  
 - initial release.  

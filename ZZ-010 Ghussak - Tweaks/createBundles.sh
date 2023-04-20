@@ -35,8 +35,8 @@
 
 source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
-#strModName="The NoMad"
-#strModNameForIDs="TheNoMadOverhaul"
+strCraftBundlePrefixID="GSK${strModNameForIDs}CreateRespawnBundle"
+
 strPartToken="_TOKEN_NEWPART_MARKER_"
 strSchematics="Schematics"
 strSCHEMATICS_BEGIN_TOKEN="${strPartToken}:${strSchematics}"
@@ -69,7 +69,7 @@ function FUNCprepareCraftBundle() {
   if $lbSchematic;then ((liB+=130));fi
   local lstrColor="$liR,$liG,$liB"
   local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
-  strFUNCprepareCraftBundle_CraftBundleID_OUT="GSKTheNoMadCreateRespawnBundle${lstrBundleShortName}"
+  strFUNCprepareCraftBundle_CraftBundleID_OUT="${strCraftBundlePrefixID}${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
     <item name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" help="on death free items helper">
@@ -92,10 +92,17 @@ function FUNCprepareCraftBundle() {
   strXmlCraftBundleCreateRecipesXml+='
     <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"></recipe>'
   # not using onSelfDied anymore, unnecessary
-  strXmlCraftBundleCreateBuffsXml+='
+  if ! $lbSchematic;then
+    strXmlCraftBundleCreateBuffsXml+='
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
+  else
+    strXmlCraftBundleCreateBuffsXml+='
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1" />
+        </triggered_effect>'
+  fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now, you can cfg this limit): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -109,7 +116,8 @@ function FUNCprepareCraftBundle() {
 }
 
 function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT vars are to avoid subshell. if the bundle contains any of these items, specific code shall be added
-  local strItemID="$1"
+  local lbCheckMissingItemIds="$1";shift
+  local strItemID="$1";shift
   
   strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
   #strFUNCspecificItemsCode_AddDesc=""
@@ -123,7 +131,14 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
       lastrFlCfgChkFullPathList+=("${strCFGNewestSavePathConfigsDumpIgnorable}/${strFlCfgChk}s.xml")
     fi
   done
-  if ! egrep '< *('"${lstrFlCfgChkRegex}"') *name *= *"'"${strItemID}"'"' "${lastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id is missing (or was changed): ${strItemID}";fi
+  
+  if [[ "$strItemID" =~ ^${strCraftBundlePrefixID} ]];then
+    lbCheckMissingItemIds=false
+  fi
+  
+  if $lbCheckMissingItemIds;then
+    if ! egrep '< *('"${lstrFlCfgChkRegex}"') *name *= *"'"${strItemID}"'"' "${lastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id is missing (or was changed): ${strItemID}. try: egrep 'TypePreviousIdHere' * -iRnI --include=\"*.xml\"";fi
+  fi
   
   local fDmg=0.75
   if [[ "$strItemID" == "apparelNightvisionGoggles" ]];then
@@ -191,6 +206,7 @@ function FUNCprepareBundlePart() {
   local lstrColor="$1";shift
   local lbCB=$1;shift
   local lstrBundleDesc="$1";shift
+  local lbCheckMissingItemIds="$1";shift
   local lastrItemAndCountList=("$@")
   
   local lastrOpt=()
@@ -213,7 +229,7 @@ function FUNCprepareBundlePart() {
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
     lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lastrItemAndCountList[i]} ${lastrItemAndCountList[i+1]}"
-    FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "${lastrItemAndCountList[i]}"
+    FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "$lbCheckMissingItemIds" "${lastrItemAndCountList[i]}"
     lstrSpecifiItemsCode+="${strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT}"
     #if [[ "${lstrBundleDesc:0:2}" != "dk" ]];then
       #if [[ -n "${strFUNCspecificItemsCode_AddDesc}" ]];then
@@ -301,11 +317,13 @@ function FUNCprepareBundles() {
   local lbCB=true
   local lstrColor="192,192,192"
   local lbIgnTopList=false
+  local lbCheckMissingItemIds=true
   while [[ "${1:0:2}" == "--" ]];do
     if [[ "$1" == --ignoreTopList ]];then shift;lbIgnTopList=true;fi
     if [[ "$1" == --choseRandom ]];then shift;lbRnd=true;fi
     if [[ "$1" == --noCB ]];then shift;lbCB=false;fi
     if [[ "$1" == --color ]];then shift;lstrColor="$1";shift;fi #help <lstrColor>
+    if [[ "$1" == --noCheckMissingItemIds ]];then shift;lbCheckMissingItemIds=false;fi #help <lstrColor>
   done
   
   local lstrBundleName="$1";shift
@@ -313,7 +331,7 @@ function FUNCprepareBundles() {
   local lstrBundleDesc="$1";shift
   local lastrItemAndCountList=("$@")
   
-  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc")
+  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds")
   
   declare -p lastrItemAndCountList |tr '[' '\n'
   
@@ -361,24 +379,24 @@ astr=(
 
 astr=(
   apparelNightvisionGoggles 1
-  bedrollBlue 103
+  bedrollBlue 33
   casinoCoin 666
-  drugJailBreakers 6
-  GlowStickGreen       100
-  GSKfireFuel 10
-  GSKsimpleBeer        102
-  ladderWood            98
+  drugJailBreakers 3
+  GlowStickGreen       33
+  GSKfireFuel 13
+  GSKsimpleBeer        33
+  ladderWood            66
   meleeToolFlashlight02 1
   meleeToolTorch 1
-  NightVisionBattery    60
+  NightVisionBattery    66
   #meleeWpnSpearT0StoneSpear 1
-  resourceCloth 50
+  resourceCloth 33
   resourceDuctTape 1
   resourceFeather        1
   resourceLockPick 1
-  resourceRockSmall    208
+  resourceRockSmall    222
   resourceWood         666
-  resourceYuccaFibers  31
+  resourceYuccaFibers  33
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorHelmetLightSchematic 1
   modGunFlashlightSchematic 1
@@ -388,13 +406,13 @@ astr=(
 
 astr=( #TEMPLATE
   ammo9mmBulletBall 666
-  ammoArrowStone 53
-  gunHandgunT1PistolParts 30
+  ammoArrowStone 33
+  gunHandgunT1PistolParts 33
   gunHandgunT3SMG5 1
   modGunScopeSmall 1
-  thrownAmmoMolotovCocktail6s 10
-  thrownAmmoStunGrenade 10
-  trapSpikesIronDmg0    100
+  thrownAmmoMolotovCocktail6s 13
+  thrownAmmoStunGrenade 13
+  trapSpikesIronDmg0    33
   #trapSpikesWoodDmg0    99
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookRangersExplodingBolts 1
@@ -423,13 +441,13 @@ astr=( #TEMPLATE
   #armorScrapLegs 1
   armorClothPants 1
   armorClothBoots 1
-  RepairColdProt 10
-  RepairHeatProt 10
+  RepairColdProt 13
+  RepairHeatProt 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
 astr=(
-  ammoJunkTurretRegular 200
+  ammoJunkTurretRegular 222
   armorClothHat 1 # this is to be able to install one of the mods
   gunBotT2JunkTurret 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
@@ -437,7 +455,7 @@ astr=(
   GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
   modGSKTeslaTeleport 1
-  NightVisionBattery    16
+  NightVisionBattery    13
   NightVisionBatteryStrong 2
   NVBatteryCreate 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
@@ -450,24 +468,24 @@ astr=(
 astr=(
   bucketRiverWater 1
   drinkJarGrandpasMoonshine 1
-  drinkJarPureMineralWater 20
+  drinkJarPureMineralWater 22
   drugAntibiotics 4
   drugPainkillers 1
-  drugSteroids  10
+  drugSteroids  13
   drugVitamins 1
   foodHoney 1
-  drugGSKAntiRadiation 10
-  drugGSKAntiRadiationSlow 10
-  drugGSKAntiRadiationStrong 10
-  drugGSKPsyonicsResist 10
-  drugGSKRadiationResist 10
-  drugGSKsnakePoisonAntidote 10
-  medicalBloodBag 10
-  medicalFirstAidBandage 15
-  medicalSplint 10
-  potionRespec 3
+  drugGSKAntiRadiation 13
+  drugGSKAntiRadiationSlow 13
+  drugGSKAntiRadiationStrong 13
+  drugGSKPsyonicsResist 13
+  drugGSKRadiationResist 13
+  drugGSKsnakePoisonAntidote 13
+  medicalBloodBag 13
+  medicalFirstAidBandage 13
+  medicalSplint 3
+  potionRespec 1
   toolBeaker 1
-  treePlantedMountainPine1m 16
+  treePlantedMountainPine1m 13
   foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookWasteTreasuresHoney 1
@@ -493,8 +511,8 @@ astr=(
   candleTableLight 1
   cntSecureStorageChest 1
   meleeToolRepairT0StoneAxe 1
-  resourceRockSmall 10
-  resourceWood 31
+  resourceRockSmall 13
+  resourceWood 33
   drinkCanEmpty 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "BasicCampingKit" "bundleTraps" "Some basic things to quickly set a tiny camp with shelter and cook a bit." "${astr[@]}"
@@ -519,9 +537,14 @@ astr=(
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "SomeSchematics" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
+);FUNCprepareBundles "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
+#);FUNCprepareBundles --noCheckMissingItemIds "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 
+#########################################################################################
+#########################################################################################
 ###################################### KEEP AS LAST ONE!!! ##############################
+#########################################################################################
+#########################################################################################
 astr=(
   # notes
   GSKTRNotesBundle 1 #from createNotesTips.sh
@@ -540,6 +563,7 @@ astr=(
   
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
+#);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
 
 ################## DESCRIPTIONS ####################
 echo

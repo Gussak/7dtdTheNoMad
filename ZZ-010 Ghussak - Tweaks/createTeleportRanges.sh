@@ -54,6 +54,7 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
       #<action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"',0"/></action_sequence>
       
 : ${nBaseDist:=7} #help the minimum distance to teleport, will be multiplied by the current index limited by teleport mod level
+: ${nEnergyPerBlock:=60} #help
 
 nOptsMax=6 # the optional distances amount you can choose in-game that multiplies nBaseDist for final dist calc. 6 is like teleport mod lvl 0 allows index 1... lvl5 allows index 6.
 
@@ -210,7 +211,11 @@ echo "$strCodeCfgOpts" >>"${strFlGenIte}${strGenTmpSuffix}"
   #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
   #' >>"${strFlGenBuf}${strGenTmpSuffix}"
 #./gencodeApply.sh --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --xmlcfg iGSKTeslaTeleportDistIndexMax "${nOptsMax}" iGSKTeslaTeleportBaseDist "${nBaseDist}"
+./gencodeApply.sh --xmlcfg                                          \
+  iGSKTeslaTeleportDistIndexMax "${nOptsMax}"                       \
+  iGSKTeslaTeleportBaseDist "${nBaseDist}"                          \
+  iGSKTeslaTeleportEnergy "$((nBaseDist*nEnergyPerBlock))"
+
 echo "$strMayhemRnd" >>"${strFlGenBuf}${strGenTmpSuffix}"
 ./gencodeApply.sh --subTokenId "TeleDirectionsMayhemRnd" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
