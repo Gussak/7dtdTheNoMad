@@ -102,7 +102,7 @@ function FUNCprepareCraftBundle() {
         </triggered_effect>'
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -456,7 +456,7 @@ astr=(
   modGSKEnergyThorns     1
   modGSKTeslaTeleport 1
   NightVisionBattery    13
-  NightVisionBatteryStrong 2
+  #NightVisionBatteryStrong 2 #uneccessarry now, tele to sky will just make energy negative and will work.
   NVBatteryCreate 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   batterybankSchematic 1
@@ -479,7 +479,7 @@ astr=(
   drugGSKAntiRadiationStrong 13
   drugGSKPsyonicsResist 13
   drugGSKRadiationResist 13
-  drugGSKsnakePoisonAntidote 13
+  drugGSKsnakePoisonAntidote 3
   medicalBloodBag 13
   medicalFirstAidBandage 13
   medicalSplint 3
@@ -524,7 +524,7 @@ astr=(
   GlowStickGreen       13
   drugGSKAntiRadiationStrong 2
   drugGSKPsyonicsResist 3
-  drugGSKsnakePoisonAntidote 2
+  drugGSKsnakePoisonAntidote 1
   GSKfireFuel 5
   GSKsimpleBeer        3
   medicalFirstAidBandage 3

@@ -159,7 +159,7 @@ for str in "${astrPrefabsList[@]}";do
   iYOrig=$iY
   bModY=false
   if $bParachuteMode;then iYNew=2000;bModY=true;fi #help the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
-  if $bUndergroundAutoPlaceMode;then iYNew=1;bModY=true;fi #help this will use the engine auto placement ray cast from sky
+  if $bUndergroundAutoPlaceMode;then iYNew=-2;bModY=true;fi #help this negative Y elevation will quickly use the engine auto placement ray cast from sky
   if $bModY;then
     iY=$iYNew
   else
