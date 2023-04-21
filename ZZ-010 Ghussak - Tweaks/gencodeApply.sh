@@ -58,7 +58,11 @@ function FUNCapplyChanges2() {
     if ! $bSkipMeld;then 
       #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
       if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
-        echo "ERROR: aborted."
+        #echo "ERROR: aborted."
+        #CFGFUNCerrorExit
+        echo "WARNING: aborted."
+        #CFGFUNCprompt "Hit any key to trash the tmp file '${strFlToPatch}.GENCODENEWFILE' and exit."
+        #CFGFUNCtrash "${strFlToPatch}.GENCODENEWFILE"
         CFGFUNCerrorExit
       fi
     fi
@@ -215,25 +219,28 @@ fi
 
 tail -n +$((nTail+1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
 
-#declare -p LINENO
-unix2dos "${strFlToPatch}.GENCODENEWFILE"
-if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
-  : ${bSkipMeld:=false} #help
-  if ! $bSkipMeld;then 
-    #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
-    if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
-      echo "ERROR: aborted."
-      CFGFUNCerrorExit
-    fi
-  fi
-  # "overwrite" the old with new file
-  #CFGFUNCtrash "${strFlToPatch}.OLD"&&:
-  #mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
-  #mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
-  #echo "PATCHING expectedly WORKED! now test it!"
-  FUNCapplyChanges
-else
-  echo "WARN: nothing changed"
-fi
+FUNCapplyChanges2
+##declare -p LINENO
+#unix2dos "${strFlToPatch}.GENCODENEWFILE"
+#if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+  #: ${bSkipMeld:=false} #help
+  #if ! $bSkipMeld;then 
+    ##echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
+    #if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
+      #echo "WARNING: aborted."
+      #CFGFUNCprompt "Hit any key to trash the tmp file '$strFlPatch' and exit."
+      #CFGFUNCtrash "$strFlPatch"
+      #CFGFUNCerrorExit
+    #fi
+  #fi
+  ## "overwrite" the old with new file
+  ##CFGFUNCtrash "${strFlToPatch}.OLD"&&:
+  ##mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
+  ##mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
+  ##echo "PATCHING expectedly WORKED! now test it!"
+  #FUNCapplyChanges
+#else
+  #echo "WARN: nothing changed"
+#fi
 
-#CFGFUNCtrash "$strFlPatch"&&:
+##CFGFUNCtrash "$strFlPatch"&&:

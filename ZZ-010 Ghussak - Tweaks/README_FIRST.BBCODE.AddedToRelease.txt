@@ -132,6 +132,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - added alternative god mode for devs. also if you use the numpad to move, this will allow you to console disable dm and continue in god mode  
 - lowered drop rate for many new items  
 - lowered and limited starting free bundles based on respawns  
+- added journal for NPC follower changes, and melee npc now has strike limits too  
 .  
 --------- v0.9a -----------  
 - initial release.  

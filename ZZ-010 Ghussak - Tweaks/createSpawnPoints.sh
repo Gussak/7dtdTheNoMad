@@ -33,10 +33,9 @@
 
 #egrep "[#]help" $0
 
-bParachuteMode=false
+bUndergroundAutoPlaceMode=false #help this works only for the 1st spawn, the engine will fix the position. But for the device toSky activation it will ignore the wrong negative y value and will just not teleport at all.
+bParachuteMode=true #help on the 1st spawn, the engine will place the player on ground automatically. the  toSky later activations will be ok on the sky, but not so high.
 #: ${bParachuteMode:=true} #h elp bParachuteMode=false to spawn on the ground in the original elevation, but you may end inside the building what may not be a good idea. bParachuteMode does not work, player is always placed on ground (never on sky), but this is good to try to place player above buildings at least on first spawn (if the first spawn location is not modified by some buff). This is only good later when using the tele to sky feature.
-
-bUndergroundAutoPlaceMode=true
 
 #help after death, player seems to respawn always on the nearest spawnpoints.xml if having no bed placed
 
@@ -158,7 +157,9 @@ for str in "${astrPrefabsList[@]}";do
   #NORMAL DIFFICULTY SPAWNS from -5000 5000 to -2300 -2000
   iYOrig=$iY
   bModY=false
-  if $bParachuteMode;then iYNew=2000;bModY=true;fi #help the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
+  if $bParachuteMode;then iYNew=260;bModY=true;fi #help it is a bit above the blocks limit (255 right?), but as the engine may lag on repositionings, this seems a safe dist from highest ground til the engine stabilizes. this is intended to be above any terrain, to let the engine auto place the player on ground on the 1st spawn. later toSky activations will further teleport to above locations
+  
+  #he lp the spawns on sky are elevation 2000 because the idea is not about relocation but to let player choose just an area nearby that spawn spot on the ground
   if $bUndergroundAutoPlaceMode;then iYNew=-2;bModY=true;fi #help this negative Y elevation will quickly use the engine auto placement ray cast from sky
   if $bModY;then
     iY=$iYNew
@@ -178,11 +179,12 @@ for str in "${astrPrefabsList[@]}";do
   #if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
     #if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
   bNormalZone=false;if FUNCisNormalZone;then bNormalZone=true;fi
-  if $bUseAll || $bNormalZone;then
-      strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
-      strTeleport="original teleport $iX $iYOrig $iZ"
-      echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strNm} ${strTeleport}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
-  fi
+  #if $bUseAll || $bNormalZone;then
+      #strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
+      #strTeleport="original teleport $iX $iYOrig $iZ"
+      #strHelp="index=${iTeleportIndex};prefab=${strNm};${strTeleport}"
+      #echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
+  #fi
   
   bCreateAutoTeleport=false
   : ${bUseOnlyNormalDifficultySpawns:=false} #help
@@ -194,23 +196,41 @@ for str in "${astrPrefabsList[@]}";do
   else # allow all spawns everywhere
     bCreateAutoTeleport=true 
   fi
+  
+  
+  
   if $bCreateAutoTeleport;then #create initial spawns to teleport to
     ((iTeleportIndex++))&&:
+    
+    if $bUseAll || $bNormalZone;then
+        strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
+        strTeleport="prefabPosCmd: teleport $iX $iYOrig $iZ"
+        strHelp="index=${iTeleportIndex};prefab=${strNm};spawnPos=${strPos};${strTeleport}"
+        echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
+    fi
+    
     if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
     strTeleportIndex="`printf %03d $iTeleportIndex`"
     strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
     echo '      <!-- '"${strMsg}"' -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
     echo '      <!-- '"${strMsg}"' -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:'"${strHelp}"'">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
+        </triggered_effect>' >>"${strFlGenBuf}Log${strGenTmpSuffix}"
+    echo '      <!-- '"${strMsg}"' -->
     <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
-      <property name="target_position" value="'"${strPos}"'" help="'"${strNm} ${strTeleport}"'"/>
+      <property name="target_position" value="'"${strPos}"'" help="'"${strHelp}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
     iTeleportMaxIndex=$iTeleportIndex
     if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
     #((iTeleportIndex++))&&:
   fi
+  
+  
+  
     #fi
   #fi
 done
@@ -219,7 +239,10 @@ echo "$strSorted" >"${strFlGenSpa}${strGenTmpSuffix}"
 cat "${strFlGenSpa}${strGenTmpSuffix}"
 
 ./gencodeApply.sh "${strFlGenSpa}${strGenTmpSuffix}" "${strFlGenSpa}"
+
 ./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "TeleSpawnLog" "${strFlGenBuf}Log${strGenTmpSuffix}" "${strFlGenBuf}"
+
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
 ##xmlstarlet ed -L -d "//triggered_effect[@help='SPAWNPOINT_RANDOM_AUTOMATIC']" "${strFlGenBuf}"
