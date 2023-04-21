@@ -4338,10 +4338,12 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgPercTPx100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleWrongDir" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="@fGSKDmgSafePercTP"/>
           <requirement name="CVarCompare" cvar="iGSKTeleportToSkyCount" operation="GT" value="1" help="protects 1st sky teleport only"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.fGSKDmgPercTPx100"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleMayhem" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="@fGSKDmgSafePercTP"/>
           <requirement name="CVarCompare" cvar=".bGSKTeleWrongDir" operation="Equals" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         </triggered_effect>
