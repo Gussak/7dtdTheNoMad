@@ -1725,6 +1725,35 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKCalcLightsPercRound"/>
       </effect_group>
     </item>
+    <item name="GSKCFGTeslaTeleChangeSpawnIndex">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGTeslaTeleChangeSpawnIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKTeslaTeleSpawnLAST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="-10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKTeslaTeleSpawnFIRST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKTeslaTeleSpawnLAST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKTeslaTeleSpawnFIRST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKTeslaTeleSpawnLAST">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKTeslaTeleSpawnLAST"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKTeslaTeleSpawnFIRST">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKTeslaTeleSpawnFIRST"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKCFGTeslaTeleportToSkyDistIndex">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToSkyDistIndex"/>

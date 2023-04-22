@@ -249,6 +249,9 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 #CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"
 #echo '        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 #./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --xmlcfg iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')'
+./gencodeApply.sh --xmlcfg \
+  iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')' \
+  ".iGSKTeslaTeleSpawnFIRST" "${iTeleportIndexFirst}" \
+  ".iGSKTeslaTeleSpawnLAST" "${iTeleportMaxIndex}" 
 
 ./gencodeApply.sh --cleanChkDupTokenFiles

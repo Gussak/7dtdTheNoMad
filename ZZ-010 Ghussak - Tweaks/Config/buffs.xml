@@ -4219,6 +4219,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyDistIndexMax" operation="set" value="6" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleportBaseToSkyDist" operation="set" value="2000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnFIRST" operation="set" value="50001" helpgencode="DO NOT MODIFY! run: createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnLAST" operation="set" value="50150" helpgencode="DO NOT MODIFY! run: createSpawnPoints.sh"/>
       </effect_group>
       <effect_group help="all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
@@ -5099,6 +5101,7 @@
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKFirstEnterGameTeleportToRandomSpawnOnGround"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeFirstSpawn"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPrepareRandomSpawnAndTeleportToZone"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKFirstEnterGameTeleportToRandomSpawnOnGround"/>
       </effect_group>
@@ -6607,6 +6610,14 @@
         <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+      <stack_type value="ignore"/>
+      <duration value="60"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
       </effect_group>
     </buff>
   </append>

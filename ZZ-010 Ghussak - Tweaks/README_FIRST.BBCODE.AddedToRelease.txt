@@ -133,6 +133,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - lowered drop rate for many new items  
 - lowered and limited starting free bundles based on respawns  
 - added journal for NPC follower changes, and melee npc now has strike limits too  
+- simple god mode for player on 1st spawn for 60s in case of 1st spawining over a mob will be fair
 .  
 --------- v0.9a -----------  
 - initial release.  
