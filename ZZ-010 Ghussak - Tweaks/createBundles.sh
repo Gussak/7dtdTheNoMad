@@ -548,6 +548,7 @@ astr=(
 #########################################################################################
 astr=(
   # notes
+  GSKCFGTeslaTeleportToBiome 1
   GSKTRNotesBundle 1 #from createNotesTips.sh
   GSKTRSpecialNotesBundle 1 #from createNotesTips.sh
   GSKNoteInfoDevice 1 

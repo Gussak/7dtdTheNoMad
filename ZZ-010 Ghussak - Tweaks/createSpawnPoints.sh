@@ -43,8 +43,9 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
 strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
-CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 
+# trash special files that are not at --gencodeTrashLast option:
+CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 CFGFUNCtrash "${strFlGenBuf}Log${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}BiomeId${strGenTmpSuffix}"&&:
 
@@ -243,20 +244,21 @@ for str in "${astrPrefabsList[@]}";do
     
     if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
     strTeleportIndex="`printf %03d $iTeleportIndex`"
-    strMsg="first join spawn points normal difficulty index ${strTeleportIndex}"
-    echo '      <!-- '"${strMsg}"' -->
+    #strMsg="spawn point index ${strTeleportIndex}"
+    #echo '      <!-- '"${strMsg}"' -->'
+    echo '
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
-    echo '      <!-- '"${strMsg}"' -->
+    echo '
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}Log${strGenTmpSuffix}"
-    echo '      <!-- '"${strMsg}"' -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="'"${iBiome}"'">
+    echo '
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="'"${iBiome}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}BiomeId${strGenTmpSuffix}"
-    echo '      <!-- '"${strMsg}"' -->
+    echo '
     <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
       <property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
@@ -275,6 +277,7 @@ echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColor"
 echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColor"
 declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColor" #TODO sha1sum the biome file and if it changes, recreate the array
 
+# this file can be sorted because each entry is one line!
 strSorted="`cat "${strFlGenSpa}${strGenTmpSuffix}" |sort`"
 echo "$strSorted" >"${strFlGenSpa}${strGenTmpSuffix}"
 cat "${strFlGenSpa}${strGenTmpSuffix}"

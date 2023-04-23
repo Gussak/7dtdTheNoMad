@@ -1763,16 +1763,23 @@
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToBiome"/>
       <property name="CustomIconTint" value="0,0,255"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="LT" value="@iGSKEnergyLvlTP"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="1" help="Snow">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="set" value="@.iGSKTeslaTeleSkyDistMax">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="GT" value="@.iGSKTeslaTeleSkyDistMax"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="3" help="PineForest">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="LT" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="3"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="8" help="Wasteland">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
+        <!--HELPGOOD: TODO
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
+-->
       </effect_group>
     </item>
     <item name="GSKCFGTeslaTeleportToSkyDistIndex">
