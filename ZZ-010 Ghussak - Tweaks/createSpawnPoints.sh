@@ -48,6 +48,7 @@ strFlGenSpa="${strPathWork}/spawnpoints.xml"
 CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 CFGFUNCtrash "${strFlGenBuf}Log${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}BiomeId${strGenTmpSuffix}"&&:
+CFGFUNCtrash "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}"&&:
 
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
@@ -259,6 +260,11 @@ for str in "${astrPrefabsList[@]}";do
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}BiomeId${strGenTmpSuffix}"
     echo '
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNewTeleToSpawnPointIndex" operation="set" value="'"${iTeleportIndex}"'" help="'"${strHelp}"'">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="'"${iBiome}"'"/>
+          <requirement name="CVarCompare" cvar=".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" operation="Equals" value="'"${iTeleportIndex}"'"/>
+        </triggered_effect>' >>"${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}"
+    echo '
     <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
       <property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
@@ -288,6 +294,7 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 ./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 ./gencodeApply.sh --subTokenId "TeleSpawnLog" "${strFlGenBuf}Log${strGenTmpSuffix}" "${strFlGenBuf}"
 ./gencodeApply.sh --subTokenId "TeleSpawnBiomeId" "${strFlGenBuf}BiomeId${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "ChooseRandomSpawnInBiome" "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}" "${strFlGenBuf}"
 
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
@@ -297,6 +304,7 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 #./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 ./gencodeApply.sh --xmlcfg \
   iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')' \
+  ".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')' \
   ".iGSKTeslaTeleSpawnFIRST" "${iTeleportIndexFirst}" \
   ".iGSKTeslaTeleSpawnLAST" "${iTeleportMaxIndex}" 
 

@@ -93,9 +93,9 @@ if [[ "${1-}" == "--xmlcfg" ]];then #help <<strId> <strValue>> [[<strId> <strVal
     strVal="${astrIdVal[i+1]}"
     #NOT GOOD. Wont preserve some white spaces, will mess all alignment formatting white spaces for easier reading :(. #xmlstarlet ed -P -L -u "//triggered_effect[@action='ModifyCVar' and @cvar='${strId}' and @operation='set']/@value" -v "${strVal}" "${strFlToPatch}.GENCODENEWFILE"
     strRegexBase='action="ModifyCVar" *cvar="'"${strId}"'" *operation="set"' #action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)"
-    astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(")#\1'"${strVal}"'\2#i')
-    #astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(" *helpgencode=")[^"]*(")#\1'"${strVal}"'\2''\3#i') # helpgencode becomes a token this way
-    astrSed+=(-e 's#('"${strRegexBase}"' .*helpgencode=")[^"]*(")#\1'"DO NOT MODIFY! run: ${strCallerScript}"'\2#i') #help this requires helpgencode="" to be manually set before showing it like that
+    #astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(")#\1'"${strVal}"'\2#i')
+    astrSed+=(-e 's#('"${strRegexBase}"' *value=")[^"]*(" *helpgencode=")[^"]*(")#\1'"${strVal}"'\2''\3#i') # helpgencode becomes a token that only allows this change on such lines
+    astrSed+=(-e 's#('"${strRegexBase}"' .*helpgencode=")[^"]*(")#\1'"ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:${strCallerScript}"'\2#i') #help this requires helpgencode="" to be manually set before showing it like that
     #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBatteryEnergyMinModActivableCfgRO" operation="set" value="15" />
   done
   CFGFUNCexec sed -i -r "${astrSed[@]}" "${strFlToPatch}.GENCODENEWFILE" #this requires all cfg to be in a single line!!!
