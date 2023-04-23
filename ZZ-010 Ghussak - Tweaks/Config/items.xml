@@ -453,8 +453,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKExploringBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 18 diff items" value="apparelNightvisionGoggles,bedrollBlue,casinoCoin,drugJailBreakers,GlowStickGreen,GSKfireFuel,GSKsimpleBeer,ladderWood,meleeToolFlashlight02,meleeToolTorch,NightVisionBattery,resourceCloth,resourceDuctTape,resourceFeather,resourceLockPick,resourceRockSmall,resourceWood,resourceYuccaFibers"/>
-        <property name="Create_item_count" value="1,33,666,3,33,13,33,66,1,1,66,33,1,1,1,222,666,33"/>
+        <property name="Create_item" help="it has 19 diff items" value="apparelNightvisionGoggles,bedrollBlue,casinoCoin,cobblestoneShapes,drugJailBreakers,GlowStickGreen,GSKfireFuel,GSKsimpleBeer,ladderWood,meleeToolFlashlight02,meleeToolTorch,NightVisionBattery,resourceCloth,resourceDuctTape,resourceFeather,resourceLockPick,resourceRockSmall,resourceWood,resourceYuccaFibers"/>
+        <property name="Create_item_count" value="1,33,666,66,3,33,13,33,66,1,1,66,33,1,1,1,222,66,33"/>
       </property>
       <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: apparelNightvisionGoggles" tiered="false">
@@ -1751,6 +1751,27 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKTeslaTeleSpawnFIRST">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKTeslaTeleSpawnFIRST"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGTeslaTeleportToBiome">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToBiome"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="LT" value="@iGSKEnergyLvlTP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDist" operation="set" value="@.iGSKTeslaTeleSkyDistMax">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="GT" value="@.iGSKTeslaTeleSkyDistMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
     </item>

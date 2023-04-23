@@ -381,6 +381,7 @@ astr=(
   apparelNightvisionGoggles 1
   bedrollBlue 33
   casinoCoin 666
+  cobblestoneShapes 66 #"cobblestoneShapes:VariantHelper"
   drugJailBreakers 3
   GlowStickGreen       33
   GSKfireFuel 13
@@ -395,7 +396,7 @@ astr=(
   resourceFeather        1
   resourceLockPick 1
   resourceRockSmall    222
-  resourceWood         666
+  resourceWood         66
   resourceYuccaFibers  33
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorHelmetLightSchematic 1

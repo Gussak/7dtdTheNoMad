@@ -45,6 +45,9 @@ strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
 CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 
+CFGFUNCtrash "${strFlGenBuf}Log${strGenTmpSuffix}"&&:
+CFGFUNCtrash "${strFlGenBuf}BiomeId${strGenTmpSuffix}"&&:
+
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
     |egrep 'position="[^"]*"' \
@@ -140,11 +143,20 @@ function FUNCisNormalZone() {
   fi
   return 1
 }
+
+strBiomeFileInfo="`identify "${strCFGGeneratedWorldTNMFolder}/biomes.png" |egrep " [0-9]*x[0-9]* " -o |tr -d ' ' |tr 'x' ' '`";
+nBiomesW="`echo "$strBiomeFileInfo" |cut -d' ' -f1`";
+nBiomesH="`echo "$strBiomeFileInfo" |cut -d' ' -f2`";
+declare -p nBiomesW nBiomesH
+
 iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleSpawnBEGIN
 iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
 iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
+declare -A astrPosVsBiomeColor=()
+strFlPosVsBiomeColor="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
+source "${strFlPosVsBiomeColor}"&&:
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
   #iX=${astrPrefabsList[i]}
@@ -197,16 +209,36 @@ for str in "${astrPrefabsList[@]}";do
     bCreateAutoTeleport=true 
   fi
   
-  
-  
   if $bCreateAutoTeleport;then #create initial spawns to teleport to
     ((iTeleportIndex++))&&:
     
     if $bUseAll || $bNormalZone;then
-        strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
+        iXSP=$((iX+iDisplacementXZ))
+        iZSP=$((iZ+iDisplacementXZ))
+        strSpawnPos="$iXSP,$iY,$iZSP"
+        
+        strColorAtBiomeFile="${astrPosVsBiomeColor[${strSpawnPos}]-}"&&:
+        if [[ -z "${strColorAtBiomeFile}" ]];then #TODO : ${bForceRecreateBiomeCacheFile:=false} #help
+          strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)+iZSP))"'}]' info:-`"
+        fi
+        if [[ "$strColorAtBiomeFile" == "FFFFFFFF" ]];then 
+          strBiome="Snow";iBiome=1
+        elif [[ "$strColorAtBiomeFile" == "004000FF" ]];then 
+          strBiome="PineForest";iBiome=3
+        elif [[ "$strColorAtBiomeFile" == "FFE477FF" ]];then 
+          strBiome="Desert";iBiome=5
+        elif [[ "$strColorAtBiomeFile" == "FFA800FF" ]];then 
+          strBiome="Wasteland";iBiome=8
+        elif [[ "$strColorAtBiomeFile" == "does not exist on rgw generated worlds right?" ]];then 
+          strBiome="BurntForest";iBiome=9
+        else
+          CFGFUNCerrorExit "not implemented biome for ${strColorAtBiomeFile}"
+        fi
+        astrPosVsBiomeColor["${strSpawnPos}"]="${strColorAtBiomeFile}"
+        
         strTeleport="prefabPosCmd: teleport $iX $iYOrig $iZ"
-        strHelp="index=${iTeleportIndex};prefab=${strNm};spawnPos=${strPos};${strTeleport}"
-        echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
+        strHelp="index=${iTeleportIndex};prefab=${strNm};biome=${strColorAtBiomeFile},${strBiome},${iBiome};spawnPos=${strSpawnPos};${strTeleport}"
+        echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strSpawnPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
     fi
     
     if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
@@ -221,8 +253,12 @@ for str in "${astrPrefabsList[@]}";do
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}Log${strGenTmpSuffix}"
     echo '      <!-- '"${strMsg}"' -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="'"${iBiome}"'">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
+        </triggered_effect>' >>"${strFlGenBuf}BiomeId${strGenTmpSuffix}"
+    echo '      <!-- '"${strMsg}"' -->
     <action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
-      <property name="target_position" value="'"${strPos}"'" help="'"${strHelp}"'"/>
+      <property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
     iTeleportMaxIndex=$iTeleportIndex
     if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
@@ -234,14 +270,21 @@ for str in "${astrPrefabsList[@]}";do
     #fi
   #fi
 done
+
+echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColor"
+echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColor"
+declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColor" #TODO sha1sum the biome file and if it changes, recreate the array
+
 strSorted="`cat "${strFlGenSpa}${strGenTmpSuffix}" |sort`"
 echo "$strSorted" >"${strFlGenSpa}${strGenTmpSuffix}"
 cat "${strFlGenSpa}${strGenTmpSuffix}"
+
 
 ./gencodeApply.sh "${strFlGenSpa}${strGenTmpSuffix}" "${strFlGenSpa}"
 
 ./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 ./gencodeApply.sh --subTokenId "TeleSpawnLog" "${strFlGenBuf}Log${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "TeleSpawnBiomeId" "${strFlGenBuf}BiomeId${strGenTmpSuffix}" "${strFlGenBuf}"
 
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
