@@ -126,6 +126,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 ################## CHANGES ##############  
 --------- v0.9c -----------  
+- improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGTeslaTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - fixed HitpointsBlockageByChemUse  
 - clearly visible HP, Stamina blockage (also for Food and Water if it is working)  
 - new teleport activators fully working now with configurable distances (also to sky)  

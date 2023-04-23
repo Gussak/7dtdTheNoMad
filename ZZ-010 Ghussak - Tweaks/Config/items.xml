@@ -453,7 +453,7 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKExploringBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 19 diff items" value="apparelNightvisionGoggles,bedrollBlue,casinoCoin,cobblestoneShapes,drugJailBreakers,GlowStickGreen,GSKfireFuel,GSKsimpleBeer,ladderWood,meleeToolFlashlight02,meleeToolTorch,NightVisionBattery,resourceCloth,resourceDuctTape,resourceFeather,resourceLockPick,resourceRockSmall,resourceWood,resourceYuccaFibers"/>
+        <property name="Create_item" help="it has 19 diff items" value="apparelNightvisionGoggles,bedrollBlue,casinoCoin,cobblestoneShapes:VariantHelper,drugJailBreakers,GlowStickGreen,GSKfireFuel,GSKsimpleBeer,ladderWood,meleeToolFlashlight02,meleeToolTorch,NightVisionBattery,resourceCloth,resourceDuctTape,resourceFeather,resourceLockPick,resourceRockSmall,resourceWood,resourceYuccaFibers"/>
         <property name="Create_item_count" value="1,33,666,66,3,33,13,33,66,1,1,66,33,1,1,1,222,66,33"/>
       </property>
       <!-- HELPGOOD: initially damaged items below -->
@@ -550,8 +550,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTeslaEnergyBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 10 diff items" value="ammoJunkTurretRegular,armorClothHat,gunBotT2JunkTurret,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportDirection,GSKTeslaTeleportToSky,modGSKEnergyThorns,modGSKTeslaTeleport,NightVisionBattery,NVBatteryCreate"/>
-        <property name="Create_item_count" value="222,1,1,1,1,1,1,1,13,1"/>
+        <property name="Create_item" help="it has 11 diff items" value="ammoJunkTurretRegular,armorClothHat,gunBotT2JunkTurret,GSKCFGTeslaTeleportToBiome,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportDirection,GSKTeslaTeleportToSky,modGSKEnergyThorns,modGSKTeslaTeleport,NightVisionBattery,NVBatteryCreate"/>
+        <property name="Create_item_count" value="222,1,1,1,1,1,1,1,1,13,1"/>
       </property>
       <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: GSKTeslaTeleportDirection" tiered="false">
@@ -662,8 +662,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTheNoMadOverhaulBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 16 diff items" value="GSKCFGTeslaTeleportToBiome,GSKTRNotesBundle,GSKTRSpecialNotesBundle,GSKNoteInfoDevice,GSKNoteStartNewGameSurvivingFirstDay,GSKTheNoMadOverhaulBundleNoteBkp,startNewGameOasisHint,GSKTheNoMadOverhaulCreateRespawnBundleExploring,GSKTheNoMadOverhaulCreateRespawnBundleCombatWeapons,GSKTheNoMadOverhaulCreateRespawnBundleCombatArmor,GSKTheNoMadOverhaulCreateRespawnBundleTeslaEnergy,GSKTheNoMadOverhaulCreateRespawnBundleHealing,GSKTheNoMadOverhaulCreateRespawnBundleFarming,GSKTheNoMadOverhaulCreateRespawnBundleBasicCampingKit,GSKTheNoMadOverhaulCreateRespawnBundleMinimalSurvivalKit,GSKTheNoMadOverhaulCreateRespawnBundleSomeSchematicBundles"/>
-        <property name="Create_item_count" value="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+        <property name="Create_item" help="it has 15 diff items" value="GSKTRNotesBundle,GSKTRSpecialNotesBundle,GSKNoteInfoDevice,GSKNoteStartNewGameSurvivingFirstDay,GSKTheNoMadOverhaulBundleNoteBkp,startNewGameOasisHint,GSKTheNoMadOverhaulCreateRespawnBundleExploring,GSKTheNoMadOverhaulCreateRespawnBundleCombatWeapons,GSKTheNoMadOverhaulCreateRespawnBundleCombatArmor,GSKTheNoMadOverhaulCreateRespawnBundleTeslaEnergy,GSKTheNoMadOverhaulCreateRespawnBundleHealing,GSKTheNoMadOverhaulCreateRespawnBundleFarming,GSKTheNoMadOverhaulCreateRespawnBundleBasicCampingKit,GSKTheNoMadOverhaulCreateRespawnBundleMinimalSurvivalKit,GSKTheNoMadOverhaulCreateRespawnBundleSomeSchematicBundles"/>
+        <property name="Create_item_count" value="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
       </property>
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
@@ -1762,21 +1762,23 @@
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToBiome"/>
       <property name="CustomIconTint" value="0,0,255"/>
+      <property class="Action1">
+        <property name="Class" value="Eat" help="to be consumed"/>
+      </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="1" help="Snow">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-1" help="Snow">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="3" help="PineForest">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-3" help="PineForest">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-5" help="Desert">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="3"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="8" help="Wasteland">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-8" help="Wasteland">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
       </effect_group>
     </item>

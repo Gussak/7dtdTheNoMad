@@ -220,8 +220,8 @@ for str in "${astrPrefabsList[@]}";do
         strSpawnPos="$iXSP,$iY,$iZSP"
         
         strColorAtBiomeFile="${astrPosVsBiomeColor[${strSpawnPos}]-}"&&:
-        if [[ -z "${strColorAtBiomeFile}" ]];then #TODO : ${bForceRecreateBiomeCacheFile:=false} #help
-          strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)+iZSP))"'}]' info:-`"
+        if [[ -z "${strColorAtBiomeFile}" ]];then
+          strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)-iZSP))"'}]' info:-`" #the center of the map is X,Z=0,0. North from center is Z positive in game, but for imagemagick convert, it is inverted because the topleft image picture is the 0,0 origin
         fi
         if [[ "$strColorAtBiomeFile" == "FFFFFFFF" ]];then 
           strBiome="Snow";iBiome=1

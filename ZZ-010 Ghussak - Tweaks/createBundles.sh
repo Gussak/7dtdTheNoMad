@@ -137,7 +137,8 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
   fi
   
   if $lbCheckMissingItemIds;then
-    if ! egrep '< *('"${lstrFlCfgChkRegex}"') *name *= *"'"${strItemID}"'"' "${lastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id is missing (or was changed): ${strItemID}. try: egrep 'TypePreviousIdHere' * -iRnI --include=\"*.xml\"";fi
+    local lstrChkItemId="`echo "${strItemID}" |cut -d: -f1`" #TODO check for the "VariantHelper" string if it is valike like in "cobblestoneShapes:VariantHelper"
+    if ! egrep '< *('"${lstrFlCfgChkRegex}"') *name *= *"'"${lstrChkItemId}"'"' "${lastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id lstrChkItemId='${lstrChkItemId}' is missing (or was changed): strItemID='${strItemID}'. try: egrep 'TypePreviousIdHere' * -iRnI --include=\"*.xml\"";fi
   fi
   
   local fDmg=0.75
@@ -381,7 +382,7 @@ astr=(
   apparelNightvisionGoggles 1
   bedrollBlue 33
   casinoCoin 666
-  cobblestoneShapes 66 #"cobblestoneShapes:VariantHelper"
+  "cobblestoneShapes:VariantHelper" 66
   drugJailBreakers 3
   GlowStickGreen       33
   GSKfireFuel 13
@@ -451,6 +452,7 @@ astr=(
   ammoJunkTurretRegular 222
   armorClothHat 1 # this is to be able to install one of the mods
   gunBotT2JunkTurret 1
+  GSKCFGTeslaTeleportToBiome 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
   GSKTeslaTeleportDirection 1
   GSKTeslaTeleportToSky 1
@@ -548,7 +550,6 @@ astr=(
 #########################################################################################
 astr=(
   # notes
-  GSKCFGTeslaTeleportToBiome 1
   GSKTRNotesBundle 1 #from createNotesTips.sh
   GSKTRSpecialNotesBundle 1 #from createNotesTips.sh
   GSKNoteInfoDevice 1 
