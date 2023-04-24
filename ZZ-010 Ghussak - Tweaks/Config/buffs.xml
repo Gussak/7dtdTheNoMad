@@ -4463,15 +4463,37 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKMutantRandomTeleAgressor" remove_on_death="true" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="10"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKMutantRandomTeleAgressor"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You hit a mutant and got teleported."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection">
+          <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize">
+          <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantRandomTeleAgressor">
+          <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="3"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKTeslaTeleportFinalize" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
       <stack_type value="ignore"/>
       <duration value="1.0"/>
       <update_rate value="0.05"/>
-      <effect_group>
+      <effect_group help="log">
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:ONUPDATE:buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKExternalForceTeleport"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="consume battery">
+        <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="0" help="the mayhem loop will deplet the battery but wont cause too much trouble. will become negative only once"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="@iGSKTeslaTeleportEnergy"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKTeslaTeleportDistIndex"/>
@@ -4481,7 +4503,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKTTETmp"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="disable devices">
+        <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaDisableAll" help="this is important because the slow fall trick makes it too difficult to use the inventory to unequip tesla mods if player is being shocked">
           <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
@@ -5012,6 +5035,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="damage per use">
+        <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="set" value="1500" help="15% dmg">
           <requirement name="CVarCompare" cvar=".bGSKTTFBattGood" operation="Equals" value="0"/>
         </triggered_effect>
@@ -5044,7 +5068,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="0" help="resets to prepare for next"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="finalize, rm this buff and prepare for next call of this buff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
       </effect_group>
     </buff>
@@ -7397,6 +7422,10 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="set" value="0" help="consume"/>
       </effect_group>
+      <effect_group help="mutant external force teleport on player">
+        <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomTeleAgressor"/>
+      </effect_group>
       <effect_group help="hazard: weather apply and fix time">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather38">
           <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="GT" value="0"/>
@@ -7728,10 +7757,14 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
       <stack_type value="ignore"/>
       <duration value="60"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}/60s"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
       </effect_group>

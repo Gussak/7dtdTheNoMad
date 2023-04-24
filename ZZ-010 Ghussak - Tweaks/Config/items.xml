@@ -1760,10 +1760,11 @@
     </item>
     <item name="GSKCFGTeslaTeleportToBiome">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
       <property name="DescriptionKey" value="dkGSKCFGTeslaTeleportToBiome"/>
-      <property name="CustomIconTint" value="0,0,255"/>
+      <property name="CustomIconTint" value="80,80,80"/>
       <property class="Action1">
-        <property name="Class" value="Eat" help="to be consumed"/>
+        <property name="Class" value="Eat" help="to be consumed at secondary action"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-1" help="Snow">
@@ -2241,6 +2242,12 @@
           <requirement name="NotHasBuff" buff="god"/>
           <requirement name="NotHasBuff" buff="buffRadSuit"/>
         </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestMutantRandomTeleportSelf">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKMutantRandomTeleAgressor"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestRadiationClear">
@@ -4956,6 +4963,11 @@
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->
   <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
+  <append xpath="/items/item[starts-with(@name,'gun') or starts-with(@name,'melee')]" help="mutant zombies may teleport who hits them">
+    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
+      <requirement name="EntityTagCompare" tags="mutant" target="other"/>
+    </triggered_effect>
+  </append>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" tags="animalSpider01"/>
