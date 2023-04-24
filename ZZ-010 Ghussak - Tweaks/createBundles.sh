@@ -221,6 +221,7 @@ function FUNCprepareBundlePart() {
   local lbCB=$1;shift
   local lstrBundleDesc="$1";shift
   local lbCheckMissingItemIds="$1";shift
+  local lbExpLoss="$1";shift
   local lastrItemAndCountList=("$@")
   
   local lastrOpt=()
@@ -235,12 +236,14 @@ function FUNCprepareBundlePart() {
   
   bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=false
   strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
-  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode=""
+  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode="" liExpDebt=0
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
     if((i>0));then lstrSep=",";fi;
     lstrItems+="$lstrSep${lastrItemAndCountList[i]}"
+    ((liExpDebt+=100))&&:
     local liItemCount="${lastrItemAndCountList[i+1]}"
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
+    ((liExpDebt+=(liItemCount/10)))&&:
     lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lastrItemAndCountList[i]} ${lastrItemAndCountList[i+1]}"
     FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES "$lbCheckMissingItemIds" "${lastrItemAndCountList[i]}"
@@ -251,24 +254,12 @@ function FUNCprepareBundlePart() {
       #fi
     #fi
   done;
+  
+  if ! $lbExpLoss;then liExpDebt=1;fi
+  
   local lstrAddDesc=""
   if $bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT;then
-    lstrAddDesc+="\nObs.: Some of these equipment or devices are severely damaged and wont last long w/o repairs.\n"
-  fi
-  
-  local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
-  if [[ "${lstrBundleDesc}" == "--autoDK" ]];then
-    lstrBundleDesc="$lstrBundleDK"
-  fi
-  if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
-    lstrBundleDK="$lstrBundleDesc"
-  else
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}${lstrAddDesc}\"")
-  fi
-  if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
-    if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
-       CFGFUNCerrorExit "ugh..."
-    fi
+    lstrAddDesc+=" Obs.: Some of these equipment or devices are severely damaged and wont last long w/o repairs.\n"
   fi
   
   #strDK=""
@@ -281,6 +272,7 @@ function FUNCprepareBundlePart() {
     #astrBundlesSchematics+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
     lastrOpt+=(--lightcolor)
     lastrOpt+=(--schematic)
+    ((liExpDebt*=5))&&:
   else
     if ! $lbIgnTopList;then
       astrBundlesItemsLeastLastOne+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
@@ -291,7 +283,20 @@ function FUNCprepareBundlePart() {
     lstrIcon="cntStorageGeneric"
   fi
   
-  
+  local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
+  if [[ "${lstrBundleDesc}" == "--autoDK" ]];then
+    lstrBundleDesc="$lstrBundleDK"
+  fi
+  if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
+    lstrBundleDK="$lstrBundleDesc"
+  else
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost when opening this bundle: ${liExpDebt}\n${lstrAddDesc}\"")
+  fi
+  if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
+    if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
+       CFGFUNCerrorExit "ugh..."
+    fi
+  fi
   
   #if [[ "$lstrBundleName" == "$strModNameForIDs" ]];then
     ##strColor="220,180,128" #TODO use same color of GSKTheNoMadOverhaulBundleNoteBkp thru xmlstarlet get value
@@ -319,6 +324,9 @@ function FUNCprepareBundlePart() {
   fi
   echo '
       </property>'"${lstrSpecifiItemsCode}"'
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-'"${liExpDebt}"'" />
+      </effect_group>
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
@@ -332,12 +340,14 @@ function FUNCprepareBundles() {
   local lstrColor="192,192,192"
   local lbIgnTopList=false
   local lbCheckMissingItemIds=true
+  local lbExpLoss=true
   while [[ "${1:0:2}" == "--" ]];do
     if [[ "$1" == --ignoreTopList ]];then shift;lbIgnTopList=true;fi
     if [[ "$1" == --choseRandom ]];then shift;lbRnd=true;fi
     if [[ "$1" == --noCB ]];then shift;lbCB=false;fi
     if [[ "$1" == --color ]];then shift;lstrColor="$1";shift;fi #help <lstrColor>
     if [[ "$1" == --noCheckMissingItemIds ]];then shift;lbCheckMissingItemIds=false;fi #help <lstrColor>
+    if [[ "$1" == --noExpLoss ]];then shift;lbExpLoss=false;fi
   done
   
   local lstrBundleName="$1";shift
@@ -345,7 +355,7 @@ function FUNCprepareBundles() {
   local lstrBundleDesc="$1";shift
   local lastrItemAndCountList=("$@")
   
-  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds")
+  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds" "$lbExpLoss")
   
   declare -p lastrItemAndCountList |tr '[' '\n'
   
@@ -556,7 +566,7 @@ astr=(
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
+);FUNCprepareBundles --noExpLoss "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 #);FUNCprepareBundles --noCheckMissingItemIds "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 
 #########################################################################################
@@ -581,7 +591,7 @@ astr=(
   "${astrCBItemsLeastLastOne[@]}"
   
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
+);FUNCprepareBundles --noExpLoss --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
 #);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
 
 ################## DESCRIPTIONS ####################
