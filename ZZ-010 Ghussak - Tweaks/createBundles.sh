@@ -396,6 +396,7 @@ astr=(
   bedrollBlue 33
   casinoCoin 666
   "cobblestoneShapes:VariantHelper" 66
+  drinkCanEmptyCookingOneUse 33
   drugJailBreakers 3
   GlowStickGreen       33
   GSKfireFuel 13
@@ -524,6 +525,7 @@ astr=(
 astr=(
   bedrollBlue 1
   campfire 1 
+  drinkCanEmptyCookingOneUse 3
   candleTableLight 1
   cntSecureStorageChest 1
   meleeToolRepairT0StoneAxe 1
@@ -535,6 +537,7 @@ astr=(
 
 astr=(
   bedrollBlue 1
+  drinkCanEmptyCookingOneUse 3
   drinkJarBoiledWater 2
   drugSteroids 1
   GlowStickGreen       13
