@@ -176,7 +176,7 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
-  if [[ "$strItemID" == "GSKTeslaTeleportDirection" ]];then
+  if [[ "$strItemID" == "modGSKTeslaTeleport" ]];then
     bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
     strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
@@ -184,6 +184,19 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="'$fDmg'">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>'
+  fi
+  if [[ "$strItemID" == "modGSKEnergyThorns" ]];then
+    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
+      <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="'$fDmg'">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
@@ -240,7 +253,7 @@ function FUNCprepareBundlePart() {
   done;
   local lstrAddDesc=""
   if $bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT;then
-    lstrAddDesc+="\n The devices in this bundle are damaged but still usable."
+    lstrAddDesc+="\nObs.: Some of these equipment or devices are severely damaged and wont last long w/o repairs.\n"
   fi
   
   local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
@@ -404,7 +417,7 @@ astr=(
   modGunFlashlightSchematic 1
   vehicleBicycleChassisSchematic 1
   vehicleBicycleHandlebarsSchematic 1
-);FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho). Some of these equipment are severely damaged and wont last long w/o repairs tho." "${astr[@]}"
+);FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho)." "${astr[@]}"
 
 astr=( #TEMPLATE
   ammo9mmBulletBall 666
@@ -454,10 +467,10 @@ astr=(
   gunBotT2JunkTurret 1
   GSKCFGTeslaTeleportToBiome 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
-  GSKTeslaTeleportDirection 1
-  GSKTeslaTeleportToSky 1
+  #GSKTeslaTeleportDirection 1
+  #GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
-  modGSKTeslaTeleport 1
+  #modGSKTeslaTeleport 1
   NightVisionBattery    13
   #NightVisionBatteryStrong 2 #uneccessarry now, tele to sky will just make energy negative and will work.
   NVBatteryCreate 1
@@ -466,7 +479,7 @@ astr=(
   bookTechJunkie5Repulsor 1
   generatorbankSchematic 1
   gunBotT2JunkTurretSchematic 1
-);FUNCprepareBundles "TeslaEnergy" "bundleBatteryBank" "Use this if want to start using and crafting tesla mods, this will increase your combat survival chances." "${astr[@]}"
+);FUNCprepareBundles "TeslaEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting tesla mods, this will increase your combat survival chances." "${astr[@]}"
 
 astr=(
   bucketRiverWater 1
