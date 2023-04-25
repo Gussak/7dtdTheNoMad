@@ -44,6 +44,8 @@ astrDKAndDescList=()
 astrBundlesItemsLeastLastOne=()
 astrBundlesSchematics=()
 
+iAllFreeBundlesSumExpDebit=0
+
 # sub sections
 strXmlCraftBundleCreateItemsXml=""
 strXmlCraftBundleCreateRecipesXml=""
@@ -102,7 +104,7 @@ function FUNCprepareCraftBundle() {
         </triggered_effect>'
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has exp penalty. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)},"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -282,6 +284,7 @@ function FUNCprepareBundlePart() {
   if [[ -z "${lstrIcon}" ]];then
     lstrIcon="cntStorageGeneric"
   fi
+  ((iAllFreeBundlesSumExpDebit+=liExpDebt))&&:
   
   local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
   if [[ "${lstrBundleDesc}" == "--autoDK" ]];then
@@ -290,7 +293,7 @@ function FUNCprepareBundlePart() {
   if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
     lstrBundleDK="$lstrBundleDesc"
   else
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost when opening this bundle: ${liExpDebt}\n${lstrAddDesc}\"")
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle: ${liExpDebt}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0.00)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n MinutesRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0)}\n ${lstrAddDesc}\"")
   fi
   if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
     if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
@@ -325,7 +328,9 @@ function FUNCprepareBundlePart() {
   echo '
       </property>'"${lstrSpecifiItemsCode}"'
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-'"${liExpDebt}"'" />
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-'"${liExpDebt}"'" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="'"${liExpDebt}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
@@ -476,8 +481,8 @@ astr=(
   ammoJunkTurretRegular 222
   armorClothHat 1 # this is to be able to install one of the mods
   gunBotT2JunkTurret 1
-  GSKCFGTeslaTeleportToBiome 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
+  GSKTeslaTeleportToBiomeFreeAndSafeCall 1
   #GSKTeslaTeleportDirection 1
   #GSKTeslaTeleportToSky 1
   modGSKEnergyThorns     1
@@ -517,6 +522,7 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookWasteTreasuresHoney 1
   bookWasteTreasuresWater 1
+  drinkJarGoldenRodTeaSchematic 1
   drugAntibioticsSchematic 1
   drugHerbalAntibioticsSchematic 1
   foodBoiledMeatBundleSchematic 1
@@ -624,4 +630,9 @@ for strDKCraftBundleName in "${astrCraftBundleNameList[@]}";do
 done
 ./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 
+./gencodeApply.sh --xmlcfg \
+  fGSKAllFreeBundlesSumExpDebit "${iAllFreeBundlesSumExpDebit}"
+
+#last
 ./gencodeApply.sh --cleanChkDupTokenFiles
+

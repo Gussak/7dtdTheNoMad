@@ -1292,6 +1292,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgColdProt" operation="GT" value="1.00"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgColdProtx100" operation="set" value="@fGSKDmgColdProt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgColdProtx100" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgHeatProtx100" operation="set" value="@fGSKDmgHeatProt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgHeatProtx100" operation="multiply" value="100"/>
       </effect_group>
       <effect_group>
         <passive_effect name="HypothermalResist" operation="perc_subtract" value="@fGSKDmgColdProt">
@@ -3784,11 +3788,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="multiply" value="@fGSKHazmatSuitIntegrity">
           <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="1.0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.5" help="hazmatsuit in perfect condition provides 100perc protection">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.5" help="hazmatsuit in perfect condition provides 100 percent protection">
           <requirement name="HasBuff" buff="buffRadSuit"/>
           <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="Equals" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@fGSKRadResChemDiv"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="set" value="@_sheltered"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="divide" value="2.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@.fGSKRadResSheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="set" value="0.90" help="this happens having 4 or less hazmatsuit parts and using radres chem many times">
           <requirement name="!HasBuff" buff="buffRadSuit"/>
           <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.90"/>
@@ -4221,6 +4228,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="21654" helpgencode="ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
@@ -5151,13 +5159,23 @@
     </buff>
     <buff name="buffGSKPrepareRandomSpawnAndTeleportToZone">
       <stack_type value="ignore"/>
-      <duration value="10.0"/>
+      <duration value="600"/>
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKPrepareRandomSpawnAndTeleportToZone"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt(50001,50150)" helpgencode="ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:createSpawnPoints.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPRSATTZPhase" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPRSATTZPhase" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPRSATTZPhase"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPRSATTZPhase" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="-1" help="this is an invalid value to let it wait for the valid value below"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="set" value="0" help="this is a parameter for the below buff call to prevent it from calling teleport event, so it will just set a random spawn point index for the chosen biome"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPRSATTZPhase" operation="GT" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKTeslaTeleSpawnBEGIN"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
@@ -6803,7 +6821,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKTeleportedToSky"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKRndSUCBIRetry"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone">
+          <requirement name="CVarCompare" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
@@ -7409,7 +7429,28 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group help="fix the imperfect God ;). put here only what is causing trouble in god mode...">
+      <effect_group help="shelter gives radiation resistance">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadResistWork14"/>
+      </effect_group>
+      <effect_group help="exp loss, temporary by opening free bundles">
+        <requirement name="CVarCompare" cvar="fGSKExpDebt" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="set" value="@fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="60" help="minutes"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="@fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="0.95">
+          <requirement name="CVarCompare" cvar=".fGSKExpDebtPercTmp" operation="GT" value="0.95"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="multiply" value="-1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPerc" operation="set" value="@.fGSKExpDebtPercTmp" help="to avoid varying values during above lines"/>
+        <passive_effect name="PlayerExpGain" operation="perc_add" value="@.fGSKExpDebtPerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="set" value="@.fGSKExpDebtPerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="multiply" value="100"/>
+      </effect_group>
+      <effect_group help="fix the imperfect god ;). put here only what is causing trouble in god mode...">
         <requirement name="HasBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0"/>
@@ -7788,6 +7829,15 @@
     <effect_group>
       <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.1" effect_name="Drunk">
         <requirement name="ProgressionLevel" progression_name="perkBarBrawling7BoozedUp" operation="Equals" value="1"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffNewbieCoat']">
+    <effect_group help="CoatlessVeteran: this is intended just to keep the above passives about water food and health and anything else new that may take just a few seconds to be stabilized">
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="set" value="60"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="subtract" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNewbieCoat">
+        <requirement name="CVarCompare" cvar=".iGSKVeteranTmOut" operation="LTE" value="0"/>
       </triggered_effect>
     </effect_group>
   </append>
