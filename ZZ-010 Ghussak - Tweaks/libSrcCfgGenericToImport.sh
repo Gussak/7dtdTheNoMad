@@ -143,7 +143,7 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
   if [[ -f "${strCFGErrorLog}" ]];then
     cat "${strCFGErrorLog}"
     echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell: ${strCFGErrorLog} " >&2
-    read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script."
+    read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
     trash "${strCFGErrorLog}"
     exit 1
   fi
@@ -162,13 +162,19 @@ function CFGFUNCDevMeErrorExit() { #helpf <msg>
 function CFGFUNCDryRunMsg() { 
   if $bCFGDryRun;then echo "<DryRun>";fi
 };export -f CFGFUNCDryRunMsg
-function CFGFUNCexec() { #helpf <<acmd>>
+function CFGFUNCexec() { #helpf [--noErrorExit] <<acmd>>
+  local lbAllowErrorExit=true;if [[ "$1" == --noErrorExit ]];then shift;lbAllowErrorExit=false;fi
   CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $*"
   if ! $bCFGDryRun;then
-    if ! "$@";then
-      CFGFUNCerrorExit "Failed to execute the command above."
+    "$@"&&:;local lnRet=$?
+    if((lnRet>0));then
+      if $lbAllowErrorExit;then
+        CFGFUNCerrorExit "Failed to execute the command above."
+      fi
+      return $lnRet
     fi
   fi
+  return 0
 };export -f CFGFUNCexec
 function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
   local lbQ=false;if [[ "$1" == -q ]];then shift;lbQ=true;fi

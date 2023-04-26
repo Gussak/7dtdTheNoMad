@@ -54,16 +54,16 @@ function FUNCapplyChanges() {
 function FUNCapplyChanges2() {
   unix2dos "${strFlToPatch}.GENCODENEWFILE"
   if ! cmp "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
-    : ${bSkipMeld:=false} #help
+    : ${bSkipMeld:=false} #help ignore the merger app and apply the patch w/o reviewing
     if ! $bSkipMeld;then 
       #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
       if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
         #echo "ERROR: aborted."
         #CFGFUNCerrorExit
-        echo "WARNING: aborted."
+        #echo "WARNING: aborted."
         #CFGFUNCprompt "Hit any key to trash the tmp file '${strFlToPatch}.GENCODENEWFILE' and exit."
         #CFGFUNCtrash "${strFlToPatch}.GENCODENEWFILE"
-        CFGFUNCerrorExit
+        CFGFUNCerrorExit "WARN: user aborted."
       fi
     fi
     # "overwrite" the old with new file
@@ -73,8 +73,9 @@ function FUNCapplyChanges2() {
     #echo "PATCHING expectedly WORKED! now test it!"
     FUNCapplyChanges
   else
-    echo "WARN: nothing changed"
+    CFGFUNCinfo "Nothing changed for '${strFlToPatch}'."
   fi
+  return 0
 }
 
 strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"

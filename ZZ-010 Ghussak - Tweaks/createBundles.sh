@@ -59,16 +59,27 @@ strFlCfgChkRegex="`echo "${astrFlCfgChkList[@]}" |tr ' ' '|'`"
 astrFlCfgChkFullPathList=()
 astrXmlToken1VsFile2List=() # key value
 for strFlCfgChk in "${astrFlCfgChkList[@]}";do
-  astrFlCfgChkFullPathList+=("Config/${strFlCfgChk}s.xml") # this is the xml modlet file on this mod's folder
+  strFlRelatModCfgXml="Config/${strFlCfgChk}s.xml"
+  astrFlCfgChkFullPathList+=("${strFlRelatModCfgXml}") # this is the xml modlet file on this mod's folder
+  astrXmlToken1VsFile2List+=("$strFlCfgChk" "${strFlRelatModCfgXml}")
   if [[ -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
     strFlXmlFinalChk="${strCFGNewestSavePathConfigsDumpIgnorable}/${strFlCfgChk}s.xml"
     astrFlCfgChkFullPathList+=("$strFlXmlFinalChk") # this is the xml final dump of the last save
     astrXmlToken1VsFile2List+=("$strFlCfgChk" "$strFlXmlFinalChk")
   fi
 done #for strFlCfgChkFullPath in "${astrFlCfgChkFullPathList[@]}";do
+declare -p astrXmlToken1VsFile2List |tr '[' '\n'
 
+declare -A astrItem1Value2List=()
 strFlItemEconomicValueCACHE="`basename "$0"`.ItemEconomicValue.CACHE.sh" #help if you delete the cache file it will be recreated
+#if [[ -f "${strFlItemEconomicValueCACHE}" ]];then source "${strFlItemEconomicValueCACHE}";fi
 source "${strFlItemEconomicValueCACHE}"&&:
+strIVChk="`declare -p astrItem1Value2List |tr '[' '\n' |egrep -v "^ *$" |egrep -v "${strCraftBundlePrefixID}" |sort -u`"
+echo "$strIVChk" |egrep '="1"'&&: # just to check if they should really be value 1
+if((`echo "$strIVChk" |egrep '="0*"' |wc -l`>0));then # matches "" or "0"
+  echo "$strIVChk"
+  CFGFUNCprompt "there are the above entries that could be improved (at least EconomicValue 1)"
+fi
 
 function FUNCprepareCraftBundle() {
   local lbLightColor=false
@@ -122,7 +133,7 @@ function FUNCprepareCraftBundle() {
         </triggered_effect>'
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has exp penalty. Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now). The number inside parenthesis is the experience penalty: '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has experience penalty time (inside parenthesis). Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)}(${liExpDebt}),"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -227,15 +238,31 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
 }
 
 function FUNCxmlstarletSel() {
+  local lbChkExistsOnly=false;if [[ "$1" == --chk ]];then shift;lbChkExistsOnly=true;fi
   local lstrPath="$1";shift
   local lstrFlXml="$1";shift
   
-  local lstrResult="`xmlstarlet sel -t -v "${lstrPath}" "${lstrFlXml}"`"&&:
-  if((`echo "${lstrResult}" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrResult='${lstrResult}', ${lstrPath} ${lstrFlXml}";fi
+  local lastrCmd=(xmlstarlet)
+  if $lbChkExistsOnly;then lastrCmd+=(-q);fi
+  lastrCmd+=(sel -t)
+  if $lbChkExistsOnly;then
+    lastrCmd+=(-c)
+  else
+    lastrCmd+=(-v)
+  fi
+  lastrCmd+=("${lstrPath}" "${lstrFlXml}")
   
-  if [[ -n "$lstrResult" ]];then
-    echo "$lstrResult"
-    return 0
+  if $lbChkExistsOnly;then
+    if CFGFUNCexec --noErrorExit "${lastrCmd[@]}";then return 0;fi
+  else
+    #CFGFUNCinfo "EXEC: ${lastrCmd[@]}"
+    local lstrResult="`CFGFUNCexec --noErrorExit "${lastrCmd[@]}"`"&&:
+    if((`echo "${lstrResult}" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrResult='${lstrResult}', ${lstrPath} ${lstrFlXml}";fi
+    
+    if [[ -n "$lstrResult" ]];then
+      echo "$lstrResult"
+      return 0
+    fi
   fi
   
   return 1
@@ -248,45 +275,50 @@ function FUNCrecursiveSearchPropertyValue() { # FUNCrecursiveSearchPropertyValue
   local lstrItemID="$1";shift
   local lstrFlCfgChkFullPath="$1";shift
   
-  declare -g bFUNCgetEcoVal_CanSell_OUT=true
-  declare -g iFUNCgetEcoVal_EcVal_OUT=0
-  declare -g strFUNCgetEcoVal_XmlTokenFound_OUT #to help determine what kind of id is this, in what xml file it is
-  declare -g strFUNCgetEcoVal_PreviousItemID
+  declare -g bFRSPV_CanSell_OUT
+  declare -g iFRSPV_EcVal_OUT
+  declare -g strFRSPV_XmlTokenFound_OUT #to help determine what kind of id is this, in what xml file it is
+  declare -g strFRSPV_PreviousItemID
   
   local lstrChkItem="`FUNCidWithoutVariant "$lstrItemID"`"
   local lastrItemInheritPath=("$lstrChkItem")
   local lstrParent=""
   while [[ -n "$lstrChkItem" ]];do # recursively look for lstrProp at extended parents
-    if ! xmlstarlet -q sel -t -c "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']" "${lstrFlCfgChkFullPath}";then
+    #if xmlstarlet -q sel -t -c "//${lstrXmlToken}[@name='${lstrChkItem}']" "${lstrFlCfgChkFullPath}";then
+    if FUNCxmlstarletSel --chk "//${lstrXmlToken}[@name='${lstrChkItem}']" "${lstrFlCfgChkFullPath}";then
+      strFRSPV_XmlTokenFound_OUT="${lstrXmlToken}"
+    else
       return 1
     fi
     
-    if [[ "${strFUNCgetEcoVal_PreviousItemID-}" != "$lstrItemID" ]];then
-      #strFUNCgetEcoVal_XmlTokenFound_OUT=""
-      strFUNCgetEcoVal_PreviousItemID="$lstrItemID"
+    if [[ "${strFRSPV_PreviousItemID-}" != "$lstrItemID" ]];then
+      CFGFUNCinfo "initialize new item: $lstrItemID"
+      #strFRSPV_XmlTokenFound_OUT=""
+      strFRSPV_PreviousItemID="$lstrItemID"
+      bFRSPV_CanSell_OUT=true
+      iFRSPV_EcVal_OUT=0
     fi
-    
-    strFUNCgetEcoVal_XmlTokenFound_OUT="${lstrXmlToken}"
     
     echo "CHK: ${lstrChkItem} ${lstrFlCfgChkFullPath}"
     
     # check allowed
     #echo FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"
-    local lstrAllowVal="`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"`"
-    if((`echo "$lstrAllowVal" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrAllowVal='${lstrAllowVal}'";fi
-    if [[ -n "$lstrBoolAllowProp" ]] && [[ "${lstrAllowVal}" == "false" ]];then
-      bFUNCgetEcoVal_CanSell_OUT=false
-      break
+    local lstrAllowVal="`FUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"`" #like SellableToTrader
+    #if((`echo "$lstrAllowVal" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrAllowVal='${lstrAllowVal}'";fi
+    if [[ -n "$lstrBoolAllowProp" ]] && [[ "`echo ${lstrAllowVal} |tr '[:upper:]' '[:lower:]'`" == "false" ]];then
+      bFRSPV_CanSell_OUT=false #even if it cant be sold, it may still have a EconomicValue set, that is good for the calc here
+      declare -p bFRSPV_CanSell_OUT
+      #break
     fi
     
     # get value
-    if iFUNCgetEcoVal_EcVal_OUT="`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`";then
+    if iFRSPV_EcVal_OUT="`FUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`";then
       break
     fi
     
     # get parent to check
     #echo FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"
-    if lstrParent="`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
+    if lstrParent="`FUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
       lstrChkItem="$lstrParent"
       lastrItemInheritPath+=("$lstrChkItem")
     else
@@ -294,9 +326,9 @@ function FUNCrecursiveSearchPropertyValue() { # FUNCrecursiveSearchPropertyValue
     fi
   done
   
-  if $bFUNCgetEcoVal_CanSell_OUT;then
-    if((iFUNCgetEcoVal_EcVal_OUT>0));then 
-      CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` ${iFUNCgetEcoVal_EcVal_OUT} ${lstrFlCfgChkFullPath}";
+  if $bFRSPV_CanSell_OUT;then
+    if((iFRSPV_EcVal_OUT>0));then 
+      CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` ${iFRSPV_EcVal_OUT} ${lstrFlCfgChkFullPath}";
       return 0
     fi
   else
@@ -304,6 +336,11 @@ function FUNCrecursiveSearchPropertyValue() { # FUNCrecursiveSearchPropertyValue
     return 0
   fi
   
+  return 1
+}
+
+function FUNCchkNum() {
+  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
   return 1
 }
 
@@ -332,8 +369,9 @@ function FUNCprepareBundlePart() {
   
   bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=false
   strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
-  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode="" liExpDebt=0
+  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode="" liExpDebt=0 liTotItems=0
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
+    ((liTotItems++))&&:
     if((i>0));then lstrSep=",";fi;
     local lstrItemID="${lastrItemAndCountList[i]}"
     lstrItems+="$lstrSep${lstrItemID}"
@@ -341,51 +379,57 @@ function FUNCprepareBundlePart() {
     #local liEcVal=0
     #local lbCanSell=true
     if [[ -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
-      #for lstrFlCfgChkFullPath in "${astrFlCfgChkFullPathList[@]}";do
-      for((j=0;j<${#astrXmlToken1VsFile2List[@]};j+=2));do 
-        local lstrXmlToken="${astrXmlToken1VsFile2List[j]}"
-        local lstrFlCfgChkFullPath="${astrXmlToken1VsFile2List[j+1]}"
-        
-        #local lstrChkItem="`FUNCidWithoutVariant "$lstrItemID"`"
-        #local lastrItemInheritPath=("$lstrChkItem")
-        #while [[ -n "$lstrChkItem" ]];do # recursively look for EconomicValue at extended parents
-          #declare -p lstrChkItem
-          #if liEcVal="`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='EconomicValue']/@value" "${lstrFlCfgChkFullPath}"`";then
-            #break
-          #fi
-          #if [[ "`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='SellableToTrader']/@value" "${lstrFlCfgChkFullPath}"`" == "false" ]];then
-            #lbCanSell=false
-            #break
-          #fi
-          #if lstrParent="`FUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
-            #lstrChkItem="$lstrParent"
-            #lastrItemInheritPath+=("$lstrChkItem")
-          #else
-            #break
-          #fi
-        #done
-        #if $lbCanSell;then
-          #if((liEcVal>0));then CFGFUNCinfo "EconomicValue: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` ${liEcVal} ${lstrFlCfgChkFullPath}";break;fi
-        #else
-          #CFGFUNCinfo "CannotBeSold: ${lstrItemID}";break;fi
-        #fi
-        if FUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
-          break
-        fi
-      done
-      #lbCanSell="${bFUNCgetEcoVal_CanSell_OUT}"
-      #liEcVal="${iFUNCgetEcoVal_EcVal_OUT}"
-      #if $lbCanSell && [[ -z "$liEcVal" ]];then CFGFUNCerrorExit "Can be sold but missing economic value for lstrItemID='${lstrItemID}'";fi
-      if $bFUNCgetEcoVal_CanSell_OUT && ((iFUNCgetEcoVal_EcVal_OUT==0));then
-        if [[ "${strFUNCgetEcoVal_XmlTokenFound_OUT}" == "item_modifier" ]];then
-          CFGFUNCprompt "auto value for ${lstrItemID} 2500"
-          iFUNCgetEcoVal_EcVal_OUT=2500 #help this value is based on prices shown on the trader inventory for player lvl 1 w/o trading skills. it is not an average. No problem it being a high value as will be used just to create a experience debuff.
-        elif [[ "${strFUNCgetEcoVal_XmlTokenFound_OUT}" == "block" ]];then
-          CFGFUNCprompt "auto value for ${lstrItemID} 20"
-          iFUNCgetEcoVal_EcVal_OUT=20 #help this is just to not leave it empty as many blocks (when they have a price) worth almost nothing TODO: create some check for high priced blocks like steel
+      iFRSPV_EcVal_OUT="${astrItem1Value2List[${lstrItemID}]-}" #tries the cache
+      #if [[ -n "${iFRSPV_EcVal_OUT-}" ]] && [[ "${liItemCount}" =~ ^[0-9]*$ ]] && ((iFRSPV_EcVal_OUT>0));then
+      if FUNCchkNum "${iFRSPV_EcVal_OUT}";then
+        : #successfully used the cache
+      else
+        #for lstrFlCfgChkFullPath in "${astrFlCfgChkFullPathList[@]}";do
+        for((j=0;j<${#astrXmlToken1VsFile2List[@]};j+=2));do 
+          local lstrXmlToken="${astrXmlToken1VsFile2List[j]}"
+          local lstrFlCfgChkFullPath="${astrXmlToken1VsFile2List[j+1]}"
+          if FUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
+          #if FUNCrecursiveSearchPropertyValue "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
+            break
+          fi
+        done
+        #lbCanSell="${bFRSPV_CanSell_OUT}"
+        #liEcVal="${iFRSPV_EcVal_OUT}"
+        #if $lbCanSell && [[ -z "$liEcVal" ]];then CFGFUNCerrorExit "Can be sold but missing economic value for lstrItemID='${lstrItemID}'";fi
+        if $bFRSPV_CanSell_OUT;then
+          if ((iFRSPV_EcVal_OUT==0));then
+            #if [[ "$lstrItemID" == "modGunScopeSmall" ]];then
+              #iFRSPV_EcVal_OUT=378
+            #elif [[ "$lstrItemID" == "candleTableLight" ]];then
+              #iFRSPV_EcVal_OUT=72
+            #else
+              CFGFUNCinfo "WARN: Can be sold but missing economic value for lstrItemID='${lstrItemID}'"
+              while true;do
+                local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills:" liItemValueResp&&:
+                #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
+                if FUNCchkNum "${liItemValueResp}";then
+                  iFRSPV_EcVal_OUT="${liItemValueResp}"
+                  break
+                else
+                  CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
+                fi
+              done
+            #if [[ "${strFRSPV_XmlTokenFound_OUT}" == "item_modifier" ]];then
+              #CFGFUNCprompt "auto value for ${lstrItemID} 2500"
+              #iFRSPV_EcVal_OUT=2500 #help this value is based on prices shown on the trader inventory for player lvl 1 w/o trading skills. it is not an average. No problem it being a high value as will be used just to create a experience debuff.
+            #elif [[ "${strFRSPV_XmlTokenFound_OUT}" == "block" ]];then
+              #CFGFUNCprompt "auto value for ${lstrItemID} 20"
+              #iFRSPV_EcVal_OUT=20 #help this is just to not leave it empty as many blocks (when they have a price) worth almost nothing TODO: create some check for high priced blocks like steel
+            #else
+            #fi
+          fi
         else
-          CFGFUNCerrorExit "Can be sold but missing economic value for lstrItemID='${lstrItemID}'";
+          if ((iFRSPV_EcVal_OUT==0));then
+            iFRSPV_EcVal_OUT=1 #just to have something
+          fi
         fi
+        astrItem1Value2List["${lstrItemID}"]=$iFRSPV_EcVal_OUT
+        CFGFUNCinfo "NEW: astrItem1Value2List[${lstrItemID}]=${astrItem1Value2List[${lstrItemID}]}"
       fi
     else
       ((liExpDebt+=100))&&:
@@ -393,10 +437,11 @@ function FUNCprepareBundlePart() {
     
     local liItemCount="${lastrItemAndCountList[i+1]}"
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
-    if((iFUNCgetEcoVal_EcVal_OUT>0));then
-      (( liExpDebt+=(iFUNCgetEcoVal_EcVal_OUT*liItemCount) ))&&:
+    if((iFRSPV_EcVal_OUT>0));then
+      (( liExpDebt+=(iFRSPV_EcVal_OUT*liItemCount) ))&&:
     else
-      (( liExpDebt+=(liItemCount/10) ))&&:
+      #(( liExpDebt+=(liItemCount/10) ))&&:
+      (( liExpDebt+=liItemCount ))&&:
     fi
     lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lstrItemID} ${liItemCount}"
@@ -409,7 +454,13 @@ function FUNCprepareBundlePart() {
     #fi
   done;
   
-  if ! $lbExpLoss;then liExpDebt=1;fi
+  if $lbExpLoss;then 
+    if $lbRnd;then # the random option is to choose one from many, so it will be the average value of all the items in the bundle
+      ((liExpDebt/=liTotItems))&&:
+    fi
+  else
+    liExpDebt=1;
+  fi
   
   local lstrAddDesc=""
   if $bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT;then
@@ -426,7 +477,7 @@ function FUNCprepareBundlePart() {
     #astrBundlesSchematics+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
     lastrOpt+=(--lightcolor)
     lastrOpt+=(--schematic)
-    ((liExpDebt*=5))&&:
+    #((liExpDebt*=5))&&:
   else
     if ! $lbIgnTopList;then
       astrBundlesItemsLeastLastOne+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
@@ -473,8 +524,9 @@ function FUNCprepareBundlePart() {
         <property name="Random_item_count" value="'"${lstrCounts}"'" />
         <property name="Random_count" value="1" />' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   else
+        #<property name="Create_item" help="it has '"$((${#lastrItemAndCountList[@]}/2))"' diff items" value="'"${lstrItems}"'" />
     echo '
-        <property name="Create_item" help="it has '"$((${#lastrItemAndCountList[@]}/2))"' diff items" value="'"${lstrItems}"'" />
+        <property name="Create_item" help="it has '"${liTotItems}"' diff items" value="'"${lstrItems}"'" />
         <property name="Create_item_count" value="'"${lstrCounts}"'" />' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   fi
   echo '
@@ -751,6 +803,11 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --noExpLoss --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
 #);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
+
+#############################################
+echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlItemEconomicValueCACHE"
+echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlItemEconomicValueCACHE"
+declare -p astrItem1Value2List >>"$strFlItemEconomicValueCACHE"
 
 ################## DESCRIPTIONS ####################
 echo

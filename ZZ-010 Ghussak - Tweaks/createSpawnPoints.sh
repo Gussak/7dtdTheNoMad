@@ -159,6 +159,7 @@ iTeleportIndexFirst=-1
 declare -A astrPosVsBiomeColor=()
 
 strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
+#if [[ -f "${strFlPosVsBiomeColorCACHE}" ]];then source "${strFlPosVsBiomeColorCACHE}";fi
 source "${strFlPosVsBiomeColorCACHE}"&&:
 
 for str in "${astrPrefabsList[@]}";do
