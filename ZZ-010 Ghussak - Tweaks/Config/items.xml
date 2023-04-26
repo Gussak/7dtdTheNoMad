@@ -4026,7 +4026,6 @@
       <property name="Material" value="Mmetal"/>
       <property name="EconomicValue" value="1"/>
       <property name="SellableToTrader" value="false"/>
-      <property name="SellableToTrader" value="false"/>
     </item>
     <item name="silver01gram">
       <property name="CustomIcon" value="resourceSilverNugget"/>
@@ -4038,7 +4037,6 @@
       <property name="Material" value="Mmetal"/>
       <property name="EconomicValue" value="1"/>
       <property name="SellableToTrader" value="false"/>
-      <property name="SellableToTrader" value="false"/>
     </item>
     <item name="gold01gram">
       <property name="CustomIcon" value="resourceGoldNugget"/>
@@ -4049,7 +4047,6 @@
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
       <property name="Material" value="Mmetal"/>
       <property name="EconomicValue" value="1"/>
-      <property name="SellableToTrader" value="false"/>
       <property name="SellableToTrader" value="false"/>
     </item>
     <item name="electronicsParts">
@@ -4075,7 +4072,6 @@
       <property name="Weight" value="10"/>
       <property name="Stacknumber" value="102"/>
       <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
       <property name="SellableToTrader" value="false"/>
       <property name="DisplayType" value="waterBeer"/>
       <property name="Group" value="Food/Cooking,CFDrink/Cooking,Medical"/>
@@ -4107,7 +4103,6 @@
       <property name="Weight" value="10"/>
       <property name="Stacknumber" value="3"/>
       <property name="EconomicValue" value="0"/>
-      <property name="SellableToTrader" value="false"/>
       <property name="SellableToTrader" value="false"/>
       <property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
       <property class="Action0">
@@ -5077,6 +5072,12 @@
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
       <requirement name="EntityTagCompare" tags="mutant" target="other"/>
     </triggered_effect>
+  </append>
+  <set xpath="/items/item[starts-with(@name,'ammoArrow') or starts-with(@name,'ammoCrossbowBolt')]/property[@class='Action1']/property[@name='LifeTime']/@value">3600</set>
+  <append xpath="/items/item[       starts-with(@name,'ammoArrowStone') or        starts-with(@name,'ammoArrowIron') or       starts-with(@name,'ammoArrowSteelAP') or       starts-with(@name,'ammoCrossbowBoltStone') or       starts-with(@name,'ammoCrossbowBoltIron') or       starts-with(@name,'ammoCrossbowBoltSteelAP')     ]">
+    <effect_group tiered="false">
+      <passive_effect name="ProjectileStickChance" operation="perc_set" value="0.75" help="to keep perkRangersArrowRecovery useful"/>
+    </effect_group>
   </append>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">

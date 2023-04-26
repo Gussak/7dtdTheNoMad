@@ -157,8 +157,10 @@ iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&:
 iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
 declare -A astrPosVsBiomeColor=()
-strFlPosVsBiomeColor="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
-source "${strFlPosVsBiomeColor}"&&:
+
+strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
+source "${strFlPosVsBiomeColorCACHE}"&&:
+
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
   #iX=${astrPrefabsList[i]}
@@ -279,9 +281,9 @@ for str in "${astrPrefabsList[@]}";do
   #fi
 done
 
-echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColor"
-echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColor"
-declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColor" #TODO sha1sum the biome file and if it changes, recreate the array
+echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColorCACHE"
+echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColorCACHE"
+declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColorCACHE" #TODO sha1sum the biome file and if it changes, recreate the array
 
 # this file can be sorted because each entry is one line!
 strSorted="`cat "${strFlGenSpa}${strGenTmpSuffix}" |sort`"

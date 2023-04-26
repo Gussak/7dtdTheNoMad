@@ -34,19 +34,19 @@
 #PREPARE_RELEASE:REVIEWED:OK
 
 
-function CFGFUNCcleanMsg() {
+function CFGFUNCcleanMsgPRIVATE() {
   if $bCFGDbg;then set -x;fi #place anywhere useful
   echo "$*" |sed -r                                              \
     -e "s@${strCFGGameFolderRegex}@(GameDir)@g"                  \
     -e "s@${strCFGGeneratedWorldsFolderRegex}@(RwgDir)@g"        \
     -e "s@${strCFGGeneratedWorldTNMFolderRegex}@(RwgTNMDir)@g"
-};export -f CFGFUNCcleanMsg
-function CFGFUNCcleanEcho() {
-  local lstr="`CFGFUNCcleanMsg " (CFG) $*"`"
-  CFGFUNCechoLog "${lstr}"
+};export -f CFGFUNCcleanMsgPRIVATE
+function CFGFUNCcleanEchoPRIVATE() {
+  local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG) $*"`"
+  CFGFUNCechoLogPRIVATE "${lstr}"
   #echo "$lstr" >&2
   #echo "$lstr" >>"$strCFGScriptLog"
-};export -f CFGFUNCcleanEcho
+};export -f CFGFUNCcleanEchoPRIVATE
 
 function CFGFUNCshowHelp() { 
   local lstrMatch="help";if [[ "${1-}" == --func ]];then shift;lstrMatch="helpf";fi
@@ -58,13 +58,13 @@ function CFGFUNCshowHelp() {
 
 function CFGFUNCprepareRegex() {
   echo "$1" |sed -r 's@(.)@[\1]@g'
-};export -f CFGFUNCcleanMsg
+};export -f CFGFUNCcleanMsgPRIVATE
 
 bNoChkErrOnExitPls=false
 function CFGFUNCerrorChk() {
   if $bNoChkErrOnExitPls;then return;fi
   if(($?!=0));then
-    CFGFUNCechoLog " (CFG)ERROR: the above message may contain the line where the error happened, read below on the help if it is there."
+    CFGFUNCechoLogPRIVATE " (CFG)ERROR: the above message may contain the line where the error happened, read below on the help if it is there."
     read -p '(CFG)WARN: Hit a key to show the help.' -n 1&&:
     CFGFUNCshowHelp
   fi
@@ -90,7 +90,7 @@ function CFGFUNCchkAvailHDAndGetFlSz() { #helpf <lstrRequiredBinaryFile> <liMult
 
 function CFGFUNCtrash() { #helpf <file>
   while [[ -f "${1-}" ]];do
-    CFGFUNCcleanEcho " (CFG)TRASHING`CFGFUNCDryRunMsg`: $1"
+    CFGFUNCcleanEchoPRIVATE " (CFG)TRASHING`CFGFUNCDryRunMsg`: $1"
     if ! $bCFGDryRun;then
       #trash -v "$1"&&:
       #trash -v "$1" 2>&1 |egrep "^trash: '" &&:
@@ -99,10 +99,15 @@ function CFGFUNCtrash() { #helpf <file>
     shift&&:
   done
 };export -f CFGFUNCtrash
-function CFGFUNCechoLog() {
+function CFGFUNCechoLogPRIVATE() {
+  CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
+  if [[ "$1" == "--error" ]];then
+    shift
+    echo "$* (Stack ${FUNCNAME[@]})" >>"$strCFGErrorLog"
+  fi
   echo "$*" >&2
   echo "$* (Stack ${FUNCNAME[@]})" >>"$strCFGScriptLog"
-};export -f CFGFUNCechoLog
+};export -f CFGFUNCechoLogPRIVATE
 function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
   local lbSIGINTonMeld=false
   trap 'lbSIGINTonMeld=true' INT
@@ -113,11 +118,11 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
     fi
   fi
   if which "${strCFGCompareApp}";then
-    CFGFUNCcleanEcho "WARN: hit ctrl+c to abort, closing '${strCFGCompareApp}' will accept the patch!!!"
+    CFGFUNCcleanEchoPRIVATE "WARN: hit ctrl+c to abort, closing '${strCFGCompareApp}' will accept the patch!!!"
     colordiff "$@"&&:
     "${strCFGCompareApp}" "$@"&&:;local lnRet=$? # it is expected that the merger app will not be a detached child process otherwise this wont work!
     if((lnRet!=0));then # (USELESS) meld gives the same exit value 0 if you hit ctrl+c, this wont help
-      CFGFUNCechoLog "ERROR=$lnRet: '${strCFGCompareApp}' $@"
+      CFGFUNCechoLogPRIVATE "ERROR=$lnRet: '${strCFGCompareApp}' $@"
       return 1;
     fi
   else
@@ -125,25 +130,40 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
     CFGFUNCprompt -q "WARN: hit ctrl+c to abort, or continue to accept the patch!!! Obs.: you can configure a merger app like meld or winmerge for better viewing."
   fi
   if $lbSIGINTonMeld;then
-    CFGFUNCcleanEcho "WARN: Ctrl+c pressed while running: '${strCFGCompareApp}' $@"
+    CFGFUNCcleanEchoPRIVATE "WARN: Ctrl+c pressed while running: '${strCFGCompareApp}' $@"
     return 1;
   fi
-  CFGFUNCcleanEcho "AcceptingChanges: '${strCFGCompareApp}' $@"
+  CFGFUNCcleanEchoPRIVATE "AcceptingChanges: '${strCFGCompareApp}' $@"
   return 0
 };export -f CFGFUNCmeld
+
+#export iCFGFUNCerrorExit_Count=0
+function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to grant errors happening in subshells will be detected and help stop the script
+  #if((iCFGFUNCerrorExit_Count>0));then
+  if [[ -f "${strCFGErrorLog}" ]];then
+    cat "${strCFGErrorLog}"
+    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell: ${strCFGErrorLog} " >&2
+    read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script."
+    trash "${strCFGErrorLog}"
+    exit 1
+  fi
+};export -f CFGFUNCerrorForceEndPRIVATE
 function CFGFUNCerrorExit() { #helpf [msg]
-  CFGFUNCechoLog " [ERROR] ${1-} (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})" 
+  #((iCFGFUNCerrorExit_Count++))&&:
+  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1-} (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})" 
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
-  CFGFUNCechoLog "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})"
+  #((iCFGFUNCerrorExit_Count++))&&:
+  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})"
   exit 1
 };export -f CFGFUNCDevMeErrorExit
+
 function CFGFUNCDryRunMsg() { 
   if $bCFGDryRun;then echo "<DryRun>";fi
 };export -f CFGFUNCDryRunMsg
 function CFGFUNCexec() { #helpf <<acmd>>
-  CFGFUNCcleanEcho " (((EXEC`CFGFUNCDryRunMsg`))) $*"
+  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $*"
   if ! $bCFGDryRun;then
     if ! "$@";then
       CFGFUNCerrorExit "Failed to execute the command above."
@@ -165,7 +185,7 @@ function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
     lstrHitAKey+="[Hit any key to continue]"
   fi
   
-  CFGFUNCcleanEcho " ${lstrMode} ${lstrMsg} ${lstrHitAKey} ${lstrQ}"
+  CFGFUNCcleanEchoPRIVATE " ${lstrMode} ${lstrMsg} ${lstrHitAKey} ${lstrQ}"
   if $bCFGInteractive;then
     read -p '.' -t $fCFGPromptWait -n 1 strResp >&2 &&:
   else
@@ -192,20 +212,20 @@ function CFGFUNCinfo() { #helpf <verboseMsg>
   #if $bCFGVerbose || [[ -z "${lstrShortMsg-}" ]];then
     #lstrMsg="$lstrVerboseMsg"
   #fi
-  #CFGFUNCcleanEcho " [INFO] $lstrMsg"
+  #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrMsg"
   
   #if ! $bCFGVerbose && [[ -n "${lstrShortMsg-}" ]];then
-    #CFGFUNCcleanEcho " [INFO] $lstrShortMsg"
+    #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrShortMsg"
   #else
-    #CFGFUNCcleanEcho " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
+    #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
   #fi
   
-  #!!! no CFGFUNCcleanEcho for the log !!!
-  #CFGFUNCechoLog " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
-  #CFGFUNCechoLog --logOnly "$lstrVerboseMsg"
-  #CFGFUNCechoLog "$lstrVerboseMsg"
+  #!!! no CFGFUNCcleanEchoPRIVATE for the log !!!
+  #CFGFUNCechoLogPRIVATE " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
+  #CFGFUNCechoLogPRIVATE --logOnly "$lstrVerboseMsg"
+  #CFGFUNCechoLogPRIVATE "$lstrVerboseMsg"
   
-  CFGFUNCcleanEcho "$lstrVerboseMsg"
+  CFGFUNCcleanEchoPRIVATE "$lstrVerboseMsg"
 };export -f CFGFUNCinfo
 function CFGFUNCcreateBackup() { #helpf <lstrFlDest>
   #local lbOrigBkpOnly=false;if [[ "$1" == --onlyCreateOriginalBackup ]];then shift;lbOrigBkpOnly=true;fi
@@ -273,6 +293,26 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
   
+  : ${bCFGDryRun:=false} #help just show what would be done
+  export bCFGDryRun
+  
+  : ${bCFGDbg:=false} #help to debug these scripts
+  export bCFGDbg
+  
+  : ${strCFGGameFolder:="`cd ../..;pwd`"} #help configure the game folder
+  export strCFGGameFolder
+  export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
+  
+  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
+  export strCFGGeneratedWorldsFolder
+  export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
+  
+  : ${strCFGGeneratedWorldTNM:="East Nikazohi Territory"} #help
+  export strCFGGeneratedWorldTNM
+  
+  export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
+  export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
+  
   export bCFGHelpMode=false
   trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd;read -p " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed...";exit' INT
@@ -284,9 +324,14 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/ConfigsDump/"}&&: #help
   export strCFGSavesPathIgnorable
   export strCFGNewestSavePathConfigsDumpIgnorable
+  if [[ ! -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
+    if ! CFGFUNCprompt -q "last savegame path not found, this may create undesired (limited, invalid, incomplete, non updated) results, continue anyway?";then exit 1;fi
+  fi
   
-  mkdir -vp _log
+  mkdir -vp _log _tmp
   export strCFGScriptLog="`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
+  export strCFGErrorLog="`dirname "${0}"`/_tmp/`basename "${0}"`.LastRunErrors.log"
+  CFGFUNCtrash "${strCFGErrorLog}"
   #declare -p strCFGScriptLog
   
   : ${strModName:="[NoMad]"} #as short as possible
@@ -298,20 +343,9 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh
   
-  : ${strCFGGameFolder:="`cd ../..;pwd`"} #help configure the game folder
-  export strCFGGameFolder
-  export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
-  
-  : ${bCFGDbg:=false} #help to debug these scripts
-  export bCFGDbg
-  
   : ${bCFGInteractive:=true} #help running like this will accept all prompts: bInteractive=false ./installSpecificFilesIntoGameFolder.sh
   export bCFGInteractive
   fCFGPromptWait=$((60*60*24*31*3));if ! $bCFGInteractive;then fCFGPromptWait=0.01;fi
-  
-  : ${bCFGDryRun:=false} #help just show what would be done
-  export bCFGDryRun
-  
   
   : ${bCFGVerbose:=false} #help enable this to show detailed messages. Anyway everything will be in the install log.
   export bCFGVerbose
@@ -322,16 +356,6 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   export strCFGInstallToken="ThisFileIsAReplacementOrPatchOfTheMod_${strModNameForIDs}" #TODO may be it is possible to create a xmlstarlet merger that provide consistent/reliable results for each xml file that cant be patched as modlet?
   
   export strCFGOriginalBkpSuffix=".OriginalOrExistingFile.BakupMadeBy_${strModNameForIDs}.bkp"
-  
-  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
-  export strCFGGeneratedWorldsFolder
-  export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
-  
-  : ${strCFGGeneratedWorldTNM:="East Nikazohi Territory"} #help
-  export strCFGGeneratedWorldTNM
-  
-  export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
-  export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
   
   export strFlGenLoc="Config/Localization.txt"
   export strFlGenLoa="Config/loadingscreen.xml"
@@ -362,8 +386,8 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   #export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
 #fi
 
-#!!! no CFGFUNCcleanEcho for params !!!
-CFGFUNCechoLog " (CFG)PARAMS: $@"
+#!!! no CFGFUNCcleanEchoPRIVATE for params !!!
+CFGFUNCechoLogPRIVATE " (CFG)PARAMS: $@"
 
 if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;fi #help show help info.
 if [[ "${1-}" == --helpfunc ]];then shift;CFGFUNCshowHelp --func;fi #help show function's help info for developers.
