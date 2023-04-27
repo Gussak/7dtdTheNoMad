@@ -117,7 +117,7 @@ strSubTokenId=""
 if [[ "${1-}" == "--subTokenId" ]];then #help <strSubTokenId> will be used on the same file to match another section on it
   shift
   strSubTokenId="$1";shift
-  if ! [[ "$strSubTokenId" =~ ^[A-Z0-9]*$ ]];then echo "ERROR: invalid strSubTokenId='$strSubTokenId'";fi
+  if ! [[ "$strSubTokenId" =~ ^[a-zA-Z0-9]*$ ]];then CFGFUNCerrorExit "invalid strSubTokenId='$strSubTokenId', use only letters and numbers";fi
   strSubTokenId="_${strSubTokenId}"
 fi
 
@@ -183,6 +183,7 @@ if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd
   elif [[ "${strFileType}" == ftXML ]];then
     echo -e "$strTokenHelperXml"
   fi
+  echo
   CFGFUNCerrorExit
 fi
 if((`egrep "$strCodeTokenBegin" "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenBegin";fi

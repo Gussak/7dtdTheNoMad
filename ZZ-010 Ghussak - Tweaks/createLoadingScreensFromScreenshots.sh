@@ -33,14 +33,24 @@
 
 source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
+bAnnotate=false
+if CFGFUNCprompt -q "write (paint) the screenshot filename on the image data of the copied file? (you will see the filename when the game is loading on the bottom right corner) (tip: accept once, then move original Screenshots to a sub-folder there and move the files from LoadingScreens to the Screenshots folder and run this script again denying writing the filename on them (to create symlinks))";then
+  bAnnotate=true
+fi
+
 #set -x
 #IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
-IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
+IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop
 for strFl in "${astrFlList[@]}";do
   if [[ -L "$strFl" ]];then continue;fi
   strBN="`basename "$strFl"`"
-  if ! ln -sf "$strFl" "LoadingScreens/$strBN";then
-    cp -f "$strFl" "LoadingScreens/$strBN"
+  CFGFUNCtrash "LoadingScreens/$strBN"
+  if $bAnnotate;then
+    CFGFUNCexec convert "$strFl" -gravity SouthEast -pointsize 17 -fill white -annotate +0+0 "LoadingScreens/$strBN" "jpeg:LoadingScreens/$strBN"
+  else
+    if ! ln -sf "$strFl" "LoadingScreens/$strBN";then #better to save space if it works
+      CFGFUNCexec cp -f "$strFl" "LoadingScreens/$strBN"
+    fi
   fi
   echo '      <tex file="@modfolder:LoadingScreens/'"$strBN"'" />' >>"${strFlGenLoa}${strGenTmpSuffix}"
   echo -n .

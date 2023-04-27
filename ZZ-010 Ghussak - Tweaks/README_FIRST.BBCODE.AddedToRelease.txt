@@ -1,15 +1,15 @@
 The NoMad, unforgiving lands (developer tools, WIP)  
 .  
 ##############################  OVERHAUL(WIP) ##############################    
-This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very or insanely difficult but not impossible) gameplay.    
-This mod is intended for players that are used with the vanilla gameplay already and want an extra challenge.  
+This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very difficult but not impossible) gameplay.    
+This mod is intended for players that are used with the vanilla gameplay already and want an extra challenge and many new features.  
 Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.  
-Please follow the server configs below and look for tactical hints on in-game notes on how to survive.  
+Please follow the server configs below and look for tactical hints (on in-game notes or the journal) on how to survive.  
 .  
-Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles, mainly the healing bundle and use anti-radiation (all 3 of them) and psyonicResist chems, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the "teleport to sky" feature (armor mod and activator).  
+Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experiency penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the free activator.  
 .  
 ############################## DEVELOPER(WIP) ##############################   
-This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod.
+This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.
 This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.  
 But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), drop a pull request on github for review, thx!  
 .  
@@ -138,6 +138,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - added journal for NPC follower changes, and melee npc now has strike limits too  
 - simple god mode for player on 1st spawn for 60s in case of 1st spawining over a mob will be fair
 - increased green glow sticks time to be more useful
+- there are downgrade recipes to better use some resources
+- a bit bigger Tesla HUD for better reading
+- added one hired NPC info on the HUD
 .  
 --------- v0.9a -----------  
 - initial release.  

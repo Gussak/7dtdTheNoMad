@@ -496,7 +496,7 @@ function FUNCprepareBundlePart() {
   if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
     lstrBundleDK="$lstrBundleDesc"
   else
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle: ${liExpDebt}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0.00)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n MinutesRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0)}\n ${lstrAddDesc}\"")
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle: ${liExpDebt}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0.00)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n RealTimeHoursRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0.0)}\n ${lstrAddDesc}\"")
   fi
   if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
     if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
