@@ -869,6 +869,64 @@
   <append xpath="/items/item[@name='drugSteroids']">
     <property name="Stacknumber" value="100"/>
   </append>
+  <append xpath="/items">
+    <item name="GSKplayerVomit">
+      <property name="Extends" value="meleeHandMaster"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="128,255,128"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="Degradation" value="99999" param1="true"/>
+      <property class="Action0">
+        <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GT" value="0.15"/>
+        <property name="Class" value="Vomit"/>
+        <property name="Hitmask_override" value="Arrow"/>
+        <property name="Delay" value=".3"/>
+        <property name="Range" value="5"/>
+        <property name="Infinite_ammo" value="true"/>
+        <property name="Magazine_items" value="ammoProjectileZombieVomit"/>
+        <property name="Sound_warning" value="hulkvomitwarning"/>
+        <property name="Sound_start" value="hulkvomitattack"/>
+        <property name="Sound_repeat" value=""/>
+        <property name="Sound_end" value=""/>
+        <property name="Sound_empty" value=""/>
+        <property name="Sound_reload" value=""/>
+      </property>
+      <property class="Action1">
+        <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GT" value="1.20"/>
+        <property name="Class" value="Vomit"/>
+        <property name="Hitmask_override" value="Arrow"/>
+        <property name="Delay" value=".3"/>
+        <property name="Range" value="10"/>
+        <property name="Infinite_ammo" value="true"/>
+        <property name="Magazine_items" value="ammoProjectileZombieVomitFeral"/>
+        <property name="Sound_warning" value="hulkvomitwarning"/>
+        <property name="Sound_start" value="hulkvomitattack"/>
+        <property name="Sound_repeat" value=""/>
+        <property name="Sound_end" value=""/>
+        <property name="Sound_empty" value=""/>
+        <property name="Sound_reload" value=""/>
+      </property>
+      <effect_group name="playerVomit" tiered="false">
+        <passive_effect name="ModSlots" operation="base_set" value="0"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
+        <passive_effect name="MaxRange" operation="base_set" value="10"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="1"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="2"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="4"/>
+        <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="15"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Food" operation="subtract" value="15"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="30"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyStats" stat="Food" operation="subtract" value="30"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[     starts-with(@name,'melee') and       not(         @name='meleeToolPickT3Auger' or          @name='meleeToolAxeT3Chainsaw' or          @name='meleeToolRepairT3Nailgun' or          starts-with(@name,'meleeHandZombie')       )     ]">
+    <effect_group help="stay fit">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+    </effect_group>
+  </append>
   <append xpath="/items/item[starts-with(@name, 'meleeNPC')]/effect_group[starts-with(@name,'melee')]">
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoLimit" operation="set" value="500"/>
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1"/>
