@@ -326,9 +326,11 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   
-  : ${strCFGSavesPathIgnorable:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/East Nikazohi Territory/"}&&: #help you will need to set this if on windows cygwin
-  : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/ConfigsDump/"}&&: #help
+  : ${strCFGSavesPathIgnorable:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #help
+  : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}"}&&: #help
   export strCFGSavesPathIgnorable
+  export strCFGNewestSavePathIgnorable
   export strCFGNewestSavePathConfigsDumpIgnorable
   if [[ ! -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
     if ! CFGFUNCprompt -q "last savegame path not found, this may create undesired (limited, invalid, incomplete, non updated) results, continue anyway?";then exit 1;fi
