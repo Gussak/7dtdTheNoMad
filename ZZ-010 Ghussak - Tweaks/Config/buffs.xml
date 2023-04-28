@@ -4757,6 +4757,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMin" operation="set" value="0.15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMinx100" operation="set" value="15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMax" operation="set" value="0.42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMaxx100" operation="set" value="42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
       </effect_group>
       <effect_group help="all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
@@ -7949,7 +7953,7 @@
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fGSKFatStaminaBlockage">
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
         </passive_effect>
-        <!-- HELPGOOD: none of these work? -->
+        <!-- HELPGOOD: some of these do not work? hitting with melee also helps. -->
         <triggered_effect trigger="onSelfRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
@@ -7974,29 +7978,31 @@
       </effect_group>
       <effect_group help="NearDeathBloated:ResetLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LT" value="15"/>
+          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LTE" value="@$foodOverEatAmount"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathBloated:SetLvl">
         <requirement name="IsStatAtMax" stat="food"/>
+        <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GT" value="@$foodOverEatAmount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="set" value="@$foodAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="subtract" value="@$foodOverEatAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GTE" value="15"/>
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LT" value="30"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="15"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="2">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GTE" value="30"/>
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LT" value="45"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="15"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="30"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="3">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GTE" value="45"/>
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LT" value="60"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="30"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="45"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="4">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GTE" value="60"/>
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LT" value="75"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="45"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="60"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="5">
-          <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GTE" value="75"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="60"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathBloated:ControlIndicator">
@@ -8008,39 +8014,36 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathOverhydrated:ResetLvl">
-        <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="set" value="0"/>
+        <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LTE" value="@$waterOverEatAmount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHTmSub" operation="set" value="@$waterOverEatAmount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHTmSub" operation="subtract" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="subtract" value="@.fGSKOHTmSub"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="subtract" value="@.fGSKOHTmSub">
+          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="Equals" value="0"/>
+        </triggered_effect>
       </effect_group>
-      <effect_group help="NearDeathOverhydrated:SetLvl">
+      <effect_group help="NearDeathOverhydrated:UpdateTime">
         <requirement name="IsStatAtMax" stat="water"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="-3">
-          <requirement name="StatComparePercCurrentToModMax" stat="Water" operation="LT" value="0.90"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="-2">
-          <requirement name="StatComparePercCurrentToModMax" stat="Water" operation="LT" value="0.95"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="-1">
-          <requirement name="StatComparePercCurrentToModMax" stat="Water" operation="LT" value="1.00"/>
-        </triggered_effect>
+        <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GT" value="@$waterOverEatAmount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="set" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="subtract" value="@$waterOverEatAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GTE" value="3"/>
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="15"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="15"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="2">
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GTE" value="15"/>
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="30"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="15"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="30"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="4">
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GTE" value="30"/>
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="45"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="30"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="45"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="7">
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GTE" value="45"/>
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="60"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="45"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="LT" value="60"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="add" value="10">
-          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GTE" value="60"/>
+          <requirement name="CVarCompare" cvar=".fGSKOHFExtra" operation="GTE" value="60"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKOverhydratedTime" operation="LTE" value="0"/>
@@ -8048,6 +8051,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKOverhydratedTime" operation="GT" value="600"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="NearDeathOverhydrated:CalcLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="@fGSKOverhydratedTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="divide" value="60"/>
       </effect_group>
@@ -8062,30 +8067,38 @@
       <effect_group help="NearDeathChemUse:CurveLikeIncLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="-0.01">
           <requirement name="HasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.15"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="@.fGSKHPBlkChemUseMin"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.15"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="@.fGSKHPBlkChemUseMin"/>
         </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATENEARDEATHCALCS_ChemUse_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createNearDeathCalcs.sh ===== -->
+        <!-- HELPGOOD: lvl 1 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="1">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.15"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.25"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.25" help="min+0.10"/>
         </triggered_effect>
+        <!-- HELPGOOD: lvl 2 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="2">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.25"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.32"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.32" help="min+0.07"/>
         </triggered_effect>
+        <!-- HELPGOOD: lvl 3 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="3">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.32"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.37"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.37" help="min+0.05"/>
         </triggered_effect>
+        <!-- HELPGOOD: lvl 4 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="4">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.37"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.40"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.40" help="min+0.03"/>
         </triggered_effect>
+        <!-- HELPGOOD: lvl 5 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="5">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.40"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.42" help="min+0.02"/>
         </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATENEARDEATHCALCS_ChemUse_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createNearDeathCalcs.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathChemUse">
           <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
         </triggered_effect>

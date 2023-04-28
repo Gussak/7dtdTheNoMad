@@ -34,6 +34,12 @@
 #PREPARE_RELEASE:REVIEWED:OK
 
 
+function CFGFUNCcalc() { #help [-s <scale(default=2)>] <lstrCalcExpression>
+  local liScale=2
+  if [[ "${1}" == -s ]];then shift;liScale=$1;shift;fi
+  local lstrCalcExpression="$1"
+  printf "%.${liScale}f" "`bc <<< "scale=10;${lstrCalcExpression}"`"
+}
 function CFGFUNCcleanMsgPRIVATE() {
   if $bCFGDbg;then set -x;fi #place anywhere useful
   echo "$*" |sed -r                                              \
@@ -320,7 +326,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
   
   export bCFGHelpMode=false
-  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd;read -p " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;read -p " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed...";exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   
