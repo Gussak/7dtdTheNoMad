@@ -8013,13 +8013,20 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NearDeathOverhydrated:ResetLvl">
-        <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LTE" value="@$waterOverEatAmount"/>
+      <effect_group help="NearDeathOverhydrated:LowerTime">
+        <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LTE" value="@$waterOverEatAmount" help="both may be 0"/>
+        <requirement name="CVarCompare" cvar="fGSKOverhydratedTime" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHTmSub" operation="set" value="@$waterOverEatAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHTmSub" operation="subtract" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHTmSub" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="LT" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="subtract" value="@.fGSKOHTmSub"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="subtract" value="@.fGSKOHTmSub">
           <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedTime" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKOverhydratedTime" operation="LT" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathOverhydrated:UpdateTime">
