@@ -1137,6 +1137,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKBkpWaterVal59"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKBkpWaterVal59"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
           <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp1"/>
@@ -8046,6 +8048,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="@fGSKOverhydratedTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="divide" value="60"/>
+      </effect_group>
+      <effect_group help="NearDeathOverhydrated:ControlIndicator">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathOverhydrated">
           <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
         </triggered_effect>
@@ -8172,14 +8176,20 @@
     <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
+      <display_value value="iGSKNearDeathChemUse"/>
+      <display_value_key value="{0:0.0}/5"/>
     </buff>
     <buff name="buffGSKNearDeathBloated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathBloated" icon="ui_game_symbol_hunger" icon_blink="true" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
+      <display_value value="iGSKNearDeathBloated"/>
+      <display_value_key value="{0:0.0}/5"/>
     </buff>
     <buff name="buffGSKNearDeathOverhydrated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathOverhydrated" icon="ui_game_symbol_thirst" icon_blink="true" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
+      <display_value value="iGSKNearDeathOverhydrated"/>
+      <display_value_key value="{0:0.0}/5"/>
     </buff>
     <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -8507,6 +8517,9 @@
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffNewbieCoat']">
+    <display_value value=".iGSKVeteranTmOut"/>
+    <display_value_key value="{0:0}s"/>
+    <display_value_format value="time"/>
     <effect_group help="CoatlessVeteran: this is intended just to keep the above passives about water food and health and anything else new that may take just a few seconds to be stabilized">
       <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="set" value="60"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="subtract" value="1"/>
@@ -8533,8 +8546,10 @@
       <stack_type value="ignore"/>
       <duration value="1"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="subtract" value="30"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="subtract" value="30"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKModWaterTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="subtract" value="@.fGSKModWaterTmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKModFoodTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="subtract" value="@.fGSKModFoodTmp"/>
       </effect_group>
     </buff>
   </append>
