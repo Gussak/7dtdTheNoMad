@@ -46,7 +46,8 @@ strScriptFile="${1-}"
 strScriptFile="`basename "$strScriptFile"`"
 bOneFile=false;if [[ -f "$strScriptFile" ]];then bOneFile=true;fi
 
-strRegex="[ (\`;][a-zA-Z0-9_]{2,} "
+strValidCharsB4Cmds=' (`;|'
+strRegex="[${strValidCharsB4Cmds}][a-zA-Z0-9_]{2,} " #between [] are chars that can happen just before a valid command. {2,} means commands must have at least 2 of the previous chars
 
 astrFileFilterList=()
 if $bOneFile;then
@@ -69,7 +70,7 @@ fi
 echo ">>>>> search all possible commands (exclude only specific commands that will probably never be on the scripts like 'see'"
 IFS=$'\n' read -d '' -r -a astrFlList < <(
   egrep "${strRegex}" * "${astrFileFilterList[@]}" -iRIhow \
-    |tr -d '`( ' \
+    |tr -d "${strValidCharsB4Cmds}" \
     |egrep -v "^(see)$" \
     |sort -u \
 )
