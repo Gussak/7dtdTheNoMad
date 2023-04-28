@@ -7995,6 +7995,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="5">
           <requirement name="StatComparePercCurrentToModMax" stat="Food" operation="GTE" value="1.75"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathBloated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeathBloated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="LT" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NearDeath Overhydrated">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="subtract" value="1">
@@ -8057,6 +8063,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="5">
           <requirement name="CVarCompare" cvar="fGSKOverhydratedTime" operation="GTE" value="300"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathOverhydrated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeathOverhydrated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="LT" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NearDeath ChemUse">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="-0.01">
@@ -8084,6 +8096,12 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="5">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathChemUse">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeathChemUse">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="shelter gives radiation resistance">
@@ -8167,6 +8185,18 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKTeslaHero"/>
       </effect_group>
+    </buff>
+    <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
+    <buff name="buffGSKNearDeathBloated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathBloated" icon="ui_game_symbol_hunger" icon_blink="true" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
+    <buff name="buffGSKNearDeathOverhydrated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathOverhydrated" icon="ui_game_symbol_thirst" icon_blink="true" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
     </buff>
     <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>

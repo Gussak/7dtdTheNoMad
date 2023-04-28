@@ -141,6 +141,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - there are downgrade recipes to better use some resources
 - a bit bigger Tesla HUD for better reading
 - added one hired NPC info on the HUD
+- added near death lvls for Overhydrated Bloated ChemUse
 .  
 --------- v0.9a -----------  
 - initial release.  
