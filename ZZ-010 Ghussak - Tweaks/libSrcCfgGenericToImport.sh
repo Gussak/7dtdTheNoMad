@@ -389,6 +389,17 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
     CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
   fi
   
+  iMissingCmdCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "ScriptsDependencies.AddedToRelease.Commands.txt")&&:;for strFl in "${astrFlList[@]}";do if ! which "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux command is missing: '$strFl'";((iMissingCmdCount++))&&:;fi;done
+  if((iMissingCmdCount>0));then
+    strFlPkgDeps="ScriptsDependencies.AddedToRelease.Packages.txt"
+    iMissingPkgsCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "${strFlPkgDeps}")&&:;for strFl in "${astrFlList[@]}";do if ! dpkg -s "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux PACKAGE is missing: '$strFl'";((iMissingPkgsCount++))&&:;fi;done
+    if((iMissingPkgsCount>0));then
+      if ! CFGFUNCprompt -q "WARNING: PROBLEM! There are missing command(s) and package(s) above, continue anyway? But you should install them first if possible. Removing the package from the file '${strFlPkgDeps}' will prevent this message prompt on next run.";then
+        CFGFUNCerrorExit
+      fi
+    fi
+  fi
+  
   if [[ ! -f "${strCfgFlDBToImportOnChildShellFunctions-}" ]];then
     export strCfgFlDBToImportOnChildShellFunctions="`mktemp`" # this contains all arrays marked to export. PUT ALL SUCH ARRAYS BEFORE including/loading this cfg file!
   fi
