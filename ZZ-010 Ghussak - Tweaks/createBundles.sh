@@ -615,6 +615,7 @@ astr=(
   bedrollBlue 33
   casinoCoin 666
   "cobblestoneShapes:VariantHelper" 66
+  drinkJarBoiledWater 33
   drinkCanEmptyCookingOneUse 33
   drugJailBreakers 3
   GlowStickGreen       33
@@ -704,7 +705,8 @@ astr=(
 astr=(
   bucketRiverWater 1
   drinkJarGrandpasMoonshine 1
-  drinkJarPureMineralWater 22
+  drinkJarPureMineralWater 2
+  drinkJarBoiledWater 13
   drugAntibiotics 4
   drugPainkillers 1
   drugSteroids  13

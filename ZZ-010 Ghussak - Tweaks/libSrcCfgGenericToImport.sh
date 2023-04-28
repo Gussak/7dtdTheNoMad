@@ -328,7 +328,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   : ${strCFGSavesPathIgnorable:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
   : ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #help
-  : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}"}&&: #help
+  : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}/ConfigsDump/"}&&: #help
   export strCFGSavesPathIgnorable
   export strCFGNewestSavePathIgnorable
   export strCFGNewestSavePathConfigsDumpIgnorable
