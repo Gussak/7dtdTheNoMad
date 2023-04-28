@@ -7939,7 +7939,7 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group help="rad slow remover: make sure it is working.">
+      <effect_group help="rad slow remover: to make sure it is still working mainly after resurrect">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadLowerSlow9">
           <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="GT" value="0"/>
         </triggered_effect>
@@ -7949,6 +7949,7 @@
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fGSKFatStaminaBlockage">
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
         </passive_effect>
+        <!-- HELPGOOD: none of these work? -->
         <triggered_effect trigger="onSelfRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
@@ -7963,6 +7964,7 @@
         <triggered_effect trigger="onSelfSwimIdle" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
       </effect_group>
       <effect_group help="fat stamina blockage fix">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001" help="at buffHealFood updaterate 0.1, it is increased by 0.001 (0.01/s), so not being overfed takes 10x longer to remove the debuff val"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="LT" value="0"/>
         </triggered_effect>
@@ -8534,7 +8536,7 @@
     <effect_group name="increaseFat">
       <requirement name="IsStatAtMax" stat="food"/>
       <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GT" value="@$foodOverEatAmount"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="0.01"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="0.001"/>
     </effect_group>
   </append>
   <!-- HELPGOOD: overhydration can be lethal -->
