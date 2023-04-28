@@ -68,12 +68,16 @@ else
 fi
 
 echo ">>>>> search all possible commands (exclude only specific commands that will probably never be on the scripts like 'see'"
+strRegexCommentedLiines="^ *#.*$"
+strRegexIgnoreCmds="^(see)$"
 IFS=$'\n' read -d '' -r -a astrFlList < <(
   egrep "${strRegex}" * "${astrFileFilterList[@]}" -iRIhow \
+    |egrep -v "${strRegexCommentedLiines}" \
     |tr -d "${strValidCharsB4Cmds}" \
-    |egrep -v "^(see)$" \
+    |egrep -v "${strRegexIgnoreCmds}" \
     |sort -u \
 )
+declare -p astrFlList |tr '[' '\n'
     #|egrep -v "^(if|while|for|which|to|source|trap|image|fi)$" \
     #|sort -u \
 
@@ -92,7 +96,7 @@ astrCmdOkList=()
 for strCmd in "${astrCmdList[@]}";do 
   egrep "$strCmd" * -RnI "${astrFileFilterList[@]}" -RInw \
     |egrep -v "#.*${strCmd}" \
-    |egrep -v '"[^"]*'"${strCmd}"'[^"]*"' \
+    |egrep -v '"[^"`]*'"${strCmd}"'[^"`]*"' \
     |egrep -v "'[^']*${strCmd}[^']*'" \
     |egrep "${strRegex}" \
     |head -n 1 \
