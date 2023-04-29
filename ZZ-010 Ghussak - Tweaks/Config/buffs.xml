@@ -7947,34 +7947,6 @@
           <requirement name="!HasBuff" buff="buffGSKRadLowerSlow9"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="fat stamina blockage">
-        <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
-        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fGSKFatStaminaBlockage">
-          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
-        </passive_effect>
-        <!-- HELPGOOD: some of these do not work? hitting with melee also helps. -->
-        <triggered_effect trigger="onSelfRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfWalk" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
-        <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
-        <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfCrouchRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfCrouchWalk" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
-        <triggered_effect trigger="onSelfSwimStart" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfSwimStop" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfSwimRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-        <triggered_effect trigger="onSelfSwimIdle" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
-      </effect_group>
-      <effect_group help="fat stamina blockage fix">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001" help="at buffHealFood updaterate 0.1, it is increased by 0.001 (0.01/s), so not being overfed takes 10x longer to remove the debuff val"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="LT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="set" value="50">
-          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="50"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group help="NearDeathBloated:ResetLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="0">
           <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="LTE" value="@$foodOverEatAmount"/>
@@ -8010,6 +7982,34 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeathBloated">
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="NearDeathBloated:Debuff:fat stamina blockage">
+        <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
+        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fGSKFatStaminaBlockage">
+          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
+        </passive_effect>
+        <!-- HELPGOOD: some of these do not work? hitting with melee also helps. -->
+        <triggered_effect trigger="onSelfRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfWalk" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
+        <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
+        <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfCrouchRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfCrouchWalk" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001"/>
+        <triggered_effect trigger="onSelfSwimStart" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfSwimStop" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfSwimRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfSwimIdle" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
+      </effect_group>
+      <effect_group help="NearDeathBloated:Debuff:fat stamina blockage fix">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.001" help="at buffHealFood updaterate 0.1, it is increased by 0.001 (0.01/s), so not being overfed takes 10x longer to remove the debuff val"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="set" value="25">
+          <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="25"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathOverhydrated:LowerTime">
@@ -8061,6 +8061,9 @@
       <effect_group help="NearDeathOverhydrated:CalcLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="@fGSKOverhydratedTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="divide" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GT" value="5"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathOverhydrated:ControlIndicator">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathOverhydrated">
@@ -8069,6 +8072,15 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeathOverhydrated">
           <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="LT" value="1"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="NearDeathOverhydrated:Debuff:HP blockage">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHHBtmp" operation="set" value="@iGSKNearDeathOverhydrated"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHHBtmp" operation="multiply" value="5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKOverhydratedHPBlockage" operation="set" value="@.fGSKOHHBtmp"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKOverhydratedHPBlockage">
+          <requirement name="CVarCompare" cvar="fGSKOverhydratedHPBlockage" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
+        </passive_effect>
       </effect_group>
       <effect_group help="NearDeathChemUse:CurveLikeIncLvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="-0.01">
@@ -8199,18 +8211,42 @@
       <duration value="0"/>
       <display_value value="iGSKNearDeathChemUse"/>
       <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="set" value="@iGSKNearDeathChemUse"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKNDCUStunChance"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
     <buff name="buffGSKNearDeathBloated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathBloated" icon="ui_game_symbol_hunger" icon_blink="true" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <display_value value="iGSKNearDeathBloated"/>
       <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="30"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDOFStunChance" operation="set" value="@iGSKNearDeathBloated"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDOFStunChance" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKNDOFStunChance"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
     <buff name="buffGSKNearDeathOverhydrated" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathOverhydrated" icon="ui_game_symbol_thirst" icon_blink="true" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <display_value value="iGSKNearDeathOverhydrated"/>
       <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDOHStunChance" operation="set" value="@iGSKNearDeathOverhydrated"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDOHStunChance" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKNDOHStunChance"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
     <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -8413,7 +8449,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="0"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="burn">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
@@ -8422,7 +8458,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffBurningElement"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="3"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="shock">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="2"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
@@ -8431,7 +8467,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="add" value="3.0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffShocked"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="poison">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="3"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
@@ -8440,7 +8476,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(15,75)"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork41"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="bleed">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="4"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
@@ -8448,7 +8484,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryBleedingTwo"/>
       </effect_group>
-      <effect_group help="Keep this on as last as has 100% chance to happen">
+      <effect_group help="stun: Keep this on as last as has 100% chance to happen">
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryStunned03"/>
