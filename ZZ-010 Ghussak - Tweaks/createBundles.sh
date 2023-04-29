@@ -722,14 +722,15 @@ astr=(
   medicalFirstAidBandage 13
   medicalSplint 3
   potionRespec 1
+  resourceSewingKit 1
   toolBeaker 1
   treePlantedMountainPine1m 13
   foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-  bookWasteTreasuresHoney 1
-  bookWasteTreasuresWater 1
-  drinkJarGoldenRodTeaSchematic 1
-  drugAntibioticsSchematic 1
+  bookWasteTreasuresHoney 1 #because it is cool
+  #bookWasteTreasuresWater 1
+  drinkJarGoldenRodTeaSchematic 1 #for disyntery
+  drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
   drugHerbalAntibioticsSchematic 1
   foodBoiledMeatBundleSchematic 1
   foodBoiledMeatSchematic 1
