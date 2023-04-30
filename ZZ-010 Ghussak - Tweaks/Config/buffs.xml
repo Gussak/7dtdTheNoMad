@@ -2079,27 +2079,17 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <!-- HELPGOOD: TODO createTeslaModsEnableBuffs.sh option to add check for overcharge TS TT and damage for overcharge, ignore battery depleted TB, no OFF on no energy for TA -->
     <buff name="buffGSKEnergyHarvestEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1" help="auto turn on again if it is safe">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LTE" value="0.95"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg60">
           <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="0.95"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
       </effect_group>
       <effect_group help="green energy harvest">
         <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
@@ -2123,27 +2113,45 @@
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="Auto OFF">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKEnergyTeleportEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1" help="auto turn on again if it is safe">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.95"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg60">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="OFF on no energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Auto OFF">
         <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.95"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyShieldEnabled" hidden="true" remove_on_death="false">
@@ -2153,23 +2161,9 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LTE" value="0.95"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg60">
           <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="0.95"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="0"/>
@@ -2218,6 +2212,24 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="@fGSKShieldDmgResAdd"/>
         <passive_effect name="ElementalDamageResist" operation="base_add" value="@fGSKShieldDmgResAdd" tags="Electrical"/>
       </effect_group>
+      <effect_group help="OFF on no energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Auto OFF">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKEnergyThornsEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
@@ -2226,31 +2238,35 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1" help="auto turn on again if it is safe">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.95"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg60">
           <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="0.95"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
-      </effect_group>
-      <effect_group>
+      <effect_group help="standby consumption">
         <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKtmp" operation="set" value="0.01"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKtmp" operation="multiply" value="@fGSKDmgPercAddTT">
           <requirement name="CVarCompare" cvar="fGSKDmgPercAddTT" operation="GT" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.fGSKtmp"/>
+      </effect_group>
+      <effect_group help="OFF on no energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Auto OFF">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaShockArrowEnabled" hidden="true" remove_on_death="false">
@@ -2259,23 +2275,33 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
+        <!-- HELPGOOD:
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1" help="auto turn on again if it is safe">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LTE" value="0.95"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" />
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent" />
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LTE" value="0.95" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
-        </triggered_effect>
+-->
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg60">
           <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="OFF on no energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Auto OFF">
         <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="0.95"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaHeroEnabled" hidden="true" remove_on_death="false">
@@ -2288,11 +2314,23 @@
           <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="OFF on no energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Auto OFF">
         <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="0.95"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeslaBatteryEnabled" hidden="true" remove_on_death="false">
@@ -2306,11 +2344,16 @@
           <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="Auto OFF">
         <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="0.95"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+      </effect_group>
+      <effect_group help="Auto ON">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyShieldDefend" hidden="true" remove_on_death="false">
@@ -4046,7 +4089,7 @@
     </buff>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKDenyGoreHarvest" hidden="false" remove_on_death="false" description_key="buffGSKDenyGoreHarvestDesc" name_key="GoreHarvest">
+    <buff name="buffGSKDenyGoreHarvest" hidden="true" remove_on_death="false" description_key="buffGSKDenyGoreHarvestDesc" name_key="GoreHarvest">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
@@ -4404,6 +4447,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiatedRegenBlock"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKInPineForestBiomeMonstersThrive1" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="7.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="2.5" target="selfAOE" range="60" target_tags="zombie">
+        <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+      </triggered_effect>
+    </buff>
     <buff name="buffGSKRadiationAura">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4439,7 +4490,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKMutant_ChkAndApplyOnMobs7">
+    <buff name="buffGSKMutant_ChkAndApplyOnMobs7" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="10"/>
@@ -4505,24 +4556,28 @@
     </buff>
     <buff name="buffGSKMutantTeleport" help="TODO: events dont work with mobs?">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
       <effect_group help="random teleport in front nearby TODO: does not work on mobs?">
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKTeslaTele1NoMutant"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKTeslaTele1NoMutant not working tho"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKMutantTeleport"/>
       </effect_group>
       <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoMutant">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKTeslaTele1NoMutant not working tho">
           <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele1NoUpMutant">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport2" help="was eventGSKTeslaTele1NoUpMutant not working tho">
           <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="2"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantTeleport"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantRabbits">
@@ -4739,7 +4794,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="80559" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="80695" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
@@ -4749,7 +4804,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDist" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyDistIndexMax" operation="set" value="6" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleportBaseToSkyDist" operation="set" value="2000"/>
@@ -4832,7 +4887,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportAndDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="128,180,180">
+    <buff name="buffGSKTeslaTeleportAndDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="215,180,220">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -4939,7 +4994,7 @@
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportRandomMayhem" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleportRandomMayhem" icon_color="255,128,128">
+    <buff name="buffGSKTeslaTeleportRandomMayhem" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleportRandomMayhem" icon_color="255,64,64">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -5014,6 +5069,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:ONUPDATE:buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKExternalForceTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKEventFeedbackTeleportPhase" operation="set" value="0"/>
       </effect_group>
       <effect_group help="consume battery">
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
@@ -5596,17 +5652,17 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaExplodeExtra9">
+    <buff name="buffGSKTeslaExplodeExtra9" help="TODO:review, seems useless...">
       <stack_type value="replace"/>
       <duration value="10" help="should be time enough even on slow machine for the boom"/>
       <update_rate value="0.25"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKTeslaExplodeExtra9"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeslaTele00" help="after 0.5s"/>
-        <!-- HELPGOOD:TODO: is there some way to know eventGSKTeslaTele00 finished so this buff can be removed based on that? -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaExplodeExtra9">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="NotEquals" value="@.iGSKTeslaTeleSpecialZero"/>
-        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEventFeedbackTeleportPhase"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaExplodeExtra9"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKTeslaExplodeExtra9"/>
       </effect_group>
     </buff>
@@ -7805,7 +7861,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleSpawnBiomeId"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardWeatherMiasmaDirty45" description_key="buffGSKHazardWeatherMiasmaDirty5Desc" name_key="MiasmaAndDirtyEtc" help="this is also always running, so is used like a generic place for many things TODO: make a generic checker buff and put stuff there...">
+    <buff name="buffGSKHazardWeatherMiasmaDirty45" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -7940,7 +7996,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKPermanentGenericCheck7" hidden="false" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false">
+    <buff name="buffGSKPermanentGenericCheck7" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -8117,7 +8173,7 @@
         <!-- HELPGOOD: lvl 5 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="5">
           <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.40"/>
-          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0.42" help="min+0.02"/>
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="10000" help="min+0.02"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATENEARDEATHCALCS_ChemUse_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createNearDeathCalcs.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeathChemUse">

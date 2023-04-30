@@ -618,9 +618,11 @@ astr=(
   drinkJarBoiledWater 33
   drinkCanEmptyCookingOneUse 33
   drugJailBreakers 3
+  foodRawMeat 1 #for dog companion
   GlowStickGreen       33
   GSKfireFuel 13
   GSKsimpleBeer        33
+  GSKspawnDogCompanion 1
   ladderWood            66
   meleeToolFlashlight02 1
   meleeToolTorch 1
@@ -685,6 +687,7 @@ astr=( #TEMPLATE
 astr=(
   ammoJunkTurretRegular 222
   armorClothHat 1 # this is to be able to install one of the mods
+  drugOhShitzDrops 1 # just in case the auto protection doesnt kick in..
   gunBotT2JunkTurret 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
   GSKTeslaTeleportToBiomeFreeAndSafeCall 1

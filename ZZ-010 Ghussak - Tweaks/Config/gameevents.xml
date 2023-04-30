@@ -115,6 +115,11 @@
         <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
+      <action class="SetCVar">
+        <property name="phase" value="10"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="10" help="the phase"/>
+      </action>
       <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
         <property name="phase" value="20"/>
         <property name="blast_power" value="75"/>
@@ -122,6 +127,11 @@
         <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
         <property name="entity_damage" value="0"/>
         <property name="entity_radius" value="0"/>
+      </action>
+      <action class="SetCVar">
+        <property name="phase" value="20"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="20" help="the phase"/>
       </action>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="30"/>
@@ -144,6 +154,11 @@
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="30"/>
         <property name="entity_radius" value="5"/>
+      </action>
+      <action class="SetCVar">
+        <property name="phase" value="1000"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="1000" help="the phase"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleBeacon">
@@ -214,6 +229,18 @@
       <action class="SpawnEntity">
         <property name="entity_names" value="Backpack"/>
         <property name="spawn_count" value="1"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKMutantTeleport">
+      <action class="PushEntity">
+        <property name="direction" value="Forward"/>
+        <property name="distance" value="4"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKMutantTeleport2">
+      <action class="PushEntity">
+        <property name="direction" value="Forward"/>
+        <property name="distance" value="8"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTele1NoMutant" template="eventGSKTeslaTele">
@@ -1668,5 +1695,11 @@
       </action>
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+    <action_sequence name="eventGSKSpawnDogCompanion">
+      <action class="SpawnEntity">
+        <property name="entity_names" value="npcAnimalFox"/>
+        <property name="spawn_count" value="1"/>
+      </action>
+    </action_sequence>
   </append>
 </GhussakTweaks>

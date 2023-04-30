@@ -59,7 +59,7 @@ function FUNCapplyChanges2() {
       #echo "WARN: hit ctrl+c to abort, closing meld will accept the patch!!! "
       if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
         #echo "ERROR: aborted."
-        #CFGFUNCerrorExit
+        #CFGFUNCerrorExit "43958736458"
         #echo "WARNING: aborted."
         #CFGFUNCprompt "Hit any key to trash the tmp file '${strFlToPatch}.GENCODENEWFILE' and exit."
         #CFGFUNCtrash "${strFlToPatch}.GENCODENEWFILE"
@@ -79,7 +79,7 @@ function FUNCapplyChanges2() {
 }
 
 strCallerScript="`ps --no-header -p $PPID -o cmd |sed -r 's@.* .*/([a-zA-Z0-9]*[.]sh).*@\1@'`"
-#if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit;fi
+#if [[ ! -f "$strCallerScript" ]];then echo "ERROR: caller should be a script. strCallerScript='$strCallerScript'";CFGFUNCerrorExit "4965876";fi
 declare -p strCallerScript
 
 if [[ "${1-}" == "--xmlcfg" ]];then #help <<strId> <strValue>> [[<strId> <strValue>] ...] set the value of some constant config cvar at buffs.xml
@@ -109,7 +109,7 @@ if [[ "${1-}" == "--xmlcfg" ]];then #help <<strId> <strValue>> [[<strId> <strVal
   #if ! colordiff "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then #has diff
     #if ! CFGFUNCmeld "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE";then
       #echo "ERROR: aborted."
-      #CFGFUNCerrorExit
+      #CFGFUNCerrorExit "345345879"
     #fi
     #FUNCapplyChanges
   #fi
@@ -140,7 +140,7 @@ strFlPatch="$1";shift #help file containing only the changes section to be updat
 strFlToPatch="$1";shift #help file to be patched
 #strComment="$1";shift #he lp 
 if ! ls -l "$strFlPatch" "$strFlToPatch";then
-  echo "InputFilesMissing.";CFGFUNCerrorExit
+  CFGFUNCerrorExit "InputFilesMissing."
 fi
 
 strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
@@ -155,7 +155,7 @@ strFlChkDupToken="${strTmpPath}/${strFlChkDupToken}.tmp"
 if [[ -f "${strFlChkDupToken}" ]];then
   ls -l "$strFlChkDupToken"
   if ! CFGFUNCprompt -q "The above token was already used on this session, this means the caller script may have been misconfigured and provided a duplicated token to apply a new patch on the same file sector. Continue anyway?";then
-    CFGFUNCerrorExit
+    CFGFUNCerrorExit "DupToken"
   fi
 fi
 echo -n "pseudo lock" >"${strFlChkDupToken}"
@@ -166,7 +166,7 @@ if [[ "${strFlToPatch}" =~ .*[.]txt$ ]];then
 elif [[ "${strFlToPatch}" =~ .*[.]xml$ ]];then
   strFileType=ftXML
 else
-  echo "Unsupported filetype.";CFGFUNCerrorExit
+  CFGFUNCerrorExit "Unsupported filetype.";
 fi
 
 #strCodeTokenBegin="${strToken}_BEGIN"
@@ -179,8 +179,8 @@ strMsgDoNotModify="===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: ${strCallerScri
 strMsgErrTokenMiss="token missing, you must place it manually initially (each token must be in a single whole line)!"
 strTokenHelperXml="\n<!-- $strCodeTokenBegin -->\n<!-- $strCodeTokenEnd -->"
 strTokenHelperTxt="$strCodeTokenBegin,\"\"\n$strCodeTokenEnd,\"\""
-#if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";CFGFUNCerrorExit;fi
-#if ! egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni;then echo -e "ERROR: end   $strMsgErrTokenMiss${strTokenHelper}"  ;CFGFUNCerrorExit;fi
+#if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";CFGFUNCerrorExit "4587936459876";fi
+#if ! egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni;then echo -e "ERROR: end   $strMsgErrTokenMiss${strTokenHelper}"  ;CFGFUNCerrorExit "89345298756";fi
 if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd" "$strFlToPatch" -ni;then
   echo "ERROR: $strMsgErrTokenMiss"
   if [[ "${strFileType}" == ftTXT ]];then
@@ -189,7 +189,7 @@ if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd
     echo -e "$strTokenHelperXml"
   fi
   echo
-  CFGFUNCerrorExit
+  CFGFUNCerrorExit "$strMsgErrTokenMiss"
 fi
 if((`egrep "$strCodeTokenBegin" "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenBegin";fi
 if((`egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenEnd";fi
@@ -209,7 +209,7 @@ if [[ "${strFileType}" == ftTXT ]];then
 elif [[ "${strFileType}" == ftXML ]];then
   echo "<!-- HELPGOOD:${strCodeTokenBegin} BELOW:${strMsgDoNotModify} -->" >>"${strFlToPatch}.GENCODENEWFILE"
 else
-  echo "Unsupported filetype.";CFGFUNCerrorExit
+  CFGFUNCerrorExit "Unsupported filetype.";
 fi
 # copy updated sector
 wc -l "$strFlPatch"
@@ -221,7 +221,7 @@ if [[ "${strFileType}" == ftTXT ]];then
 elif [[ "${strFileType}" == ftXML ]];then
   echo "<!-- HELPGOOD:${strCodeTokenEnd} ABOVE:${strMsgDoNotModify} -->" >>"${strFlToPatch}.GENCODENEWFILE"
 else
-  echo "Unsupported filetype.";CFGFUNCerrorExit
+  CFGFUNCerrorExit "Unsupported filetype.";
 fi
 
 tail -n +$((nTail+1)) "${strFlToPatch}" >>"${strFlToPatch}.GENCODENEWFILE";wc -l "${strFlToPatch}.GENCODENEWFILE"
@@ -237,7 +237,7 @@ FUNCapplyChanges2
       #echo "WARNING: aborted."
       #CFGFUNCprompt "Hit any key to trash the tmp file '$strFlPatch' and exit."
       #CFGFUNCtrash "$strFlPatch"
-      #CFGFUNCerrorExit
+      #CFGFUNCerrorExit "34592075837"
     #fi
   #fi
   ## "overwrite" the old with new file

@@ -60,6 +60,9 @@ for strND in "${astrNearDeathList[@]}";do
           #fMax="`printf "%.2f" $(bc <<< "${fMin}+${fStep}")`"
           fStep="`CFGFUNCcalc "(${fStep}*${fMultPerLvl})"`"
           fMax="`CFGFUNCcalc "${fMin}+${fStep}"`"
+          fMaxFinal="${fMax}"
+          
+          if((iLvl==iMaxLvl));then fMax="10000";fi #anything unexpectedly high will work, just to have no limit.
           
       echo '        <!-- HELPGOOD: lvl '"${iLvl}"' -->
           <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="'"${iLvl}"'">
@@ -68,7 +71,6 @@ for strND in "${astrNearDeathList[@]}";do
           </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
           
           fMin="${fMax}"
-          fMaxFinal="${fMax}"
           
           #<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="2">
             #<requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GTE" value="0.25" />

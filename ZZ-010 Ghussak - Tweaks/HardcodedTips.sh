@@ -92,9 +92,8 @@ if $bHCTCrouchHeight;then
   egrep "PhysicsCrouchHeightModifier....." "${strFlTmp}" -ao
   
   if(( nSzBytes != $(stat -c "%s" "$strFlTmp") ));then 
-    CFGFUNCinfo "ERROR: Something went wrong! The binary file size differs from original! Deleting the temporary file: '$strFlTmp'";
     CFGFUNCexec rm -v "${strFlTmp}"
-    CFGFUNCerrorExit
+    CFGFUNCerrorExit "ERROR: Something went wrong! The binary file size differs from original! Deleted the temporary file: '$strFlTmp'";
   else
     CFGFUNCinfo "The file '$strFlTmp' was successfully patched!"
     

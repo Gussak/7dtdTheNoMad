@@ -69,6 +69,7 @@ astrBuffBNList=(
   "buffGSKHazardWWetFreezingAndHunger"
   "buffGSKHeatColdProtClothDmgAdd"
   "buffGSKHeatColdProtClothDmgKeep"
+  "buffGSKInPineForestBiomeMonstersThrive"
   "buffGSKMutant_ChkAndApplyOnMobs"
   "buffGSKNearDeath"
   "buffGSKPermanentGenericCheck"

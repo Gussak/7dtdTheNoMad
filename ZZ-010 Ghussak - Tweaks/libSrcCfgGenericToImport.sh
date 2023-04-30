@@ -109,10 +109,10 @@ function CFGFUNCechoLogPRIVATE() {
   CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
   if [[ "$1" == "--error" ]];then
     shift
-    echo "$* (Stack ${FUNCNAME[@]})" >>"$strCFGErrorLog"
+    echo "$* (Stack: ${FUNCNAME[@]})" >>"$strCFGErrorLog"
   fi
   echo "$*" >&2
-  echo "$* (Stack ${FUNCNAME[@]})" >>"$strCFGScriptLog"
+  echo "$* (Stack: ${FUNCNAME[@]})" >>"$strCFGScriptLog"
 };export -f CFGFUNCechoLogPRIVATE
 function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
   local lbSIGINTonMeld=false
@@ -154,14 +154,15 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
     exit 1
   fi
 };export -f CFGFUNCerrorForceEndPRIVATE
-function CFGFUNCerrorExit() { #helpf [msg]
+function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1-} (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})" 
+  if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "now $FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
+  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]})" 
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack ${FUNCNAME[@]})"
+  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]})"
   exit 1
 };export -f CFGFUNCDevMeErrorExit
 
@@ -395,7 +396,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
     iMissingPkgsCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "${strFlPkgDeps}")&&:;for strFl in "${astrFlList[@]}";do if ! dpkg -s "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux PACKAGE is missing: '$strFl'";((iMissingPkgsCount++))&&:;fi;done
     if((iMissingPkgsCount>0));then
       if ! CFGFUNCprompt -q "WARNING: PROBLEM! There are missing command(s) and package(s) above, continue anyway? But you should install them first if possible. Removing the package from the file '${strFlPkgDeps}' will prevent this message prompt on next run.";then
-        CFGFUNCerrorExit
+        CFGFUNCerrorExit "MissingCmdsPgks"
       fi
     fi
   fi

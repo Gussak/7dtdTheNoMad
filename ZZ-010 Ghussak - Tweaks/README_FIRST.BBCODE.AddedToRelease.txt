@@ -127,6 +127,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 ################## CHANGES ##############  
 --------- v0.9c -----------  
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGTeslaTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
+- free dog companion per respawn within the configured limit
 - removed newbie coat protection
 - free bundles now have experience penalty for some time
 - fixed HitpointsBlockageByChemUse  
@@ -142,6 +143,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - a bit bigger Tesla HUD for better reading
 - added one hired NPC info on the HUD
 - added near death lvls for Overhydrated Bloated ChemUse
+- added some Notes about buffs. They have dynamic values that would be shown for buffs that have no icon and were bloating the detailed buffs list.
+- automatic turn on tesla mods if all checks are ok
+- reorganized notes/journal to be easyer to read
 .  
 --------- v0.9a -----------  
 - initial release.  
@@ -152,5 +156,8 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 ###FileDescription v0.9c:###  
+More friendly first spawn. WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).  
+.  
+###FileDescription v0.9a:###  
 More friendly first spawn. WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).  
 .  
