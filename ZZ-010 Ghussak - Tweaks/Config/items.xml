@@ -16,7 +16,10 @@
   
   - explosion and decoy seem to be incompatible at GlowStickGreenDecoy2? only one or the other works, not both..
   
+  - if onSelfDamagedOther do not work for NPCs hitting the player or any other case, try onSelfAttackedOther
+  
   - TODO:RMMAJORVERSION: these lines are for who is upgrading the mod only. Remove them on major version increase that requires a game restart because things and balance etc changed so much that only a fresh new game start will work well with it.
+  
 -->
   <append xpath="/items">
     <item name="GSKBaseActivator">
@@ -644,8 +647,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTeslaEnergyBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 10 diff items" value="ammoJunkTurretRegular,armorClothHat,drugOhShitzDrops,gunBotT2JunkTurret,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportUndergroundFreeAndSafeCall,GSKTeslaTeleportToBiomeFreeAndSafeCall,modGSKEnergyThorns,NightVisionBattery,NVBatteryCreate"/>
-        <property name="Create_item_count" value="222,1,1,1,1,1,1,1,13,1"/>
+        <property name="Create_item" help="it has 11 diff items" value="ammoJunkTurretRegular,armorClothHat,drugOhShitzDrops,gunBotT2JunkTurret,GSKCFGTeleUndergroundFreeDelay,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportUndergroundFreeAndSafeCall,GSKTeslaTeleportToBiomeFreeAndSafeCall,modGSKEnergyThorns,NightVisionBattery,NVBatteryCreate"/>
+        <property name="Create_item_count" value="222,1,1,1,1,1,1,1,1,13,1"/>
       </property>
       <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: modGSKEnergyThorns" tiered="false">
@@ -658,8 +661,8 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-7340" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="7340"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-7341" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="7341"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>
@@ -1064,19 +1067,21 @@
       <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.03"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and (contains(@name,'Dog') or contains(@name,'Wolf') or contains(@name,'Coyote') or contains(@name,'Bear'))]">
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and (contains(@name,'Dog') or contains(@name,'Wolf') or contains(@name,'Coyote') or contains(@name,'Bear'))]" help="boars too, they use wolf hand">
     <effect_group help="Fang hold up">
-      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and contains(@name,'Bear')]">
     <effect_group help="strong push and ragdoll">
-      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKStrongPushAndRagdoll"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and contains(@name,'Wolf')]" help="boar uses meleeHandAnimalWolf">
     <effect_group help="strong push and ragdoll">
-      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKStrongPushAndRagdoll">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
         <requirement name="EntityTagCompare" tags="boar" target="self"/>
       </triggered_effect>
     </effect_group>
@@ -1167,7 +1172,7 @@
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="0"/>
         <triggered_effect trigger="onProjectileImpact" action="AddBuff" buff="buffGSKDancingZombies" target="otherAOE" range="10"/>
-        <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKDancingZombies"/>
+        <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKDancingZombies"/>
       </effect_group>
     </item>
     <item name="GlowStickGreenDecoy" help="TODO:not working as decoy yet..">
@@ -1887,10 +1892,10 @@
     </effect_group>
   </append>
   <append xpath="/items/item[         @name='gunNPCRocketLauncher' or         @name='gunExplosivesT3RocketLauncher' or         @name='thrownAmmoPipeBomb' or         @name='thrownGrenadeContact' or         @name='thrownGrenade'       ]/effect_group">
-    <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffNPCdmgArmorExplosion">
+    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffNPCdmgArmorExplosion">
       <requirement name="!EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKEnergyShieldDefend">
+    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKEnergyShieldDefend">
       <requirement name="EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
   </append>
@@ -2103,6 +2108,7 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportUndergroundFree"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodMode60s"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
       </effect_group>
     </item>
@@ -2130,6 +2136,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodMode60s"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
       </effect_group>
     </item>
@@ -2265,6 +2272,17 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKFreeBundlesRemaining" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKCFGTeleUndergroundFreeDelay">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="DescriptionKey" value="dkGSKCFGTeleUndergroundFreeDelay"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTTUnderFreeDelay" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTTUnderFreeDelay" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderFreeDelay" operation="GT" value="1"/>
         </triggered_effect>
       </effect_group>
     </item>
@@ -2626,12 +2644,14 @@
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" target="self" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestRagdoll">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" target="self" buff="buffGSKStrongPushAndRagdoll"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestHeatColdProtDmgAdd">
@@ -5370,7 +5390,7 @@
   <!-- HELPGOOD: other things that call or should be only 1 -->
   <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
   <append xpath="/items/item[starts-with(@name,'gun') or starts-with(@name,'melee')]" help="mutant zombies may teleport who hits them">
-    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
       <requirement name="EntityTagCompare" tags="mutant" target="other"/>
     </triggered_effect>
   </append>

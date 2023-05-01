@@ -123,13 +123,27 @@
         <property name="entity_damage" value="0"/>
         <property name="entity_radius" value="0"/>
       </action>
+      <action class="SetCVar">
+        <property name="phase" value="10"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="10" help="the phase"/>
+      </action>
+      <action class="Ragdoll">
+        <property name="phase" value="20"/>
+        <property name="stun_duration" value="0.5"/>
+      </action>
+      <action class="SetCVar">
+        <property name="phase" value="20"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="20" help="the phase"/>
+      </action>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="30"/>
         <property name="group_name" value="gnHostiles"/>
         <property name="max_distance" value="2" param1="iXplodRangeEnt"/>
       </action>
       <action class="Explode" help="kill any hostile entity at teleport destination">
-        <property name="phase" value="40"/>
+        <property name="phase" value="30"/>
         <property name="target_group" value="gnHostiles"/>
         <property name="blast_power" value="0"/>
         <property name="block_damage" value="0"/>
@@ -138,12 +152,18 @@
         <property name="entity_radius" value="2" param1="iXplodRangeEnt" help="will only affect selected gnHostiles tho"/>
       </action>
       <action class="Explode" help="this is like a sonic damage">
-        <property name="phase" value="50"/>
+        <property name="phase" value="40"/>
+        <property name="target_group" value="gnHostiles"/>
         <property name="blast_power" value="500" param1="iBlastPower"/>
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="30"/>
         <property name="entity_radius" value="5"/>
+      </action>
+      <action class="SetCVar">
+        <property name="phase" value="40"/>
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="value" value="40" help="the phase"/>
       </action>
       <action class="SetCVar">
         <property name="phase" value="1000"/>
@@ -152,7 +172,7 @@
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety" template="eventGSKTeslaTele">
-      <variable name="v3Dir" value="0,-30,0" help="y -30 may start the engine world generation that will lag while the player fall outside the world making this trick useless because the explosion just after may take too long to happen"/>
+      <variable name="v3Dir" value="0,-50,0" help="this far down to also help stay away of mutants psyonic attack and rads range"/>
       <variable name="iXplodRangeBlock" value="4"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleBeacon">

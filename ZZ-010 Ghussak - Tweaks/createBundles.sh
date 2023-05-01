@@ -689,6 +689,7 @@ astr=(
   armorClothHat 1 # this is to be able to install one of the mods
   drugOhShitzDrops 1 # just in case the auto protection doesnt kick in..
   gunBotT2JunkTurret 1
+  GSKCFGTeleUndergroundFreeDelay 1 #for GSKTeslaTeleportUndergroundFreeAndSafeCall
   GSKNoteTeslaTeleporToSkyFirstTime 1
   GSKTeslaTeleportUndergroundFreeAndSafeCall 1
   GSKTeslaTeleportToBiomeFreeAndSafeCall 1

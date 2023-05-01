@@ -33,7 +33,7 @@
 
 source ./libSrcCfgGenericToImport.sh
 
-if ! CFGFUNCprompt -q "TODO: find a way to let trader area be both destructible and have an interactive trader. This is still not working, patch anyway (you can try some values on the script before applying the patch also)?";then 
+if ! CFGFUNCprompt -q "TODO: find a way to let trader area be both destructible and have an interactive trader. This is still not working, patch anyway (you can try some values on the script before applying the patch also)? Traders' quests seem to stop working also with this? just in case you want these quests.";then 
   exit 0
 fi
 

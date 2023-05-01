@@ -4794,7 +4794,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="81694" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="81695" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
@@ -4817,6 +4817,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMinx100" operation="set" value="15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMax" operation="set" value="0.42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMaxx100" operation="set" value="42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderFreeDelay" operation="set" value="11"/>
       </effect_group>
       <effect_group help="all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
@@ -7866,8 +7867,8 @@
       <duration value="3"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.75"/>
-        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.75"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
       </effect_group>
     </buff>
     <buff name="buffGSKStrongPushAndRagdoll" hidden="true">
@@ -7879,28 +7880,34 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerGotPushed">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKStrongPushAndRagdoll">
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportUndergroundFree" hidden="true">
+    <buff name="buffGSKTeslaTeleportUndergroundFree" hidden="false" icon="7dtdShockTip" icon_blink="true" name_key="TeleUnderground">
       <stack_type value="replace"/>
-      <duration value="10"/>
-      <update_rate value="0.15"/>
+      <duration value="30"/>
+      <update_rate value="1.0"/>
+      <display_value value=".iGSKTTUndergTm"/>
+      <display_value_key value="{0:0}s"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderPhase" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTUnderPhase" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUndergTm" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTUndergTm" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="set" value="randomInt(1,7)" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTTUnderSpawnSimpleIndex"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="2"/>
+        <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode60s"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportUnder_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50021" help="index=50021;prefab=abandoned_house_03;biome=004000FF,PineForest,3;spawnPos=4205,260,1219;prefabPosCmd: teleport 4185 67 1199">
           <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="1"/>
@@ -7926,9 +7933,9 @@
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportUnder_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety">
-          <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="7"/>
-        </triggered_effect>
+        <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="@.iGSKTTUnderFreeDelay" help="it will wait 10s to let the engine world generator create as much blocks it can, so teleporting underground will work better. TODO: let player configure this delay."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportUndergroundFree"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardWeatherMiasmaDirty45" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty">
@@ -8070,6 +8077,12 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="ragdoll">
+        <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTryRagdollSelf"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
+      </effect_group>
       <effect_group help="rad slow remover: to make sure it is still working mainly after resurrect">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadLowerSlow9">
           <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="GT" value="0"/>
@@ -8669,7 +8682,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+    <buff name="buffGSKGodModeFirstSpawn" hidden="true" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
       <stack_type value="ignore"/>
       <duration value="60"/>
       <display_value value=".iGSKGodModeFirstSpawnTm"/>
@@ -8679,13 +8692,23 @@
       </requirements>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode60s"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodMode60s" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+      <stack_type value="ignore"/>
+      <duration value="60"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}/60s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
       </effect_group>
     </buff>
   </append>

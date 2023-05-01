@@ -127,7 +127,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 ################## CHANGES ##############  
 --------- v1.0aRC -----------  
-- it is recommended to start a new game as many things changed and so did the first spawn challenge
+- it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge, it is worth the try!
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGTeslaTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - free dog companion per respawn within the configured limit
 - removed newbie coat protection
@@ -158,7 +158,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 ###FileDescription v1.0aRC:###  
-More friendly and helpful first spawn and respawns, I suggest starting a new game for major version 1.0aRC. Run `./installSpecificFilesIntoGameFolder.sh` on cygwin to prepare files outside the modlet folder (and create bkps).  
+More helpful 1st spawn and respawns, I suggest starting a new game for major version 1.0aRC. Run `./installSpecificFilesIntoGameFolder.sh` on cygwin to prepare files outside the modlet folder (and create bkps).  
 .  
 ###FileDescription v0.9a:###  
 More friendly first spawn. WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).  
