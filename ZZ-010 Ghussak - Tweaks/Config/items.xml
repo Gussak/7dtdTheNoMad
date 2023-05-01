@@ -66,6 +66,7 @@
         <property name="Class" value="Eat" help="Could be also class Activate?"/>
         <property name="Delay" value="0.1"/>
       </property>
+      <!-- HELPGOOD: do not make Action1 Eat class because there may have nothing configured on the extending item and it will be lost. -->
     </item>
     <item name="GSKBaseActivatorConsumableSlow">
       <property name="Extends" value="GSKBaseActivator"/>
@@ -643,8 +644,8 @@
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKTeslaEnergyBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 9 diff items" value="ammoJunkTurretRegular,armorClothHat,drugOhShitzDrops,gunBotT2JunkTurret,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportToBiomeFreeAndSafeCall,modGSKEnergyThorns,NightVisionBattery,NVBatteryCreate"/>
-        <property name="Create_item_count" value="222,1,1,1,1,1,1,13,1"/>
+        <property name="Create_item" help="it has 10 diff items" value="ammoJunkTurretRegular,armorClothHat,drugOhShitzDrops,gunBotT2JunkTurret,GSKNoteTeslaTeleporToSkyFirstTime,GSKTeslaTeleportUndergroundFreeAndSafeCall,GSKTeslaTeleportToBiomeFreeAndSafeCall,modGSKEnergyThorns,NightVisionBattery,NVBatteryCreate"/>
+        <property name="Create_item_count" value="222,1,1,1,1,1,1,1,13,1"/>
       </property>
       <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: modGSKEnergyThorns" tiered="false">
@@ -657,8 +658,8 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-6341" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="6341"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-7340" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="7340"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>
@@ -1061,6 +1062,23 @@
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.03"/>
       <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.03"/>
       <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.03"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and (contains(@name,'Dog') or contains(@name,'Wolf') or contains(@name,'Coyote') or contains(@name,'Bear'))]">
+    <effect_group help="Fang hold up">
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and contains(@name,'Bear')]">
+    <effect_group help="strong push and ragdoll">
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKStrongPushAndRagdoll"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and contains(@name,'Wolf')]" help="boar uses meleeHandAnimalWolf">
+    <effect_group help="strong push and ragdoll">
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKStrongPushAndRagdoll">
+        <requirement name="EntityTagCompare" tags="boar" target="self"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/items">
@@ -2074,7 +2092,21 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
       </effect_group>
     </item>
-    <item name="GSKTeslaTeleportToBiomeFreeAndSafeCall">
+    <item name="GSKTeslaTeleportUndergroundFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod">
+      <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
+      <property name="EconomicValue" value="999"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="DescriptionKey" value="dkGSKTeslaTeleportUndergroundFreeAndSafeCall"/>
+      <property name="CustomIconTint" value="80,80,128"/>
+      <property class="Action1">
+        <property name="Class" value="Eat" help="because 2nd actiom must also consume!"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeslaTeleportUndergroundFree"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
+      </effect_group>
+    </item>
+    <item name="GSKTeslaTeleportToBiomeFreeAndSafeCall" help="do not allow crafting as this do not use energy nor dmgs the mod">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="EconomicValue" value="999"/>
       <property name="CustomIcon" value="7dtdTeleport"/>
@@ -2588,6 +2620,18 @@
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="500"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestPush">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestRagdoll">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestHeatColdProtDmgAdd">

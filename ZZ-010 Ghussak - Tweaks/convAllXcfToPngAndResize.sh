@@ -17,6 +17,7 @@ function FUNCconv() {
     strH="${astrOpt[i+2]}"
     strScriptScale="(gimp-image-scale-full image ${strW} ${strH} INTERPOLATION-CUBIC)"
     # https://stackoverflow.com/a/5846727/1422630 (that code was adapted to fit here)
+#todo: how? show current file being processed?        (gimp-message file's)
     gimp -n -i -b - <<EOF
     (let* ( (file's (cadr (file-glob "${strFilter}" 1))) (filename "") (image 0) (layer 0) )
       (while (pair? file's) 

@@ -44,11 +44,27 @@ source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
 
+if [[ "${1-}" == "-e" ]];then #help prefab elevations
+  anPrefabPosXYZList=(`cat GeneratedWorlds.ManualInstallRequired/East\ Nikazohi\ Territory/spawnpoints.xml |tr -d '\r' |egrep -o 'teleport[^"]*' |sed -r 's@teleport (.*)@\1@'`);
+  #for nPrefabPosXYZ in "${anPrefabPosXYZList[@]}";do echo ${nPrefabPosXYZ};done
+  for((i=0;i<"${#anPrefabPosXYZList[@]}";i+=3));do
+    nX=${anPrefabPosXYZList[i]}
+    nY=${anPrefabPosXYZList[i+1]}
+    nZ=${anPrefabPosXYZList[i+2]}
+    if((nY>=60));then
+      echo "$nX $nY $nZ"
+    fi
+    #declare -p nX nY nZ
+  done |sort -n
+  exit 0
+fi
+
 # trash special files that are not at --gencodeTrashLast option:
 CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
-CFGFUNCtrash "${strFlGenBuf}Log${strGenTmpSuffix}"&&:
-CFGFUNCtrash "${strFlGenBuf}BiomeId${strGenTmpSuffix}"&&:
+CFGFUNCtrash "${strFlGenBuf}TeleSpawnLog${strGenTmpSuffix}"&&:
+CFGFUNCtrash "${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}"&&:
+#CFGFUNCtrash "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"&&:
 
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
@@ -158,6 +174,8 @@ iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
 declare -A astrPosVsBiomeColor=()
 
+iUnderSimpleIndex=0
+
 strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
 #if [[ -f "${strFlPosVsBiomeColorCACHE}" ]];then source "${strFlPosVsBiomeColorCACHE}";fi
 source "${strFlPosVsBiomeColorCACHE}"&&:
@@ -221,6 +239,7 @@ for str in "${astrPrefabsList[@]}";do
         iXSP=$((iX+iDisplacementXZ))
         iZSP=$((iZ+iDisplacementXZ))
         strSpawnPos="$iXSP,$iY,$iZSP"
+        strPrefabPos="$iXSP,$iYOrig,$iZSP"
         
         strColorAtBiomeFile="${astrPosVsBiomeColor[${strSpawnPos}]-}"&&:
         if [[ -z "${strColorAtBiomeFile}" ]];then
@@ -254,14 +273,25 @@ for str in "${astrPrefabsList[@]}";do
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport'"${strTeleportIndex}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
         </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+    if((iYOrig>=60));then
+      ((iUnderSimpleIndex++))&&:
+      echo '
+    <action_sequence name="eventGSKTeleportToPrefab'"${strTeleportIndex}"'"><action class="Teleport">
+      <property name="target_position" value="'"${strPrefabPos}"'" help="'"${strHelp}"'"/>
+    </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      echo '
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab'"${strTeleportIndex}"'" help="'"${strHelp}"'">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="'"${iUnderSimpleIndex}"'"/>
+        </triggered_effect>' >>"${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"
+    fi
     echo '
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
-        </triggered_effect>' >>"${strFlGenBuf}Log${strGenTmpSuffix}"
+        </triggered_effect>' >>"${strFlGenBuf}TeleSpawnLog${strGenTmpSuffix}"
     echo '
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="'"${iBiome}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
-        </triggered_effect>' >>"${strFlGenBuf}BiomeId${strGenTmpSuffix}"
+        </triggered_effect>' >>"${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}"
     echo '
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNewTeleToSpawnPointIndex" operation="set" value="'"${iTeleportIndex}"'" help="'"${strHelp}"'">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="'"${iBiome}"'"/>
@@ -295,9 +325,10 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 ./gencodeApply.sh "${strFlGenSpa}${strGenTmpSuffix}" "${strFlGenSpa}"
 
 ./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --subTokenId "TeleSpawnLog" "${strFlGenBuf}Log${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --subTokenId "TeleSpawnBiomeId" "${strFlGenBuf}BiomeId${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "TeleSpawnLog" "${strFlGenBuf}TeleSpawnLog${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "TeleSpawnBiomeId" "${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}" "${strFlGenBuf}"
 ./gencodeApply.sh --subTokenId "ChooseRandomSpawnInBiome" "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}" "${strFlGenBuf}"
+./gencodeApply.sh --subTokenId "TeleportUnder" "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}" "${strFlGenBuf}"
 
 ./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
@@ -305,10 +336,11 @@ cat "${strFlGenSpa}${strGenTmpSuffix}"
 #CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"
 #echo '        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')"/>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 #./gencodeApply.sh --subTokenId "TeleportCfgs" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --xmlcfg \
-  iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')' \
-  ".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')' \
-  ".iGSKTeslaTeleSpawnFIRST" "${iTeleportIndexFirst}" \
-  ".iGSKTeslaTeleSpawnLAST" "${iTeleportMaxIndex}" 
+./gencodeApply.sh --xmlcfg                                                                                      \
+  iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')'                  \
+  ".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')'   \
+  ".iGSKTeslaTeleSpawnFIRST" "${iTeleportIndexFirst}"                                                           \
+  ".iGSKTeslaTeleSpawnLAST" "${iTeleportMaxIndex}"                                                              \
+  ".iGSKTTUnderSpawnSimpleIndex" "randomInt(1,${iUnderSimpleIndex})"
 
 ./gencodeApply.sh --cleanChkDupTokenFiles

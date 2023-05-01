@@ -7,7 +7,7 @@ egrep "[#]help" $0
 : ${strTelricsModFolder:="Telrics Health Bars 2.0A19"} #help config this to the correct folder name or it wont work..
 
 if [[ ! -f "./Resources/100HealthBarParticle.unity3d" ]];then
-  echo "ERROR: you need to copy the Resources folder from 'Telrics Health Bars' to this mod's folder (I dont know how to point to the files on that folder w/o causing errors and failing, sorry...)"
+  echo "ERROR: you need to symlink or copy the Resources folder from 'Telrics Health Bars' to this mod's folder (I dont know how to point to the files on that folder w/o causing errors and failing, sorry...)"
   exit 1
 fi
 

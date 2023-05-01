@@ -4794,7 +4794,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="80695" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="81694" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
@@ -4808,8 +4808,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyDistIndexMax" operation="set" value="6" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleportBaseToSkyDist" operation="set" value="2000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnFIRST" operation="set" value="50001" helpgencode="ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:createSpawnPoints.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnLAST" operation="set" value="50150" helpgencode="ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnLAST" operation="set" value="50150" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
         </triggered_effect>
@@ -6777,7 +6777,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="Trying random spawn matching chosen biome, please be patient (max 600s)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKRndSUCBIRetry" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRndSUCBIRetry" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" operation="set" value="randomInt(50001,50150)" helpgencode="ThisPropertyIsATokenTooAllowingThisLineToBeUpdated!DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" operation="set" value="randomInt(50001,50150)" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
       </effect_group>
       <effect_group>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_ChooseRandomSpawnInBiome_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
@@ -7859,6 +7859,76 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleSpawnBiomeId"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKBeastFangsHoldup" hidden="false" description_key="dkbuffGSKBeastFangsHoldup" name_key="BeastFangsHoldUp" icon="7dtdGskFangHoldUp" icon_blink="true">
+      <stack_type value="replace"/>
+      <duration value="3"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.75"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.75"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKStrongPushAndRagdoll" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerGotPushed">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKStrongPushAndRagdoll">
+          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="4"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeslaTeleportUndergroundFree" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="0.15"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderPhase" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTUnderPhase" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="set" value="randomInt(1,7)" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="2"/>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportUnder_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50021" help="index=50021;prefab=abandoned_house_03;biome=004000FF,PineForest,3;spawnPos=4205,260,1219;prefabPosCmd: teleport 4185 67 1199">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50044" help="index=50044;prefab=remnant_house_06;biome=004000FF,PineForest,3;spawnPos=-753,260,1767;prefabPosCmd: teleport -773 197 1747">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50048" help="index=50048;prefab=house_old_modular_02;biome=004000FF,PineForest,3;spawnPos=4199,260,-303;prefabPosCmd: teleport 4179 68 -323">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50066" help="index=50066;prefab=remnant_house_11;biome=FFA800FF,Wasteland,8;spawnPos=-3132,260,-4313;prefabPosCmd: teleport -3152 90 -4333">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50072" help="index=50072;prefab=remnant_house_18;biome=004000FF,PineForest,3;spawnPos=2579,260,665;prefabPosCmd: teleport 2559 152 645">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50097" help="index=50097;prefab=house_old_gambrel_04;biome=004000FF,PineForest,3;spawnPos=3953,260,-322;prefabPosCmd: teleport 3933 151 -342">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50131" help="index=50131;prefab=house_old_ranch_07;biome=FFE477FF,Desert,5;spawnPos=-2417,260,-1687;prefabPosCmd: teleport -2437 99 -1707">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="7"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportUnder_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety">
+          <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="7"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardWeatherMiasmaDirty45" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty">

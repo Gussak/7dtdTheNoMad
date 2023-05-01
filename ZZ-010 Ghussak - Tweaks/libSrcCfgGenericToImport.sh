@@ -147,13 +147,19 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
 function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to grant errors happening in subshells will be detected and help stop the script
   #if((iCFGFUNCerrorExit_Count>0));then
   if [[ -f "${strCFGErrorLog}" ]];then
+    echo "====================== ERROR LOG ======================"
     cat "${strCFGErrorLog}"
-    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell: ${strCFGErrorLog} " >&2
-    read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
-    trash "${strCFGErrorLog}"
+    echo "====================== ERROR LOG ======================"
+    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (Stack: ${FUNCNAME[@]})" >&2
+    echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (Stack: ${FUNCNAME[@]})"
+    read -n 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then trash "${strCFGErrorLog}";return 0;fi
+    #read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
+    #trash "${strCFGErrorLog}"
     exit 1
   fi
 };export -f CFGFUNCerrorForceEndPRIVATE
+#CFGFUNCerrorForceEndPRIVATE #here is good to quickly show there is some problem if any
+
 function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
   if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "now $FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi

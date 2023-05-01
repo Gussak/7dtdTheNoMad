@@ -115,23 +115,13 @@
         <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
-      <action class="SetCVar">
-        <property name="phase" value="10"/>
-        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
-        <property name="value" value="10" help="the phase"/>
-      </action>
       <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
-        <property name="phase" value="20"/>
+        <property name="phase" value="10"/>
         <property name="blast_power" value="75"/>
         <property name="block_damage" value="99999"/>
         <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
         <property name="entity_damage" value="0"/>
         <property name="entity_radius" value="0"/>
-      </action>
-      <action class="SetCVar">
-        <property name="phase" value="20"/>
-        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
-        <property name="value" value="20" help="the phase"/>
       </action>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="30"/>
@@ -160,6 +150,10 @@
         <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
         <property name="value" value="1000" help="the phase"/>
       </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety" template="eventGSKTeslaTele">
+      <variable name="v3Dir" value="0,-30,0" help="y -30 may start the engine world generation that will lag while the player fall outside the world making this trick useless because the explosion just after may take too long to happen"/>
+      <variable name="iXplodRangeBlock" value="4"/>
     </action_sequence>
     <action_sequence name="eventGSKTeslaTeleBeacon">
       <action class="TeleportToSpecial">
@@ -229,6 +223,17 @@
       <action class="SpawnEntity">
         <property name="entity_names" value="Backpack"/>
         <property name="spawn_count" value="1"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKPlayerGotPushed">
+      <action class="PushEntity">
+        <property name="direction" value="Random"/>
+        <property name="distance" value="1"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKPlayerRagdoll">
+      <action class="Ragdoll">
+        <property name="stun_duration" value="0.5"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKMutantTeleport">
@@ -1044,6 +1049,11 @@
         <property name="target_position" value="-1884,260,4359" help="index=50020;prefab=abandoned_house_02;biome=FFE477FF,Desert,5;spawnPos=-1884,260,4359;prefabPosCmd: teleport -1904 37 4339"/>
       </action>
     </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50021">
+      <action class="Teleport">
+        <property name="target_position" value="4205,67,1219" help="index=50021;prefab=abandoned_house_03;biome=004000FF,PineForest,3;spawnPos=4205,260,1219;prefabPosCmd: teleport 4185 67 1199"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKTeleport50021">
       <action class="Teleport">
         <property name="target_position" value="4205,260,1219" help="index=50021;prefab=abandoned_house_03;biome=004000FF,PineForest,3;spawnPos=4205,260,1219;prefabPosCmd: teleport 4185 67 1199"/>
@@ -1159,6 +1169,11 @@
         <property name="target_position" value="647,260,3514" help="index=50043;prefab=remnant_house_05;biome=FFE477FF,Desert,5;spawnPos=647,260,3514;prefabPosCmd: teleport 627 38 3494"/>
       </action>
     </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50044">
+      <action class="Teleport">
+        <property name="target_position" value="-753,197,1767" help="index=50044;prefab=remnant_house_06;biome=004000FF,PineForest,3;spawnPos=-753,260,1767;prefabPosCmd: teleport -773 197 1747"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKTeleport50044">
       <action class="Teleport">
         <property name="target_position" value="-753,260,1767" help="index=50044;prefab=remnant_house_06;biome=004000FF,PineForest,3;spawnPos=-753,260,1767;prefabPosCmd: teleport -773 197 1747"/>
@@ -1177,6 +1192,11 @@
     <action_sequence name="eventGSKTeleport50047">
       <action class="Teleport">
         <property name="target_position" value="-733,260,4357" help="index=50047;prefab=house_old_ranch_05;biome=FFE477FF,Desert,5;spawnPos=-733,260,4357;prefabPosCmd: teleport -753 37 4337"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50048">
+      <action class="Teleport">
+        <property name="target_position" value="4199,68,-303" help="index=50048;prefab=house_old_modular_02;biome=004000FF,PineForest,3;spawnPos=4199,260,-303;prefabPosCmd: teleport 4179 68 -323"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleport50048">
@@ -1269,6 +1289,11 @@
         <property name="target_position" value="-2175,260,-1147" help="index=50065;prefab=house_country_01;biome=FFA800FF,Wasteland,8;spawnPos=-2175,260,-1147;prefabPosCmd: teleport -2195 37 -1167"/>
       </action>
     </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50066">
+      <action class="Teleport">
+        <property name="target_position" value="-3132,90,-4313" help="index=50066;prefab=remnant_house_11;biome=FFA800FF,Wasteland,8;spawnPos=-3132,260,-4313;prefabPosCmd: teleport -3152 90 -4333"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKTeleport50066">
       <action class="Teleport">
         <property name="target_position" value="-3132,260,-4313" help="index=50066;prefab=remnant_house_11;biome=FFA800FF,Wasteland,8;spawnPos=-3132,260,-4313;prefabPosCmd: teleport -3152 90 -4333"/>
@@ -1297,6 +1322,11 @@
     <action_sequence name="eventGSKTeleport50071">
       <action class="Teleport">
         <property name="target_position" value="-1009,260,-1773" help="index=50071;prefab=house_old_cottage_01_path;biome=FFA800FF,Wasteland,8;spawnPos=-1009,260,-1773;prefabPosCmd: teleport -1029 36 -1793"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50072">
+      <action class="Teleport">
+        <property name="target_position" value="2579,152,665" help="index=50072;prefab=remnant_house_18;biome=004000FF,PineForest,3;spawnPos=2579,260,665;prefabPosCmd: teleport 2559 152 645"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleport50072">
@@ -1422,6 +1452,11 @@
     <action_sequence name="eventGSKTeleport50096">
       <action class="Teleport">
         <property name="target_position" value="1882,260,-4122" help="index=50096;prefab=remnant_house_07;biome=FFFFFFFF,Snow,1;spawnPos=1882,260,-4122;prefabPosCmd: teleport 1862 35 -4142"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50097">
+      <action class="Teleport">
+        <property name="target_position" value="3953,151,-322" help="index=50097;prefab=house_old_gambrel_04;biome=004000FF,PineForest,3;spawnPos=3953,260,-322;prefabPosCmd: teleport 3933 151 -342"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleport50097">
@@ -1592,6 +1627,11 @@
     <action_sequence name="eventGSKTeleport50130">
       <action class="Teleport">
         <property name="target_position" value="3375,260,-2056" help="index=50130;prefab=remnant_house_09;biome=FFFFFFFF,Snow,1;spawnPos=3375,260,-2056;prefabPosCmd: teleport 3355 37 -2076"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleportToPrefab50131">
+      <action class="Teleport">
+        <property name="target_position" value="-2417,99,-1687" help="index=50131;prefab=house_old_ranch_07;biome=FFE477FF,Desert,5;spawnPos=-2417,260,-1687;prefabPosCmd: teleport -2437 99 -1707"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleport50131">

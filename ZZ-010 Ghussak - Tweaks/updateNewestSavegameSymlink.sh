@@ -5,4 +5,4 @@
 source ./libSrcCfgGenericToImport.sh
 
 ls -ld "$strCFGNewestSavePathIgnorable"
-ln -vsfT "$strCFGNewestSavePathIgnorable" _NewestSavegamePath #useful to see already opened and updated files easily on geany and meld
+ln -vsfT "$strCFGNewestSavePathIgnorable" _NewestSavegamePath.IgnoreOnBackup #useful to see already opened and updated files easily on geany and meld

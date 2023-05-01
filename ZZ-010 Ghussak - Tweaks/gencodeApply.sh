@@ -176,7 +176,7 @@ strCodeTokenEnd="_AUTOGENCODE_${strFinalToken}_END"
 declare -p strCodeTokenBegin strCodeTokenEnd
 strMsgDoNotModify="===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: ${strCallerScript} ====="
 
-strMsgErrTokenMiss="token missing, you must place it manually initially (each token must be in a single whole line)!"
+strMsgErrTokenMiss="token missing($strCodeTokenBegin $strCodeTokenEnd), you must place it manually initially (each token must be in a single whole line)!"
 strTokenHelperXml="\n<!-- $strCodeTokenBegin -->\n<!-- $strCodeTokenEnd -->"
 strTokenHelperTxt="$strCodeTokenBegin,\"\"\n$strCodeTokenEnd,\"\""
 #if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";CFGFUNCerrorExit "4587936459876";fi

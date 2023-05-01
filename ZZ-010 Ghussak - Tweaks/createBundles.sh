@@ -690,6 +690,7 @@ astr=(
   drugOhShitzDrops 1 # just in case the auto protection doesnt kick in..
   gunBotT2JunkTurret 1
   GSKNoteTeslaTeleporToSkyFirstTime 1
+  GSKTeslaTeleportUndergroundFreeAndSafeCall 1
   GSKTeslaTeleportToBiomeFreeAndSafeCall 1
   #GSKTeslaTeleportDirection 1
   #GSKTeslaTeleportToSky 1
