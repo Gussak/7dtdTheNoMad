@@ -4271,6 +4271,10 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKEquippedPoisonedAmmo" hidden="false" icon="7dtdPoison" icon_color="0,255,255" description_key="dkbuffGSKEquippedPoisonedAmmo">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
     <buff name="buffGSKPsyResistWork14" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
       <stack_type value="effect"/>
       <duration value="0"/>
@@ -4537,6 +4541,7 @@
       <stack_type value="ignore"/>
       <duration value="0.5"/>
       <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
@@ -4548,6 +4553,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <requirement name="CVarCompare" cvar=".bGSKMutFlash" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".bGSKMutFlash"/>
         <passive_effect name="WalkSpeed" operation="perc_add" value="10"/>
@@ -4559,12 +4565,14 @@
       <duration value="1.0"/>
       <update_rate value="0.05"/>
       <effect_group help="random teleport in front nearby TODO: does not work on mobs?">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKTeslaTele1NoMutant not working tho"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKMutantTeleport"/>
       </effect_group>
       <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
@@ -4587,13 +4595,15 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantMode" operation="set" value="randomint(1,2)"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="Mode:RadiationAura">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadiationAura">
           <requirement name="!HasBuff" buff="buffGSKRadiationAura"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="Mode:Miasma">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationAura">
           <requirement name="HasBuff" buff="buffGSKRadiationAura"/>
@@ -4602,13 +4612,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(75,150)" target="selfAOE" range="15" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(50,100)" target="selfAOE" range="30" target_tags="player"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="RandomChaos">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork41"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.45" target="selfAOE" range="5" target_tags="player"/>
         <!-- HELPGOOD: it is the sum for all distances on nearest -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="15" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="30" target_tags="player"/>
       </effect_group>
-      <effect_group help="timeout control">
+      <effect_group help="timeout reinit">
         <requirement name="CVarCompare" cvar=".iGSKMutantRabbits" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="set" value="10">
           <requirement name="!InBiome" biome="3" help="not at pineforest (all monsters thrive more difficultly)"/>
@@ -4617,7 +4628,7 @@
           <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="timeout update">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
@@ -5042,12 +5053,12 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKMutantRandomTeleAgressor" remove_on_death="true" hidden="true">
+    <buff name="buffGSKExternalForceTeleport" remove_on_death="true" hidden="true">
       <stack_type value="ignore"/>
       <duration value="10"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKMutantRandomTeleAgressor"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKExternalForceTeleport"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You hit a mutant and got teleported."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="add" value="1"/>
@@ -5057,7 +5068,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize">
           <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="2"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantRandomTeleAgressor">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKExternalForceTeleport">
           <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="3"/>
         </triggered_effect>
       </effect_group>
@@ -5069,7 +5080,6 @@
       <effect_group help="log">
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:ONUPDATE:buffGSKTeslaTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKExternalForceTeleport"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKEventFeedbackTeleportPhase" operation="set" value="0"/>
       </effect_group>
       <effect_group help="consume battery">
@@ -5649,7 +5659,6 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="0" help="resets to prepare for next"/>
       </effect_group>
       <effect_group help="finalize, rm this buff and prepare for next call of this buff">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
       </effect_group>
     </buff>
@@ -7943,6 +7952,7 @@
       <duration value="0"/>
       <update_rate value="1"/>
       <effect_group help="add miasma">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.1)">
           <requirement name="InBiome" biome="1"/>
           <!-- HELPGOOD: snow -->
@@ -8303,7 +8313,8 @@
       </effect_group>
       <effect_group help="mutant external force teleport on player">
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomTeleAgressor"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKExternalForceTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="set" value="0" help="consume"/>
       </effect_group>
       <effect_group help="hazard: weather apply and fix time">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather44">
@@ -8590,6 +8601,12 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPsyResSheltered" operation="set" value="@_sheltered"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPsyResSheltered" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPsyResSheltered" operation="divide" value="2" help="max shelter interference is at most 50% resist chance"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKPsyResSheltered"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="burn">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="1"/>

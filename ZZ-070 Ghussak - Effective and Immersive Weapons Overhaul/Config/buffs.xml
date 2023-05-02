@@ -510,6 +510,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_onFire">
           <requirement name="IsAlive"/>
         </triggered_effect>
+        <!-- HELPGOOD: TODO: there is nothing for npcs being in rain right? NPCs dont have onSelfWaterSubmerge ? -->
         <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffEWExtraBurning"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
           <requirement name="!EntityTagCompare" tags="bandit"/>
@@ -521,7 +522,7 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
-          <requirement name="!EntityTagCompare" tags="bandit,npc"/>
+          <requirement name="!EntityTagCompare" has_all_tags="false" tags="bandit,npc" help="others than bandits and npcs will have just a small chance"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="3"/>
         </triggered_effect>
       </effect_group>

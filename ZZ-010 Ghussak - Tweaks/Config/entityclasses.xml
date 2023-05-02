@@ -48,6 +48,7 @@
   <set xpath="/entity_classes/entity_class[contains(@name, 'npc')]/property[contains(@name, 'LootDropProb')]/@value">0.33</set>
   <set xpath="/entity_classes/entity_class[contains(@name, 'Raider') or starts-with(@name,'npcHarley')]/property[contains(@name, 'LootDropProb')]/@value">1.00</set>
   <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcHarley')]/property[contains(@name, 'LootDropProb')]/@value">1.00</set>
+  <!-- HELPGOOD: only npcHarley is set as bandit, must be set after 'npc' -->
   <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]">
     <property name="LootDropProb" value="0.50"/>
   </append>
@@ -57,6 +58,13 @@
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'animalZombie')]">
     <property name="TimeStayAfterDeath" value="7200"/>
+  </append>
+  <append xpath="/entity_classes">
+    <entity_class name="entContainerGSKGuardedTreasure" extends="DroppedLootContainer">
+      <property name="LootListAlive" value="buriedTreasure"/>
+      <property name="LootListOnDeath" value="buriedTreasure"/>
+      <property name="TimeStayAfterDeath" value="72000"/>
+    </entity_class>
   </append>
   <set xpath="/entity_classes/entity_class[contains(@name, 'EntityLootContainerRegular')]/property[contains(@name, 'Mesh')]/@value">#Entities/LootContainers?zpackBluePrefab.prefab</set>
   <set xpath="/entity_classes/entity_class[contains(@name, 'EntityLootContainerStrong')]/property[contains(@name, 'Mesh')]/@value">#Entities/LootContainers?zpackRedPrefab.prefab</set>

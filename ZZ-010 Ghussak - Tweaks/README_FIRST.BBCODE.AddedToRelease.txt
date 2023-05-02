@@ -12,7 +12,7 @@ Beware tho, you may initially spawn (1st game join) in a very difficult place; t
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.
 This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.  
-But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), drop a pull request on github for review, thx!  
+But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), you can create a pull request on github for review, thx!  
 .  
 ############################## MOD FEATURES OVERVIEW: ##############################   
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
@@ -148,6 +148,12 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - added some Notes about buffs. They have dynamic values that would be shown for buffs that have no icon and were bloating the detailed buffs list.
 - automatic turn on tesla mods if all checks are ok
 - reorganized notes/journal to be easyer to read
+- some beasts may byte and hold your leg for a few seconds preventing you from moving, others may even knock you down.
+- attacking mutant zombies may make them teleport you, more info on the docs
+- quests may have raiders waiting for the treasure to be found and ambush you
+- treasure maps may attract raiders when you open the treasure
+- poison will block enemies new abilities, including psyonic
+- psyonic resistance will help against mutant teleports
 .  
 --------- v0.9a -----------  
 - initial release.  

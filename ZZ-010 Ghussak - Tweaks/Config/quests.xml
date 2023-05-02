@@ -23,9 +23,14 @@
     <property name="difficulty" value="insane"/>
     <property name="difficulty_tier" value="1" help="!!!IMPORTANT!!! other than 1 prevents interacting with traders! DO NOT CHANGE THIS!"/>
   </append>
-  <insertAfter xpath="//objective[@type='FetchFromContainer' or @type='FetchFromTreasure']" help="the phase must match these objectives'. TODO: create a bash script to use the correct phase in case it may differ than 3 in some update">
-    <action type="SpawnGSEnemy" id="NPCBanditsBossHorde" value="1" phase="3" chance="0.10"/>
-    <action type="SpawnGSEnemy" id="NPCBanditsRangedHorde" value="1" phase="3"/>
-    <action type="SpawnGSEnemy" id="NPCBanditsMeleeHorde" value="1-3" phase="3"/>
+  <insertAfter xpath="//objective[@type='ReturnToNPC']" help="the phase must match the objective's phase. it shall happen after opening the chest and getting stuff to retrieve. Dont spawn too many as they also drop good loot. TODO: create a bash script to use the correct phase in case it may differ than 4 in some vanilla update or to fit other player's mods">
+    <action type="SpawnGSEnemy" id="NPCBanditsBossHorde" value="1" phase="4" chance="0.10"/>
+    <action type="SpawnGSEnemy" id="NPCBanditsRangedHorde" value="1" phase="4"/>
+    <action type="SpawnGSEnemy" id="NPCBanditsMeleeHorde" value="1-3" phase="4"/>
   </insertAfter>
+  <append xpath="/quests/quest[starts-with(@id,'treasure_')]/objective[@type='TreasureChest']">
+    <property name="complete_event" value="eventGSKSpawnBandits" help="TODO: why this doesnt work?"/>
+    <property name="block" value="blkGSKburiedTreasure"/>
+    <property name="alt_block" value="blkGSKburiedTreasure"/>
+  </append>
 </GhussakTweaks>
