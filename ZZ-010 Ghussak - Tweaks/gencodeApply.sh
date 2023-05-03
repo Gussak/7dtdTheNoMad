@@ -166,7 +166,7 @@ if [[ "${strFlToPatch}" =~ .*[.]txt$ ]];then
 elif [[ "${strFlToPatch}" =~ .*[.]xml$ ]];then
   strFileType=ftXML
 else
-  CFGFUNCerrorExit "Unsupported filetype.";
+  CFGFUNCerrorExit "Unsupported filetype for file: ${strFlToPatch}";
 fi
 
 #strCodeTokenBegin="${strToken}_BEGIN"
@@ -181,7 +181,7 @@ strTokenHelperXml="\n<!-- $strCodeTokenBegin -->\n<!-- $strCodeTokenEnd -->"
 strTokenHelperTxt="$strCodeTokenBegin,\"\"\n$strCodeTokenEnd,\"\""
 #if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni;then echo -e "ERROR: begin $strMsgErrTokenMiss${strTokenHelper}";CFGFUNCerrorExit "4587936459876";fi
 #if ! egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni;then echo -e "ERROR: end   $strMsgErrTokenMiss${strTokenHelper}"  ;CFGFUNCerrorExit "89345298756";fi
-if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd" "$strFlToPatch" -ni;then
+while ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd" "$strFlToPatch" -ni;do
   echo "ERROR: $strMsgErrTokenMiss"
   if [[ "${strFileType}" == ftTXT ]];then
     echo -e "$strTokenHelperTxt"
@@ -189,8 +189,10 @@ if ! egrep "$strCodeTokenBegin" "$strFlToPatch" -ni || ! egrep "$strCodeTokenEnd
     echo -e "$strTokenHelperXml"
   fi
   echo
-  CFGFUNCerrorExit "$strMsgErrTokenMiss"
-fi
+  if ! CFGFUNCprompt -q "did you paste the required tokens on the file: ${strFlToPatch}";then
+    CFGFUNCerrorExit "$strMsgErrTokenMiss"
+  fi
+done
 if((`egrep "$strCodeTokenBegin" "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenBegin";fi
 if((`egrep "$strCodeTokenEnd"   "$strFlToPatch" -ni |wc -l`!=1));then CFGFUNCerrorExit "DUPLICATED: $strCodeTokenEnd";fi
 

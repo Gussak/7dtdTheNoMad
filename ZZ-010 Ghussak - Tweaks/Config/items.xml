@@ -1095,15 +1095,18 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDogCompanion"/>
       </effect_group>
     </item>
-    <item name="GSKspawnGuardedTreasure" help="no crafting. stack must be ONLY 1 to prevent buried treasure having more than one">
+    <item name="GSKspawnGuardedTreasure" help="no crafting">
       <property name="DescriptionKey" value="dkGSKspawnGuardedTreasure"/>
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="Candrop" value="false"/>
       <property name="CustomIcon" value="cntStorageGeneric"/>
       <property name="CustomIconTint" value="180,150,128"/>
-      <property name="Stacknumber" value="1" help="KEEP AS 1!!!"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0">
+        <requirement name="NotHasBuff" buff="buffGSKSpawnTreasure1"/>
+      </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnTreasure"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasure1"/>
       </effect_group>
     </item>
   </append>
@@ -5408,6 +5411,10 @@
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->
   <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
+  <!-- HELPGOOD: other things that had no Stacknumber but should -->
+  <append xpath="/items/item[@name='meleeToolTorch']">
+    <property name="Stacknumber" value="65535"/>
+  </append>
   <append xpath="/items/item[starts-with(@name,'gun') or starts-with(@name,'melee')]" help="mutant zombies may teleport who hits them">
     <effect_group tiered="false">
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">

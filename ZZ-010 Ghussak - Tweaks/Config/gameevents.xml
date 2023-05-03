@@ -128,15 +128,17 @@
         <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
         <property name="value" value="10" help="the phase"/>
       </action>
+      <!-- HELPGOOD: ragdoll here is not good as it just creates a fall damage prevention (ragdoll does not take fall damage right?)
       <action class="Ragdoll">
-        <property name="phase" value="20"/>
-        <property name="stun_duration" value="0.5"/>
+        <property name="phase" value="20" />
+        <property name="stun_duration" value="0.5" />
       </action>
       <action class="SetCVar">
-        <property name="phase" value="20"/>
-        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
+        <property name="phase" value="20" />
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase" />
         <property name="value" value="20" help="the phase"/>
       </action>
+-->
       <action class="AddEntitiesToGroup">
         <property name="phase" value="30"/>
         <property name="group_name" value="gnHostiles"/>
@@ -1765,8 +1767,23 @@
       <action class="SpawnEntity">
         <!-- HELPGOOD:codegen: egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |sort -u |sed -r -e 's@<entity_class name="(.*)@\1@' |tr '\n' ',' -->
         <property name="entity_names" value="npcHarleyAK47,npcHarleyAShotgun,npcHarleyAxe,npcHarleyBat,npcHarleyBMEmptyHand,npcHarleyClub,npcHarleyDPistol,npcHarleyEmptyHand,npcHarleyHRifle,npcHarleyKnife,npcHarleyLBow,npcHarleyM60,npcHarleyMachete,npcHarleyPipeMG,npcHarleyPipePistol,npcHarleyPipeRifle,npcHarleyPipeShotgun,npcHarleyPistol,npcHarleyPShotgun,npcHarleyRocketL,npcHarleySMG,npcHarleySpear,npcHarleySRifle,npcHarleyTRifle,npcHarleyVomitHand,npcHarleyXBow,RaiderBeatzAK47,RaiderBeatzBat,RaiderBeatzClub,RaiderBeatzDPistol,RaiderBeatzSMG,RaiderBettyAxe,RaiderBettyBat,RaiderBettyClub,RaiderBettyDPistol,RaiderBettyKnife,RaiderBettyMachete,RaiderBettySMG,RaiderBettyTRifle,RaiderGinaAxe,RaiderGinaBat,RaiderGinaClub,RaiderGinaDPistol,RaiderGinaKnife,RaiderGinaMachete,RaiderGinaSMG,RaiderGinaTRifle,RaiderGypsyAxe,RaiderGypsyBat,RaiderGypsyClub,RaiderGypsyDPistol,RaiderGypsyKnife,RaiderGypsyMachete,RaiderGypsySMG,RaiderGypsyTRifle,RaiderHedyAxe,RaiderHedyBat,RaiderHedyClub,RaiderHedyDPistol,RaiderHedyKnife,RaiderHedyMachete,RaiderHedySMG,RaiderHedyTRifle,RaiderJayneAxe,RaiderJayneBat,RaiderJayneClub,RaiderJayneDPistol,RaiderJayneKnife,RaiderJayneMachete,RaiderJayneSMG,RaiderJayneTRifle,RaiderMercAK47,RaiderMercClub,RaiderMercDPistol,RaiderMercKnife,RaiderMercMachete,RaiderMercTRifle,RaiderMotoAK47,RaiderMotoAxe,RaiderMotoBat,RaiderMotoDPistol,RaiderMotoTRifle,RaiderPestAxe,RaiderPestBat,RaiderPestClub,RaiderPestDPistol,RaiderPestKnife,RaiderPestMachete,RaiderPestPipeMG,RaiderPestSMG,RaiderSluggerAK47,RaiderSluggerAxe,RaiderSluggerBat,RaiderSluggerM60,RaiderSluggerRocketL"/>
-        <property name="spawn_count" value="3"/>
+        <property name="spawn_count" value="3" param1="iCount"/>
       </action>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnBanditsx1" template="eventGSKSpawnBandits">
+      <variable name="iCount" value="1"/>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnBanditsx2" template="eventGSKSpawnBandits">
+      <variable name="iCount" value="2"/>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnBanditsx3" template="eventGSKSpawnBandits">
+      <variable name="iCount" value="3"/>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnBanditsx4" template="eventGSKSpawnBandits">
+      <variable name="iCount" value="4"/>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnBanditsx5" template="eventGSKSpawnBandits">
+      <variable name="iCount" value="5"/>
     </action_sequence>
     <action_sequence name="eventGSKSpawnTreasure">
       <action class="SpawnContainer">
@@ -1776,6 +1793,12 @@
         <property name="spawn_from_position" value="true"/>
         <property name="min_distance" value="1"/>
         <property name="max_distance" value="1"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnTreasureAndRaiders">
+      <action class="CallGameEvent">
+        <property name="phase" value="10"/>
+        <property name="game_events" value="eventGSKSpawnTreasure"/>
       </action>
       <action class="CallGameEvent">
         <property name="phase" value="20"/>

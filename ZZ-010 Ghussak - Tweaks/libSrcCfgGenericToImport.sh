@@ -322,7 +322,8 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   export strCFGGameFolder
   export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
   
-  : ${strCFGGeneratedWorldsFolder:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
+  #help setting WINEPREFIX manually may help if you are using cygwin
+  : ${strCFGGeneratedWorldsFolder:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
   export strCFGGeneratedWorldsFolder
   export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
   
@@ -339,7 +340,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   
-  : ${strCFGSavesPathIgnorable:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGSavesPathIgnorable:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
   : ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #help
   : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}/ConfigsDump/"}&&: #help
   export strCFGSavesPathIgnorable

@@ -38,6 +38,11 @@ echo " also, some buffs may completely fail to kick in, so create a debug item t
 set -eu
 trap 'echo ERROR nLnErr=$nLnErr' ERR
 
+bDecrement=false;
+if [[ "${1-}" == --dec ]];then #help decrement instead
+  bDecrement=true
+fi
+
 #HELP to get most of them: egrep 'buffGSKCalcPercRound[^"]*"' * -irI --include="*.xml" -oh |sort -u |tr -d '"' |sed -r 's@.*@  "&"@'
 
 astrBuffBNList=(
@@ -81,10 +86,12 @@ astrBuffBNList=(
   "buffGSKRadResistWork"
   "buffGSKShowWaterBkp"
   "buffGSKSnakePoisonWork"
+  "buffGSKSpawnTreasure"
   "buffGSKTeslaExplodeExtra"
   "buffGSKTeslaOverchargeDmg"
   "buffGSKWornArmor"
   "buffHiredNPCdamageArmor"
+  "buffHiredNPCnoFallDamage"
   "buffLeaderCollectExpDebitFromNPC"
   "buffLeaderLimitsHiredNPCsAmount"
   "buffNightVisionUsesBatteries"
@@ -105,6 +112,7 @@ function FUNCgetCurrentIndex() {
 iErrorCount=0
 strErr=""
 #set -x
+iVal=1;if $bDecrement;then iVal=-1;fi
 for strBuffBN in "${astrBuffBNList[@]}";do
   iId="$(FUNCgetCurrentIndex "${strBuffBN}")"
   declare -p iId strBuffBN
@@ -118,7 +126,9 @@ for strBuffBN in "${astrBuffBNList[@]}";do
   declare -p astrFlList |tr '[' '\n'
   for strFl in "${astrFlList[@]}";do
     declare -p strFl
-    sed -i.bkp -r "s@(${strBuffBN})${iId}@\1$((iId+1))@" "$strFl"
+    iIdNew=$((iId+iVal))&&:
+    if((iIdNew<1));then iIdNew=1;fi
+    sed -i.bkp -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "$strFl"
     if colordiff "${strFl}.bkp" "${strFl}";then
       strErr+="ERROR: should have patched for $strBuffBN"
       echo "$strErr"
