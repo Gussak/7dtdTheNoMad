@@ -155,6 +155,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - poison will block enemies new abilities, including psyonic
 - psyonic resistance will help against mutant teleports
 - some chance to ragdoll player on fallimpact, higher chance if leg is hurt
+- improved rwgImprovePOIs.sh to place tall buildings only on wasteland and to remove towns that are not on the wasteland
 .  
 --------- v0.9a -----------  
 - initial release.  

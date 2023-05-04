@@ -15,6 +15,20 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfFallImpact" action="LogMessage" message="GSK:HiredNPCFallImpact"/>
+        <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:HiredNPCTeleported"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
+          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
+          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="Leader"/>
+      </effect_group>
     </buff>
     <buff name="_buffHiredNPCnoFallDamage_CAUSING_ERRORS_ON_LOG" hidden="true" remove_on_death="false" help="ERRORING:ProbablyAtSection=HPUP: INF MinEventLogMessage: GSK:START:buffHiredNPCnoFallDamage4;ArgumentNullException: Value cannot be null.;Parameter name: key;  at System.Collections.Generic.Dictionary2 TKey,TValue .FindEntry;at System.Collections.Generic.Dictionary2 TKey,TValue .TryGetValue;at EntityBuffs.GetCustomVar">
       <stack_type value="ignore"/>

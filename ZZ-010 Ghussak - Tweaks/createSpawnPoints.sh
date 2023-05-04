@@ -162,23 +162,23 @@ function FUNCisNormalZone() {
   return 1
 }
 
-strBiomeFileInfo="`identify "${strCFGGeneratedWorldTNMFolder}/biomes.png" |egrep " [0-9]*x[0-9]* " -o |tr -d ' ' |tr 'x' ' '`";
-nBiomesW="`echo "$strBiomeFileInfo" |cut -d' ' -f1`";
-nBiomesH="`echo "$strBiomeFileInfo" |cut -d' ' -f2`";
-declare -p nBiomesW nBiomesH
+#strBiomeFileInfo="`identify "${strCFGGeneratedWorldTNMFolder}/biomes.png" |egrep " [0-9]*x[0-9]* " -o |tr -d ' ' |tr 'x' ' '`";
+#nBiomesW="`echo "$strBiomeFileInfo" |cut -d' ' -f1`";
+#nBiomesH="`echo "$strBiomeFileInfo" |cut -d' ' -f2`";
+#declare -p nBiomesW nBiomesH
 
 iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleSpawnBEGIN
 iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
 iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
-declare -A astrPosVsBiomeColor=()
 
 iUnderSimpleIndex=0
 
 strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
-#if [[ -f "${strFlPosVsBiomeColorCACHE}" ]];then source "${strFlPosVsBiomeColorCACHE}";fi
+declare -A astrPosVsBiomeColor=()
 source "${strFlPosVsBiomeColorCACHE}"&&:
+#if [[ -f "${strFlPosVsBiomeColorCACHE}" ]];then source "${strFlPosVsBiomeColorCACHE}";fi
 
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
@@ -241,24 +241,25 @@ for str in "${astrPrefabsList[@]}";do
         strSpawnPos="$iXSP,$iY,$iZSP"
         strPrefabPos="$iXSP,$iYOrig,$iZSP"
         
-        strColorAtBiomeFile="${astrPosVsBiomeColor[${strSpawnPos}]-}"&&:
-        if [[ -z "${strColorAtBiomeFile}" ]];then
-          strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)-iZSP))"'}]' info:-`" #the center of the map is X,Z=0,0. North from center is Z positive in game, but for imagemagick convert, it is inverted because the topleft image picture is the 0,0 origin
-        fi
-        if [[ "$strColorAtBiomeFile" == "FFFFFFFF" ]];then 
-          strBiome="Snow";iBiome=1
-        elif [[ "$strColorAtBiomeFile" == "004000FF" ]];then 
-          strBiome="PineForest";iBiome=3
-        elif [[ "$strColorAtBiomeFile" == "FFE477FF" ]];then 
-          strBiome="Desert";iBiome=5
-        elif [[ "$strColorAtBiomeFile" == "FFA800FF" ]];then 
-          strBiome="Wasteland";iBiome=8
-        elif [[ "$strColorAtBiomeFile" == "does not exist on rgw generated worlds right?" ]];then 
-          strBiome="BurntForest";iBiome=9
-        else
-          CFGFUNCerrorExit "not implemented biome for ${strColorAtBiomeFile}"
-        fi
-        astrPosVsBiomeColor["${strSpawnPos}"]="${strColorAtBiomeFile}"
+        #strColorAtBiomeFile="${astrPosVsBiomeColor[${strSpawnPos}]-}"&&:
+        #if [[ -z "${strColorAtBiomeFile}" ]];then
+          #strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)-iZSP))"'}]' info:-`" #the center of the map is X,Z=0,0. North from center is Z positive in game, but for imagemagick convert, it is inverted because the topleft image picture is the 0,0 origin
+        #fi
+        #if [[ "$strColorAtBiomeFile" == "FFFFFFFF" ]];then 
+          #strBiome="Snow";iBiome=1
+        #elif [[ "$strColorAtBiomeFile" == "004000FF" ]];then 
+          #strBiome="PineForest";iBiome=3
+        #elif [[ "$strColorAtBiomeFile" == "FFE477FF" ]];then 
+          #strBiome="Desert";iBiome=5
+        #elif [[ "$strColorAtBiomeFile" == "FFA800FF" ]];then 
+          #strBiome="Wasteland";iBiome=8
+        #elif [[ "$strColorAtBiomeFile" == "does not exist on rgw generated worlds right?" ]];then 
+          #strBiome="BurntForest";iBiome=9
+        #else
+          #CFGFUNCerrorExit "not implemented biome for ${strColorAtBiomeFile}"
+        #fi
+        #astrPosVsBiomeColor["${strSpawnPos}"]="${strColorAtBiomeFile}"
+        eval `./getBiomeData.sh "${strSpawnPos}"` # strColorAtBiomeFile strBiome iBiome
         
         strTeleport="prefabPosCmd: teleport $iX $iYOrig $iZ"
         strHelp="index=${iTeleportIndex};prefab=${strNm};biome=${strColorAtBiomeFile},${strBiome},${iBiome};spawnPos=${strSpawnPos};${strTeleport}"
@@ -312,9 +313,9 @@ for str in "${astrPrefabsList[@]}";do
   #fi
 done
 
-echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColorCACHE"
-echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColorCACHE"
-declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColorCACHE" #TODO sha1sum the biome file and if it changes, recreate the array
+#echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColorCACHE"
+#echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColorCACHE"
+#declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColorCACHE" #TODO sha1sum the biome file and if it changes, recreate the array
 
 # this file can be sorted because each entry is one line!
 strSorted="`cat "${strFlGenSpa}${strGenTmpSuffix}" |sort`"
