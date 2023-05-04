@@ -581,6 +581,8 @@ egrep "decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"]
 
 CFGFUNCinfo "SUCCESS! now run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' at the game folder (outside this modlet folder)"
 
+CFGFUNCinfo "After installing the prefabs file, run ./createSpawnPoints.sh to update the spawn points file"
+
 exit
 
 

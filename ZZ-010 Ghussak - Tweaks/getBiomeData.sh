@@ -91,7 +91,7 @@ if [[ -z "${strColorAtBiomeFile}" ]];then
   ((nNewRequested++))&&:
 fi
 
-FUNCtranslateColor
+FUNCtranslateColor "$strColorAtBiomeFile"
 
 if((nNewRequested>0)) || $bNeedsUpdate;then
   astrPosVsBiomeColor["${strPosV3}"]="${strColorAtBiomeFile}"

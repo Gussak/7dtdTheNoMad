@@ -64,7 +64,7 @@ CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 CFGFUNCtrash "${strFlGenBuf}TeleSpawnLog${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}"&&:
-#CFGFUNCtrash "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"&&:
+CFGFUNCtrash "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"&&:
 
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
@@ -175,10 +175,17 @@ iTeleportIndexFirst=-1
 
 iUnderSimpleIndex=0
 
-strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
-declare -A astrPosVsBiomeColor=()
-source "${strFlPosVsBiomeColorCACHE}"&&:
+#strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated
+#declare -A astrPosVsBiomeColor=()
+#source "${strFlPosVsBiomeColorCACHE}"&&:
 #if [[ -f "${strFlPosVsBiomeColorCACHE}" ]];then source "${strFlPosVsBiomeColorCACHE}";fi
+
+if [[ ! -f "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh" ]];then
+  if ! CFGFUNCprompt -q "it is better if you run ./rwgImprovePOIs.sh first, continue anyway?";then
+    exit 0
+  fi
+fi
+source "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh"&&:
 
 for str in "${astrPrefabsList[@]}";do
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
@@ -259,7 +266,13 @@ for str in "${astrPrefabsList[@]}";do
           #CFGFUNCerrorExit "not implemented biome for ${strColorAtBiomeFile}"
         #fi
         #astrPosVsBiomeColor["${strSpawnPos}"]="${strColorAtBiomeFile}"
-        eval `./getBiomeData.sh "${strSpawnPos}"` # strColorAtBiomeFile strBiome iBiome
+        if [[ -n "${astrPosVsBiomeColor[${strSpawnPos}]-}" ]];then
+          # faster
+          eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["${strSpawnPos}"]}`" # iBiome strBiome strColorAtBiomeFile
+        else
+          # much slower
+          eval "`./getBiomeData.sh "${strSpawnPos}"`" # strColorAtBiomeFile strBiome iBiome
+        fi
         
         strTeleport="prefabPosCmd: teleport $iX $iYOrig $iZ"
         strHelp="index=${iTeleportIndex};prefab=${strNm};biome=${strColorAtBiomeFile},${strBiome},${iBiome};spawnPos=${strSpawnPos};${strTeleport}"
