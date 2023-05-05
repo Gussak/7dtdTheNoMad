@@ -5433,6 +5433,12 @@
       <passive_effect name="ProjectileStickChance" operation="perc_set" value="0.75" help="to keep perkRangersArrowRecovery useful"/>
     </effect_group>
   </append>
+  <append xpath="/items/item[starts-with(@name,'gun')]" help="this is meant for a melee build with many hired NPCs using ranged weapons">
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="1"/>
+    </effect_group>
+  </append>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" tags="animalSpider01"/>

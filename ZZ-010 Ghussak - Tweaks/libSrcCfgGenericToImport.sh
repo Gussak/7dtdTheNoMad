@@ -33,6 +33,12 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+#if [[ "$1" == --aliases ]];then
+  #echo "
+    #alias CFGFUNCinfoA='CFGFUNCinfo -l \$LINENO'
+  #"
+  #exit
+#fi
 
 function CFGFUNCcalc() { #help [-s <scale(default=2)>] <lstrCalcExpression>
   local liScale=2
@@ -143,6 +149,52 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
   return 0
 };export -f CFGFUNCmeld
 
+function CFGFUNCdbg() { echo "$@" >&2; };export -f CFGFUNCdbg; #export CFGdbg='echo "(stack: ${FUNCNAME[@]-})Ln:${LINENO},Ret=$?" >&2;CFGFUNCdbg '
+
+function CFGFUNCxmlGetLinePropertyValue(){ #help <lstrLine> <lstrXmlPathAndPropID>
+  local lstrLine="$1";shift
+  local lstrXmlPathAndPropID="$1";shift
+  #$CFGdbg "$lstrXmlPathAndPropID:$lstrLine"
+  local lstrVal="`echo "$lstrLine" |xmlstarlet sel -t -v "${lstrXmlPathAndPropID}"`"&&:;local lnRet=$?
+  #echo "(stack: ${FUNCNAME[@]-})Ln:${LINENO},Ret=$?,$lstrXmlPathAndPropID:$lstrVal:$lstrLine" >&2
+  if [[ -z "$lstrVal" ]];then
+    CFGFUNCinfo "WARNING: xmlstarlet returned empty value for lstrXmlPathAndPropID='$lstrXmlPathAndPropID', lstrLine='$lstrLine'"
+  fi
+  if((lnRet>0));then
+    CFGFUNCerrorExit "xmlstarlet errored. lstrXmlPathAndPropID='$lstrXmlPathAndPropID', lstrLine='$lstrLine'"
+    #CFGFUNCinfo "WARNING: xmlstarlet returned empty value for lstrXmlPathAndPropID='$lstrXmlPathAndPropID', lstrLine='$lstrLine'"
+    #if [[ -z "$lstrVal" ]];then
+      #CFGFUNCinfo "WARNING: xmlstarlet returned empty value for lstrXmlPathAndPropID='$lstrXmlPathAndPropID', lstrLine='$lstrLine'"
+      #return 0
+    #else
+      #CFGFUNCerrorExit "xmlstarlet errored while returning a not empty value. lstrXmlPathAndPropID='$lstrXmlPathAndPropID', lstrLine='$lstrLine'"
+    #fi
+  fi
+  #$CFGdbg "$lstrXmlPathAndPropID:$lstrLine"
+  #echo "(stack: ${FUNCNAME[@]-})Ln:${LINENO},Ret=$?,$lstrXmlPathAndPropID:$lstrLine" >&2
+  #echo "$lstrLine" |sed -r "s@.* ${lstrPropID}=\"([^\"]*)\".*@\1@"
+  #echo "$lstrLine" |sed -r 's@.* '"${lstrPropID}"'="([^"]*)".*@\1@'
+  echo "$lstrVal" # OUTPUT
+};export -f CFGFUNCxmlGetLinePropertyValue
+function CFGFUNCxmlSetLinePropertyValue(){ #help <lstrLine> <lstrXmlPathAndPropID> <lstrValue>
+  local lstrLine="$1";shift
+  local lstrXmlPathAndPropID="$1";shift
+  local lstrValue="$1";shift
+  echo "$lstrLine" |xmlstarlet ed -P -L -u "${lstrXmlPathAndPropID}" -v "${lstrValue}" |tail -n 1
+  #echo "$lstrLine" |sed -r "s@(.* ${lstrPropID}=\")[^\"]*(\".*)@\1${lstrValue}\2@"
+  #echo "$lstrLine" |sed -r 's@(.* '"${lstrPropID}"'=")[^"]*(".*)@\1'"${lstrValue}"'\2@'
+};export -f CFGFUNCxmlSetLinePropertyValue
+function CFGFUNCxmlAppendLinePropertyValue(){ #help <lstrLine> <lstrXmlPathAndPropID> <lstrValue> only for text
+  local lstrLine="$1";shift
+  local lstrXmlPathAndPropID="$1";shift
+  local lstrValue="$1";shift
+  #echo "$LINENO:RET=$?" >&2
+  local lstrValueOld="`CFGFUNCxmlGetLinePropertyValue "$lstrLine" "$lstrXmlPathAndPropID"`"
+  #echo "$LINENO:RET=$?" >&2
+  CFGFUNCxmlSetLinePropertyValue "$lstrLine" "$lstrXmlPathAndPropID" "${lstrValueOld};${lstrValue}"
+  #echo "$LINENO:RET=$?" >&2
+};export -f CFGFUNCxmlAppendLinePropertyValue
+
 #export iCFGFUNCerrorExit_Count=0
 function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to grant errors happening in subshells will be detected and help stop the script
   #if((iCFGFUNCerrorExit_Count>0));then
@@ -175,9 +227,10 @@ function CFGFUNCDevMeErrorExit() { #helpf <msg>
 function CFGFUNCDryRunMsg() { 
   if $bCFGDryRun;then echo "<DryRun>";fi
 };export -f CFGFUNCDryRunMsg
-function CFGFUNCexec() { #helpf [--noErrorExit] <<acmd>>
+function CFGFUNCexec() { #helpf [--noErrorExit] [-m <lstrComment>] <<acmd>>
   local lbAllowErrorExit=true;if [[ "$1" == --noErrorExit ]];then shift;lbAllowErrorExit=false;fi
-  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $*"
+  local lstrComment="";if [[ "$1" == -m ]];then shift;lstrComment="#COMMENT: $1";shift;fi
+  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $* ${lstrComment}"
   if ! $bCFGDryRun;then
     "$@"&&:;local lnRet=$?
     if((lnRet>0));then
@@ -206,6 +259,7 @@ function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
   
   CFGFUNCcleanEchoPRIVATE " ${lstrMode} ${lstrMsg} ${lstrHitAKey} ${lstrQ}"
   if $bCFGInteractive;then
+    while read -n 1 -t 0.1 str;do echo -n .;done;echo #cleans any buffered key to avoid messing up the interaction
     read -p '.' -t $fCFGPromptWait -n 1 strResp >&2 &&:
   else
     strResp=y
@@ -222,9 +276,10 @@ function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
   
   return 0
 };export -f CFGFUNCprompt
-function CFGFUNCinfo() { #helpf <verboseMsg>
+function CFGFUNCinfo() { #helpf [-l <lnLine>] <verboseMsg>
+  local lstrLine="";if [[ "$1" == -l ]];then shift;lstrLine=":Ln${1}";shift;fi
   #[shortMsg]
-  local lstrVerboseMsg=" [INFO] $* (Caller ${FUNCNAME[1]})";shift
+  local lstrVerboseMsg=" [INFO] $* (Caller ${FUNCNAME[1]}${lstrLine})";shift
   #local lstrShortMsg="${1-}";shift&&:
   
   #local lstrMsg=" [INFO] $lstrShortMsg"
@@ -311,9 +366,16 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
 
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
+  export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
+  shopt -s expand_aliases
   
   : ${bCFGDryRun:=false} #help just show what would be done
   export bCFGDryRun
+  
+  mkdir -vp _log _tmp
+  export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
+  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.LastRunErrors.log"
+  #declare -p strCFGScriptLog
   
   : ${bCFGDbg:=false} #help to debug these scripts
   export bCFGDbg
@@ -334,11 +396,9 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
   
   export bCFGHelpMode=false
-  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;read -p " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
-  trap 'echo " (CFG)TRAP: Ctrl+c pressed...";exit' INT
+  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
-  
-  export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   
   : ${strCFGSavesPathIgnorable:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
   : ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #help
@@ -349,12 +409,6 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   if [[ ! -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
     if ! CFGFUNCprompt -q "last savegame path not found, this may create undesired (limited, invalid, incomplete, non updated) results, continue anyway?";then exit 1;fi
   fi
-  
-  mkdir -vp _log _tmp
-  export strCFGScriptLog="`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
-  export strCFGErrorLog="`dirname "${0}"`/_tmp/`basename "${0}"`.LastRunErrors.log"
-  CFGFUNCtrash "${strCFGErrorLog}"
-  #declare -p strCFGScriptLog
   
   : ${strModName:="[NoMad]"} #as short as possible
   export strModName
@@ -415,6 +469,8 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   if [[ -n "$strTmp345987623" ]];then
     echo "$strTmp345987623" >>"$strCfgFlDBToImportOnChildShellFunctions"
   fi
+  
+  CFGFUNCtrash "${strCFGErrorLog}"
   
   #export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
 #fi
