@@ -48,6 +48,7 @@ function FUNCtranslateColor() { #<strColorAtBiomeFile>
   fi
   
   declare -p iBiome strBiome strColorAtBiomeFile #help this return result is meant to be eval
+  echo "declare -g iBiome strBiome strColorAtBiomeFile"
 }
 if [[ "$1" == -t ]];then #help <strColorAtBiomeFile> just translate color
   shift

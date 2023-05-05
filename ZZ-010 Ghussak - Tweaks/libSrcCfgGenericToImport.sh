@@ -54,11 +54,22 @@ function CFGFUNCcleanMsgPRIVATE() {
     -e "s@${strCFGGeneratedWorldTNMFolderRegex}@(RwgTNMDir)@g"
 };export -f CFGFUNCcleanMsgPRIVATE
 function CFGFUNCcleanEchoPRIVATE() {
-  local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG) $*"`"
+  local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG:${SECONDS}s) $*"`"
   CFGFUNCechoLogPRIVATE "${lstr}"
   #echo "$lstr" >&2
   #echo "$lstr" >>"$strCFGScriptLog"
 };export -f CFGFUNCcleanEchoPRIVATE
+
+function CFGFUNCbiomeData() { #helpf <lstrXYZ>
+  local lstrXYZ="$1"
+  if [[ -n "${astrPosVsBiomeColor[${lstrXYZ}]-}" ]];then      # faster
+    eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["${lstrXYZ}"]}`" # iBiome strBiome strColorAtBiomeFile
+  else      # much slower
+    eval "`./getBiomeData.sh "${lstrXYZ}"`" # strColorAtBiomeFile strBiome iBiome
+  fi
+  #declare -p iBiome strBiome strColorAtBiomeFile
+  echo "iBiome=$iBiome;strBiome='$strBiome';strColorAtBiomeFile='$strColorAtBiomeFile'" #OUTPUT
+};export -f CFGFUNCbiomeData
 
 function CFGFUNCshowHelp() { 
   local lstrMatch="help";if [[ "${1-}" == --func ]];then shift;lstrMatch="helpf";fi
@@ -115,10 +126,10 @@ function CFGFUNCechoLogPRIVATE() {
   CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
   if [[ "$1" == "--error" ]];then
     shift
-    echo "$* (Stack: ${FUNCNAME[@]})" >>"$strCFGErrorLog"
+    echo "$* (Stack: ${FUNCNAME[@]-})" >>"$strCFGErrorLog"
   fi
   echo "$*" >&2
-  echo "$* (Stack: ${FUNCNAME[@]})" >>"$strCFGScriptLog"
+  echo "$* (Stack: ${FUNCNAME[@]-})" >>"$strCFGScriptLog"
 };export -f CFGFUNCechoLogPRIVATE
 function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
   local lbSIGINTonMeld=false
@@ -202,8 +213,8 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
     echo "====================== ERROR LOG ======================"
     cat "${strCFGErrorLog}"
     echo "====================== ERROR LOG ======================"
-    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (Stack: ${FUNCNAME[@]})" >&2
-    echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (Stack: ${FUNCNAME[@]})"
+    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (Stack: ${FUNCNAME[@]-})" >&2
+    echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (Stack: ${FUNCNAME[@]-})"
     read -n 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then trash "${strCFGErrorLog}";return 0;fi
     #read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
     #trash "${strCFGErrorLog}"
@@ -215,12 +226,12 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
 function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
   if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "now $FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
-  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]})" 
+  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]-})" 
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]})"
+  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]-})"
   exit 1
 };export -f CFGFUNCDevMeErrorExit
 
@@ -230,7 +241,7 @@ function CFGFUNCDryRunMsg() {
 function CFGFUNCexec() { #helpf [--noErrorExit] [-m <lstrComment>] <<acmd>>
   local lbAllowErrorExit=true;if [[ "$1" == --noErrorExit ]];then shift;lbAllowErrorExit=false;fi
   local lstrComment="";if [[ "$1" == -m ]];then shift;lstrComment="#COMMENT: $1";shift;fi
-  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $* ${lstrComment}"
+  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $* ${lstrComment} (Stack: ${FUNCNAME[@]-})"
   if ! $bCFGDryRun;then
     "$@"&&:;local lnRet=$?
     if((lnRet>0));then
@@ -366,6 +377,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
 
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
+  SECONDS=0
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   shopt -s expand_aliases
   
@@ -396,7 +408,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
   
   export bCFGHelpMode=false
-  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]}) Hit a key to continue" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit a key to continue" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   
