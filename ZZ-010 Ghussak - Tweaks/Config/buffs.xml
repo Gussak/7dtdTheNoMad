@@ -224,7 +224,7 @@
           <requirement name="CVarCompare" cvar="bGSKDebug" operation="GTE" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="bGSKDebug"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaLog"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloodLossLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotTime"/>
@@ -1520,7 +1520,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaDegrade" target="self"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnDegrade" target="self"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectHLON" target="self">
           <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
         </triggered_effect>
@@ -1533,10 +1533,10 @@
       </effect_group>
       <effect_group name="other very useful info">
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaLog"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
     </buff>
@@ -1659,13 +1659,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="multiply" value="100"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaOverchargeDmg62" hidden="false" remove_on_death="true" icon="ui_game_symbol_electric_power" icon_blink="true" description_key="dkbuffGSKTeslaOverchargeDmg" icon_color="200,0,0">
+    <buff name="buffGSKElctrnOverchargeDmg62" hidden="false" remove_on_death="true" icon="ui_game_symbol_electric_power" icon_blink="true" description_key="dkbuffGSKElctrnOverchargeDmg" icon_color="200,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3.0"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaOverchargeDmg62"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnOverchargeDmg62"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKBattMaxChargeCurrent" operation="GT" value="0"/>
@@ -1677,29 +1677,29 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.GSKtmp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyHL"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyWL"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyNV"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyHL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyWL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyNV"/>
         <!-- HELPGOOD: all least the battery and things that have no standby consumption
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTA"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTB"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTR"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTH"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTA"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTB"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTR"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTH"/>
 -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@iGSKTeslaHeroMode"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTS"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkTeslaModsSum" operation="add" value="@bGSKEnergyTT"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@iGSKElctrnHeroMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTS"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iChkElctrnModsSum" operation="add" value="@bGSKEnergyTT"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffShocked">
-          <requirement name="CVarCompare" cvar="iChkTeslaModsSum" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iChkElctrnModsSum" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipBuffGSKTeslaOverchargeDmg">
-          <requirement name="CVarCompare" cvar="iChkTeslaModsSum" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipBuffGSKElctrnOverchargeDmg">
+          <requirement name="CVarCompare" cvar="iChkElctrnModsSum" operation="GTE" value="1"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaDegrade" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnDegrade" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.0"/>
@@ -1743,7 +1743,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
-          <requirement name="HasBuff" buff="buffGSKTeslaHero"/>
+          <requirement name="HasBuff" buff="buffGSKElctrnHero"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="1.0"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
         </triggered_effect>
@@ -1856,7 +1856,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="HasBuff" buff="buffGSKTeslaHero"/>
+        <requirement name="HasBuff" buff="buffGSKElctrnHero"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercAddTH" operation="set" value="@fGSKDmgPercTH"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercAddTH" operation="add" value="1.0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercSubTH" operation="set" value="1.0"/>
@@ -2069,7 +2069,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="HasBuff" buff="buffGSKTeslaHero"/>
+        <requirement name="HasBuff" buff="buffGSKElctrnHero"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="0"/>
         </triggered_effect>
@@ -2111,7 +2111,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaLog"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattAutoUnglitchChance" operation="set" value="0"/>
@@ -2122,7 +2122,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaLog" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnLog" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
@@ -2253,7 +2253,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <!-- HELPGOOD: TODO createTeslaModsEnableBuffs.sh option to add check for overcharge TS TT and damage for overcharge, ignore battery depleted TB, no OFF on no energy for TA -->
+    <!-- HELPGOOD: TODO createElctrnModsEnableBuffs.sh option to add check for overcharge TS TT and damage for overcharge, ignore battery depleted TB, no OFF on no energy for TA -->
     <buff name="buffGSKEnergyHarvestEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -2261,7 +2261,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2291,7 +2291,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="0"/>
@@ -2305,7 +2305,7 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
@@ -2319,7 +2319,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0"/>
@@ -2335,7 +2335,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2395,7 +2395,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="0"/>
@@ -2412,7 +2412,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2433,7 +2433,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="0"/>
@@ -2443,7 +2443,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaShockArrowEnabled" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnShockArrowEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
@@ -2456,7 +2456,7 @@
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LTE" value="0.95" />
         </triggered_effect>
 -->
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2469,7 +2469,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="0"/>
@@ -2478,13 +2478,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTR" operation="set" value="1"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaHeroEnabled" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnHeroEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2497,7 +2497,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="0"/>
@@ -2507,14 +2507,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="1"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaBatteryEnabled" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnBatteryEnabled" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaOverchargeDmg62">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg62">
           <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -2522,7 +2522,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="1.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipTeslaModTooDamaged"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipElctrnModTooDamaged"/>
       </effect_group>
       <effect_group help="Auto ON">
         <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="0"/>
@@ -2574,26 +2574,26 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKTSBCTmpSub"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaHeroToggle" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnHeroToggle" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
         <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="-1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaHeroMode" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnHeroMode" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKTeslaHeroMode"/>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTeslaHero">
-          <requirement name="CVarCompare" cvar="iGSKTeslaHeroMode" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKElctrnHeroMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKElctrnHero">
+          <requirement name="CVarCompare" cvar="iGSKElctrnHeroMode" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKTeslaHero">
-          <requirement name="CVarCompare" cvar="iGSKTeslaHeroMode" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnHero">
+          <requirement name="CVarCompare" cvar="iGSKElctrnHeroMode" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaHero" hidden="false" remove_on_death="true" icon="7dtdHero" icon_blink="true" description_key="dkbuffGSKTeslaHero" icon_color="128.128,128">
+    <buff name="buffGSKElctrnHero" hidden="false" remove_on_death="true" icon="7dtdHero" icon_blink="true" description_key="dkbuffGSKElctrnHero" icon_color="128.128,128">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.0"/>
@@ -2690,8 +2690,8 @@
       </effect_group>
       <effect_group name="remove on low energy">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBatteryEnergyMinModActivableCfgRO"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaHero"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnHero"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyThornsDischarge" hidden="true" remove_on_death="false">
@@ -3554,7 +3554,7 @@
     <effect_group name="collect energy from electrical dmg external source">
       <requirement name="EntityTagCompare" tags="player"/>
       <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
-      <requirement name="!HasBuff" buff="buffGSKTeslaHero"/>
+      <requirement name="!HasBuff" buff="buffGSKElctrnHero"/>
       <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKtmp" operation="set" value="12">
         <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="1"/>
@@ -4742,7 +4742,7 @@
         <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork43"/>
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKTeslaTele1NoMutant not working tho"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKMutantTeleport"/>
       </effect_group>
       <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
@@ -4750,10 +4750,10 @@
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKTeslaTele1NoMutant not working tho">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho">
           <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport2" help="was eventGSKTeslaTele1NoUpMutant not working tho">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport2" help="was eventGSKElctrnTele1NoUpMutant not working tho">
           <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
@@ -4972,7 +4972,7 @@
       <stack_type value="ignore"/>
       <duration value="0.05"/>
       <effect_group help="TODO: most of these pseudo constants dont need to be saved. so add a dot in front of their names and update everywhere">
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportEnergy" operation="set" value="420" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportEnergy" operation="set" value="420" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
@@ -4983,18 +4983,18 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="7" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleSkyDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndexMax" operation="set" value="6" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportBaseDist" operation="set" value="7" helpgencode="DO NOT MODIFY! run: createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyDistIndexMax" operation="set" value="6" help="tesla mod is from 0 to 5, allowing 6 indexes"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleportBaseToSkyDist" operation="set" value="2000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnLAST" operation="set" value="50149" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyDistIndexMax" operation="set" value="6" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleportBaseToSkyDist" operation="set" value="2000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnLAST" operation="set" value="50149" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
         </triggered_effect>
@@ -5005,56 +5005,56 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderFreeDelay" operation="set" value="11"/>
       </effect_group>
       <effect_group help="all below are teleport sections up to integer limit 65535">
-        <!-- HELPGOOD: all nearby directions are below .iGSKTeslaTeleSpecialBEGIN value -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleNearDirectionBEGIN" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleNearDirectionBEGIN"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleNearDirectionEND" operation="set" value="9999"/>
+        <!-- HELPGOOD: all nearby directions are below .iGSKElctrnTeleSpecialBEGIN value -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionBEGIN" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleNearDirectionBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionEND" operation="set" value="9999"/>
         <!-- HELPGOOD: special tele destinations, shall have no clashes with createTeleportRanges.sh max value too. can be sorted now -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBEGIN" operation="set" value="10000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBEGIN"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleSpecialBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBEGIN" operation="set" value="10000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSpecialBEGIN"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBackpack" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBackpack"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBackpack" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBackpack"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBeacon" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBeacon"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBeacon" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBeacon"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialBedroll" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialBedroll"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBedroll" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBedroll"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialLandClaim" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialLandClaim"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialLandClaim" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialLandClaim"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialZero" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialZero"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialZero" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialZero"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpecialEND" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpecialEND"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialEND" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialEND"/>
         <!-- HELPGOOD: PLACE NEW SECTIONS ABOVE HERE -->
         <!-- HELPGOOD: ALL SKY SECTIONS MUST BE BELOW HERE!-->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyBEGIN" operation="set" value="40000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyBEGIN"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKTeslaTeleSkyBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyBEGIN" operation="set" value="40000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSkyBEGIN"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyLastSpawn"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyLastSpawn"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyAbove" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyAbove"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAbove" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAbove"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyAboveButLower" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyAboveButLower"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAboveButLower" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAboveButLower"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSkyEND" operation="set" value="@.iGSKTTStmp"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSkyEND"/>
-        <!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKTeslaTeleSpawnBEGIN -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnBEGIN" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnBEGIN"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnRANDOM" operation="set" value="@.iGSKTeslaTeleSpawnBEGIN"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnRANDOM"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleSpawnEND" operation="set" value="59999"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleSpawnEND"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyEND" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyEND"/>
+        <!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKElctrnTeleSpawnBEGIN -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnBEGIN" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnRANDOM" operation="set" value="@.iGSKElctrnTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnRANDOM"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnEND" operation="set" value="59999"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnEND"/>
         <!-- HELPGOOD: LIMIT is 65535? -->
       </effect_group>
       <effect_group>
@@ -5073,15 +5073,15 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportAndDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleport" icon_color="215,180,220">
+    <buff name="buffGSKElctrnTeleportAndDebuff" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKElctrnTeleport" icon_color="215,180,220">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <display_value value=".fGSKTeleportDebuffTm"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportAndDebuff"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKElctrnTeleportAndDebuff"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleDir"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKTTeleportLoopCount" operation="add" value="1"/>
@@ -5111,7 +5111,7 @@
       <effect_group name="CHECK damaged do random teleport">
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="@fGSKDmgSafePercTP" help="u can still trust it up to that dmg limit"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportAndDebuff:CHECK damaged do random teleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportAndDebuff:CHECK damaged do random teleport"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgPercTPx100" operation="set" value="@fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgPercTPx100"/>
@@ -5131,63 +5131,63 @@
           <requirement name="CVarCompare" cvar=".bGSKTeleWrongDir" operation="Equals" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleChoseRandomDirection">
           <requirement name="CVarCompare" cvar=".bGSKTeleWrongDir" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group name="TELEPORT">
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="Equals" value="2"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportAndDebuff:TELEPORT"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportAndDebuff:TELEPORT"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKElctrnTeleDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKTeleWrongDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKTeleMayhem"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportRandomMayhem">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportRandomMayhem">
           <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize" help="can be the normal dir or the wrong one, but not the mayhem">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportFinalize" help="can be the normal dir or the wrong one, but not the mayhem">
           <requirement name="CVarCompare" cvar=".bGSKTeleMayhem" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".fGSKTTeleportLoopCount" operation="GTE" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportAndDebuff">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,50" operation="LTE" value="@iGSKperkElectrLvl" help="2% chance per perk lvl"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportAndDebuff">
           <requirement name="CVarCompare" cvar=".fGSKTeleportDebuffTm" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportAndDebuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportAndDebuff">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0" help="device was unequiped"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleChoseRandomDirection" remove_on_death="true" hidden="true">
+    <buff name="buffGSKElctrnTeleChoseRandomDirection" remove_on_death="true" hidden="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
       <effect_group>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,6)" help="distances"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="multiply" value="randomInt(1,6)" help="distances"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="1" help="straight up or down">
           <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsMayhemRnd_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportRandomMayhem" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKTeslaTeleportRandomMayhem" icon_color="255,64,64">
+    <buff name="buffGSKElctrnTeleportRandomMayhem" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKElctrnTeleportRandomMayhem" icon_color="255,64,64">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <display_value value=".iGSKTeleRndMayhemCount"/>
       <display_value_key value="{0:0}"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKTeslaTeleportRandomMayhem"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKElctrnTeleportRandomMayhem"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="set" value="randomInt(3,13)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="add" value="-1"/>
@@ -5202,27 +5202,27 @@
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.80"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,6" operation="GT" value="@iGSKEnergyLvlTP" help="lowest chance at mod lvl 5"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:eventGSKTeleportMayhemKillsPlayer"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportRandomMayhem:Call:eventGSKTeleportMayhemKillsPlayer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportMayhemKillsPlayer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Tesla Teleport Device mod was too damaged, and exploded!!!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="The Elctrn Teleport Device mod was too damaged, and exploded!!!"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleChoseRandomDirection"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKTeleRndDelay" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportRandomMayhem:Call:buffGSKTeslaTeleportFinalize"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportRandomMayhem:Call:buffGSKElctrnTeleportFinalize"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportFinalize"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndMayhemCount" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleRndDelay" operation="set" value="randomInt(2,10)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="Teleport Mayhem, unequip Teleport mod now!!!"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportRandomMayhem">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportRandomMayhem">
           <requirement name="CVarCompare" cvar=".iGSKTeleRndMayhemCount" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportRandomMayhem">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportRandomMayhem">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="0" help="device was unequiped"/>
         </triggered_effect>
       </effect_group>
@@ -5236,10 +5236,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You hit a psyonic mutant and got teleported!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutRndTeleAgressorPhase" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleChoseRandomDirection">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleChoseRandomDirection">
           <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportFinalize">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportFinalize">
           <requirement name="CVarCompare" cvar=".iGSKMutRndTeleAgressorPhase" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKExternalForceTeleport">
@@ -5247,20 +5247,20 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportFinalize" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
+    <buff name="buffGSKElctrnTeleportFinalize" remove_on_death="true" hidden="true" help="Directions and modes have simple integer ranges.">
       <stack_type value="ignore"/>
       <duration value="1.0"/>
       <update_rate value="0.05"/>
       <effect_group help="log">
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:ONUPDATE:buffGSKTeslaTeleportFinalize"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTeslaTeleDir"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:ONUPDATE:buffGSKElctrnTeleportFinalize"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKElctrnTeleDir"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKEventFeedbackTeleportPhase" operation="set" value="0"/>
       </effect_group>
       <effect_group help="consume battery">
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="0" help="the mayhem loop will deplet the battery but wont cause too much trouble. will become negative only once"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="@iGSKTeslaTeleportEnergy"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKTeslaTeleportDistIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="@iGSKElctrnTeleportEnergy"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKElctrnTeleportDistIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@.iGSKTTETmp"/>
@@ -5269,533 +5269,533 @@
       </effect_group>
       <effect_group help="disable devices">
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaDisableAll" help="this is important because the slow fall trick makes it too difficult to use the inventory to unequip tesla mods if player is being shocked">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnDisableAll" help="this is important because the slow fall trick makes it too difficult to use the inventory to unequip Elctrn mods if player is being shocked">
           <requirement name="CVarCompare" cvar=".bGSKTeleportedToSky" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="tele directions">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleNearDirectionBEGIN"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleNearDirectionEND"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleNearDirectionBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="LT" value="@.iGSKElctrnTeleNearDirectionEND"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="101"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="101"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="102"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="102"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="103"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="103"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="104"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="104"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="105"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="105"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="106"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="106"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="107"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="107"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="108"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="108"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="109"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="109"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="111"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="111"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="112"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="112"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="113"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="113"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="114"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="114"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="115"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="115"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="116"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="116"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="117"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="117"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="118"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="118"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="121"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="121"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="122"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="122"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="123"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="123"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="124"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="124"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="125"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="125"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="126"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="126"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="127"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="127"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="128"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="128"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele1Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="129"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele1Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="129"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="201"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="201"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="202"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="202"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="203"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="203"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="204"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="204"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="205"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="205"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="206"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="206"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="207"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="207"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="208"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="208"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="209"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="209"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="211"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="211"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="212"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="212"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="213"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="213"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="214"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="214"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="215"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="215"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="216"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="216"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="217"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="217"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="218"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="218"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="221"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="221"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="222"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="222"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="223"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="223"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="224"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="224"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="225"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="225"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="226"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="226"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="227"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="227"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="228"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="228"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele2Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="229"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele2Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="229"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="301"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="301"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="302"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="302"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="303"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="303"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="304"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="304"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="305"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="305"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="306"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="306"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="307"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="307"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="308"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="308"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="309"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="309"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="311"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="311"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="312"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="312"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="313"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="313"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="314"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="314"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="315"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="315"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="316"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="316"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="317"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="317"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="318"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="318"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="321"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="321"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="322"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="322"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="323"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="323"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="324"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="324"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="325"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="325"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="326"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="326"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="327"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="327"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="328"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="328"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele3Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="329"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele3Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="329"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="401"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="401"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="402"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="402"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="403"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="403"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="404"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="404"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="405"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="405"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="406"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="406"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="407"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="407"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="408"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="408"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="409"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="409"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="411"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="411"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="412"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="412"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="413"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="413"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="414"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="414"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="415"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="415"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="416"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="416"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="417"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="417"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="418"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="418"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="421"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="421"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="422"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="422"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="423"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="423"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="424"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="424"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="425"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="425"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="426"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="426"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="427"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="427"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="428"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="428"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele4Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="429"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele4Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="429"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="501"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="501"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="502"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="502"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="503"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="503"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="504"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="504"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="505"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="505"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="506"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="506"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="507"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="507"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="508"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="508"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="509"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="509"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="511"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="511"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="512"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="512"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="513"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="513"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="514"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="514"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="515"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="515"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="516"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="516"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="517"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="517"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="518"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="518"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="521"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="521"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="522"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="522"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="523"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="523"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="524"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="524"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="525"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="525"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="526"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="526"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="527"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="527"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="528"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="528"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele5Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="529"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele5Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="529"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="601"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="601"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="602"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="602"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6EaDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="603"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6EaDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="603"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SEDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="604"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SEDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="604"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SoDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="605"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SoDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="605"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="606"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="606"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6WeDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="607"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6WeDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="607"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NWDn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="608"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NWDn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="608"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6Dn">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="609"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6Dn">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="609"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6No">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="611"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6No">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="611"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="612"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="612"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6Ea">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="613"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6Ea">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="613"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SE">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="614"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SE">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="614"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6So">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="615"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6So">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="615"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="616"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="616"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6We">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="617"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6We">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="617"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NW">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="618"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NW">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="618"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="621"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="621"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="622"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6EaUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="623"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6EaUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="623"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SEUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SEUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="624"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SoUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="625"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SoUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="625"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6SWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="626"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6SWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="626"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6WeUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="627"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6WeUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="627"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6NWUp">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="628"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6NWUp">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="628"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele6Up">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="629"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele6Up">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="629"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
       </effect_group>
       <effect_group help="tele specials">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSpecialBEGIN"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleSpecialEND"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBeacon">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBeacon"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleSpecialBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="LT" value="@.iGSKElctrnTeleSpecialEND"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTeleBeacon">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialBeacon"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBackpack">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBackpack"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTeleBackpack">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialBackpack"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleBedroll">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialBedroll"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTeleBedroll">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialBedroll"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTeleLandclaim">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialLandClaim"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTeleLandclaim">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialLandClaim"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaExplodeExtra11">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpecialZero" help="tele 0,0,0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnExplodeExtra11">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialZero" help="tele 0,0,0"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="tele sky">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="LT" value="@.iGSKTeslaTeleSkyEND"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleSkyBEGIN"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="LT" value="@.iGSKElctrnTeleSkyEND"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove1">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove2">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove3">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="3"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove4">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="4"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove5">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="5"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyAbove6">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAbove"/>
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleSkyDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAbove"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="6"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyNotSoHighAbove">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyAboveButLower"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAboveButLower"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="damage per use">
@@ -5814,10 +5814,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.iGSKTeslaTeleSkyBEGIN" help="to sky teleports may destroy the mod device"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleSkyBEGIN" help="to sky teleports may destroy the mod device"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="GTE" value="@.bGSKTeleportedToSky" help="to sky teleports may destroy the mod device"/>
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.bGSKTeleportedToSky" help="to sky teleports may destroy the mod device"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="multiply" value="10">
           <requirement name="CVarCompare" cvar=".bGSKToSkyDmtMode" operation="Equals" value="1"/>
@@ -5830,24 +5830,24 @@
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="0" help="resets to prepare for next"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="0" help="resets to prepare for next"/>
       </effect_group>
       <effect_group help="finalize, rm this buff and prepare for next call of this buff">
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportFinalize"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportFinalize"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaExplodeExtra11" help="TODO:review, seems useless...">
+    <buff name="buffGSKElctrnExplodeExtra11" help="TODO:review, seems useless...">
       <stack_type value="replace"/>
       <duration value="10" help="should be time enough even on slow machine for the boom"/>
       <update_rate value="0.25"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKTeslaExplodeExtra11"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKElctrnExplodeExtra11"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEventFeedbackTeleportPhase"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaExplodeExtra11"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKTeslaExplodeExtra11"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnExplodeExtra11"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra11"/>
       </effect_group>
     </buff>
     <buff name="buffNVBatteryCreateConsumeEnergy">
@@ -5930,7 +5930,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKPRSATTZPhase" operation="GT" value="1"/>
-        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKTeslaTeleSpawnBEGIN"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKElctrnTeleSpawnBEGIN"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleSpawnBiomeId"/>
@@ -5954,7 +5954,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportToSky">
+    <buff name="buffGSKElctrnTeleportToSky">
       <stack_type value="ignore"/>
       <duration value="10.0"/>
       <update_rate value="0.05"/>
@@ -5963,32 +5963,32 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportToSkyCount" operation="add" value="1"/>
       </effect_group>
       <effect_group help="try last spawn">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSkyLastSpawn"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportToSky: try last spawn"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex">
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyLastSpawn"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportToSky: try last spawn"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleportToAnyDifficultyZone">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@.iGSKTeslaTeleSpawnRANDOM">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpawnRANDOM">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="0" help="has no previous"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="chose random spawn">
-        <requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="@.iGSKTeslaTeleSpawnRANDOM"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKTeslaTeleportToSky: chose random spawn"/>
+        <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpawnRANDOM"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKElctrnTeleportToSky: chose random spawn"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPrepareRandomSpawnAndTeleportToZone"/>
       </effect_group>
       <effect_group help="tele AndOr debuff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to initialize the 'flying' trick as soon as possible">
           <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeslaTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
       </effect_group>
       <effect_group help="finish">
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportToSky"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportToSky"/>
       </effect_group>
     </buff>
     <buff name="buffGSKTeleportToAnyDifficultyZone" help="all difficultyies spawn points. easiest to hardest: desert,forest,snow,wasteland">
@@ -7561,7 +7561,7 @@
         <requirement name="CVarCompare" cvar=".iGSKNewTeleToSpawnPointIndex" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKNewTeleToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNewTeleToSpawnPointIndex"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKTeleportedToSky"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
@@ -8061,7 +8061,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaTeleportUndergroundFree" hidden="false" icon="7dtdShockTip" icon_blink="true" name_key="TeleUnderground">
+    <buff name="buffGSKElctrnTeleportUndergroundFree" hidden="false" icon="7dtdShockTip" icon_blink="true" name_key="TeleUnderground">
       <stack_type value="replace"/>
       <duration value="30"/>
       <update_rate value="1.0"/>
@@ -8102,7 +8102,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="@.iGSKTTUnderFreeDelay" help="it will wait 10s to let the engine world generator create as much blocks it can, so teleporting underground will work better. TODO: let player configure this delay."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeslaTeleportUndergroundFree"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportUndergroundFree"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardWeatherMiasmaDirty47" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty">
@@ -8534,8 +8534,8 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKTeslaHero"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKElctrnHero"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
@@ -8580,7 +8580,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeslaDisableAll" hidden="true" remove_on_death="true">
+    <buff name="buffGSKElctrnDisableAll" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
@@ -8596,8 +8596,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaHeroMode" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTeslaHero"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKElctrnHero"/>
       </effect_group>
     </buff>
     <buff name="buffGSKSlowFallSimple">
@@ -8751,8 +8751,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeslaEnergy" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeslaEnergySchematics" operation="add" value="1">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperElctrnEnergy" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperElctrnEnergySchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperHealing" operation="add" value="1"/>

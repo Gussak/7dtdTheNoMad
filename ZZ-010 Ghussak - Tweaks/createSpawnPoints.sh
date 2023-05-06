@@ -167,7 +167,7 @@ function FUNCisNormalZone() {
 #nBiomesH="`echo "$strBiomeFileInfo" |cut -d' ' -f2`";
 #declare -p nBiomesW nBiomesH
 
-iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKTeslaTeleSpawnBEGIN
+iTeleportIndex=50000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKElctrnTeleSpawnBEGIN
 iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
 iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
@@ -352,8 +352,8 @@ CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 CFGFUNCgencodeApply --xmlcfg                                                                                      \
   iGSKTeleportedToSpawnPointIndex 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')'                  \
   ".iGSKRandomSpawnPointIndexCheckForBiomeIdTmp" 'randomInt('"${iTeleportIndexFirst},${iTeleportMaxIndex}"')'   \
-  ".iGSKTeslaTeleSpawnFIRST" "${iTeleportIndexFirst}"                                                           \
-  ".iGSKTeslaTeleSpawnLAST" "${iTeleportMaxIndex}"                                                              \
+  ".iGSKElctrnTeleSpawnFIRST" "${iTeleportIndexFirst}"                                                           \
+  ".iGSKElctrnTeleSpawnLAST" "${iTeleportMaxIndex}"                                                              \
   ".iGSKTTUnderSpawnSimpleIndex" "randomInt(1,${iUnderSimpleIndex})"
 
 CFGFUNCgencodeApply --cleanChkDupTokenFiles

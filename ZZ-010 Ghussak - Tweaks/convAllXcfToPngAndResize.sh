@@ -10,6 +10,9 @@ function FUNCconv() {
   astrOpt=(
     "7dtd*.xcf"        160 160
     "NavObj_7dtd*.xcf"  32  32
+    
+    #keep specific ones last. The above will create them too, but below here they will be re-created correctly
+    7dtdGskElctrnHud3.xcf 410 173 #this is the original size
   )
   for((i=0;i<${#astrOpt[@]};i+=3));do
     strFilter="${astrOpt[i]}"

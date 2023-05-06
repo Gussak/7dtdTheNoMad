@@ -33,25 +33,25 @@
 
 source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
 
-    #<action_sequence name="eventGSKTeslaTeleNo" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,0,'"${nRange}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSo" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,0,-'"${nRange}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleWe" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRange}"',0,0"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleEa" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRange}"',0,0"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleNW" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"',0,'"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleNE" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"',0,'"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSW" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"',0,-'"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSE" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"',0,-'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNo" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,0,'"${nRange}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSo" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,0,-'"${nRange}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleWe" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRange}"',0,0"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleEa" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRange}"',0,0"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNW" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRng45}"',0,'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNE" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRng45}"',0,'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSW" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRng45}"',0,-'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSE" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRng45}"',0,-'"${nRng45}"'"/></action_sequence>
 
-    #<action_sequence name="eventGSKTeslaTeleNoDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"','"${nRange}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSoDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"',-'"${nRange}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleWeDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRange}"',-'"${nRange}"',0"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleEaDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRange}"',-'"${nRange}"',0"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleNWDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"',-'"${nRange}"','"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleNEDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"',-'"${nRange}"','"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSWDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="-'"${nRng45}"',-'"${nRange}"',-'"${nRng45}"'"/></action_sequence>
-    #<action_sequence name="eventGSKTeslaTeleSEDw" template="eventGSKTeslaTele"><variable name="v3Dir" value="'"${nRng45}"',-'"${nRange}"',-'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNoDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,-'"${nRange}"','"${nRange}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSoDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,-'"${nRange}"',-'"${nRange}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleWeDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRange}"',-'"${nRange}"',0"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleEaDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRange}"',-'"${nRange}"',0"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNWDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRng45}"',-'"${nRange}"','"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleNEDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRng45}"',-'"${nRange}"','"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSWDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="-'"${nRng45}"',-'"${nRange}"',-'"${nRng45}"'"/></action_sequence>
+    #<action_sequence name="eventGSKElctrnTeleSEDw" template="eventGSKElctrnTele"><variable name="v3Dir" value="'"${nRng45}"',-'"${nRange}"',-'"${nRng45}"'"/></action_sequence>
     
-      #<action_sequence name="eventGSKTeslaTeleDn" template="eventGSKTeslaTele"><variable name="v3Dir" value="0,-'"${nRange}"',0"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTeleDn" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,-'"${nRange}"',0"/></action_sequence>
       
 : ${nBaseDist:=7} #help the minimum distance to teleport, will be multiplied by the current index limited by teleport mod level
 : ${nEnergyPerBlock:=60} #help
@@ -66,8 +66,8 @@ anRangeList=()
 for((nOpts=1;nOpts<=nOptsMax;nOpts++));do
   anRangeList+=($((nOpts*nBaseDist)))
   strCodeCfgOpts+='
-  <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index '"${nOpts}"'"><requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nOpts}"'" /></triggered_effect>
-  <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index '"${nOpts}"'"><requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nOpts}"'" /></triggered_effect>
+  <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index '"${nOpts}"'"><requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="'"${nOpts}"'" /></triggered_effect>
+  <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index '"${nOpts}"'"><requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="'"${nOpts}"'" /></triggered_effect>
   '
 done
 
@@ -94,13 +94,13 @@ astrDirList=(
 #: ${iDummyRange:=10} #h elp around directions are 1to8
 
 strMayhemRnd='
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"${iCVarIndexRange}"'"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="multiply" value="randomInt(1,'"${nOptsMax}"')" help="distances"/>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="'"${iCVarIndexRange}"'"/>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="multiply" value="randomInt(1,'"${nOptsMax}"')" help="distances"/>
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="add" value="1" help="straight up or down">
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="randomInt(1,8)" help="around directions"/>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="1" help="straight up or down">
     <requirement name="CVarCompare" cvar=".iGSKTTDUpMidDown" operation="NotEquals" value="1" help="00 is down (1to8) and 9 is straight down, 10 is no elevation (11to18), 20 is up (21to28) and 29 is straight up"/>
     <requirement name="RandomRoll" seed_type="Random" min_max="1,9" operation="Equals" value="9"/>
   </triggered_effect>'
@@ -136,31 +136,31 @@ for iIndex in "${!anRangeList[@]}";do
     #for strDir in "${astrDirList[@]}";do
     for((iDir=0;iDir<${#astrDirList[@]};iDir+=2));do
       strDir="${astrDirList[$iDir]}"
-      echo '  <action_sequence name="eventGSKTeslaTele'"${nUserIndex}${strDir}${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
-      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele'"${nUserIndex}${strDir}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+      echo '  <action_sequence name="eventGSKElctrnTele'"${nUserIndex}${strDir}${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele'"${nUserIndex}${strDir}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
       if [[ "$strDir" == "No" ]];then
         nUpDown=0;if [[ "$strEl" == "Dn" ]];then nUpDown=-1;fi;if [[ "$strEl" == "Up" ]];then nUpDown=1;fi
         strGenCodeItemTeleCvarRanges+='
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"${iCV}"'" help="'"$nUserIndex: ${astrDirList[$((iDir+1))]} $strEl"'">
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportMixUpDown" operation="Equals" value="'"${nUpDown}"'" />
-          <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="'"${iCV}"'" help="'"$nUserIndex: ${astrDirList[$((iDir+1))]} $strEl"'">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="'"${nUpDown}"'" />
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
         </triggered_effect>'
       fi
     done
     
-    #echo '<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'No'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'NE'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'Ea'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRange}"','"${nYRng}"',0"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'SE'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'So'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',-'"${nRange}"'"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'SW'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'We'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRange}"','"${nYRng}"',0"/></action_sequence>
-      #<action_sequence name="eventGSKTeslaTele'"${nUserIndex}"'NW'"${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
+    #echo '<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'No'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"','"${nRange}"'"/></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'NE'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'Ea'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRange}"','"${nYRng}"',0"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'SE'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'So'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',-'"${nRange}"'"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'SW'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"',-'"${nRng45}"'"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'We'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRange}"','"${nYRng}"',0"/></action_sequence>
+      #<action_sequence name="eventGSKElctrnTele'"${nUserIndex}"'NW'"${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="-'"${nRng45}"','"${nYRng}"','"${nRng45}"'"/></action_sequence>
       #' >>"${strFlGenEve}${strGenTmpSuffix}"
     #strGenCodeItemTeleCvarRanges+='
-  #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"$((iCV+1))"'" help="North">
-    #<requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+  #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="'"$((iCV+1))"'" help="North">
+    #<requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
     #<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
   #</triggered_effect>
     #'
@@ -175,13 +175,13 @@ for iIndex in "${!anRangeList[@]}";do
         iCrouch=0
       fi
       strGenCodeEventUpDown+='
-      <action_sequence name="eventGSKTeslaTele'"${nUserIndex}${strEl}"'" template="eventGSKTeslaTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',0"/></action_sequence>'
+      <action_sequence name="eventGSKElctrnTele'"${nUserIndex}${strEl}"'" template="eventGSKElctrnTele" help="'"${nUserIndex}:cvdir=$((++iCV))"'"><variable name="v3Dir" value="0,'"${nYRng}"',0"/></action_sequence>'
       strGenCodeItemTeleCvarRangesUpDn+='
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeslaTeleDir" operation="set" value="'"$((iCV))"'">
-        <requirement name="CVarCompare" cvar="iGSKTeslaTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="'"$((iCV))"'">
+        <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="'"${nUserIndex}"'" />
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="'"${iCrouch}"'" />
       </triggered_effect>'
-      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeslaTele'"${nUserIndex}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKTeslaTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+      echo '        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele'"${nUserIndex}${strEl}"'"><requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="'"${iCV}"'"/></triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
     fi
     
     ((iEl++))&&:
@@ -208,14 +208,14 @@ CFGFUNCgencodeApply --subTokenId "TeleDirectionsCfgOptsMsgs" "${strFlGenIte}${st
 
 CFGFUNCgencodeApply --subTokenId "TeleDirections" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 #echo '
-  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>
-  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
+  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>
+  #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
   #' >>"${strFlGenBuf}${strGenTmpSuffix}"
 #CFGFUNCgencodeApply --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 CFGFUNCgencodeApply --xmlcfg                                          \
-  iGSKTeslaTeleportDistIndexMax "${nOptsMax}"                       \
-  iGSKTeslaTeleportBaseDist "${nBaseDist}"                          \
-  iGSKTeslaTeleportEnergy "$((nBaseDist*nEnergyPerBlock))"
+  iGSKElctrnTeleportDistIndexMax "${nOptsMax}"                       \
+  iGSKElctrnTeleportBaseDist "${nBaseDist}"                          \
+  iGSKElctrnTeleportEnergy "$((nBaseDist*nEnergyPerBlock))"
 
 echo "$strMayhemRnd" >>"${strFlGenBuf}${strGenTmpSuffix}"
 CFGFUNCgencodeApply --subTokenId "TeleDirectionsMayhemRnd" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"

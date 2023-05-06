@@ -19,7 +19,7 @@ There are several mini mods here that may work without this main mod (the Tweaks
 The main mod (Tweak folder) has a lot of configs that one day will become minimods to let you cherry pick only what you want like:  
   - night vision and flash light energy requirement and degradation/repair  
   - torch fuel  
-  - Tesla Hero mods for armor and some weapons, to improve attack, defense and mobility.  
+  - Elctrn Hero mods for armor and some weapons, to improve attack, defense and mobility.  
   - many compact info in a tiny HUD to help you on making decisions and understand why something is malfunctioning (degradating)  
   - much more dangerous rad zombies  
   - dangerous mutated bunny  
@@ -128,7 +128,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 ################## CHANGES ##############  
 --------- v1.0aRC1 -----------  
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge, it is worth the try!
-- improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGTeslaTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
+- improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - free dog companion per respawn within the configured limit
 - removed newbie coat protection
 - free bundles now have experience penalty for some time
@@ -142,11 +142,11 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - simple god mode for player on 1st spawn for 60s in case of 1st spawining over a mob will be fair
 - increased green glow sticks time to be more useful
 - there are downgrade recipes to better use some resources
-- a bit bigger Tesla HUD for better reading
+- a bit bigger Elctrn HUD for better reading
 - added one hired NPC info on the HUD
 - added near death lvls for Overhydrated Bloated ChemUse
 - added some Notes about buffs. They have dynamic values that would be shown for buffs that have no icon and were bloating the detailed buffs list.
-- automatic turn on tesla mods if all checks are ok
+- automatic turn on Elctrn mods if all checks are ok
 - reorganized notes/journal to be easyer to read
 - some beasts may byte and hold your leg for a few seconds preventing you from moving, others may even knock you down.
 - attacking mutant zombies may make them teleport you, more info on the docs

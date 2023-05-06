@@ -202,7 +202,7 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>'
   fi
-  if [[ "$strItemID" == "modGSKTeslaTeleport" ]];then
+  if [[ "$strItemID" == "modGSKElctrnTeleport" ]];then
     bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
     strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
       <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
@@ -689,14 +689,14 @@ astr=(
   armorClothHat 1 # this is to be able to install one of the mods
   drugOhShitzDrops 1 # just in case the auto protection doesnt kick in..
   gunBotT2JunkTurret 1
-  GSKCFGTeleUndergroundFreeDelay 1 #for GSKTeslaTeleportUndergroundFreeAndSafeCall
-  GSKNoteTeslaTeleporToSkyFirstTime 1
-  GSKTeslaTeleportUndergroundFreeAndSafeCall 1
-  GSKTeslaTeleportToBiomeFreeAndSafeCall 1
-  #GSKTeslaTeleportDirection 1
-  #GSKTeslaTeleportToSky 1
+  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
+  GSKNoteElctrnTeleporToSkyFirstTime 1
+  GSKElctrnTeleportUndergroundFreeAndSafeCall 1
+  GSKElctrnTeleportToBiomeFreeAndSafeCall 1
+  #GSKElctrnTeleportDirection 1
+  #GSKElctrnTeleportToSky 1
   modGSKEnergyThorns     1
-  #modGSKTeslaTeleport 1
+  #modGSKElctrnTeleport 1
   NightVisionBattery    13
   #NightVisionBatteryStrong 2 #uneccessarry now, tele to sky will just make energy negative and will work.
   NVBatteryCreate 1
@@ -705,7 +705,7 @@ astr=(
   bookTechJunkie5Repulsor 1
   generatorbankSchematic 1
   gunBotT2JunkTurretSchematic 1
-);FUNCprepareBundles "TeslaEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting tesla mods, this will increase your combat survival chances." "${astr[@]}"
+);FUNCprepareBundles "ElctrnEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting Elctrn mods, this will increase your combat survival chances." "${astr[@]}"
 
 astr=(
   bucketRiverWater 1

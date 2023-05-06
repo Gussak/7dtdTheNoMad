@@ -31,16 +31,16 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-# this helps when creating a new tesla mod
+# this helps when creating a new Elctrn mod
 
-astrTeslaVarsSuffix=(TA TB TH TP TR TS TT)
-strTeslaVarsSuffixRegex="`echo ${astrTeslaVarsSuffix[*]} |tr ' ' '|'`"
-for strSuffix in "${astrTeslaVarsSuffix[@]}";do
-  strTeslaVarsSuffixRegex+="|${strSuffix}Show"
+astrElctrnVarsSuffix=(TA TB TH TP TR TS TT)
+strElctrnVarsSuffixRegex="`echo ${astrElctrnVarsSuffix[*]} |tr ' ' '|'`"
+for strSuffix in "${astrElctrnVarsSuffix[@]}";do
+  strElctrnVarsSuffixRegex+="|${strSuffix}Show"
 done
-declare -p strTeslaVarsSuffixRegex
-IFS=$'\n' read -d '' -r -a astrVarList < <(egrep '[^"]*('"${strTeslaVarsSuffixRegex}"')[":]' * -rIoh --include="*.xml" |egrep -v "^[_@]"|sort -u |tr -d '"')&&:
-for strSuffix in "${astrTeslaVarsSuffix[@]}";do
+declare -p strElctrnVarsSuffixRegex
+IFS=$'\n' read -d '' -r -a astrVarList < <(egrep '[^"]*('"${strElctrnVarsSuffixRegex}"')[":]' * -rIoh --include="*.xml" |egrep -v "^[_@]"|sort -u |tr -d '"')&&:
+for strSuffix in "${astrElctrnVarsSuffix[@]}";do
   strAllVarWithSuffixRegex=""
   for strVar in "${astrVarList[@]}";do
     if [[ "$strVar" =~ ^.*${strSuffix}$ ]];then
@@ -49,7 +49,7 @@ for strSuffix in "${astrTeslaVarsSuffix[@]}";do
   done
   strAllVarWithSuffixRegex="${strAllVarWithSuffixRegex%|}"
   #strAllVarWithSuffixRegex+="|EnergyHarvest|EnergyBattery|EnergyHero|EnergyTeleport|ShockArrow|EnergyThorns|EnergyShield"
-  strAllVarWithSuffixRegex+='|((Energy|Tesla)[a-zA-Z0-9_]*(Harvest|Battery|Hero|Teleport|ShockArrow|Thorns|Shield))'
+  strAllVarWithSuffixRegex+='|((Energy|Elctrn)[a-zA-Z0-9_]*(Harvest|Battery|Hero|Teleport|ShockArrow|Thorns|Shield))'
   strAllVarWithSuffixRegex="[a-zA-Z0-9_]*(${strAllVarWithSuffixRegex})[a-zA-Z0-9_]*"
   echo "===============$strAllVarWithSuffixRegex:"
   egrep "$strAllVarWithSuffixRegex" * -wiRI -c --include="*.xml" --include="Localization.txt" |egrep -v :0 2>/dev/null
