@@ -96,8 +96,10 @@ for((j=0;j<"${#astrArmorTypes[@]}";j+=2));do
   done
 done
 
-#./gencodeApply.sh "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
-./gencodeApply.sh "${strFlGenXml}${strGenTmpSuffix}" "${strFlGenXml}"
-#./gencodeApply.sh "AUTO_GENERATED_CODE" "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
+#CFGFUNCgencodeApply "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
+CFGFUNCgencodeApply "${strFlGenXml}${strGenTmpSuffix}" "${strFlGenXml}"
+#CFGFUNCgencodeApply "AUTO_GENERATED_CODE" "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

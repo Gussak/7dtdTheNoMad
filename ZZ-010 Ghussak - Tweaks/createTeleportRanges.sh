@@ -194,32 +194,35 @@ for iIndex in "${!anRangeList[@]}";do
 done
 echo "<!-- HELPGOOD: straight up and down -->" >>"${strFlGenEve}${strGenTmpSuffix}"
 echo "${strGenCodeEventUpDown}" >>"${strFlGenEve}${strGenTmpSuffix}"
-./gencodeApply.sh "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
+
+CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
 #echo '    <!-- HELPGOOD: indexes 1 to '"${nOptsMax}"' -->
 #' >>"${strFlGenIte}${strGenTmpSuffix}"
-#./gencodeApply.sh --subTokenId "CONFIGURATORS" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+#CFGFUNCgencodeApply --subTokenId "CONFIGURATORS" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
 echo "$strGenCodeItemTeleCvarRanges" >>"${strFlGenIte}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "TeleDirections" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply --subTokenId "TeleDirections" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 echo "$strCodeCfgOpts" >>"${strFlGenIte}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "TeleDirectionsCfgOptsMsgs" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply --subTokenId "TeleDirectionsCfgOptsMsgs" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
-./gencodeApply.sh --subTokenId "TeleDirections" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --subTokenId "TeleDirections" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 #echo '
   #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportDistIndexMax" operation="set" value="'"${nOptsMax}"'"/>
   #<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeslaTeleportBaseDist" operation="set" value="'"${nBaseDist}"'"/>
   #' >>"${strFlGenBuf}${strGenTmpSuffix}"
-#./gencodeApply.sh --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-./gencodeApply.sh --xmlcfg                                          \
+#CFGFUNCgencodeApply --subTokenId "TeleDirectionsTOT" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --xmlcfg                                          \
   iGSKTeslaTeleportDistIndexMax "${nOptsMax}"                       \
   iGSKTeslaTeleportBaseDist "${nBaseDist}"                          \
   iGSKTeslaTeleportEnergy "$((nBaseDist*nEnergyPerBlock))"
 
 echo "$strMayhemRnd" >>"${strFlGenBuf}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "TeleDirectionsMayhemRnd" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --subTokenId "TeleDirectionsMayhemRnd" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 echo "$strGenCodeItemTeleCvarRangesUpDn" >>"${strFlGenIte}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "TeleDirectionsUPDOWN" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply --subTokenId "TeleDirectionsUPDOWN" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

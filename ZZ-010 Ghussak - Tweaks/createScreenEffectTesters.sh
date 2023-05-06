@@ -115,6 +115,8 @@ strCodeResetAll+='
       </item>'
 echo "$strCodeResetAll" >>"${strFlGenIte}${strGenTmpSuffix}"
 
-./gencodeApply.sh "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

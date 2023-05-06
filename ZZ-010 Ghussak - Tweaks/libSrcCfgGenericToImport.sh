@@ -54,7 +54,7 @@ function CFGFUNCcleanMsgPRIVATE() {
     -e "s@${strCFGGeneratedWorldTNMFolderRegex}@(RwgTNMDir)@g"
 };export -f CFGFUNCcleanMsgPRIVATE
 function CFGFUNCcleanEchoPRIVATE() {
-  local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG:${SECONDS}s) $*"`"
+  local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG:${SECONDS}/${astrCFGTotalRunTimeList[${strCFGScriptNameAsID}]-}s) $*"`"
   CFGFUNCechoLogPRIVATE "${lstr}"
   #echo "$lstr" >&2
   #echo "$lstr" >>"$strCFGScriptLog"
@@ -90,8 +90,22 @@ function CFGFUNCerrorChk() {
     CFGFUNCechoLogPRIVATE " (CFG)ERROR: the above message may contain the line where the error happened, read below on the help if it is there."
     read -p '(CFG)WARN: Hit a key to show the help.' -n 1&&:
     CFGFUNCshowHelp
+  #else
+    #astrCFGTotalRunTimeList["${strCFGScriptNameAsID}"]=$SECONDS
+    #declare -p astrCFGTotalRunTimeList >"${strCFGFlTotalRunTimeSrc}"
   fi
 };export -f CFGFUNCerrorChk
+
+function CFGFUNCgencodeApply() {
+  local lSECONDS=$SECONDS
+  ./gencodeApply.sh "$@"
+  SECONDS=$lSECONDS
+};export -f CFGFUNCgencodeApply
+
+function CFGFUNCwriteTotalScriptTimeOnSuccess() { #help use this before calling ./gencodeApply.sh as it opens merger app and you may delay there, or use CFGFUNCgencodeApply and place this function at the very end
+  astrCFGTotalRunTimeList["${strCFGScriptNameAsID}"]=$SECONDS
+  declare -p astrCFGTotalRunTimeList >"${strCFGFlTotalRunTimeSrc}"
+};export -f CFGFUNCwriteTotalScriptTimeOnSuccess
 
 function CFGFUNCchkAvailHDAndGetFlSz() { #helpf <lstrRequiredBinaryFile> <liMultiplyFileSize> the liMultiplyFileSize param means that if you want to create a temporary and a backup you will need 2x the lstrRequiredBinaryFile file size in available HD space
   local lstrRequiredBinaryFile="$1";shift
@@ -271,7 +285,9 @@ function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
   CFGFUNCcleanEchoPRIVATE " ${lstrMode} ${lstrMsg} ${lstrHitAKey} ${lstrQ}"
   if $bCFGInteractive;then
     while read -n 1 -t 0.1 str;do echo -n .;done;echo #cleans any buffered key to avoid messing up the interaction
+    local lSECONDSbkp=$SECONDS
     read -p '.' -t $fCFGPromptWait -n 1 strResp >&2 &&:
+    SECONDS=$lSECONDSbkp
   else
     strResp=y
   fi
@@ -359,11 +375,15 @@ function CFGFUNCdiffFromBkp() { #helpf <strFl>
   return 0
 };export -f CFGFUNCcreateBackup
 
+function CFGFUNCfixId() {
+  echo "$1" |sed -r 's@[^a-zA-Z0-9_]@_@g'
+}
 
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
 export strScriptName="`basename "$0"`" #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -e xec bash`
 export strCFGScriptName="$strScriptName" #TODO update all scripts with this new var name
+export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
 #declare -p strScriptName strScriptParentList >&2 
 
 #ps -o ppid,pid,cmd
@@ -380,14 +400,17 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   SECONDS=0
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   shopt -s expand_aliases
-  
+
   : ${bCFGDryRun:=false} #help just show what would be done
   export bCFGDryRun
   
   mkdir -vp _log _tmp
   export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
   export strCFGErrorLog="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.LastRunErrors.log"
+  export strCFGFlTotalRunTimeSrc="`pwd `/`dirname "${0}"`/_tmp/CFGTotalScriptsRunTimes.sh"
   #declare -p strCFGScriptLog
+  declare -A astrCFGTotalRunTimeList=()
+  source "${strCFGFlTotalRunTimeSrc}"&&:
   
   : ${bCFGDbg:=false} #help to debug these scripts
   export bCFGDbg
@@ -409,6 +432,7 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
   
   export bCFGHelpMode=false
   trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit a key to continue" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  #trap 'nErrVal=$?;ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit a key to continue" >&2;read -n 1&&:;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   
@@ -454,15 +478,6 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
 
   export strGenTmpSuffix=".GenCode.UpdateSection.TMP"
   
-  if [[ "${1-}" == --gencodeTrashLast ]];then
-    CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
-  fi
-  
   iMissingCmdCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "ScriptsDependencies.AddedToRelease.Commands.txt")&&:;for strFl in "${astrFlList[@]}";do if ! which "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux command is missing: '$strFl'";((iMissingCmdCount++))&&:;fi;done
   if((iMissingCmdCount>0));then
     strFlPkgDeps="ScriptsDependencies.AddedToRelease.Packages.txt"
@@ -488,11 +503,51 @@ export strCFGScriptName="$strScriptName" #TODO update all scripts with this new 
 #fi
 
 #!!! no CFGFUNCcleanEchoPRIVATE for params !!!
-CFGFUNCechoLogPRIVATE " (CFG)PARAMS: $@"
+CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
 
-if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;fi #help show help info.
-if [[ "${1-}" == --helpfunc ]];then shift;CFGFUNCshowHelp --func;fi #help show function's help info for developers.
+#if [[ "${1-}" == --help ]];then shift;CFGFUNCshowHelp;fi #help show help info.
+#if [[ "${1-}" == --helpfunc ]];then shift;CFGFUNCshowHelp --func;fi #help show function's help info for developers.
 #echo " (CFG)Use --help alone to show this script help." >&2
 
+#( #subshell to not create these vars
+  bCFGLIBONLYOptgencodeTrashLast=false
+  #ps --no-headers -o cmd `ps --no-headers -o ppid $$` $$
+  #if ps --no-headers -o cmd `ps --no-headers -o ppid $$` |egrep "\--help";then CFGFUNCshowHelp;fi
+  strCFGLIBONLYSelfCmdLine="`ps --no-headers -o cmd $$`" #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
+  if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--help";then CFGFUNCshowHelp;fi #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
+  if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then CFGFUNCshowHelp --func;fi #help show function's help info for developers.    
+  if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
+    #if [[ "$1" == --help ]];then #help show this help. This lib script will receive all params of the script calling it if no param is passed to it on that caller script ex.: ./rwgImprovePOIs.sh --help; this script will receive and execute --help too, but ONLY if this script is called w/o params like: ./libSrcCfgGenericToImport.sh
+      #CFGFUNCshowHelp
+      ##exit 1
+    #elif [[ "$1" == --helpfunc ]];then #help show function's help info for developers.    
+      #CFGFUNCshowHelp --func
+    #elif [[ "$1" == --gencodeTrashLast ]];then #help trash tmp files for code generator
+      #bCFGOptgencodeTrashLast=true
+    #else
+      #CFGFUNCinfo "(LIB)WARN:ignored unsupported param '$1'"
+    ##else
+      ##CFGFUNCinfo "CFGLIB:PROBLEM: invalid option '$1'"
+      ##CFGFUNCshowHelp
+      ###$0 --help #$0 considers ./, works best anyway..
+      ##exit 1
+    #fi
+    #shift&&:
+  #done
+
+  if $bCFGLIBONLYOptgencodeTrashLast;then
+    CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
+  fi
+#)
+
+###########################################################################
+############################ LAST #########################################
+###########################################################################
 # keep at the end
+###########################################################################
 echo -n "" >&2 #this is to prevent error value returned from missing files to be trashed above or anything else irrelevant

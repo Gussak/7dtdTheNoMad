@@ -56,6 +56,8 @@ if [[ "$1" == -t ]];then #help <strColorAtBiomeFile> just translate color
   exit
 fi
 
+######################################################################################################
+
 source ./libSrcCfgGenericToImport.sh #placed here so the code above will run as fast as possible!
 
 strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if you delete the cache file it will be recreated

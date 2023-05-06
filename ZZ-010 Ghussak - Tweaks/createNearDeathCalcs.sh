@@ -89,18 +89,15 @@ for strND in "${astrNearDeathList[@]}";do
           #</triggered_effect>  
     done
   fi
-  ./gencodeApply.sh --subTokenId "`echo ${strND} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+  CFGFUNCgencodeApply --subTokenId "`echo ${strND} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 done
 
   #".fGSKHPBlkChemUseMinx100" "`bc <<< "scale=0;${fGSKHPBlkChemUseMin}*100" |cut -d. -f1`" 
   #".fGSKHPBlkChemUseMaxx100" "`bc <<< "scale=0;${fMaxFinal}*100" |cut -d. -f1`"
-./gencodeApply.sh --xmlcfg                                                                \
+CFGFUNCgencodeApply --xmlcfg                                                                \
   ".fGSKHPBlkChemUseMin"     "${fGSKHPBlkChemUseMin}"                                     \
   ".fGSKHPBlkChemUseMinx100" "`CFGFUNCcalc -s 0 "${fGSKHPBlkChemUseMin}*100"`"            \
   ".fGSKHPBlkChemUseMax"     "${fMaxFinal}"                                               \
   ".fGSKHPBlkChemUseMaxx100" "`CFGFUNCcalc -s 0 "${fMaxFinal}*100"`"
 
-
-
-
-
+CFGFUNCwriteTotalScriptTimeOnSuccess

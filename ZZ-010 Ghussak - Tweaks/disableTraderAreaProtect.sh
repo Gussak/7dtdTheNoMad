@@ -56,3 +56,5 @@ for strFl in "${astrFlList[@]}";do
 done
 
 CFGFUNCinfo "to undo just this patch run: ./uninstallByRestoringOriginalFilesBackups.sh trader_"
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

@@ -825,31 +825,32 @@ done
 
 ############ APPLY CHANGES AT SECTIONS ################
 #ls -l *"${strGenTmpSuffix}"&&:
-./gencodeApply.sh "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
-./gencodeApply.sh "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
+CFGFUNCgencodeApply "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
 # CRAFT BUNDLES SECTIONS
 strSubToken="CRAFTBUNDLES"
 
 echo "$strXmlCraftBundleCreateItemsXml"   >"${strFlGenIte}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+CFGFUNCgencodeApply --subTokenId "${strSubToken}" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 
 echo "$strXmlCraftBundleCreateRecipesXml" >"${strFlGenRec}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
+CFGFUNCgencodeApply --subTokenId "${strSubToken}" "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 
 echo "$strXmlCraftBundleCreateBuffsXml"   >"${strFlGenBuf}${strGenTmpSuffix}"
-./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --subTokenId "${strSubToken}" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 strDKCraftAvailableBundles+='"' #closes the prepared description text
 echo "$strDKCraftAvailableBundles"        >"${strFlGenLoc}${strGenTmpSuffix}"
 for strDKCraftBundleName in "${astrCraftBundleNameList[@]}";do
   echo "$strDKCraftBundleName" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
 done
-./gencodeApply.sh --subTokenId "${strSubToken}" "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
+CFGFUNCgencodeApply --subTokenId "${strSubToken}" "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 
-./gencodeApply.sh --xmlcfg \
+CFGFUNCgencodeApply --xmlcfg \
   fGSKAllFreeBundlesSumExpDebit "${iAllFreeBundlesSumExpDebit}"
 
 #last
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
 
+CFGFUNCwriteTotalScriptTimeOnSuccess

@@ -112,6 +112,8 @@ if((iDupCount>0));then
   echo "ERROR: duplicated loot IDs above clashed, fix it!!!" >&2
   exit 1
 fi
+
+CFGFUNCwriteTotalScriptTimeOnSuccess
 exit 0
 
 #iIdChk=0

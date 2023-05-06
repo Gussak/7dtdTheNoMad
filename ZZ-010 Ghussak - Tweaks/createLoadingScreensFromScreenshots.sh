@@ -56,6 +56,8 @@ for strFl in "${astrFlList[@]}";do
   echo -n .
 done
 
-./gencodeApply.sh "${strFlGenLoa}${strGenTmpSuffix}" "${strFlGenLoa}"
+CFGFUNCgencodeApply "${strFlGenLoa}${strGenTmpSuffix}" "${strFlGenLoa}"
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

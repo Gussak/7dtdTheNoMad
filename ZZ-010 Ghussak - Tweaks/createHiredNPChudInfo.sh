@@ -68,7 +68,7 @@ for strCVar in "${astrCVarList[@]}";do
 '"${strIndent}"'  '"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   
-  ./gencodeApply.sh --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+  CFGFUNCgencodeApply --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 done
 
 # SECONDS
@@ -89,4 +89,7 @@ for((i=13;i<=iLim;i+=iStep));do
       </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   if $bBreak;then break;fi
 done
-./gencodeApply.sh --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+
+CFGFUNCgencodeApply --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

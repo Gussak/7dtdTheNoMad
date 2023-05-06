@@ -360,18 +360,20 @@ fi
 
 #ls -l *"${strGenTmpSuffix}"&&:
 if $bGenLoc;then
-  ./gencodeApply.sh "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
+  CFGFUNCgencodeApply "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 fi 
 if $bGenXml;then
-  ./gencodeApply.sh "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+  CFGFUNCgencodeApply "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
   
   for strJournalEntryID in "${astrJournalEntryIDList[@]}";do
     echo '    <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddJournalEntry" journal="'"${strJournalEntryID}"'"/>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   done
-  ./gencodeApply.sh --subTokenId "JOURNALENTRIES" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+  CFGFUNCgencodeApply --subTokenId "JOURNALENTRIES" "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
 fi 
 if $bGenRec;then
-  ./gencodeApply.sh "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
+  CFGFUNCgencodeApply "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 fi 
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

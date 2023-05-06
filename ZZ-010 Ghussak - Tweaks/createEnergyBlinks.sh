@@ -112,8 +112,7 @@ echo "<effect_group name=\"${strCodeTokenEnd}\"/>"  >>"${strFlOut}"
 unix2dos "$strFlOut" # to grant CR LF
 cat "$strFlOut"
 
-./gencodeApply.sh "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
-
+CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 ## apply patch (recreated code)
 ## find begin and end of the patch
@@ -143,4 +142,6 @@ cat "$strFlOut"
 
 #trash "$strFlOut"
 
-./gencodeApply.sh --cleanChkDupTokenFiles
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+
+CFGFUNCwriteTotalScriptTimeOnSuccess
