@@ -309,6 +309,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="0.12345678912"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKIsRainingOnPlayer" operation="set" value="0"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
@@ -320,6 +321,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="0.083"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="8"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKIsRainingOnPlayer" operation="set" value="1"/>
       </effect_group>
       <effect_group>
         <requirement name="!HasBuff" buff="buffGSKmodArmorWaterPurifier"/>
@@ -8195,18 +8197,31 @@
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTryRagdollSelf"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKSPRRagdollChanceFromCount" operation="set" value="@.iGSKTryRagdollSelf"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKSPRRagdollChanceFromCount" operation="multiply" value="25"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerGotPushed">
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKStrongPushAndRagdoll">
-          <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
-        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: push may trigger this (bug?): "INF PlayerSpawnedInWorld (reason: Teleport, position: 0, 36, 0): localplayer" instead of a short teleport offset it will teleport to an absolute location in the center of the world apparently. Try again on new game releases, spawn 6 boars and wait...
+      <effect_group>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="85" />
+        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="1" />
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKStrongPushAndRagdoll:eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="You got pushed by a strong beast..."/>
+      </effect_group>
+      -->
+      <effect_group>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKSPRRagdollChanceFromCount"/>
+        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKStrongPushAndRagdoll:eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="You got knocked down by a strong beast..."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKStrongPushAndRagdoll"/>
       </effect_group>
     </buff>
     <buff name="buffGSKElctrnTeleportUndergroundFree" hidden="false" icon="7dtdShockTip" icon_blink="true" name_key="TeleUnderground">
@@ -8389,8 +8404,6 @@
       <update_rate value="1"/>
       <effect_group help="ragdoll: by foe">
         <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKTryRagdollSelf"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
       </effect_group>
       <effect_group help="ragdoll: by fall impact">
@@ -8423,7 +8436,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".bGSKDoRagdollFromFallImpact" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="You miss step and fall down..."/>
+        <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="You stumble and fall down..."/>
         <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedLastX100"/>
         <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedRagDollCheckLuck"/>
       </effect_group>
@@ -9025,7 +9038,9 @@
       <display_value value="xxx"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveAllNegativeBuffs"/>
         <passive_effect name="CarryCapacity" operation="base_set" value="160"/>
         <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
         <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
