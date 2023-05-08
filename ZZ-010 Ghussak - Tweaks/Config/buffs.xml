@@ -20,98 +20,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffHiredNPCnoFallDamage4"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:END:buffHiredNPCnoFallDamage4"/>
       </effect_group>
-      <effect_group help="HPUP: workaround bkp and restore HP if dmg is more than 50 in 1s that is about 33% less than the fall damage">
-        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="@.fGSKHiredNPCHPprev"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="add" value="-50"/>
-      </effect_group>
-      <effect_group help="HPUP:log and heal">
-        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
-        <requirement name="CVarCompare" stat=".fGSKHiredNPCHPprevLess50" operation="GT" value="0"/>
-        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
-        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="@.fGSKHiredNPCHPprevLess50"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKHiredNPCHPprev"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="75"/>
-      </effect_group>
-      <effect_group help="HPUP: update backup HP (repeated add/sub to update faster per loop)">
-        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfFallImpact" action="LogMessage" message="GSK:HiredNPCFallImpact" help="fails"/>
-        <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:HiredNPCTeleported" help="fails"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
-    <buff name="_buffHiredNPCnoFallDamage_CAUSING_ERRORS_ON_LOG" hidden="true" remove_on_death="false" help="ERRORING:ProbablyAtSection=HPUP: INF MinEventLogMessage: GSK:START:buffHiredNPCnoFallDamage4;ArgumentNullException: Value cannot be null.;Parameter name: key;  at System.Collections.Generic.Dictionary2 TKey,TValue .FindEntry;at System.Collections.Generic.Dictionary2 TKey,TValue .TryGetValue;at EntityBuffs.GetCustomVar">
-      <stack_type value="ignore"/>
-      <duration value="0"/>
-      <update_rate value="1"/>
-      <requirements>
-        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
-      </requirements>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffHiredNPCnoFallDamage4"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:END:buffHiredNPCnoFallDamage4"/>
-      </effect_group>
       <effect_group help="FAIL: fall dmg resistance">
         <passive_effect name="BuffResistance" operation="base_add" value="10000" tags="buffPlayerFallingDamage"/>
       </effect_group>
@@ -130,48 +38,83 @@
         <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKHiredNPCFallImpHeal"/>
         <triggered_effect trigger="onSelfTeleported" action="LogMessage" message="GSK:HiredNPCTeleported"/>
       </effect_group>
-      <effect_group help="HPUP: workaround bkp and restore HP if dmg is more than 50 in 1s that is +- the fall damage">
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="@.fGSKHiredNPCHP"/>
+      <effect_group help="HPUP: workaround bkp and restore HP if dmg is more than 50 in 1s that is about 33% less than the fall damage">
+        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="@.fGSKHiredNPCHPprev"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="add" value="-50"/>
       </effect_group>
       <effect_group help="HPUP:log and heal">
-        <requirement name="CVarCompare" stat=".fGSKHiredNPCHPprevLess50" operation="GT" value="0"/>
-        <requirement name="StatCompare" stat="health" operation="GT" value="0"/>
-        <requirement name="StatCompare" stat="health" operation="LTE" value="@.fGSKHiredNPCHPprevLess50"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKHiredNPCHP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="50"/>
+        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".fGSKHiredNPCHPprevLess50" operation="GT" value="0"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="@.fGSKHiredNPCHPprevLess50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKHiredNPCHPprev"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_fallSpeed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="75"/>
       </effect_group>
-      <effect_group help="HPUP:update tmp cvar">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
-          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+      <effect_group help="HPUP: update backup HP (repeated add/sub to update faster per loop)">
+        <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
-          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
-          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
-          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="5">
-          <requirement name="StatCompare" stat="health" operation="GT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
-          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
-          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
-          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
-          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHP" operation="add" value="-5">
-          <requirement name="StatCompare" stat="health" operation="LT" value="@.fGSKHiredNPCHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="5">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprev" operation="add" value="-5">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.fGSKHiredNPCHPprev"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
