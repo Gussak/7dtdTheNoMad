@@ -431,7 +431,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
   
   export bCFGHelpMode=false
-  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit a key to continue" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
+  trap 'nErrVal=$?;if ! $bCFGHelpMode;then ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit ctrl+c to stop now (if you just hit a key it will continue but is not advised)" >&2;read -n 1&&:;fi;bNoChkErrOnExitPls=true;exit' ERR
   #trap 'nErrVal=$?;ps -o ppid,pid,cmd >&2;echo " (CFG)TRAP:ERROR=${nErrVal}:Ln=$LINENO: (${FUNCNAME[@]-}) Hit a key to continue" >&2;read -n 1&&:;bNoChkErrOnExitPls=true;exit' ERR
   trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
@@ -469,13 +469,6 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   
   export strCFGOriginalBkpSuffix=".OriginalOrExistingFile.BakupMadeBy_${strModNameForIDs}.bkp"
   
-  export strFlGenLoc="Config/Localization.txt"
-  export strFlGenLoa="Config/loadingscreen.xml"
-  export strFlGenEve="Config/gameevents.xml"
-  export strFlGenRec="Config/recipes.xml"
-  export strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml"
-  export strFlGenBuf="Config/buffs.xml"
-
   export strGenTmpSuffix=".GenCode.UpdateSection.TMP"
   
   iMissingCmdCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "ScriptsDependencies.AddedToRelease.Commands.txt")&&:;for strFl in "${astrFlList[@]}";do if ! which "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux command is missing: '$strFl'";((iMissingCmdCount++))&&:;fi;done
@@ -514,27 +507,30 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   #ps --no-headers -o cmd `ps --no-headers -o ppid $$` $$
   #if ps --no-headers -o cmd `ps --no-headers -o ppid $$` |egrep "\--help";then CFGFUNCshowHelp;fi
   strCFGLIBONLYSelfCmdLine="`ps --no-headers -o cmd $$`" #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
+  
+  # IMPORTANT: these are common params to all scripts sourcing this lib. They can be run with these options below ex.: createBundles.sh --help
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--help";then CFGFUNCshowHelp;fi #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then CFGFUNCshowHelp --func;fi #help show function's help info for developers.    
-  if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
-    #if [[ "$1" == --help ]];then #help show this help. This lib script will receive all params of the script calling it if no param is passed to it on that caller script ex.: ./rwgImprovePOIs.sh --help; this script will receive and execute --help too, but ONLY if this script is called w/o params like: ./libSrcCfgGenericToImport.sh
-      #CFGFUNCshowHelp
-      ##exit 1
-    #elif [[ "$1" == --helpfunc ]];then #help show function's help info for developers.    
-      #CFGFUNCshowHelp --func
-    #elif [[ "$1" == --gencodeTrashLast ]];then #help trash tmp files for code generator
-      #bCFGOptgencodeTrashLast=true
-    #else
-      #CFGFUNCinfo "(LIB)WARN:ignored unsupported param '$1'"
-    ##else
-      ##CFGFUNCinfo "CFGLIB:PROBLEM: invalid option '$1'"
-      ##CFGFUNCshowHelp
-      ###$0 --help #$0 considers ./, works best anyway..
-      ##exit 1
-    #fi
-    #shift&&:
-  #done
+  
+  #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--gencodeTrashLast";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
+  
+  # IMPORTANT: these options will be dected only if passed on the source cmd line inside the script ex.: source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast; if that line contains no parameters, the parameters passed to the script where it was coded will come directly to here, therefore these options must not clash with options there, so prefix them with --LIB !
+  while ! ${1+false} && [[ "${1:0:1}" == "-" ]];do
+    if [[ "$1" == --LIBgencodeTrashLast ]];then #help trash tmp files for code generator
+      bCFGLIBONLYOptgencodeTrashLast=true
+    else
+      CFGFUNCinfo "(LIB)WARN:ignored unsupported param '$1'"
+    fi
+    shift&&:
+  done
 
+  export strFlGenLoc="Config/Localization.txt"
+  export strFlGenLoa="Config/loadingscreen.xml"
+  export strFlGenEve="Config/gameevents.xml"
+  export strFlGenRec="Config/recipes.xml"
+  export strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml" #TODO change everywhere to strFlGenIte
+  export strFlGenBuf="Config/buffs.xml"
+  #ps --no-headers -o cmd $$ $PPID;declare -p bCFGLIBONLYOptgencodeTrashLast;read -p oi
   if $bCFGLIBONLYOptgencodeTrashLast;then
     CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:

@@ -118,7 +118,7 @@ function FUNCromanNumbers() {
 if $bDebug || $bNiceReading;then echo;fi
 
 IFS=$'\n' read -d '' -r -a astrFullLineList < <(cat "$strFl")&&:
-iNoteIndex=10
+iNoteIndex=100 #good to them all have the same id text size
 strNewNote=""
 strNewNoteName=""
 strTitle=""
@@ -139,7 +139,7 @@ iAllNewNoteTot=0
 bDontIncTitleIndexOnce=true
 
 strNewJournalEntry=""
-iJournalEntryIndex=1
+iJournalEntryIndex=100 #good to them all have the same id text size
 astrJournalEntryIDList=()
 
 #strFlGenLoc="Config/Localization.txt"
@@ -360,6 +360,9 @@ fi
 
 #ls -l *"${strGenTmpSuffix}"&&:
 if $bGenLoc;then
+  #if((`cat "${strFlGenLoc}${strGenTmpSuffix}"|wc -l`!=`cat "${strFlGenLoc}${strGenTmpSuffix}"|sort -u|wc -l`));then CFGFUNCDevMeErrorExit "there are dup results";fi
+  strLocDataUnique="`cat "${strFlGenLoc}${strGenTmpSuffix}" |sort -u`" #TODO: this is a dirty workaround. the code is generating dup lines but there is no real problem with that. the dump for a same thing is being done more than once somewhere... w/e.
+  echo "$strLocDataUnique" >"${strFlGenLoc}${strGenTmpSuffix}"
   CFGFUNCgencodeApply "${strFlGenLoc}${strGenTmpSuffix}" "${strFlGenLoc}"
 fi 
 if $bGenXml;then

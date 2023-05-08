@@ -143,6 +143,8 @@ if ! ls -l "$strFlPatch" "$strFlToPatch";then
   CFGFUNCerrorExit "InputFilesMissing."
 fi
 
+if [[ "${strFlToPatch}" =~ ^.*[.]txt$ ]] && ((`cat "${strFlPatch}"|wc -l`!=`cat "${strFlPatch}"|sort -u|wc -l`));then CFGFUNCDevMeErrorExit "there are dup results in '${strFlPatch}' simple text file";fi
+
 strCallerAsTokenID="`echo "${strCallerScript%.sh}" |tr '[:lower:]' '[:upper:]'`"
 
 strFinalToken="${strCallerAsTokenID}${strSubTokenId}"

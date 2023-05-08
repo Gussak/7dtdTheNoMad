@@ -42,6 +42,7 @@ astrCVarList=(
   ".iGSKPlayerNPCInfoArmorDmgPercent"
   ".iGSKPlayerNPCInfoPermanentArmorDmg"
   ".iGSKPlayerNPCInfoRepairSelfArmor"
+  #".iGSKPlayerNPCInfoHealingMedicine"
 )
 
 # PERCENTS
