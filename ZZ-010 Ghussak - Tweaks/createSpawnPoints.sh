@@ -39,7 +39,7 @@ bParachuteMode=true #help on the 1st spawn, the engine will place the player on 
 
 #help after death, player seems to respawn always on the nearest spawnpoints.xml if having no bed placed
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 strPathWork="GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory"
 strFlGenSpa="${strPathWork}/spawnpoints.xml"
@@ -59,7 +59,7 @@ if [[ "${1-}" == "-e" ]];then #help prefab elevations
   exit 0
 fi
 
-# trash special files that are not at --gencodeTrashLast option:
+# trash special files that are not at --LIBgencodeTrashLast option:
 CFGFUNCtrash "${strFlGenSpa}${strGenTmpSuffix}"
 CFGFUNCtrash "${strFlGenBuf}TeleSpawnLog${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}"&&:

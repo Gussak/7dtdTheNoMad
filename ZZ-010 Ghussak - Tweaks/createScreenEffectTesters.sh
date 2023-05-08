@@ -31,7 +31,7 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 #help existing ModifyScreenEffect options (?) from resources.assets, read also Data/Config/XML.txt
 #help egrep 'ModifyScreenEffect' ../* -rIn --include="*.xml" |egrep 'effect_name="[^"]*"' -o |sort -u

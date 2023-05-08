@@ -37,7 +37,7 @@
 set -Eeu
 
 #if [[ "${1-}" == --help ]];then source ./libSrcCfgGenericToImport.sh --help;exit 0;fi
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 strPrefabsXml="prefabs.xml"
 

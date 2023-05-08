@@ -31,7 +31,7 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
     #<action_sequence name="eventGSKElctrnTeleNo" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,0,'"${nRange}"'"/></action_sequence>
     #<action_sequence name="eventGSKElctrnTeleSo" template="eventGSKElctrnTele"><variable name="v3Dir" value="0,0,-'"${nRange}"'"/></action_sequence>

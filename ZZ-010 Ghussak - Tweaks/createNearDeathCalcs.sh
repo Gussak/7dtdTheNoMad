@@ -33,7 +33,7 @@
 
 #strScriptName="`basename "$0"`"
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 : ${fGSKHPBlkChemUseMin:=0.15} #help to start the debuff
 : ${fMultPerLvl:=0.666} #help to decrease the next min/max value

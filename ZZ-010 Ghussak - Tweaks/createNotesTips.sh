@@ -37,7 +37,7 @@
 #strModName="The NoMad"
 #echo $LINENO
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 #source ./libSrcCfgGenericToImport.sh
 #fi
 #echo $LINENO

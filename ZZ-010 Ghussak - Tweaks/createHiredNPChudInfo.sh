@@ -33,7 +33,7 @@
 
 #strScriptName="`basename "$0"`"
 
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
 

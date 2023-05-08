@@ -140,10 +140,10 @@ function CFGFUNCechoLogPRIVATE() {
   CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
   if [[ "$1" == "--error" ]];then
     shift
-    echo "$* (Stack: ${FUNCNAME[@]-})" >>"$strCFGErrorLog"
+    echo "$* (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >>"$strCFGErrorLog"
   fi
   echo "$*" >&2
-  echo "$* (Stack: ${FUNCNAME[@]-})" >>"$strCFGScriptLog"
+  echo "$* (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >>"$strCFGScriptLog"
 };export -f CFGFUNCechoLogPRIVATE
 function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
   local lbSIGINTonMeld=false
@@ -227,8 +227,8 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
     echo "====================== ERROR LOG ======================"
     cat "${strCFGErrorLog}"
     echo "====================== ERROR LOG ======================"
-    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (Stack: ${FUNCNAME[@]-})" >&2
-    echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (Stack: ${FUNCNAME[@]-})"
+    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >&2
+    echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})"
     read -n 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then trash "${strCFGErrorLog}";return 0;fi
     #read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
     #trash "${strCFGErrorLog}"
@@ -240,12 +240,12 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
 function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
   if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "now $FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
-  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]-})" 
+  CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" 
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (Caller ${FUNCNAME[1]}) (Stack: ${FUNCNAME[@]-})"
+  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})"
   exit 1
 };export -f CFGFUNCDevMeErrorExit
 
@@ -255,7 +255,7 @@ function CFGFUNCDryRunMsg() {
 function CFGFUNCexec() { #helpf [--noErrorExit] [-m <lstrComment>] <<acmd>>
   local lbAllowErrorExit=true;if [[ "$1" == --noErrorExit ]];then shift;lbAllowErrorExit=false;fi
   local lstrComment="";if [[ "$1" == -m ]];then shift;lstrComment="#COMMENT: $1";shift;fi
-  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $* ${lstrComment} (Stack: ${FUNCNAME[@]-})"
+  CFGFUNCcleanEchoPRIVATE " (((EXEC`CFGFUNCDryRunMsg`))) $* ${lstrComment} (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})"
   if ! $bCFGDryRun;then
     "$@"&&:;local lnRet=$?
     if((lnRet>0));then
@@ -512,16 +512,16 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--help";then CFGFUNCshowHelp;fi #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then CFGFUNCshowHelp --func;fi #help show function's help info for developers.    
   
-  #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--gencodeTrashLast";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
+  #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--LIBgencodeTrashLast";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
   
   # IMPORTANT: these options will be dected only if passed on the source cmd line inside the script ex.: source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast; if that line contains no parameters, the parameters passed to the script where it was coded will come directly to here, therefore these options must not clash with options there, so prefix them with --LIB !
-  while ! ${1+false} && [[ "${1:0:1}" == "-" ]];do
+  while ! ${1+false} && [[ "${1:0:5}" == "--LIB" ]];do
     if [[ "$1" == --LIBgencodeTrashLast ]];then #help trash tmp files for code generator
       bCFGLIBONLYOptgencodeTrashLast=true
+      shift #ONLY CONSUME IF IT MATCHES!!!!!!! or it will mess the caller script params collection!
     else
-      CFGFUNCinfo "(LIB)WARN:ignored unsupported param '$1'"
+      break #MUST BREAK TO AVOID ENDLESS LOOP!!!!!!
     fi
-    shift&&:
   done
 
   export strFlGenLoc="Config/Localization.txt"

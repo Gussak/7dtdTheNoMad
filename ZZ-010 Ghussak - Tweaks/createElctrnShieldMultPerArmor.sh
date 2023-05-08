@@ -38,7 +38,7 @@
 #trash "${strFlGenLoc}${strGenTmpSuffix}"&&:
 #trash "${strFlGenRec}${strGenTmpSuffix}"&&:
 #trash "${strFlGenXml}${strGenTmpSuffix}"&&:
-source ./libSrcCfgGenericToImport.sh --gencodeTrashLast
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 astrArmorTypes=( # values based on protection value, so if they change the protection it should be updated here
   "Cloth|Santa" 0.20
