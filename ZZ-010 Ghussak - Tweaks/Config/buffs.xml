@@ -3681,6 +3681,9 @@
   <set xpath="/buffs/buff[@name='buffRadiation01']/effect_group/triggered_effect[       @trigger='onSelfBuffUpdate'  and       @action='ModifyCVar'         and       @cvar='$buffStatusRadiation' and       @operation='subtract'        and       @value='randomfloat(.015,.05)'     ]/@value">randomfloat(.0015,.0050)</set>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='ModifyScreenEffect' and @effect_name='Radiation' and @intensity='0.025']"/>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='ModifyScreenEffect' and @effect_name='Radiation' and @intensity='0.055']"/>
+  <append xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadiationScrEffOff"/>
+  </append>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group/triggered_effect[@trigger='onSelfBuffStart' and @action='ModifyScreenEffect' and @effect_name='Radiation']"/>
   <!-- HELPGOOD: patch for RealRad vs this mod, these make the other hazards impossible to deal with, they work best using RealRad alone. -->
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group/passive_effect[@name='FoodMaxBlockage' and @operation='base_add' and @value='@$buffStatusRadiation']"/>
@@ -3690,6 +3693,16 @@
   </append>
   <remove xpath="/buffs/buff[@name='buffRadiation03']/effect_group/triggered_effect[@trigger='onSelfBuffStart' and @action='ModifyScreenEffect' and @effect_name='Radiation']"/>
   <append xpath="/buffs">
+    <buff name="buffGSKRadiationScrEffOff" hidden="true" help="this will make screen radiation bearable making everything visible for a short time. buffRadiation01 has update_rate 3s. The effects there have 2s fade in. this buff must work just after that (after 2s) and complement it (1s) before the next loop there.">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="2.0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.025" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.0" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationScrEffOff"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHazardousWRadiation28" icon_blink="true" icon="ui_game_symbol_radiation" icon_color="200,200,128" description_key="buffGSKHazardousWRadiationDesc" name_key="RadiationHazard">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -9026,7 +9039,7 @@
     </buff>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKGodModeFull" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,250,155">
+    <buff name="buffGSKGodModeFull" hidden="false" help="do not create a recipe to activate this duh. You can place super powers here, this is NOT meant to protect the player in a normal gameplay in special moments" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,250,155">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <display_value_key value="buffGodModeNameShort"/>
@@ -9039,9 +9052,10 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. " description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,180,180">
+    <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. DO NOT PUT SUPER POWERS HERE, this is meant just to protect the player in special moments in a normal gameplay" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,180,180">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <display_value_key value="buffGodModeNameShort"/>
@@ -9057,6 +9071,10 @@
         <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <!-- HELPGOOD: DO NOT PUT SUPER POWERS HERE, this is meant to protect the player too in special moments in a normal gameplay
+        <passive_effect name="WalkSpeed" operation="perc_add" value="5.0"/>
+        <passive_effect name="RunSpeed"  operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
+-->
       </effect_group>
     </buff>
     <buff name="buffGSKGodModeFirstSpawn" hidden="true" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">

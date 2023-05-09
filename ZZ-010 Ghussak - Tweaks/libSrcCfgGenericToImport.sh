@@ -53,7 +53,7 @@ function CFGFUNCcleanMsgPRIVATE() {
     -e "s@${strCFGGeneratedWorldsFolderRegex}@(RwgDir)@g"        \
     -e "s@${strCFGGeneratedWorldTNMFolderRegex}@(RwgTNMDir)@g"
 };export -f CFGFUNCcleanMsgPRIVATE
-function CFGFUNCcleanEchoPRIVATE() {
+function CFGFUNCcleanEchoPRIVATE() { 
   local lstr="`CFGFUNCcleanMsgPRIVATE " (CFG:${SECONDS}/${astrCFGTotalRunTimeList[${strCFGScriptNameAsID}]-}s) $*"`"
   CFGFUNCechoLogPRIVATE "${lstr}"
   #echo "$lstr" >&2
@@ -136,13 +136,21 @@ function CFGFUNCtrash() { #helpf <file>
     shift&&:
   done
 };export -f CFGFUNCtrash
+function CFGFUNCechoPRIVATE() {
+  CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
+  echo "$*" >&2
+};export -f CFGFUNCechoPRIVATE
 function CFGFUNCechoLogPRIVATE() {
   CFGFUNCerrorForceEndPRIVATE #this is here just because this function is the one called most often
   if [[ "$1" == "--error" ]];then
     shift
     echo "$* (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >>"$strCFGErrorLog"
   fi
-  echo "$*" >&2
+  if ! ${bCFGLIBONLYOptInfoDebugMode-false};then
+    CFGFUNCechoPRIVATE "$*" #all terminal output should be thru here
+  else
+    bCFGLIBONLYOptInfoDebugMode=false #unnecessary? the only terminal output should be on the above but...
+  fi
   echo "$* (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >>"$strCFGScriptLog"
 };export -f CFGFUNCechoLogPRIVATE
 function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better just pass only 2 files...
@@ -239,13 +247,15 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
 
 function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "now $FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
+  if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "$FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
   CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" 
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
-  CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})"
+  while true;do #requires ctrl+c now
+    CFGFUNCechoLogPRIVATE --error "   !!!!!! [ERROR:DEVELOPER:SELFNOTE] $1 !!!!!! (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-}) (YOU NEED TO HIT ctrl+c now)"
+  done
   exit 1
 };export -f CFGFUNCDevMeErrorExit
 
@@ -303,30 +313,35 @@ function CFGFUNCprompt() { #helpf [-q] <lstrMsg>
   
   return 0
 };export -f CFGFUNCprompt
-function CFGFUNCinfo() { #helpf [-l <lnLine>] <verboseMsg>
+#function CFGFUNCinfo() { #helpf [-l <lnLine>] [-v] <lstrFullMsg>; if the -v option is used, the message will only be shown on the terminal if --verbose mode is enabled, but it will always be on the log
+function CFGFUNCinfo() { #helpf [-l <lnLine>] [--dgb] <lstrFullMsg> ; if --dbg option is used, the message will only only be only on the log file
   local lstrLine="";if [[ "$1" == -l ]];then shift;lstrLine=":Ln${1}";shift;fi
+  #local lstrOptLogOnly="";if [[ "$1" == -v ]] && ! $bCFGVerboseOutput;then lstrOptLogOnly="-l";fi
+  #local lstrDbgMode="";if [[ "$1" == --dbg ]];then lstrDbgMode="$1";fi
+  bCFGLIBONLYOptInfoDebugMode=false;if [[ "$1" == --dbg ]];then bCFGLIBONLYOptInfoDebugMode=true;fi #only sub calls after this shall use bCFGLIBONLYOptInfoDebugMode
   #[shortMsg]
-  local lstrVerboseMsg=" [INFO] $* (Caller ${FUNCNAME[1]}${lstrLine})";shift
+  local lstrFullMsg=" [INFO] $* (Caller ${FUNCNAME[1]}${lstrLine})";shift
   #local lstrShortMsg="${1-}";shift&&:
   
   #local lstrMsg=" [INFO] $lstrShortMsg"
   #if $bCFGVerbose || [[ -z "${lstrShortMsg-}" ]];then
-    #lstrMsg="$lstrVerboseMsg"
+    #lstrMsg="$lstrFullMsg"
   #fi
   #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrMsg"
   
   #if ! $bCFGVerbose && [[ -n "${lstrShortMsg-}" ]];then
     #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrShortMsg"
   #else
-    #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
+    #CFGFUNCcleanEchoPRIVATE " [INFO] $lstrFullMsg (Caller ${FUNCNAME[1]})"
   #fi
   
   #!!! no CFGFUNCcleanEchoPRIVATE for the log !!!
-  #CFGFUNCechoLogPRIVATE " [INFO] $lstrVerboseMsg (Caller ${FUNCNAME[1]})"
-  #CFGFUNCechoLogPRIVATE --logOnly "$lstrVerboseMsg"
-  #CFGFUNCechoLogPRIVATE "$lstrVerboseMsg"
+  #CFGFUNCechoLogPRIVATE " [INFO] $lstrFullMsg (Caller ${FUNCNAME[1]})"
+  #CFGFUNCechoLogPRIVATE --logOnly "$lstrFullMsg"
+  #CFGFUNCechoLogPRIVATE "$lstrFullMsg"
   
-  CFGFUNCcleanEchoPRIVATE "$lstrVerboseMsg"
+#  CFGFUNCcleanEchoPRIVATE ${lstrDbgMode} "$lstrFullMsg" #lstrDbgMode is w/o quotes to not create an empty param
+  CFGFUNCcleanEchoPRIVATE "$lstrFullMsg"
 };export -f CFGFUNCinfo
 function CFGFUNCcreateBackup() { #helpf <lstrFlDest>
   #local lbOrigBkpOnly=false;if [[ "$1" == --onlyCreateOriginalBackup ]];then shift;lbOrigBkpOnly=true;fi
@@ -397,6 +412,13 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
 
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
+  
+  if [[ -z "${WINEPREFIX-}" ]];then echo "WARNING: WINEPREFIX is not set (this is ok if on cygwin)" >&2;fi
+  
+  : ${bCFGInteractive:=true} #help running like this will accept all prompts: bInteractive=false ./installSpecificFilesIntoGameFolder.sh
+  export bCFGInteractive
+  fCFGPromptWait=$((60*60*24*31*3));if ! $bCFGInteractive;then fCFGPromptWait=0.01;fi
+  
   SECONDS=0
   export strCFGDtFmt="%Y_%m_%d-%H_%M_%S" #%Y_%m_%d-%H_%M_%S_%N
   shopt -s expand_aliases
@@ -405,8 +427,15 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export bCFGDryRun
   
   mkdir -vp _log _tmp
+  
   export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
-  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.LastRunErrors.log"
+  export strCFGScriptLogLastLink="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.Last.log"
+  ln -sfT "${strCFGScriptLog}" "${strCFGScriptLogLastLink}"
+  
+  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.`date +"${strCFGDtFmt}"`.Errors.log"
+  export strCFGErrorLogLastLink="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.Errors.Last.log"
+  ln -sfT "${strCFGErrorLog}" "${strCFGErrorLogLastLink}"
+  
   export strCFGFlTotalRunTimeSrc="`pwd `/`dirname "${0}"`/_tmp/CFGTotalScriptsRunTimes.sh"
   #declare -p strCFGScriptLog
   declare -A astrCFGTotalRunTimeList=()
@@ -426,6 +455,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   
   : ${strCFGGeneratedWorldTNM:="East Nikazohi Territory"} #help
   export strCFGGeneratedWorldTNM
+  export strCFGGeneratedWorldTNMFixedAsID="`CFGFUNCfixId "$strCFGGeneratedWorldTNM"`"
   
   export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
@@ -454,10 +484,6 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   if ! [[ "$strModNameForIDs" =~ ^[a-zA-Z0-9_]*$ ]];then CFGFUNCerrorExit " (CFG)ERROR: invalid chars at strModNameForIDs='$strModNameForIDs'";fi
   
   #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh
-  
-  : ${bCFGInteractive:=true} #help running like this will accept all prompts: bInteractive=false ./installSpecificFilesIntoGameFolder.sh
-  export bCFGInteractive
-  fCFGPromptWait=$((60*60*24*31*3));if ! $bCFGInteractive;then fCFGPromptWait=0.01;fi
   
   : ${bCFGVerbose:=false} #help enable this to show detailed messages. Anyway everything will be in the install log.
   export bCFGVerbose
@@ -508,9 +534,11 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   #if ps --no-headers -o cmd `ps --no-headers -o ppid $$` |egrep "\--help";then CFGFUNCshowHelp;fi
   strCFGLIBONLYSelfCmdLine="`ps --no-headers -o cmd $$`" #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   
+  #export bCFGVerboseOutput=false
   # IMPORTANT: these are common params to all scripts sourcing this lib. They can be run with these options below ex.: createBundles.sh --help
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--help";then CFGFUNCshowHelp;fi #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then CFGFUNCshowHelp --func;fi #help show function's help info for developers.    
+  #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--verbose";then bCFGVerboseOutput=true;fi #help some times this extra log will be useful
   
   #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--LIBgencodeTrashLast";then bCFGLIBONLYOptgencodeTrashLast=true;fi #help trash tmp files for code generator
   

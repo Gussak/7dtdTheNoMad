@@ -54,8 +54,16 @@ if $bHCTCrouchHeight;then
     #property[@name='OneBlockCrouch']/@value">true</set>
     #0-SCore
     
-  : ${fCrouchHeight:="0.40"} #help this string must be a float with 4 characters. Keep the float above 0.00 and below 1.00
-  if egrep "PhysicsCrouchHeightModifier ${fCrouchHeight}" "${strRequiredBinaryFile}" -ao;then
+  : ${fCrouchHeight:="0.40"} #help this string must be a float with 4 characters as the original is "0.75". Keep the float above 0.00 and below 1.00, but should be below original value to have a meaning, and <= 0.50 to be useful
+  : ${fPositionSpring2Damping:="0.50"} #help this string must be a float with 4 characters as the original is "0.25". Keep the float above 0.00 and below 1.00, but should be below original value to have a meaning, and > 0.25 to be useful
+  bSkipAlreadyDone=true
+  if ! egrep "PhysicsCrouchHeightModifier ${fCrouchHeight}" "${strRequiredBinaryFile}" -ao;then
+    bSkipAlreadyDone=false
+  fi
+  if ! egrep "PositionSpring2Damping ${fPositionSpring2Damping}" "${strRequiredBinaryFile}" -ao;then
+    bSkipAlreadyDone=false
+  fi
+  if $bSkipAlreadyDone;then
     CFGFUNCinfo "Skipping, the file '${strRequiredBinaryFile}' is already patched to fCrouchHeight='$fCrouchHeight'!"
     exit 0
   fi
@@ -82,14 +90,17 @@ if $bHCTCrouchHeight;then
   ls -l "$strFlTmp"
   
   CFGFUNCinfo "Existing values:"
-  egrep "PhysicsCrouchHeightModifier....." "${strFlTmp}" -ao
+  egrep "PhysicsCrouchHeightModifier.....|PositionSpring2Damping....." "${strFlTmp}" -ao
   
   CFGFUNCinfo "PATCHING the temporary file: $strPatience"
-  CFGFUNCexec sed -i -r "s'(PhysicsCrouchHeightModifier)(.)(....)'\1\2${fCrouchHeight}'g" "${strFlTmp}"
+  CFGFUNCexec sed -i -r \
+    -e "s'(PhysicsCrouchHeightModifier)(.)(....)'\1\2${fCrouchHeight}'g" \
+    -e "s'(PositionSpring2Damping)(.)(....)'\1\2${fPositionSpring2Damping}'g" \
+    "${strFlTmp}"
   ls -l "$strFlTmp"
   
   CFGFUNCinfo "Patched values:"
-  egrep "PhysicsCrouchHeightModifier....." "${strFlTmp}" -ao
+  egrep "PhysicsCrouchHeightModifier.....|PositionSpring2Damping....." "${strFlTmp}" -ao
   
   if(( nSzBytes != $(stat -c "%s" "$strFlTmp") ));then 
     CFGFUNCexec rm -v "${strFlTmp}"
@@ -102,7 +113,7 @@ if $bHCTCrouchHeight;then
     CFGFUNCexec mv -v "${strFlTmp}" "${strRequiredBinaryFile}"
     
     CFGFUNCinfo "Confirm patched values at final file:"
-    if egrep "PhysicsCrouchHeightModifier ${fCrouchHeight}" "${strRequiredBinaryFile}" -ao;then
+    if egrep "PhysicsCrouchHeightModifier ${fCrouchHeight}|PositionSpring2Damping ${fPositionSpring2Damping}" "${strRequiredBinaryFile}" -ao;then
       CFGFUNCinfo "SUCCESS!"
     else
       CFGFUNCerrorExit "something went wrong, the final file has not the patched value..."
