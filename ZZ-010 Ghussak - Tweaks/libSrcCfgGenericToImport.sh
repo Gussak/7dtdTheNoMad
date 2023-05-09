@@ -432,8 +432,8 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGScriptLogLastLink="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.Last.log"
   ln -sfT "${strCFGScriptLog}" "${strCFGScriptLogLastLink}"
   
-  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.`date +"${strCFGDtFmt}"`.Errors.log"
-  export strCFGErrorLogLastLink="`pwd `/`dirname "${0}"`/_tmp/`basename "${0}"`.Errors.Last.log"
+  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.Errors.log"
+  export strCFGErrorLogLastLink="`pwd `/`dirname "${0}"`/_log/`basename "${0}"`.Errors.Last.log"
   ln -sfT "${strCFGErrorLog}" "${strCFGErrorLogLastLink}"
   
   export strCFGFlTotalRunTimeSrc="`pwd `/`dirname "${0}"`/_tmp/CFGTotalScriptsRunTimes.sh"

@@ -10,7 +10,7 @@
 # the data for each entry is: iXTopLeft;iZTopLeft;iXBottomRight;iZBottomRight
 # each town can have more than one rectangle, and each rectangle can overlap, they are just limits to search for POIs within and protect or destroy them (towns outside wasteland will be removed as they will make things easier and you would need to explore the world much less).
 # Biomes are: Desert Snow PineForest Wasteland (copy/paste from here as these are IDs and must match case sensitive)
-# in developer mode 'dm', in the map, turn on the static map view and click the left arrow to show the biomes, then navigate and position the mouse and collect the coordinates: West and South are negative values.
+# in developer mode 'dm', in the map, turn on the static map view and click the left arrow to show the biomes, then navigate and position the mouse and collect the coordinates: West and South are negative values. Position the cursor with a good big margin for the top left and bottom right corners, but only for the town limits, not other buildings nearby.
 # spaces characters are not allowed (they could be but is much more trouble to code)
 
 astrWorldDataList=( #here you can configure your world data
@@ -30,13 +30,13 @@ astrWorldDataList=( #here you can configure your world data
   Random3
 );for strWorldData in "${astrWorldDataList[@]}";do strWorldDataTMP+="${strWorldData}_";done #DONT TOUCH THIS LINE (unless your know what your are doing)! it will mix the above to prepare the bash script array key below
 
-# here are the specific towns rectangles, you have to configure the Biome, the TownID and the rectangle data. Do NOT put spaces in each of the below lines!
+# here are the specific towns rectangles. you have to configure the Biome, the TownID and the rectangle data. Do NOT put spaces in each of the below lines!
 astrTownList["${strWorldDataTMP}BiomeWasteland_TownIDBig"]="582,-351,1120,-928"
 
-astrTownList["${strWorldDataTMP}BiomePineForest_TownIDSmall1"]="2277,-587,2577,-735"
-astrTownList["${strWorldDataTMP}BiomePineForest_TownIDSmall2"]="2426,-287,2577,-735"
+astrTownList["${strWorldDataTMP}BiomePineForest_TownIDSmall1"]="2166,-440,2638,-808"
+astrTownList["${strWorldDataTMP}BiomePineForest_TownIDSmall2"]="2426,-287,2638,-808"
 
-astrTownList["${strWorldDataTMP}BiomePineForest_TownIDTiny"]="3331,-1066,3482,-1366"
+astrTownList["${strWorldDataTMP}BiomePineForest_TownIDTiny"]="3254,-976,3536,-1415"
 
 astrTownList["${strWorldDataTMP}BiomeWasteland_TownIDTinyToo"]="-405,-2164,-238,-2429"
 
