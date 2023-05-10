@@ -456,6 +456,8 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${strCFGGeneratedWorldTNM:="East Nikazohi Territory"} #help
   export strCFGGeneratedWorldTNM
   export strCFGGeneratedWorldTNMFixedAsID="`CFGFUNCfixId "$strCFGGeneratedWorldTNM"`"
+  : ${strCFGGeneratedWorldSpecificDataAsID:="SeedHolyAir2_Size10240_TownsFew_WildPOIsMany_RiversMany_CratersMany_CracksMany_LakesMany_Plains0_Hills10_Mountains10_Random3"} #help these are all the values used in RWG config screen
+  export strCFGGeneratedWorldSpecificDataAsID
   
   export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir

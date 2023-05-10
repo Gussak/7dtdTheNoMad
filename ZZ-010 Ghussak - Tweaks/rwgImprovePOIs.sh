@@ -64,7 +64,7 @@ mkdir -vp "$strTmpPath"
 
 #strRegexProtectedPOIs="(part_|rwg_|spider_|installation_red_mesa)"
 strRegexCarefullyProtectedPOIs="(spider_)"
-strRegexProtectedPOIs="(part_|rwg_|${strRegexCarefullyProtectedPOIs})" #these POIs shall be completely ignored anywhere #TODO ignore them if in removed towns too. rwg_ are for tiles rwg_tile_, including rwg_bridge_. part_ are things that are not buildings but complement the urbanicity. spider_ are potentially very hard special places, dont touch them ever!
+strRegexProtectedPOIs="(bombshelter_|bridge_|docks_|part_|rwg_|${strRegexCarefullyProtectedPOIs})" #these POIs shall be completely ignored anywhere #TODO ignore them if in removed towns too. rwg_ are for tiles rwg_tile_, including rwg_bridge_. part_ are things that are not buildings but complement the urbanicity. spider_ are potentially very hard special places, dont touch them ever! docks_ and bridge_ are very well placed by RWG near water, but missing ones will be placed weirdly elsewhere by this script TODO place them properly using the AddExtraSpecialPOIs file.
 
 astrIgnoreTmp=( #these wont be used to create variety, they will be ignored when looking for missing POIs on the original file created by the game engine RWG
   "house_new_mansion_03" #there is no data for this POI and it cause errors on log when loading the game
@@ -130,14 +130,14 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
   for strTownData in "${!astrTownList[@]}";do
     eval "`echo "$strTownData" |sed -r 's@(.*)_CFG_(.*)_Biome(.*)_TownID(.*)@strPITWorldName="\1";strPITRWGcfg="\2";strPITBiome="\3";strPITTownID="\4";@'`"
     eval "`echo "${astrTownList[$strTownData]}" |sed -r 's@^([^,]*),([^,]*),([^,]*),([^,]*)$@iXTopLeftPIT=\1;iZTopLeftPIT=\2;iXBottomRightPIT=\3;iZBottomRightPIT=\4;@'`"
-    strDbg="`declare -p strCFGGeneratedWorldTNMFixedAsID lstrIgnoreBiome strPITWorldName strPITRWGcfg strPITBiome strPITTownID iXTopLeftPIT iZTopLeftPIT iXBottomRightPIT iZBottomRightPIT lnX lnZ|tr '\n' ';'`"
+    strDbg="`declare -p strCFGGeneratedWorldTNMFixedAsID strCFGGeneratedWorldSpecificDataAsID lstrIgnoreBiome strPITWorldName strPITRWGcfg strPITBiome strPITTownID iXTopLeftPIT iZTopLeftPIT iXBottomRightPIT iZBottomRightPIT lnX lnZ|tr '\n' ';'`"
     CFGFUNCinfo --dbg "$strDbg" #this will be only on the log file
     if((iXTopLeftPIT>=iXBottomRightPIT || iZTopLeftPIT<=iZBottomRightPIT));then
       CFGFUNCerrorExit "invalid corners. iXTopLeftPIT=$iXTopLeftPIT >= iXBottomRightPIT=$iXBottomRightPIT || iZTopLeftPIT=$iZTopLeftPIT <= iZBottomRightPIT=$iZBottomRightPIT. $strDbg"
     fi
     if [[ "$strPITBiome" != "Wasteland" ]];then ((iTownRectanglesOutsideWastelandCount++))&&:;fi
     if [[ -n "$lstrIgnoreBiome" ]] && [[ "${lstrIgnoreBiome}" =~ "$strPITBiome" ]];then continue;fi
-    if [[ "${strCFGGeneratedWorldTNMFixedAsID}" == "${strPITWorldName}" ]];then
+    if [[ "${strCFGGeneratedWorldTNMFixedAsID}" == "${strPITWorldName}" ]] && [[ "${strCFGGeneratedWorldSpecificDataAsID}" == "${strPITRWGcfg}" ]];then
       if((lnX>=iXTopLeftPIT && lnX<=iXBottomRightPIT && lnZ<=iZTopLeftPIT && lnZ>=iZBottomRightPIT));then
         declare -g strPITWorldName strPITRWGcfg strPITBiome strPITTownID iXTopLeftPIT iZTopLeftPIT iXBottomRightPIT iZBottomRightPIT
         CFGFUNCinfo "InTownLimits($lnX,$lnZ) $strPITBiome $strPITTownID ($iXTopLeftPIT,$iZTopLeftPIT,$iXBottomRightPIT,$iZBottomRightPIT)"
@@ -183,11 +183,30 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
   #return 1
 }
 
-function FUNCgetXYZ() { #<lstrPosOrig> set global vars: nX nY nZ
+function FUNCgetV3() { #<lstrPosOrig> set global vars: n1 n2 n3
   local lstrPosOrig="$1";shift
   if [[ -z "$lstrPosOrig" ]];then CFGFUNCerrorExit "invalid lstrPosOrig='$lstrPosOrig'";fi
-  local lstrGlobalsXYZ="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
-  eval "$lstrGlobalsXYZ" #nX nY nZ
+  local lstrGlobals123="`echo "${lstrPosOrig}" |sed -r 's@([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*@declare -g n1=\1 n2=\2 n3=\3;@' |head -n 1`" #collect only the integer part
+  CFGFUNCinfo --dbg "`declare -p lstrPosOrig lstrGlobals123`"
+  eval "$lstrGlobals123"
+}
+function FUNCgetXYZ() { #<lstrPosOrig> set global vars: nX nY nZ
+  FUNCgetV3 "$1"
+  declare -g nX=$n1 nY=$n2 nZ=$n3
+  #local lstrPosOrig="$1";shift
+  #if [[ -z "$lstrPosOrig" ]];then CFGFUNCerrorExit "invalid lstrPosOrig='$lstrPosOrig'";fi
+  #local lstrGlobalsXYZ="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
+  #declare -p lstrPosOrig lstrGlobalsXYZ |tee -a "$strCFGScriptLog"
+  #eval "$lstrGlobalsXYZ" #nX nY nZ
+}
+function FUNCgetWHL() { #<lstrSize> set global vars: nWidth nHeight nLength
+  FUNCgetV3 "$1"
+  declare -g nWidth=$n1 nHeight=$n2 nLength=$n3
+  #local lstrSize="$1";shift
+  #if [[ -z "$lstrSize" ]];then CFGFUNCerrorExit "invalid lstrSize='$lstrSize'";fi
+  #local lstrGlobalsWHL="`echo "${lstrSize}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@declare -g nWidth=\1 nHeight=\2 nLength=\3;@' |head -n 1`"
+  #declare -p lstrSize lstrGlobalsWHL |tee -a "$strCFGScriptLog"
+  #eval "$lstrGlobalsWHL" #nWidth nHeight nLength
 }
 function FUNCgetXYZfromXmlLineXLD() { #<lstrXmlLine> set global vars: iXLDFilterIndex
   local lstrXmlLine="$1";shift
@@ -211,10 +230,23 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   local lnY="$1";shift
   local lstrPOIold="$1";shift
   local lstrPOInew="$1";shift
+  
   local liYOSOld=${astrAllPOIsYOS[$lstrPOIold]-};if [[ -z "${liYOSOld}" ]];then CFGFUNCerrorExit "not found $lstrPOIold";fi
   local liYOSNew=${astrAllPOIsYOS[$lstrPOInew]-};if [[ -z "${liYOSNew}" ]];then CFGFUNCerrorExit "not found $lstrPOInew";fi
   #echo $(( liYOSOld+(liYOSNew-liYOSOld) ))&&:
-  local liYNew=$(( lnY+(liYOSNew-liYOSOld) ))
+  
+  local liYNew=$(( lnY+(liYOSOld-liYOSNew) ));CFGFUNCinfo 'liYNew=$(( lnY+(liYOSOld-liYOSNew) )): '"$liYNew=(( $lnY+($liYOSOld-$liYOSNew) ))"
+  
+  FUNCgetWHL "${astrAllPOIsSize[$strPOI]}" #nWidth nHeight nLength
+  #try to use height yoffset and ypos to avoid cutting the building underground on bedrock
+  if((liYOSNew<0));then
+    local liYDiff=$((liYNew+liYOSNew))&&:
+    local liMargin=3
+    if(( liYDiff < $liMargin ));then
+      liYNew+=$(( (-1*liYDiff)+(liMargin*2) ));CFGFUNCinfo 'liYNew+=$(( (-1*liYDiff)+(liMargin*2) )): '"$liYNew+=(( (-1*$liYDiff)+($liMargin*2) ))"
+    fi
+  fi
+  
   #if((liYNew!=lnY));then
     #declare -p liYOSOld liYOSNew liYNew >&2
   #fi
@@ -246,8 +278,19 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
 #}
 
 #IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig" |tr -d '\r' |egrep -v 'name="${strRegexProtectedPOIs}[^"]*"')&&:
-IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig" |tr -d '\r')&&:
+IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig" |tr -d '\r' |sort)&&:
 #if [[ "`FUNCxmlGetName "${strPatchedPOIdataLine}"`" =~ ^${strRegexProtectedPOIs}.*$ ]];then echo -n "Pt,";continue;fi #skip things from the Prefabs/Parts folder
+
+strFlAddExtraPOIs="`basename "$0"`.AddExtraPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
+CFGFUNCinfo "MAIN:adding extra manually placed POI locations for the current configured world RWG data: ${strFlAddExtraPOIs}"
+if [[ -f "$strFlAddExtraPOIs" ]];then
+  IFS=$'\n' read -d '' -r -a astrFlAddExtraPOIsList < <(egrep "<decoration " "$strFlAddExtraPOIs" |tr -d '\r' |sort)&&:
+  astrRWGOriginalPOIdataLineList+=("${astrFlAddExtraPOIsList[@]}")
+else
+  if ! CFGFUNCprompt -q "No extra POIs file found (expected: '${strFlAddExtraPOIs}'), is that correct? they are good to help on adding all missing POIs.";then
+    CFGFUNCerrorExit "missing file '$strFlAddExtraPOIs'"
+  fi
+fi
 
 strFlCACHE="`basename "$0"`.CACHE.sh" #help if you delete the cache file it will be recreated
 source "$strFlCACHE"&&: #this file contents can be like: the last value appended for the save variable will win
@@ -337,8 +380,8 @@ astrSpecialBuildingPrefix=(`cat "$strFlImportantBuildings"`)&&:
 if [[ -z "${astrSpecialBuildingPrefix[@]-}" ]];then
   CFGFUNCinfo "MAIN:show special POIs (usually the tallest) to cherry pick for buildings, that are like a small town to explore"
   for strPOI in "${!astrAllPOIsSize[@]}";do
-    FUNCgetXYZ "${astrAllPOIsSize[$strPOI]}"
-    echo "$nY height, $strPOI size ${astrAllPOIsSize[$strPOI]}"
+    FUNCgetWHL "${astrAllPOIsSize[$strPOI]}"
+    echo "nHeight=$nHeight, $strPOI size ${astrAllPOIsSize[$strPOI]}"
   done |sort -n |tee -a "$strCFGScriptLog"
   CFGFUNCprompt "please cherry pick the important special buildings that have a lot to be explored in just a single building, and place one per line in the file: $strFlImportantBuildings"
   CFGFUNCerrorExit "the important buildings list was empty, re-run after editing the required file"
@@ -774,7 +817,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       strHelpUnderground=""
       if((nYUpdatedFromPOIsOldVsNew<nY));then
         #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
-        nNewPOIHeight=$(FUNCgetXYZ "${astrAllPOIsSize[${strMissingPOI}]}";echo $nY)
+        nNewPOIHeight=$(FUNCgetWHL "${astrAllPOIsSize[${strMissingPOI}]}";echo $nHeight)
         nYUpdatedFromPOIsOldVsNew=$((nYUpdatedFromPOIsOldVsNew-nNewPOIHeight-3))
         strHelpUnderground="Underground"
         ((iUndergroundPOIs++))&&:
@@ -890,7 +933,7 @@ iMaxAllowedReservablePOIsInWasteland=$((iTotalWastelandPOIsLeastInTowns-iTotalUn
 strFlResultsFinal="`basename "$0"`.AddedToRelease.LastRunStatus.txt" #help if you delete the cache file it will be recreated
 CFGFUNCinfo "MAIN:REPORT FINAL STATUS"
 #astrFinalStatus=()
-echo "[Totals:]" >>"$strFlResultsFinal"
+echo "[Totals:]" >"$strFlResultsFinal" #trunc
 echo "POI places:total original RWG generated: ${#astrRWGOriginalPOIdataLineList[@]}" >>"$strFlResultsFinal"
 echo "POI places:total removed POIs from NON wasteland towns: $iTotalRemovedPOIsFromTownsOutsideWasteland" >>"$strFlResultsFinal"
 echo "POI places:total remaining on patched file: `egrep "<decoration " "${strFlPatched}" |wc -l`" >>"$strFlResultsFinal"
@@ -910,7 +953,7 @@ echo "iTotalWastelandPOIsLeastInTowns=${iTotalWastelandPOIsLeastInTowns}" >>"$st
 echo "iTotalSpecialBuildingsPlacedInWasteland=${iTotalSpecialBuildingsPlacedInWasteland}" >>"$strFlResultsFinal"
 echo "iTotalUniqueSpecialBuildings=$iTotalUniqueSpecialBuildings" >>"$strFlResultsFinal"
 echo "iMaxAllowedReservablePOIsInWasteland=$iMaxAllowedReservablePOIsInWasteland" >>"$strFlResultsFinal"
-echo "iUndergroundPOIs=$iUndergroundPOIs" >>"$strFlResultsFinal"
+echo "iUndergroundPOIs=$iUndergroundPOIs (probably)" >>"$strFlResultsFinal"
 CFGFUNCinfo "`cat "$strFlResultsFinal"`"
 CFGFUNCprompt "check totals and etc above"
 
@@ -928,16 +971,24 @@ if((iStillMissingPOIs>0));then
     CFGFUNCprompt "not all iStillMissingPOIs='$iStillMissingPOIs' will fit in this world because iMaxAllowedReservablePOIsInWasteland='$iMaxAllowedReservablePOIsInWasteland' (as other biomes than wasteland are already all usable to place missing POIs)"
     iSuggestReservedAmount=$iMaxAllowedReservablePOIsInWasteland
   fi
-  CFGFUNCprompt "to add all (or most) missing POIs, try to run this script again like: iReservedWastelandPOICountForMissingPOIs=${iSuggestReservedAmount} $0"
+  CFGFUNCprompt "to add all (or most) missing POIs, try to add dup POIs '${strDummyPOI}' at AddExtraPOIs file or try to run this script again like: iReservedWastelandPOICountForMissingPOIs=${iSuggestReservedAmount} $0"
 fi
 
 strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWorldTNM}"
 CFGFUNCgencodeApply "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 
-CFGFUNCinfo "MAIN:adding extra prefabs" #TODOA: add missing traders in the corners of the world, or below some lake
+strFlAddExtraSpecialPOIs="`basename "$0"`.AddExtraSpecialPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
+CFGFUNCinfo "MAIN:adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}" #TODOA: add missing traders in the corners of the world, or below some lake
+if [[ -f "$strFlAddExtraSpecialPOIs" ]];then
+  cat "${strFlAddExtraSpecialPOIs}" >>"${strFlPatched}"
+else
+  if ! CFGFUNCprompt -q "No extra POIs file found (expected: '${strFlAddExtraSpecialPOIs}'), is that correct?";then
+    CFGFUNCerrorExit "missing file '$strFlAddExtraSpecialPOIs'"
+  fi
+fi
 #echo '  <!-- HELPGOOD: '"${strCFGInstallToken}"' -->' >>"${strFlPatched}${strGenTmpSuffix}" #as this file will be copied to outside this modlet folder
-echo '  <decoration type="model" name="bombshelter_02" position="-3131,3,-3131" rotation="2" help="oasis teleport is on the ground above, this prefab will be placed further underground than vanilla, teleport -3131 37 -3131"/>' >>"${strFlPatched}" #${strGenTmpSuffix}"
-echo '  <decoration type="model" name="ranger_station_04" position="-2105,43,-2313" rotation="0" help="extra spawn point (todo: explain why)"/>' >>"${strFlPatched}" #${strGenTmpSuffix}"
+#echo '  <decoration type="model" name="bombshelter_02" position="-3131,3,-3131" rotation="2" help="oasis teleport is on the ground above, this prefab will be placed further underground than vanilla, teleport -3131 37 -3131"/>' >>"${strFlPatched}" #${strGenTmpSuffix}"
+#echo '  <decoration type="model" name="ranger_station_04" position="-2105,43,-2313" rotation="0" help="extra spawn point (todo: explain why)"/>' >>"${strFlPatched}" #${strGenTmpSuffix}"
 #while ! CFGFUNCgencodeApply "${strFlPatched}${strGenTmpSuffix}" "${strFlPatched}";do
 
 CFGFUNCgencodeApply --subTokenId "ManuallyAddedPrefabs" "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
@@ -972,7 +1023,7 @@ CFGFUNCgencodeApply --subTokenId "ManuallyAddedPrefabs" "${strFlPatched}" "${str
 #fi
 
 CFGFUNCinfo "MAIN:Listing to check for dups (tho town in wasteland shall not be touched!)"
-egrep "decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"]*"' -o |sort #todo try to list just the dups
+egrep "<decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"]*"' -o |sort #todo try to list just the dups
 
 CFGFUNCinfo "MAIN:SUCCESS! now run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' at the game folder (outside this modlet folder)"
 
