@@ -69,7 +69,7 @@ CFGFUNCtrash "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"&&:
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
     |egrep 'position="[^"]*"' \
-    |sed -r 's@.*name="([^"]*)".*position="([0-9-]*),([0-9-]*),([0-9-]*)".*rotation="([0-9-]*)".*@strNm="\1";iX=\2;iY=\3;iZ=\4;iRot=\5;@' \
+    |sed -r 's@.*name="([^"]*)".*position="([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*".*rotation="([0-9-]*)".*@strNm="\1";iX=\2;iY=\3;iZ=\4;iRot=\5;@' \
   )&&:
 
 astrDeny=( #Too good or grantedly underground or IDK

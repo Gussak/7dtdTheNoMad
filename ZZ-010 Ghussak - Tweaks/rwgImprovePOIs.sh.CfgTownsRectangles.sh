@@ -12,6 +12,7 @@
 # Biomes are: Desert Snow PineForest Wasteland (copy/paste from here as these are IDs and must match case sensitive)
 # in developer mode 'dm', in the map, turn on the static map view and click the left arrow to show the biomes, then navigate and position the mouse and collect the coordinates: West and South are negative values. Position the cursor with a good big margin for the top left and bottom right corners, but only for the town limits, not other buildings nearby.
 # spaces characters are not allowed (they could be but is much more trouble to code)
+# One POI will be kept per rectangle, so you can play with that if you want (more rectangles mean more kept POIs only outside Wasteland is like that).
 
 astrWorldDataTNMList=( #here you can configure your world data, this is for TheNoMad (TNM)
   East_Nikazohi_Territory #paste here and replace the world name spaces with _
@@ -29,7 +30,6 @@ astrWorldDataTNMList=( #here you can configure your world data, this is for TheN
   Mountains10
   Random3
 );strWorldDataTNM="";for strWorldData in "${astrWorldDataTNMList[@]}";do strWorldDataTNM+="${strWorldData}_";done #DONT TOUCH THIS LINE (unless your know what your are doing)! it will mix the above to prepare the bash script array key below
-
 
 # here are the specific towns rectangles. you have to configure the Biome, the TownID and the rectangle data. Do NOT put spaces in each of the below lines!
 astrTownList["${strWorldDataTNM}BiomeWasteland_TownIDBig"]="582,-351,1120,-928"
