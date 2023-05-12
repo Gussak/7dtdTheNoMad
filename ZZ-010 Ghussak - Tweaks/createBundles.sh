@@ -756,7 +756,7 @@ astr=(
   bedrollBlue 1
   campfire 1 
   drinkCanEmptyCookingOneUse 3
-  candleTableLight 1
+  candleTableLightPlayer 1
   cntSecureStorageChest 1
   meleeToolRepairT0StoneAxe 1
   resourceRockSmall 13
