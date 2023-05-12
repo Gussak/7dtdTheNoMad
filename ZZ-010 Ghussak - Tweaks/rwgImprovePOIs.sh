@@ -48,7 +48,7 @@ strPrefabsXml="prefabs.xml"
 #: ${strGenWorldName:="East Nikazohi Territory"} #h elp
 #strFlGenPrefabsOrig="${strPathToUserData}/GeneratedWorlds/${strGenWorldName}/${strPrefabsXml}"
 
-CFGFUNCprompt "This is not highly optimized yet and not multithread. It takes 16min on my machine 3.2GHz 1 core (1 thread)."
+CFGFUNCprompt "This is not highly optimized yet and not multithread. It takes 16min on my machine 3.2GHz 1 core (1 thread). (if in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required)"
 
 #: ${strFlGenPrefabsOrig:="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}"} #he lp you can set this file path directly here
 strFlOriginalBkp="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}${strCFGOriginalBkpSuffix}"
@@ -237,22 +237,25 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   local liYOSNew=${astrAllPOIsYOS[$lstrPOInew]-};if [[ -z "${liYOSNew}" ]];then CFGFUNCerrorExit "not found $lstrPOInew";fi
   #echo $(( liYOSOld+(liYOSNew-liYOSOld) ))&&:
   
-  local liYNew=$(( lnY+(liYOSOld-liYOSNew) ));CFGFUNCinfo 'liYNew=$(( lnY+(liYOSOld-liYOSNew) )): '"$liYNew=(( $lnY+($liYOSOld-$liYOSNew) ))"
+  #it should keep the original Y as the yOffset will let any y work correctly: a building w/o underground is YOS 0. another with underground height 1 is YOS -1. Both will be correctly placed at y 30 already...
+  echo "$lnY"
   
-  FUNCgetWHL "${astrAllPOIsSize[$strPOI]}" #nWidth nHeight nLength
-  #try to use height yoffset and ypos to avoid cutting the building underground on bedrock
-  if((liYOSNew<0));then
-    local liYDiff=$((liYNew+liYOSNew))&&:
-    local liMargin=3
-    if(( liYDiff < $liMargin ));then
-      liYNew+=$(( (-1*liYDiff)+(liMargin*2) ));CFGFUNCinfo 'liYNew+=$(( (-1*liYDiff)+(liMargin*2) )): '"$liYNew+=(( (-1*$liYDiff)+($liMargin*2) ))"
-    fi
-  fi
+  #local liYNew=$(( lnY+(liYOSOld-liYOSNew) ));CFGFUNCinfo 'liYNew=$(( lnY+(liYOSOld-liYOSNew) )): '"$liYNew=(( $lnY+($liYOSOld-$liYOSNew) ))"
   
-  #if((liYNew!=lnY));then
-    #declare -p liYOSOld liYOSNew liYNew >&2
+  #FUNCgetWHL "${astrAllPOIsSize[$strPOI]}" #nWidth nHeight nLength
+  ##try to use height yoffset and ypos to avoid cutting the building underground on bedrock
+  #if((liYOSNew<0));then
+    #local liYDiff=$((liYNew+liYOSNew))&&:
+    #local liMargin=3
+    #if(( liYDiff < $liMargin ));then
+      #liYNew+=$(( (-1*liYDiff)+(liMargin*2) ));CFGFUNCinfo 'liYNew+=$(( (-1*liYDiff)+(liMargin*2) )): '"$liYNew+=(( (-1*$liYDiff)+($liMargin*2) ))"
+    #fi
   #fi
-  echo "$liYNew" #OUTPUT
+  
+  ##if((liYNew!=lnY));then
+    ##declare -p liYOSOld liYOSNew liYNew >&2
+  ##fi
+  #echo "$liYNew" #OUTPUT
 }
 
 #function FUNCxmlGetLinePropertyValue(){ # <lstrLine> <lstrPropID>
@@ -570,7 +573,8 @@ while true;do #this loop will try to populate the whole wasteland (least the RGW
       if [[ "$strBiome" == "Wasteland" ]];then
         CFGFUNCinfo "BEFORE:$i: $strPatchedPOIdataLine"
         strSedReplaceId='s/name="[^"]*"/name="'"${strMarkToSkip}${strSpecialBuilding}"'"/'
-        astrPatchedPOIdataLineList[i]="`echo "$strPatchedPOIdataLine" |sed -r "${strSedReplaceId}"`"
+        strSedReplaceIdHS='s/helpSort="[^"]*"/helpSort="'"${strSpecialBuilding}"'"/'
+        astrPatchedPOIdataLineList[i]="`echo "$strPatchedPOIdataLine" |sed -r -e "${strSedReplaceId}" -e "${strSedReplaceIdHS}"`"
         CFGFUNCinfo "AFTER_:$i: ${astrPatchedPOIdataLineList[i]}"
         ((iTotalSpecialBuildingsPlacedInWasteland++))&&:
         iLastPPOIindexReplaced=$i
@@ -779,17 +783,17 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
     #strPos="`echo "$strGenPrefabsData" |grep "$strGPD" |head -n 2 |tail -n 1 |grep 'position="[^"]*"' -o |sed -r  's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@nX=\1;nY=\2;nZ=\3;@' |head -n 1`"
     #eval "$strPos" #nX nY nZ
     #declare -p nX nY nZ
-    strXYZ="$nX,$nY,$nZ"
-    CFGFUNCinfo "DupPOI: $strGPD iXLDFilterIndex=$iXLDFilterIndex XYZ=$strXYZ "
+    strOriginalXYZ="$nX,$nY,$nZ"
+    CFGFUNCinfo "DupPOI: $strGPD iXLDFilterIndex=$iXLDFilterIndex XYZ=$strOriginalXYZ "
     
     bSkip=false;
     #The remaining POIs from rectangles at towns may be DUPs, if that is the case they must be replaced properly. #if FUNCchkPosIsInTownPIT $nX $nZ;then bSkip=true;((iSkippedAtRemainingTowns++))&&:;CFGFUNCinfo "iSkippedAtRemainingTowns=$iSkippedAtRemainingTowns";fi # skip locations in towns to keep the RGW good looking quality
     
-    eval "$(CFGFUNCbiomeData "$strXYZ")" # iBiome strBiome strColorAtBiomeFile
-    #if [[ -n "${astrPosVsBiomeColor[${strXYZ}]-}" ]];then      # faster
-      #eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["${strXYZ}"]}`" # iBiome strBiome strColorAtBiomeFile
+    eval "$(CFGFUNCbiomeData "$strOriginalXYZ")" # iBiome strBiome strColorAtBiomeFile
+    #if [[ -n "${astrPosVsBiomeColor[${strOriginalXYZ}]-}" ]];then      # faster
+      #eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["${strOriginalXYZ}"]}`" # iBiome strBiome strColorAtBiomeFile
     #else      # much slower
-      #eval "`./getBiomeData.sh "${strXYZ}"`" # strColorAtBiomeFile strBiome iBiome
+      #eval "`./getBiomeData.sh "${strOriginalXYZ}"`" # strColorAtBiomeFile strBiome iBiome
     #fi
     #if [[ "$strBiome" == "Wasteland" ]];then bSkip=true;fi # skip wasteland that was already filled up with special buildings
     #help The wasteland biome was already filled with priority POIs as much as possible beyond the minimum and considering the reserved limit
@@ -837,16 +841,58 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       : ${bApplyYOSDiff:=true} #help changes prefab Y pos to be the difference between old and new prefab YOS (only to make things underground), if false will not change anything
       nYUpdatedFromPOIsOldVsNew="`FUNCcalcPOINewY $nY "$strRWGoriginalPOI" "$strMissingPOI"`" #use xmlstarlet to apply the new Y
       nYUpdFrPOIsOvsNinitialVal="$nYUpdatedFromPOIsOldVsNew"
+      nYOffsetNew=${astrAllPOIsYOS[$strMissingPOI]}
       #if((nYUpdatedFromPOIsOldVsNew<nY));then bApplyYOSDiff=false;fi #only apply YOS diff if overground, keep underground unchanged!
       strHelpUnderground=""
-      if((nYUpdatedFromPOIsOldVsNew<nY));then
-        #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
+      #todo (done?) improve the below idea to better randomly place POIs underground up to 33% total POIs, based on Y vs POIs' height
+      : ${iUndergroundTryAt:=3} #help once every 3 is like 33%
+      : ${iUndergroundFail:=0} #todo this feels a bit unpredictable the way it is coded below? :>
+      : ${iUndergroundTry:=0}
+      ((iUndergroundTry++))&&:
+      #if((iUndergroundFail>0 && iUndergroundTry<iUndergroundTryAt));then
+        #((iUndergroundTry++))&&:
+        #((iUndergroundFail--))&&:
+      #fi
+      #if((iUndergroundFail>0));then
+        #((iUndergroundTry=iUndergroundTryAt))&&:
+        ##((iUndergroundFail--))&&:
+      #fi
+      if((iUndergroundTry>=iUndergroundTryAt)) || ((iUndergroundFail>0));then
         nNewPOIHeight=$(FUNCgetWHL "${astrAllPOIsSize[${strMissingPOI}]}";echo $nHeight)
-        nYUpdatedFromPOIsOldVsNew=$((nYUpdatedFromPOIsOldVsNew-nNewPOIHeight-3))
-        strHelpUnderground="Underground"
-        ((iUndergroundPOIs++))&&:
+        nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-3)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. 
+      #if((nYUpdatedFromPOIsOldVsNew<nY));then
+        #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
+        #nYUpdatedFromPOIsOldVsNew=$((nYUpdatedFromPOIsOldVsNew-nNewPOIHeight-3))
+        if(( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) > 1 ));then
+          strHelpUnderground="Underground"
+          ((iUndergroundPOIs++))&&:
+          ((iUndergroundTry-=iUndergroundTryAt))&&:
+          if((iUndergroundFail>0));then
+            ((iUndergroundFail--))&&:
+          fi
+          astrUnderGroundHinters=(
+            part_waterheater_01 
+            part_utility_pole
+            part_street_clock
+            part_sculpture_02
+            part_sculpture_01
+            part_lab_greeble_16
+            part_lab_greeble_17
+            part_lab_greeble_18
+            part_lab_greeble_19
+            part_lab_greeble_20
+            part_lab_greeble_21
+          )
+          echo '  <decoration type="model" name="'"${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"'" help="UndergroundPOIHintForIndex:'"${iXLDFilterIndex}"'" position="'"${strOriginalXYZ}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml"
+        else #revert final Y
+          ((iUndergroundFail++))&&:
+          nYUpdatedFromPOIsOldVsNew=$nY
+          #if((iUndergroundTry>0));then
+            #((iUndergroundTry--))&&: #try again on next POI
+          #fi
+        fi
       fi
-      CFGFUNCinfo "old=${strRWGoriginalPOI}($nX,$nY,$nZ)(YO=${astrAllPOIsYOS[$strRWGoriginalPOI]-})(Sz=${astrAllPOIsSize[${strRWGoriginalPOI}]-});new=${strMissingPOI}($nX,$nYUpdFrPOIsOvsNinitialVal/$nYUpdatedFromPOIsOldVsNew,$nZ)(YO=${astrAllPOIsYOS[$strMissingPOI]-})(Sz=${astrAllPOIsSize[${strMissingPOI}]-})"
+      CFGFUNCinfo "old=${strRWGoriginalPOI}($nX,$nY,$nZ)(YO=${astrAllPOIsYOS[$strRWGoriginalPOI]-})(Sz=${astrAllPOIsSize[${strRWGoriginalPOI}]-});new=${strMissingPOI}($nX,$nYUpdFrPOIsOvsNinitialVal/$nYUpdatedFromPOIsOldVsNew,$nZ)(YO=${astrAllPOIsYOS[$strMissingPOI]-})(Sz=${astrAllPOIsSize[${strMissingPOI}]-}) iUndergroundTry=$iUndergroundTry iUndergroundFail=$iUndergroundFail"
       strStatus=""
       if $bApplyYOSDiff;then
         #strRWGoriginalPOIindex="${astrRWGOriginalLocationVsPOIindex[$nX,$nY,$nZ]}"
@@ -854,7 +900,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         #xmlstarlet ed -P -L -u "//decoration[@position='$nX,$nY,$nZ' and @helpFilterIndex='${strRWGoriginalPOIindex}']/@position" -v "$nYUpdatedFromPOIsOldVsNew" "$strFlPatched"
         #CFGFUNCexec -m "Query to be sure the entry exists" xmlstarlet sel -t -c "//decoration[@helpFilterIndex='${iXLDFilterIndex}']" "$strFlPatched";echo #this line is allowed to fail, do not protect with &&:
         
-        nYOffsetNew=${astrAllPOIsYOS[$strMissingPOI]}
+        #nYOffsetNew=${astrAllPOIsYOS[$strMissingPOI]}
         if((nYUpdatedFromPOIsOldVsNew<0));then
           CFGFUNCinfo "WARN:nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' < 0"
         fi
@@ -882,7 +928,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         
         #CFGFUNCexec xmlstarlet ed -P -L -u "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@helpSort" -v "${strMissingPOI}" "$strFlPatched"
         
-        strStatus="UpdatedPositionFromOriginal(${strXYZ})"
+        strStatus="UpdatedPositionFromOriginal(${strOriginalXYZ})"
         CFGFUNCinfo "$strStatus" #UpdateYOffsetForPOI"
         # BUT THERE IS A BIGGER PROBLEM: the rwg game engine considers several things to make it look good and fit perfectly on the surrounding environment. What is impossible to do with this script.
       else
@@ -1032,11 +1078,12 @@ fi
 
 strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWorldTNM}"
 CFGFUNCgencodeApply "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
+CFGFUNCgencodeApply --subTokenId "UndergroundHints" "${strFlPatched}.UndergroundHints.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 
 strFlAddExtraSpecialPOIs="`basename "$0"`.AddExtraSpecialPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
 CFGFUNCinfo "MAIN:adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}"
 if [[ -f "$strFlAddExtraSpecialPOIs" ]];then
-  egrep "HELPGOOD|<decoration" "${strFlAddExtraSpecialPOIs}" >>"${strFlPatched}"
+  egrep "HELPGOOD|<decoration" "${strFlAddExtraSpecialPOIs}" |egrep -v "dummy" >>"${strFlPatched}"
 else
   if ! CFGFUNCprompt -q "No extra POIs file found (expected: '${strFlAddExtraSpecialPOIs}'), is that correct?";then
     CFGFUNCerrorExit "missing file '$strFlAddExtraSpecialPOIs'"
@@ -1086,6 +1133,6 @@ egrep "<decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"
 
 CFGFUNCinfo "MAIN:SUCCESS! now run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' at the game folder (outside this modlet folder)"
 
-CFGFUNCinfo "MAIN:After installing the prefabs file, run ./createSpawnPoints.sh to update the spawn points file"
+CFGFUNCprompt "MAIN: you should run ./createSpawnPoints.sh to update the spawn points file now!"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
