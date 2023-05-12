@@ -110,7 +110,7 @@ astrIgnoreTmp=();unset astrIgnoreTmp # just to make it sure not to use a tmp arr
 #)
 
 #strGenPrefabsData="`(
-  #cd ../..;
+  #cd "${strCFGGameFolder}";
   #cat "$strFlGenPrefabsOrig"
 #)`"
 
@@ -233,8 +233,8 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   local lstrPOIold="$1";shift
   local lstrPOInew="$1";shift
   
-  local liYOSOld=${astrAllPOIsYOS[$lstrPOIold]-};if [[ -z "${liYOSOld}" ]];then CFGFUNCerrorExit "not found $lstrPOIold";fi
-  local liYOSNew=${astrAllPOIsYOS[$lstrPOInew]-};if [[ -z "${liYOSNew}" ]];then CFGFUNCerrorExit "not found $lstrPOInew";fi
+  local liYOSOld=${astrAllPrefabYOS[$lstrPOIold]-};if [[ -z "${liYOSOld}" ]];then CFGFUNCerrorExit "not found $lstrPOIold";fi
+  local liYOSNew=${astrAllPrefabYOS[$lstrPOInew]-};if [[ -z "${liYOSNew}" ]];then CFGFUNCerrorExit "not found $lstrPOInew";fi
   #echo $(( liYOSOld+(liYOSNew-liYOSOld) ))&&:
   
   #it should keep the original Y as the yOffset will let any y work correctly: a building w/o underground is YOS 0. another with underground height 1 is YOS -1. Both will be correctly placed at y 30 already...
@@ -242,7 +242,7 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   
   #local liYNew=$(( lnY+(liYOSOld-liYOSNew) ));CFGFUNCinfo 'liYNew=$(( lnY+(liYOSOld-liYOSNew) )): '"$liYNew=(( $lnY+($liYOSOld-$liYOSNew) ))"
   
-  #FUNCgetWHL "${astrAllPOIsSize[$strPOI]}" #nWidth nHeight nLength
+  #FUNCgetWHL "${astrAllPrefabSize[$strPOI]}" #nWidth nHeight nLength
   ##try to use height yoffset and ypos to avoid cutting the building underground on bedrock
   #if((liYOSNew<0));then
     #local liYDiff=$((liYNew+liYOSNew))&&:
@@ -322,33 +322,36 @@ source "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh" #this line is allowed to fai
 #eval "$(CFGFUNCbiomeData "-391,36,-2422")";declare -p iBiome strBiome strColorAtBiomeFile
 #exit
 
-IFS=$'\n' read -d '' -r -a astrPrefabPOIsPathList < <(cd ../../;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]POIs")&&:
-declare -p astrPrefabPOIsPathList |tr '[' '\n'
+#IFS=$'\n' read -d '' -r -a astrPrefabPOIsPathList < <(cd "${strCFGGameFolder}"/;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]POIs")&&:
+IFS=$'\n' read -d '' -r -a astrPrefabPathList < <(cd "${strCFGGameFolder}"/;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]\(POIs\|Parts\|RWGTiles\|Test\)")&&:
+declare -p astrPrefabPathList |tr '[' '\n'
 
 CFGFUNCinfo "MAIN:colleting all valid POIs from prefabs xmls (later will check if any was ignored by RWG or removed from non wasteland town areas)"
 IFS=$'\n' read -d '' -r -a astrAllPOIsList < <(
-  for strPrefabPOIsPath in "${astrPrefabPOIsPathList[@]}";do
-    cd "$strPrefabPOIsPath"
-    pwd >/dev/stderr;
-    ls *.xml|sed -r 's@[.]xml@@'|egrep -v "${strRegexIgnoreOrig}"|sort
+  for strPrefabPath in "${astrPrefabPathList[@]}";do
+    if [[ "${strPrefabPath}" =~ .*/POIs$ ]];then
+      cd "$strPrefabPath"
+      pwd >/dev/stderr;
+      ls *.xml|sed -r 's@[.]xml@@'|egrep -v "${strRegexIgnoreOrig}"|sort
+    fi
   done
 )&&:
 if((${#astrAllPOIsList[@]}==0));then CFGFUNCerrorExit "astrAllPOIsList empty";fi
 
 CFGFUNCinfo "MAIN:colleting all POIs Y offset and size from prefabs"
 #strFlTmp="`mktemp`"
-strFlTmp="`pwd`/_tmp/`basename "$0"`.POIsYOS.tmp.txt"
+strFlTmp="`pwd`/_tmp/`basename "$0"`.POIsYOS.tmp.txt" #todoa cache this. deleting it will refresh the cache
 echo -n >"$strFlTmp"
-declare -A astrAllPOIsYOS
-declare -A astrAllPOIsSize
+declare -A astrAllPrefabYOS
+declare -A astrAllPrefabSize
 #execCFGAliases="eval $("$(realpath ./libSrcCfgGenericToImport.sh)" --aliases)"
 ( # subshell to easy changing path
   #$execCFGAliases
-  for strPrefabPOIsPath in "${astrPrefabPOIsPathList[@]}";do
-    cd "$strPrefabPOIsPath"
-    #cd ../../Data/Prefabs/POIs
+  for strPrefabPath in "${astrPrefabPathList[@]}";do
+    cd "$strPrefabPath"
+    #cd "${strCFGGameFolder}"/Data/Prefabs/POIs
     pwd >/dev/stderr;
-    IFS=$'\n' read -d '' -r -a astrPrefabsList < <(ls *.xml)&&:
+    IFS=$'\n' read -d '' -r -a astrPrefabsList < <(ls *.xml&&:)&&:
     for strFlPrefabXml in "${astrPrefabsList[@]}";do
       strPOI="${strFlPrefabXml%.xml}"
     #for strPOI in "${astrAllPOIsList[@]}";do
@@ -363,39 +366,45 @@ declare -A astrAllPOIsSize
       
       if ! iYOS="`xmlstarlet sel -t -v "//property[@name='YOffset']/@value" "${strPOI}.xml"`";then
         iYOS=0
+        CFGFUNCinfo "WARN: YOffset missing for strPOI='$strPOI', using default iYOS='$iYOS'"
       fi
       if((iYOS>0));then CFGFUNCinfo "INTERESTING: positive YOffset $iYOS for strPOI='$strPOI'";fi
       #iYOS="`egrep '"YOffset"' "${strPOI}.xml" |egrep 'value="[^"]*"' -o |tr -d '[a-zA-Z"=]'`"
-      echo "astrAllPOIsYOS[$strPOI]=$iYOS" >>"$strFlTmp"
+      echo "astrAllPrefabYOS[$strPOI]=$iYOS" >>"$strFlTmp"
       
-      strSize="`xmlstarlet sel -t -v "//property[@name='PrefabSize']/@value" "${strPOI}.xml" |tr -d ' '`"
+      if ! strSize="`xmlstarlet sel -t -v "//property[@name='PrefabSize']/@value" "${strPOI}.xml" |tr -d ' '`";then
+        strSize="1,1,1"
+        CFGFUNCinfo "WARN: PrefabSize missing for strPOI='$strPOI', using default strSize='$strSize'"
+      fi
       #<property name="PrefabSize" value="60, 108, 60" />
-      echo "astrAllPOIsSize[$strPOI]='$strSize'" >>"$strFlTmp"
+      echo "astrAllPrefabSize[$strPOI]='$strSize'" >>"$strFlTmp"
       
-      CFGFUNCinfo "${strFlPrefabXml} iYOS=$iYOS strSize=$strSize"
+      CFGFUNCinfo "strPrefabPath=${strPrefabPath}/ ${strFlPrefabXml} iYOS=$iYOS strSize=$strSize"
     done
   done
 )
 source "$strFlTmp"
-declare -p astrAllPOIsYOS |tr '[' '\n'
-declare -p astrAllPOIsSize |tr '[' '\n'
+declare -p astrAllPrefabYOS |tr '[' '\n'
+declare -p astrAllPrefabSize |tr '[' '\n'
 
 strFlImportantBuildings="`basename "$0"`.AddedToRelease.ImportantBuildings.txt" #help if you delete the cache file it will be recreated
-echo -n >>"$strFlImportantBuildings"
-astrSpecialBuildingPrefix=(`cat "$strFlImportantBuildings"`)&&:
-if [[ -z "${astrSpecialBuildingPrefix[@]-}" ]];then
+echo -n >>"$strFlImportantBuildings" #just to create it if needed
+astrSpecialBuildingPOI=(`cat "$strFlImportantBuildings"`)&&:
+if [[ -z "${astrSpecialBuildingPOI[@]-}" ]];then
   CFGFUNCinfo "MAIN:show special POIs (usually the tallest) to cherry pick for buildings, that are like a small town to explore"
-  for strPOI in "${!astrAllPOIsSize[@]}";do
-    FUNCgetWHL "${astrAllPOIsSize[$strPOI]}"
-    echo "nHeight=$nHeight, $strPOI size ${astrAllPOIsSize[$strPOI]}"
-  done |sort -n |tee -a "$strCFGScriptLog"
-  CFGFUNCprompt "please cherry pick the important special buildings that have a lot to be explored in just a single building, and place one per line in the file: $strFlImportantBuildings"
+  for strPOI in "${!astrAllPrefabSize[@]}";do
+    if [[ -f "${strCFGGameFolder}/Prefabs/POIs/${strPOI}.xml" ]];then
+      FUNCgetWHL "${astrAllPrefabSize[$strPOI]}"
+      echo "nHeight=$nHeight, $strPOI size ${astrAllPrefabSize[$strPOI]}"
+    fi
+  done |egrep -vi "000_|AAA_|part_|rwg_|test_" |sort -n |tee -a "$strCFGScriptLog"
+  CFGFUNCprompt "please cherry pick the important special buildings (probably the tallest ones but others may be good too) that have a lot to be explored in just a single building, and place one per line in the file: $strFlImportantBuildings"
   CFGFUNCerrorExit "the important buildings list was empty, re-run after editing the required file"
 fi
 
 function FUNChelpInfoPOI() {
   local lstrName="$1"
-  echo "${lstrName},YOffset=${astrAllPOIsYOS[${lstrName}]-},Size=${astrAllPOIsSize[${lstrName}]-}"
+  echo "${lstrName},YOffset=${astrAllPrefabYOS[${lstrName}]-},Size=${astrAllPrefabSize[${lstrName}]-}"
 }
 
 CFGFUNCinfo "MAIN:create help and sorter xml properties for all POIs"
@@ -461,8 +470,8 @@ astrSpecialBuildingList=()
 #for strPOI in "${astrAllPOIsList[@]}";do
 for((i=0;i<"${#astrAllPOIsList[@]}";i++));do
   strPOI="${astrAllPOIsList[i]}"
-  for strSpecialBuildingPrefix in "${astrSpecialBuildingPrefix[@]}";do
-    if [[ "${strPOI}" =~ ^${strSpecialBuildingPrefix} ]];then
+  for strSpecialBuildingPOI in "${astrSpecialBuildingPOI[@]}";do
+    if [[ "${strPOI}" =~ ^${strSpecialBuildingPOI}$ ]];then
       CFGFUNCinfo "SpecialBuildingFound: $strPOI"
       astrSpecialBuildingList+=("$strPOI")
       unset astrAllPOIsList[$i] #removing special buildings from the full list
@@ -471,6 +480,7 @@ for((i=0;i<"${#astrAllPOIsList[@]}";i++));do
 done
 astrAllPOIsList=("${astrAllPOIsList[@]}") #fixes the array after removing the entries
 iTotalUniqueSpecialBuildings=${#astrSpecialBuildingList[@]}
+if((iTotalUniqueSpecialBuildings==0));then CFGFUNCerrorExit "invalid iTotalUniqueSpecialBuildings=0. Special POIs are required to prepare end game Wasteland region";fi
 
 function FUNCarrayContains() { # <lstrChk> <array values...>
   local lstrChk="$1";shift
@@ -595,7 +605,7 @@ declare -p astrPatchedPOIdataLineList |tr '[' '\n'
 
 CFGFUNCinfo "MAIN:collecting remaining POIs originally placed by RWG"
 IFS=$'\n' read -d '' -r -a astrGenPOIsList < <(
-  #cd ../..; # bash uses the symlinked path while ls and cat use the realpath
+  #cd "${strCFGGameFolder}"; # bash uses the symlinked path while ls and cat use the realpath
   #pwd >/dev/stderr;
   #cat "$strFlGenPrefabsOrig" 
   #echo "$strGenPrefabsData"           \
@@ -718,7 +728,7 @@ for strPatchedPOIdataLine in "${astrPatchedPOIdataLineList[@]}";do
 done
 echo "</${strEnclosurerToken}>" >>"$strFlPatched"
 #egrep "<decoration " "$strFlGenPrefabsOrig" >>"$strFlPatched" #this way it becomes a sector patch for gencodeApply.sh!
-#(cd ../..;cp -fv "$strFlGenPrefabsOrig" "$strFlPatched")
+#(cd "${strCFGGameFolder}";cp -fv "$strFlGenPrefabsOrig" "$strFlPatched")
 cp -v "$strFlPatched" "${strFlPatched}.BackupBeforeFurtherPatchingIt.xml" #good to see data to help debugging
 
 CFGFUNCinfo "MAIN:detecting repetead POIs"
@@ -766,6 +776,7 @@ iSkippedAtRemainingTowns=0
 iSkippedWastelandNonDummyPOI=0
 iSkippedOriginalPOIs=0
 iSkippedProtectedPOIs=0
+nExplodeAboveCount=0
 astrRestoredPOIs=()
 iUndergroundPOIs=0
 for strGPD in "${!astrGenPOIsDupCountList[@]}";do
@@ -826,7 +837,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
     else
       #strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
       strMissingPOI="${astrMissingPOIsList[$iCountAtMissingPOIs]}"
-      CFGFUNCinfo "Dup=$strGPD:$i:Orig=$strRWGoriginalPOI:Miss=$strMissingPOI($iCountAtMissingPOIs):($nX,$nY,$nZ):YOS(O=${astrAllPOIsYOS[$strRWGoriginalPOI]-}/M=${astrAllPOIsYOS[$strMissingPOI]-}/D=${astrAllPOIsYOS[$strGPD]-})" # |tee -a "$strFlRunLog"&&: >/dev/stderr
+      CFGFUNCinfo "Dup=$strGPD:$i:Orig=$strRWGoriginalPOI:Miss=$strMissingPOI($iCountAtMissingPOIs):($nX,$nY,$nZ):YOS(O=${astrAllPrefabYOS[$strRWGoriginalPOI]-}/M=${astrAllPrefabYOS[$strMissingPOI]-}/D=${astrAllPrefabYOS[$strGPD]-})" # |tee -a "$strFlRunLog"&&: >/dev/stderr
       # this will change the 2nd match only of a dup entry strGPD
       #perl -i -w -0777pe 's/("'"$strGPD"'".*?)("'"$strGPD"'")/$1"'"$strMissingPOI"'"/s' "$strFlPatched"
       
@@ -838,10 +849,13 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       #CFGFUNCexec xmlstarlet ed -P -L -u "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@help" -v "${strHelp}" "$strFlPatched"
       FUNCappendHelpOnPatchedFileCurrentIndex ";NewPOI(`FUNChelpInfoPOI "${strMissingPOI}"`)"
       
+      bAllowUnderground=true
+      if xmlstarlet sel -t -v "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@helpAddExtraPOI" "$strFlPatched";then CFGFUNCinfo "prevent underground for iXLDFilterIndex=$iXLDFilterIndex $strMissingPOI strOriginalXYZ='$strOriginalXYZ'";bAllowUnderground=false;fi #these POIs locations are manually properly placed already
+      
       : ${bApplyYOSDiff:=true} #help changes prefab Y pos to be the difference between old and new prefab YOS (only to make things underground), if false will not change anything
       nYUpdatedFromPOIsOldVsNew="`FUNCcalcPOINewY $nY "$strRWGoriginalPOI" "$strMissingPOI"`" #use xmlstarlet to apply the new Y
       nYUpdFrPOIsOvsNinitialVal="$nYUpdatedFromPOIsOldVsNew"
-      nYOffsetNew=${astrAllPOIsYOS[$strMissingPOI]}
+      nYOffsetNew=${astrAllPrefabYOS[$strMissingPOI]}
       #if((nYUpdatedFromPOIsOldVsNew<nY));then bApplyYOSDiff=false;fi #only apply YOS diff if overground, keep underground unchanged!
       strHelpUnderground=""
       #todo (done?) improve the below idea to better randomly place POIs underground up to 33% total POIs, based on Y vs POIs' height
@@ -857,8 +871,9 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         #((iUndergroundTry=iUndergroundTryAt))&&:
         ##((iUndergroundFail--))&&:
       #fi
-      if((iUndergroundTry>=iUndergroundTryAt)) || ((iUndergroundFail>0));then
-        nNewPOIHeight=$(FUNCgetWHL "${astrAllPOIsSize[${strMissingPOI}]}";echo $nHeight)
+      bSuccessfullyPlacedUnderground=false
+      if $bAllowUnderground && ((iUndergroundTry>=iUndergroundTryAt || iUndergroundFail>0));then
+        nNewPOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}";echo $nHeight)
         nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-3)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. 
       #if((nYUpdatedFromPOIsOldVsNew<nY));then
         #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
@@ -871,19 +886,22 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
             ((iUndergroundFail--))&&:
           fi
           astrUnderGroundHinters=(
+            part_fusebox_01
             part_waterheater_01 
             part_utility_pole
-            part_street_clock
+            #not good, gives 4 clocks easily for free: part_street_clock
             part_sculpture_02
             part_sculpture_01
-            part_lab_greeble_16
-            part_lab_greeble_17
-            part_lab_greeble_18
-            part_lab_greeble_19
-            part_lab_greeble_20
-            part_lab_greeble_21
+            #part_lab_greeble_16
+            #part_lab_greeble_17
+            #part_lab_greeble_18
+            #part_lab_greeble_19
+            #part_lab_greeble_20
+            #part_lab_greeble_21
           )
-          echo '  <decoration type="model" name="'"${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"'" help="UndergroundPOIHintForIndex:'"${iXLDFilterIndex}"'" position="'"${strOriginalXYZ}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml"
+          echo '  <decoration type="model" name="'"${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"'" help="UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strOriginalXYZ}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml"
+          CFGFUNCinfo "iUndergroundPOIs=$iUndergroundPOIs strMissingPOI='$strMissingPOI'"
+          bSuccessfullyPlacedUnderground=true
         else #revert final Y
           ((iUndergroundFail++))&&:
           nYUpdatedFromPOIsOldVsNew=$nY
@@ -892,7 +910,45 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           #fi
         fi
       fi
-      CFGFUNCinfo "old=${strRWGoriginalPOI}($nX,$nY,$nZ)(YO=${astrAllPOIsYOS[$strRWGoriginalPOI]-})(Sz=${astrAllPOIsSize[${strRWGoriginalPOI}]-});new=${strMissingPOI}($nX,$nYUpdFrPOIsOvsNinitialVal/$nYUpdatedFromPOIsOldVsNew,$nZ)(YO=${astrAllPOIsYOS[$strMissingPOI]-})(Sz=${astrAllPOIsSize[${strMissingPOI}]-}) iUndergroundTry=$iUndergroundTry iUndergroundFail=$iUndergroundFail"
+      
+      bPlaceExplodeAbove=false
+      if ! $bSuccessfullyPlacedUnderground;then
+        : ${iTryExplAbove:=0}
+        : ${iTryExplodeAt:=3} #help every this POI count that is not underground and is not protected, a explosive POI will (if luckly) be placed above it
+        ((iTryExplAbove++))&&:
+        if((iTryExplAbove>=iTryExplodeAt));then #once every 10 POIs on surface
+          bPlaceExplodeAbove=true
+        fi
+      fi
+      if $bPlaceExplodeAbove;then
+        nYSafeMargin=3 
+        nYAboveBuildingMin=$((nY+nNewPOIHeight+nYSafeMargin))  #margin will give a minimum terrain to collapse
+        
+        nYWorldMax=255 #todo confirm this by placing nerdpole blocks till reach the limit: 260?
+        nYAboveBuildingLimit=30 #max collapsible
+        strExplPOI="part_gas_contraption_01"
+        nExplosivePOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strExplPOI}]}";echo $nHeight)
+        
+        nYExplPOI=$((nYAboveBuildingMin+(RANDOM%nYAboveBuildingLimit)))
+        if(( (nYExplPOI+nExplosivePOIHeight+nYSafeMargin)>nYWorldMax ));then
+          nYExplPOI=$((nYWorldMax-nYSafeMargin))
+          if((nYExplPOI<nYAboveBuildingMin));then
+            nYExplPOI=-1 #to fail
+          fi
+        fi
+        
+        if((nYExplPOI>-1));then
+          iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may have no building. buildings are not terrain support right? 20 will try to place above buildings!
+          #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todoa)))
+          strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
+          echo '  <decoration type="model" name="'"${strExplPOI}"'" help="TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
+          CFGFUNCinfo "added explode above nExplodeAboveCount=$nExplodeAboveCount strMissingPOI='$strMissingPOI'"
+          ((nExplodeAboveCount++))&&:
+          iTryExplAbove=0
+        fi
+      fi
+      
+      CFGFUNCinfo "old=${strRWGoriginalPOI}($nX,$nY,$nZ)(YO=${astrAllPrefabYOS[$strRWGoriginalPOI]-})(Sz=${astrAllPrefabSize[${strRWGoriginalPOI}]-});new=${strMissingPOI}($nX,$nYUpdFrPOIsOvsNinitialVal/$nYUpdatedFromPOIsOldVsNew,$nZ)(YO=${astrAllPrefabYOS[$strMissingPOI]-})(Sz=${astrAllPrefabSize[${strMissingPOI}]-}) iUndergroundTry=$iUndergroundTry iUndergroundFail=$iUndergroundFail"
       strStatus=""
       if $bApplyYOSDiff;then
         #strRWGoriginalPOIindex="${astrRWGOriginalLocationVsPOIindex[$nX,$nY,$nZ]}"
@@ -900,7 +956,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         #xmlstarlet ed -P -L -u "//decoration[@position='$nX,$nY,$nZ' and @helpFilterIndex='${strRWGoriginalPOIindex}']/@position" -v "$nYUpdatedFromPOIsOldVsNew" "$strFlPatched"
         #CFGFUNCexec -m "Query to be sure the entry exists" xmlstarlet sel -t -c "//decoration[@helpFilterIndex='${iXLDFilterIndex}']" "$strFlPatched";echo #this line is allowed to fail, do not protect with &&:
         
-        #nYOffsetNew=${astrAllPOIsYOS[$strMissingPOI]}
+        #nYOffsetNew=${astrAllPrefabYOS[$strMissingPOI]}
         if((nYUpdatedFromPOIsOldVsNew<0));then
           CFGFUNCinfo "WARN:nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' < 0"
         fi
@@ -1018,7 +1074,7 @@ if [[ -n "$strChkWrongReplace" ]];then
 fi
 if(( $(egrep "name=\"${strDummyPOI}\"" "${strFlPatched}" |wc -l) > 1 ));then
   egrep "name=\"${strDummyPOI}\"" "${strFlPatched}" |tee -a "$strCFGScriptLog"
-  CFGFUNCprompt "WARN:the above dups of strDummyPOI='$strDummyPOI' should have been replaced (ask some developer to improve this script) unless you over configured iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs value, like in you have reserved (iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs) more than required."
+  CFGFUNCprompt "WARN:the above dups of strDummyPOI='$strDummyPOI' should have been replaced (ask some developer to improve this script, or become one) unless you over configured iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs value, like in you have reserved (iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs) more than required."
 fi
 #if((iNotUsedReservedWastelandPOICountForMissingPOIs>0));then
   #CFGFUNCprompt "WARN:iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs more than required."
@@ -1041,6 +1097,7 @@ echo "iStillMissingPOIs=$iStillMissingPOIs (0 is good)" >>"$strFlResultsFinal"
 echo "[[[ETC:(DevInfo)]]]" >>"$strFlResultsFinal"
 #echo "iSkippedAtRemainingTowns=$iSkippedAtRemainingTowns" >>"$strFlResultsFinal"
 echo "iSkippedProtectedPOIs=$iSkippedProtectedPOIs" >>"$strFlResultsFinal"
+echo "nExplodeAboveCount=$nExplodeAboveCount" >>"$strFlResultsFinal"
 echo "iSkippedWastelandNonDummyPOI=$iSkippedWastelandNonDummyPOI" >>"$strFlResultsFinal"
 #echo "iSkippedOriginalPOIs=$iSkippedOriginalPOIs" >>"$strFlResultsFinal"
 echo "iRemovedSpecialBuildingsFromNonWasteland=${iRemovedSpecialBuildingsFromNonWasteland}" >>"$strFlResultsFinal"
@@ -1079,6 +1136,7 @@ fi
 strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWorldTNM}"
 CFGFUNCgencodeApply "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 CFGFUNCgencodeApply --subTokenId "UndergroundHints" "${strFlPatched}.UndergroundHints.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
+CFGFUNCgencodeApply --subTokenId "ExplodeAbove" "${strFlPatched}.ExplodeAbove.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 
 strFlAddExtraSpecialPOIs="`basename "$0"`.AddExtraSpecialPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
 CFGFUNCinfo "MAIN:adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}"
@@ -1119,7 +1177,7 @@ CFGFUNCgencodeApply --xmlcfg ".iGSKElctrnTeleUndergroundIndexMax" "${iMaxUndergr
 ##if [[ "$strResp" == y ]];then
 #if CFGFUNCprompt -q "apply patch at '${strFlGenPrefabsOrig}' for your gamemplay?";then
   ##(
-    ##cd ../..;
+    ##cd "${strCFGGameFolder}";
     ##cp -v "$strFlGenPrefabsOrig" "${strFlGenPrefabsOrig}.`date +"${strCFGDtFmt}"`.bkp"
     ##cp -vf "$strFlPatched" "$strFlGenPrefabsOrig"
     ##trash -v "$strFlPatched"
