@@ -1131,8 +1131,10 @@ CFGFUNCgencodeApply --xmlcfg ".iGSKElctrnTeleUndergroundIndexMax" "${iMaxUndergr
 CFGFUNCinfo "MAIN:Listing to check for dups (tho town in wasteland shall not be touched!)"
 egrep "<decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"]*"' -o |sort #todo try to list just the dups
 
-CFGFUNCinfo "MAIN:SUCCESS! now run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' at the game folder (outside this modlet folder)"
+CFGFUNCinfo "MAIN:SUCCESS!"
 
 CFGFUNCprompt "MAIN: you should run ./createSpawnPoints.sh to update the spawn points file now!"
+
+CFGFUNCprompt "MAIN: then run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
