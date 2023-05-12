@@ -205,11 +205,26 @@
   <append xpath="/buffs">
     <buff name="buffGSKNPCHiredFollowingHeal" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
+      <update_rate value="1.0"/>
       <duration value="0"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKNPCHealingMedicine" operation="GT" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHealingMedicine" operation="add" value="-5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCHealingMedicine"/>
+      </effect_group>
+      <effect_group help="near death faster healing">
+        <requirement name="CVarCompare" cvar="iGSKNPCHealingMedicine" operation="GT" value="10"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LT" value="50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHealingMedicine" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCHealingMedicine"/>
+      </effect_group>
+      <effect_group help="near death faster healing too">
+        <requirement name="CVarCompare" cvar="iGSKNPCHealingMedicine" operation="GT" value="15"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LT" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHealingMedicine" operation="add" value="-15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="15"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCHealingMedicine"/>
       </effect_group>
     </buff>
