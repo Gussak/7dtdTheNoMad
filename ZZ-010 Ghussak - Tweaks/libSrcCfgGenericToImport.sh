@@ -394,6 +394,28 @@ function CFGFUNCfixId() {
   echo "$1" |sed -r 's@[^a-zA-Z0-9_]@_@g'
 }
 
+: ${nCFGSeedPredictiveRandom:=1337} #help this seed will give the same result anywhere anytime if the equivalent conditions (all the input data, files etc) is the same
+export nCFGSeedPredictiveRandom
+: ${iCFGPredictiveRandomCacheMax:=2500} #help max generated predictive random values
+export iCFGRndMax
+function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to provide the same random result for the same request time. Be sure to use the same ID in the same context.
+  local lstrID="$1"
+  declare -gA astrCFGIdForRandomVsCurrentIndex
+  #declare -p astrCFGIdForRandomVsCurrentIndex
+  if ! echo "${!astrCFGIdForRandomVsCurrentIndex[@]}" |egrep -qw "$lstrID";then
+    if ! [[ "$lstrID" =~ ^[a-zA-Z0-9_]*$ ]];then CFGFUNCDevMeErrorExit "invalid lstrID='$lstrID' to create an array";fi
+    local lstrRndMany="`RANDOM=${nCFGSeedPredictiveRandom};for((i=0;i<iCFGPredictiveRandomCacheMax;i++));do echo -n "$RANDOM ";done`"
+    eval 'declare -ga aiPredictiveRandom'"${lstrID}=($lstrRndMany)"
+    eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}"
+    astrCFGIdForRandomVsCurrentIndex["$lstrID"]=0
+  else
+    local liIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
+    if((liIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
+    eval 'echo "${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"'
+    astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liIndex+1))
+  fi
+}
+
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
 export strScriptName="`basename "$0"`" #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -e xec bash`

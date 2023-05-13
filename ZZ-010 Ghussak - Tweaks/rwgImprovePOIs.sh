@@ -39,6 +39,9 @@ set -Eeu
 #if [[ "${1-}" == --help ]];then source ./libSrcCfgGenericToImport.sh --help;exit 0;fi
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
+#for((i=0;i<10;i++));do CFGFUNCpredictiveRandom tst1;done; #TODOA comment this
+#for((i=0;i<10;i++));do CFGFUNCpredictiveRandom RandomPOIs;done;exit #TODOA comment this
+
 strPrefabsXml="prefabs.xml"
 
 #strFlRunLog="`basename "$0"`.LastRun.log.txt"
@@ -48,7 +51,7 @@ strPrefabsXml="prefabs.xml"
 #: ${strGenWorldName:="East Nikazohi Territory"} #h elp
 #strFlGenPrefabsOrig="${strPathToUserData}/GeneratedWorlds/${strGenWorldName}/${strPrefabsXml}"
 
-CFGFUNCprompt "This is not highly optimized yet and not multithread. It takes 16min on my machine 3.2GHz 1 core (1 thread). (if in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required)"
+CFGFUNCprompt "This is not highly optimized yet and not multithread. It takes 16min on my machine 3.2GHz 1 core (1 thread). If in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required. Or you can run it now already (21 is for A20) like: iReservedWastelandPOICountForMissingPOIs=21 $0"
 
 #: ${strFlGenPrefabsOrig:="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}"} #he lp you can set this file path directly here
 strFlOriginalBkp="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}${strCFGOriginalBkpSuffix}"
@@ -653,8 +656,8 @@ astrMPOItmp=("${astrMissingPOIsList[@]}")
 #fi
 astrMPOIbkp=("${astrMissingPOIsList[@]}")
 
-: ${nSeedRandomPOIs:=1337} #help this seed wont give the same result on other game versions that have a different ammount of POIs (or if you added new custom POIs)
 CFGFUNCinfo "MAIN:randomizing POIs order using seed '$nSeedRandomPOIs'"
+: ${nSeedRandomPOIs:=1337} #help this seed wont give the same result on other game versions that have a different ammount of POIs (or if you added new custom POIs)
 RANDOM=${nSeedRandomPOIs} 
 astrMissingPOIsList=() #reset to randomize
 #for strPOI in "${astrMPOItmp[@]}";do
@@ -874,7 +877,8 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       bSuccessfullyPlacedUnderground=false
       if $bAllowUnderground && ((iUndergroundTry>=iUndergroundTryAt || iUndergroundFail>0));then
         nNewPOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}";echo $nHeight)
-        nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-3)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. 
+        : ${nYExtraUndergroundDistFromSurface:=7} #help this will create a layer of earth above the underground POI. The value of 3 did not work well for some buildings, better keep it above 4 (that would make 1 block tall tick layer).
+        nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-nYExtraUndergroundDistFromSurface)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. Obs.: Engine's RWG, at least when creating towns, may place POIs very near bedrock, letting them getting cutout see house_old_bungalow_11 with position Y=-15 for TNM original world prefabs.xml file.
       #if((nYUpdatedFromPOIsOldVsNew<nY));then
         #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
         #nYUpdatedFromPOIsOldVsNew=$((nYUpdatedFromPOIsOldVsNew-nNewPOIHeight-3))
@@ -899,7 +903,20 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
             #part_lab_greeble_20
             #part_lab_greeble_21
           )
-          echo '  <decoration type="model" name="'"${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"'" help="UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strOriginalXYZ}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml"
+          #bad, this will make it float a bit in the air: nYHint=$((nY+1)) #most prefab hints were placed like original y-1 why?
+          nYHint=$nY
+          : ${bPlaceObviousPrefabHintsForUndergroundPOIs:=false} #help this wont look good as the prefabs will be floating in the air w/o terrain below to sustain it
+          if $bPlaceObviousPrefabHintsForUndergroundPOIs;then
+            nYHint=$((nY+nNewPOIHeight+nYExtraUndergroundDistFromSurface))
+          fi
+          #todoa try to create a prefab with a single smoke like at REKT trader prefab. it is very tall and may help for some hints that still end underground
+          : ${bUseUndergroundSmokePrefabHint:=true} #help otherwise it will use small static prefabs
+          if $bUseUndergroundSmokePrefabHint;then
+            strUndergroundPrefabHint="TNM_Hint_Underground"
+          else
+            strUndergroundPrefabHint="${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"
+          fi
+          echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
           CFGFUNCinfo "iUndergroundPOIs=$iUndergroundPOIs strMissingPOI='$strMissingPOI'"
           bSuccessfullyPlacedUnderground=true
         else #revert final Y
@@ -920,7 +937,9 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           bPlaceExplodeAbove=true
         fi
       fi
-      if $bPlaceExplodeAbove;then
+      : ${bAllowExplodeAbovePrefabs:=false} #help this does not work. The prefab has no auto ground placed below it and above the other prefab, it just stays there floating and wont collapse, wont fall, wont explode. Only enable when it is working one day.
+      if $bAllowExplodeAbovePrefabs && $bPlaceExplodeAbove;then 
+        #todo try to create some prefab that will explode just after being generated. FAIL: a single almost destroyed car prefab was not placed in the world in high position, the world generator ignored it
         nYSafeMargin=3 
         nYAboveBuildingMin=$((nY+nNewPOIHeight+nYSafeMargin))  #margin will give a minimum terrain to collapse
         
@@ -946,6 +965,8 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           ((nExplodeAboveCount++))&&:
           iTryExplAbove=0
         fi
+      else
+        echo -n >>"${strFlPatched}.ExplodeAbove.xml" #this is just to at least create the file
       fi
       
       CFGFUNCinfo "old=${strRWGoriginalPOI}($nX,$nY,$nZ)(YO=${astrAllPrefabYOS[$strRWGoriginalPOI]-})(Sz=${astrAllPrefabSize[${strRWGoriginalPOI}]-});new=${strMissingPOI}($nX,$nYUpdFrPOIsOvsNinitialVal/$nYUpdatedFromPOIsOldVsNew,$nZ)(YO=${astrAllPrefabYOS[$strMissingPOI]-})(Sz=${astrAllPrefabSize[${strMissingPOI}]-}) iUndergroundTry=$iUndergroundTry iUndergroundFail=$iUndergroundFail"
@@ -1136,7 +1157,9 @@ fi
 strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWorldTNM}"
 CFGFUNCgencodeApply "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 CFGFUNCgencodeApply --subTokenId "UndergroundHints" "${strFlPatched}.UndergroundHints.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
+#if [[ -f "${strFlPatched}.ExplodeAbove.xml" ]];then
 CFGFUNCgencodeApply --subTokenId "ExplodeAbove" "${strFlPatched}.ExplodeAbove.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
+#fi
 
 strFlAddExtraSpecialPOIs="`basename "$0"`.AddExtraSpecialPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
 CFGFUNCinfo "MAIN:adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}"
