@@ -412,7 +412,7 @@ function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to pro
   fi
   local liIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
   if((liIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
-  eval 'echo "${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"' #OUTPUT
+  eval 'declare -g iPRandom="${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"' #OUTPUT
   astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liIndex+1))
 }
 

@@ -229,7 +229,7 @@ function FUNCxmlGetName() { #<strDecorationLine>
   CFGFUNCxmlGetLinePropertyValue "$1" "//decoration/@name"
 }
 
-function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
+function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew> this will return the Y of the base (bottomest) of the POI
   local lnY="$1";shift
   local lstrPOIold="$1";shift
   local lstrPOInew="$1";shift
@@ -240,8 +240,8 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   
   #help RWG calcs like this right? if terrain y=100 and POI YOffset=-3, POIFinalY=100-3=97. And the game running will then ignore any YOffset, that is used only by RWG right?
   local lNewY=$lnY
-  lNewY+=$((liYOSOld*-1)) #this will restore the terrain Y at the location
-  lNewY+=$liYOSNew #this will then lower the Y if required by the new POI
+  (( lNewY+=(liYOSOld * -1) ))&&: #this will restore the terrain Y at the location
+  (( lNewY+=liYOSNew ))&&: #this will then lower the Y if required by the new POI
   
   echo "$lNewY"
   
@@ -442,7 +442,7 @@ for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
   
   # helpFilterIndex would be used to grant no clashes will happen (but no clash will happen as position is already unique as POIs wont be placed above or below others)
   strName="`FUNCxmlGetName "$strGenPOIdataLine"`"
-  strHelp="${strBiome};OriginalPOI(`FUNChelpInfoPOI "${strName}"`)"
+  strHelp="${strBiome};${strColorAtBiomeFile};OriginalPOI(`FUNChelpInfoPOI "${strName}"`)"
   strSed='s@(name=")([^"]*)(")@helpSort="'"${strName}"'" helpFilterIndex="'$i'" \1\2\3 help="'"${strHelp}"'"@'
   astrRWGOriginalPOIdataLineList[$i]="`echo "$strGenPOIdataLine" |sed -r "$strSed"`"
   CFGFUNCinfo "${astrRWGOriginalPOIdataLineList[$i]}"
@@ -686,7 +686,8 @@ astrMissingPOIsList=() #reset to randomize
 #for strPOI in "${astrMPOItmp[@]}";do
 iTot="${#astrMPOItmp[@]}"
 for((i=0;i<iTot;i++));do
-  iRnd="$(( `CFGFUNCpredictiveRandom POIsOrder` % ${#astrMPOItmp[@]} ))"
+  CFGFUNCpredictiveRandom POIsOrder
+  iRnd="$(( iPRandom % ${#astrMPOItmp[@]} ))"
   strPOI="${astrMPOItmp[$iRnd]}"
   unset astrMPOItmp[$iRnd] #this clears the entry but do not change the array size
   astrMPOItmp=("${astrMPOItmp[@]}") #to update the array size
@@ -849,6 +850,11 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         ((iNotUsedReservedWastelandPOICountForMissingPOIs--))&&:
       fi
     fi
+
+    FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}"
+    nNewPOIWidth=$nWidth
+    nNewPOIHeight=$nHeight
+    nNewPOILength=$nLength
     
     CFGFUNCexec -m "Query to be sure the entry exists for consistency" xmlstarlet sel -t -c "//decoration[@helpFilterIndex='${iXLDFilterIndex}']" "$strFlPatched";echo #this line is allowed to fail, do not protect with &&:
     if $bSkip;then
@@ -899,13 +905,15 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       #fi
       bSuccessfullyPlacedUnderground=false
       if $bAllowUnderground && ((iUndergroundTry>=iUndergroundTryAt || iUndergroundFail>0));then
-        nNewPOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}";echo $nHeight)
         : ${nYExtraUndergroundDistFromSurface:=7} #help this will create a layer of earth above the underground POI. The value of 3 did not work well for some buildings, better keep it above 4 (that would make 1 block tall tick layer).
-        nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-nYExtraUndergroundDistFromSurface)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. Obs.: Engine's RWG, at least when creating towns, may place POIs very near bedrock, letting them getting cutout see house_old_bungalow_11 with position Y=-15 for TNM original world prefabs.xml file.
+        #nYUpdatedFromPOIsOldVsNew=$((nY-nYOffsetNew-nNewPOIHeight-nYExtraUndergroundDistFromSurface)) #the negative YOffset will actually raise the building to let it's height value work properly. -3 is a terrain margin. Obs.: Engine's RWG, at least when creating towns, may place POIs very near bedrock, letting them getting cutout see house_old_bungalow_11 with position Y=-15 for TNM original world prefabs.xml file.
+        (( nYUpdatedFromPOIsOldVsNew+=(nYOffsetNew * -1) ))&&: #puts the new POI base on the terrain level
+        (( nYUpdatedFromPOIsOldVsNew-=(nNewPOIHeight+nYExtraUndergroundDistFromSurface) ))&&: #puts the new POI totally underground with a margin
       #if((nYUpdatedFromPOIsOldVsNew<nY));then
         #more calc can be done based on the new POI height for better underground placement (more close to the expected surface elevation: nYUpdatedFromPOIsOldVsNew-newPOIheight-3. -3 is to not be so close that would create structural instability, despite that still may happen cuz of earth ground I think)
         #nYUpdatedFromPOIsOldVsNew=$((nYUpdatedFromPOIsOldVsNew-nNewPOIHeight-3))
-        if(( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) > 1 ));then
+#        if(( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) > 1 ));then
+        if(( nYUpdatedFromPOIsOldVsNew >= 1 ));then
           strHelpUnderground="Underground"
           ((iUndergroundPOIs++))&&:
           ((iUndergroundTry-=iUndergroundTryAt))&&:
@@ -941,14 +949,17 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
               strUndergroundPrefabHint="TNM_Hint_UndergroundBlack" #dark smoke
             fi
           else
-            strUndergroundPrefabHint="${astrUnderGroundHinters[$((`CFGFUNCpredictiveRandom UndergroundHint`%${#astrUnderGroundHinters[@]}))]}"
+            CFGFUNCpredictiveRandom UndergroundHint
+            strUndergroundPrefabHint="${astrUnderGroundHinters[$((iPRandom%${#astrUnderGroundHinters[@]}))]}"
           fi
-          echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((`CFGFUNCpredictiveRandom UndergroundHintRotation`%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
+          CFGFUNCpredictiveRandom UndergroundHintRotation
+          echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};${strColorAtBiomeFile};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
           CFGFUNCinfo "iUndergroundPOIs=$iUndergroundPOIs strMissingPOI='$strMissingPOI'"
           bSuccessfullyPlacedUnderground=true
         else #revert final Y
           ((iUndergroundFail++))&&:
-          nYUpdatedFromPOIsOldVsNew=$nY
+          #nYUpdatedFromPOIsOldVsNew=$nY
+          nYUpdatedFromPOIsOldVsNew=$nYUpdFrPOIsOvsNinitialVal
           #if((iUndergroundTry>0));then
             #((iUndergroundTry--))&&: #try again on next POI
           #fi
@@ -975,7 +986,8 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         strExplPOI="part_gas_contraption_01"
         nExplosivePOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strExplPOI}]}";echo $nHeight)
         
-        nYExplPOI=$((nYAboveBuildingMin+(`CFGFUNCpredictiveRandom ExplosivePOIElevation`%nYAboveBuildingLimit)))
+        CFGFUNCpredictiveRandom ExplosivePOIElevation
+        nYExplPOI=$((nYAboveBuildingMin+(iPRandom%nYAboveBuildingLimit)))
         if(( (nYExplPOI+nExplosivePOIHeight+nYSafeMargin)>nYWorldMax ));then
           nYExplPOI=$((nYWorldMax-nYSafeMargin))
           if((nYExplPOI<nYAboveBuildingMin));then
@@ -987,7 +999,8 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may have no building. buildings are not terrain support right? 20 will try to place above buildings!
           #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todoa)))
           strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
-          echo '  <decoration type="model" name="'"${strExplPOI}"'" help="'"${strBiome}"'TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((`CFGFUNCpredictiveRandom ExplosivePOIRotation`%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
+          CFGFUNCpredictiveRandom ExplosivePOIRotation
+          echo '  <decoration type="model" name="'"${strExplPOI}"'" help="'"${strBiome};${strColorAtBiomeFile}"'TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
           CFGFUNCinfo "added explode above nExplodeAboveCount=$nExplodeAboveCount strMissingPOI='$strMissingPOI'"
           ((nExplodeAboveCount++))&&:
           iTryExplAbove=0
@@ -1050,29 +1063,52 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       <property name="target_position" value="'$nX',260,'$nZ'" help="'"`FUNCgetHelpOnPatchedFileCurrentIndex`"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
       else #because underground POIs already have at that location the underground hint!
+        : ${iTryTrapEveryPOIcount:=1} #help was 3, now every POI will have a trap around it with this set to 1
         : ${iTryAddWildTrap:=0}
         ((iTryAddWildTrap++))&&:
-        if((iTryAddWildTrap>=3));then
+        if((iTryAddWildTrap>=iTryTrapEveryPOIcount));then
           : ${bCreateWildernessTraps:=true} #help they will be near POIs tho...
           if $bCreateWildernessTraps;then
             iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
             if [[ "$strBiome" == "PineForest" ]];then
-              strUndergroundPrefabHint="TNM_WildernessTrapForest"
+              strPrefabTrap="TNM_WildernessTrapForest"
               iYOTrap=-4
             fi
             if [[ "$strBiome" == "Snow" ]];then
-              strUndergroundPrefabHint="TNM_WildernessTrapSnow"
+              strPrefabTrap="TNM_WildernessTrapSnow"
               iYOTrap=-4
             fi
             if [[ "$strBiome" == "Desert" ]];then
-              strUndergroundPrefabHint="TNM_WildernessTrapDesert"
+              strPrefabTrap="TNM_WildernessTrapDesert"
               iYOTrap=-4
             fi
             if [[ "$strBiome" == "Wasteland" ]];then
-              strUndergroundPrefabHint="TNM_WildernessTrapWasteland"
+              strPrefabTrap="TNM_WildernessTrapWasteland"
               iYOTrap=-4
             fi
-            echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};"'WildernessTrap:POIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$((nY+iYOTrap)),$nZ"'" rotation="'"$((`CFGFUNCpredictiveRandom WildernessTrap`%4))"'"/>' >>"${strFlPatched}.WildernessTrap.xml"
+            
+            #POI origin is always bottom left corner. this will place a trap around every POI following that square line
+            nTrapX=$nX
+            nTrapY=$((nY+iYOTrap))
+            nTrapZ=$nZ
+            CFGFUNCpredictiveRandom TrapVaryXorZ
+            if((iPRandom%2==0));then #vary X
+              CFGFUNCpredictiveRandom TrapX
+              ((nTrapX+=iPRandom%nNewPOIWidth))&&: 
+              CFGFUNCpredictiveRandom TrapZTop
+              if((iPRandom%2==0));then #because the default is already on Z bottom
+                ((nTrapZ-=nNewPOILength))&&:
+              fi
+            else #vary Z
+              CFGFUNCpredictiveRandom TrapZ
+              ((nTrapZ-=iPRandom%nNewPOILength))&&: #POI origin is always bottom left corner
+              CFGFUNCpredictiveRandom TrapXRight
+              if((iPRandom%2==0));then #because the default is already on X left
+                ((nTrapX+=nNewPOIWidth))&&:
+              fi
+            fi
+            CFGFUNCpredictiveRandom WildernessTrap
+            echo '  <decoration type="model" name="'"${strPrefabTrap}"'" help="'"${strBiome};${strColorAtBiomeFile};"'WildernessTrap:POIIndex:'"${iXLDFilterIndex}"'" position="'"$nTrapX,$nTrapY,$nTrapZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.WildernessTrap.xml"
           fi
           iTryAddWildTrap=0
         fi
@@ -1276,3 +1312,5 @@ CFGFUNCprompt "MAIN: you should run ./createSpawnPoints.sh to update the spawn p
 CFGFUNCprompt "MAIN: then run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
+declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"
+
