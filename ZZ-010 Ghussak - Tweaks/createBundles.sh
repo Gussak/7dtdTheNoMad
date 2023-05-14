@@ -645,7 +645,7 @@ astr=(
 );FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho)." "${astr[@]}"
 
 astr=( #TEMPLATE
-  ammo9mmBulletBall 666
+  ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
   ammoArrowStone 33
   gunHandgunT1PistolParts 33
   gunHandgunT3SMG5 1

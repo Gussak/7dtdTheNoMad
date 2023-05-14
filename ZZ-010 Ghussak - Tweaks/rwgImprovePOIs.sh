@@ -39,9 +39,6 @@ set -Eeu
 #if [[ "${1-}" == --help ]];then source ./libSrcCfgGenericToImport.sh --help;exit 0;fi
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
-#for((i=0;i<10;i++));do CFGFUNCpredictiveRandom tst1;done; #TODOA comment this
-#for((i=0;i<10;i++));do CFGFUNCpredictiveRandom RandomPOIs;done;exit #TODOA comment this
-
 strPrefabsXml="prefabs.xml"
 
 #strFlRunLog="`basename "$0"`.LastRun.log.txt"
@@ -121,8 +118,9 @@ declare -A astrTownList=()
 strFlTownRect="./rwgImprovePOIs.sh.CfgTownsRectangles.sh"
 if cat "${strFlTownRect}";then
   : ${bAskIfWorldTownRectanglesAreOk:=true} #help disable if this question is annoying you
-  if $bAskIfWorldTownRectanglesAreOk && ! CFGFUNCprompt -q "Are the above town's rectangles correct? (if not edit '${strFlTownRect}' properly)";then
-    CFGFUNCerrorExit "re-run this script after towns rectangles are fixed."
+  if $bAskIfWorldTownRectanglesAreOk;then
+    CFGFUNCprompt "Check if the above town's rectangles are correct (if not, abort and edit '${strFlTownRect}' properly)"
+    #CFGFUNCerrorExit "re-run this script after towns rectangles are fixed."
   fi
 fi
 source "${strFlTownRect}"&&:
@@ -240,8 +238,15 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew>
   local liYOSNew=${astrAllPrefabYOS[$lstrPOInew]-};if [[ -z "${liYOSNew}" ]];then CFGFUNCerrorExit "not found $lstrPOInew";fi
   #echo $(( liYOSOld+(liYOSNew-liYOSOld) ))&&:
   
+  #help RWG calcs like this right? if terrain y=100 and POI YOffset=-3, POIFinalY=100-3=97. And the game running will then ignore any YOffset, that is used only by RWG right?
+  local lNewY=$lnY
+  lNewY+=$((liYOSOld*-1)) #this will restore the terrain Y at the location
+  lNewY+=$liYOSNew #this will then lower the Y if required by the new POI
+  
+  echo "$lNewY"
+  
   #it should keep the original Y as the yOffset will let any y work correctly: a building w/o underground is YOS 0. another with underground height 1 is YOS -1. Both will be correctly placed at y 30 already...
-  echo "$lnY"
+  #echo "$lnY"
   
   #local liYNew=$(( lnY+(liYOSOld-liYOSNew) ));CFGFUNCinfo 'liYNew=$(( lnY+(liYOSOld-liYOSNew) )): '"$liYNew=(( $lnY+($liYOSOld-$liYOSNew) ))"
   
@@ -307,11 +312,21 @@ function FUNCwriteCacheFile(){ #call this after each var is set
   echo "#PREPARE_RELEASE:REVIEWED:OK" >"${strFlCACHE}"
   echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"${strFlCACHE}"
   declare -p iTotalChkBiome >>"${strFlCACHE}"
+  declare -p iReservedWastelandPOICountForMissingPOIs >>"${strFlCACHE}"
   # put all cache vars here!
 }
 
+bUpdateBiomeCache=false
 : ${iTotalChkBiome:=0}
 if((iTotalChkBiome==0));then
+  bUpdateBiomeCache=true
+fi
+if((iTotalChkBiome>0));then
+  if CFGFUNCprompt -q "Biome cache found: iTotalChkBiome=$iTotalChkBiome. Update biome cache anyway (will take a very long time)? this is required if you just used the Engine RWG and have a new prefabs.xml file and a new biome png file.";then #todo check sha1sum for biome and prefabs file, if they changed this will be automatic
+    bUpdateBiomeCache=true
+  fi
+fi
+if $bUpdateBiomeCache;then
   CFGFUNCinfo "MAIN:updating all biomes info for all prefabs originally placed by RWG at '${strFlGenPrefabsOrig}'. This happens only once and will take a lot of time. Please wait this step end."
   for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
     ((iTotalChkBiome++))&&:
@@ -324,6 +339,13 @@ fi
 source "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh" #this line is allowed to fail, do not protect with &&:
 #eval "$(CFGFUNCbiomeData "-391,36,-2422")";declare -p iBiome strBiome strColorAtBiomeFile
 #exit
+
+if((iReservedWastelandPOICountForMissingPOIs>0));then
+  if CFGFUNCprompt -q "iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs, do you want to set it to 0 so you can see how much is needed again (this will take a long time)? (if not, that value will be used now)";then
+    iReservedWastelandPOICountForMissingPOIs=0
+  fi
+  FUNCwriteCacheFile
+fi
 
 #IFS=$'\n' read -d '' -r -a astrPrefabPOIsPathList < <(cd "${strCFGGameFolder}"/;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]POIs")&&:
 IFS=$'\n' read -d '' -r -a astrPrefabPathList < <(cd "${strCFGGameFolder}"/;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]\(POIs\|Parts\|RWGTiles\|Test\)")&&:
@@ -656,14 +678,15 @@ astrMPOItmp=("${astrMissingPOIsList[@]}")
 #fi
 astrMPOIbkp=("${astrMissingPOIsList[@]}")
 
-CFGFUNCinfo "MAIN:randomizing POIs order using seed '$nSeedRandomPOIs'"
-: ${nSeedRandomPOIs:=1337} #help this seed wont give the same result on other game versions that have a different ammount of POIs (or if you added new custom POIs)
-RANDOM=${nSeedRandomPOIs} 
+#: ${nSeedRandomPOIs:=1337} #help this seed wont give the same result on other game versions that have a different ammount of POIs (or if you added new custom POIs)
+#CFGFUNCinfo "MAIN:randomizing POIs order using seed '$nSeedRandomPOIs'"
+CFGFUNCinfo "MAIN:randomizing POIs order using predictable random seed"
+#RANDOM=${nSeedRandomPOIs} 
 astrMissingPOIsList=() #reset to randomize
 #for strPOI in "${astrMPOItmp[@]}";do
 iTot="${#astrMPOItmp[@]}"
 for((i=0;i<iTot;i++));do
-  iRnd="$(( RANDOM % ${#astrMPOItmp[@]} ))"
+  iRnd="$(( `CFGFUNCpredictiveRandom POIsOrder` % ${#astrMPOItmp[@]} ))"
   strPOI="${astrMPOItmp[$iRnd]}"
   unset astrMPOItmp[$iRnd] #this clears the entry but do not change the array size
   astrMPOItmp=("${astrMPOItmp[@]}") #to update the array size
@@ -672,7 +695,7 @@ done
 if((${#astrMPOItmp[@]}>0));then
   declare -p astrMPOItmp |tr "[" "\n" >/dev/stderr
   #echo "ERROR:$LINENO: not empty" >/dev/stderr
-  CFGFUNCerrorExit "Ln$LINENO: the list used to extract POIs randomly is not empty"
+  CFGFUNCerrorExit "Ln$LINENO: the list used to extract POIs randomly is not empty. Because only when it is empty it means all POIs got extracted from it."
   #exit 1
 fi
 unset astrMPOItmp #to not reuse it empty
@@ -912,11 +935,15 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           #todoa try to create a prefab with a single smoke like at REKT trader prefab. it is very tall and may help for some hints that still end underground
           : ${bUseUndergroundSmokePrefabHint:=true} #help otherwise it will use small static prefabs
           if $bUseUndergroundSmokePrefabHint;then
-            strUndergroundPrefabHint="TNM_Hint_Underground"
+            if [[ "$strBiome" == "Snow" ]];then
+              strUndergroundPrefabHint="TNM_Hint_UndergroundWhite" #this white smoke blends better on snow
+            else
+              strUndergroundPrefabHint="TNM_Hint_UndergroundBlack" #dark smoke
+            fi
           else
-            strUndergroundPrefabHint="${astrUnderGroundHinters[$((RANDOM%${#astrUnderGroundHinters[@]}))]}"
+            strUndergroundPrefabHint="${astrUnderGroundHinters[$((`CFGFUNCpredictiveRandom UndergroundHint`%${#astrUnderGroundHinters[@]}))]}"
           fi
-          echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
+          echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((`CFGFUNCpredictiveRandom UndergroundHintRotation`%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
           CFGFUNCinfo "iUndergroundPOIs=$iUndergroundPOIs strMissingPOI='$strMissingPOI'"
           bSuccessfullyPlacedUnderground=true
         else #revert final Y
@@ -948,7 +975,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         strExplPOI="part_gas_contraption_01"
         nExplosivePOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strExplPOI}]}";echo $nHeight)
         
-        nYExplPOI=$((nYAboveBuildingMin+(RANDOM%nYAboveBuildingLimit)))
+        nYExplPOI=$((nYAboveBuildingMin+(`CFGFUNCpredictiveRandom ExplosivePOIElevation`%nYAboveBuildingLimit)))
         if(( (nYExplPOI+nExplosivePOIHeight+nYSafeMargin)>nYWorldMax ));then
           nYExplPOI=$((nYWorldMax-nYSafeMargin))
           if((nYExplPOI<nYAboveBuildingMin));then
@@ -960,7 +987,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
           iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may have no building. buildings are not terrain support right? 20 will try to place above buildings!
           #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todoa)))
           strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
-          echo '  <decoration type="model" name="'"${strExplPOI}"'" help="TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((RANDOM%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
+          echo '  <decoration type="model" name="'"${strExplPOI}"'" help="'"${strBiome}"'TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((`CFGFUNCpredictiveRandom ExplosivePOIRotation`%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
           CFGFUNCinfo "added explode above nExplodeAboveCount=$nExplodeAboveCount strMissingPOI='$strMissingPOI'"
           ((nExplodeAboveCount++))&&:
           iTryExplAbove=0
@@ -1012,7 +1039,9 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         strStatus="KeptPosition"
         CFGFUNCinfo "$strStatus" #Kept POI position" #CFGFUNCinfo "Kept POI expectedly Underground"
       fi
-      if [[ -n "$strHelpUnderground" ]];then
+      
+      #if [[ -n "$strHelpUnderground" ]];then
+      if $bSuccessfullyPlacedUnderground;then
         FUNCappendHelpOnPatchedFileCurrentIndex ";${strStatus};${strHelpUnderground}"
         : ${iUnderGroundBegin:=30000} #todo collect from buffs file
         iMaxUndergroundIndex=$((iUnderGroundBegin+iUndergroundPOIs))
@@ -1020,6 +1049,33 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
     <action_sequence name="eventGSKTeleportAboveUndergroundPOI'$((iMaxUndergroundIndex))'"><action class="Teleport">
       <property name="target_position" value="'$nX',260,'$nZ'" help="'"`FUNCgetHelpOnPatchedFileCurrentIndex`"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
+      else #because underground POIs already have at that location the underground hint!
+        : ${iTryAddWildTrap:=0}
+        ((iTryAddWildTrap++))&&:
+        if((iTryAddWildTrap>=3));then
+          : ${bCreateWildernessTraps:=true} #help they will be near POIs tho...
+          if $bCreateWildernessTraps;then
+            iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
+            if [[ "$strBiome" == "PineForest" ]];then
+              strUndergroundPrefabHint="TNM_WildernessTrapForest"
+              iYOTrap=-4
+            fi
+            if [[ "$strBiome" == "Snow" ]];then
+              strUndergroundPrefabHint="TNM_WildernessTrapSnow"
+              iYOTrap=-4
+            fi
+            if [[ "$strBiome" == "Desert" ]];then
+              strUndergroundPrefabHint="TNM_WildernessTrapDesert"
+              iYOTrap=-4
+            fi
+            if [[ "$strBiome" == "Wasteland" ]];then
+              strUndergroundPrefabHint="TNM_WildernessTrapWasteland"
+              iYOTrap=-4
+            fi
+            echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};"'WildernessTrap:POIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$((nY+iYOTrap)),$nZ"'" rotation="'"$((`CFGFUNCpredictiveRandom WildernessTrap`%4))"'"/>' >>"${strFlPatched}.WildernessTrap.xml"
+          fi
+          iTryAddWildTrap=0
+        fi
       fi
       
       if echo " ${astrRestoredPOIs[@]} " |grep " $strMissingPOI ";then
@@ -1126,7 +1182,7 @@ echo "iTotalWastelandPOIsLeastInTowns=${iTotalWastelandPOIsLeastInTowns}" >>"$st
 echo "iTotalSpecialBuildingsPlacedInWasteland=${iTotalSpecialBuildingsPlacedInWasteland} (big values here means more goods can be found on the Wasteland's POIs)" >>"$strFlResultsFinal"
 echo "iTotalUniqueSpecialBuildings=$iTotalUniqueSpecialBuildings" >>"$strFlResultsFinal"
 echo "iMaxAllowedReservablePOIsInWasteland=$iMaxAllowedReservablePOIsInWasteland" >>"$strFlResultsFinal"
-echo "iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs" >>"$strFlResultsFinal"
+echo "iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs (0 is good)" >>"$strFlResultsFinal"
 echo "iUndergroundPOIs=$iUndergroundPOIs (expectedly fully underground)" >>"$strFlResultsFinal"
 declare -p astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strFlResultsFinal" #may be useful
 CFGFUNCinfo "`cat "$strFlResultsFinal"`"
@@ -1158,6 +1214,7 @@ strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWor
 CFGFUNCgencodeApply "${strFlPatched}" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 CFGFUNCgencodeApply --subTokenId "UndergroundHints" "${strFlPatched}.UndergroundHints.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 #if [[ -f "${strFlPatched}.ExplodeAbove.xml" ]];then
+CFGFUNCgencodeApply --subTokenId "WildernessTrap" "${strFlPatched}.WildernessTrap.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 CFGFUNCgencodeApply --subTokenId "ExplodeAbove" "${strFlPatched}.ExplodeAbove.xml" "${strModGenWorlTNMPath}/${strPrefabsXml}"
 #fi
 

@@ -249,6 +249,7 @@ function CFGFUNCerrorExit() { #helpf <msg>
   #((iCFGFUNCerrorExit_Count++))&&:
   if [[ -z "${1-}" ]];then CFGFUNCDevMeErrorExit "$FUNCNAME needs to have some message, is better to have anything than nothing to help tracking problems";fi
   CFGFUNCechoLogPRIVATE --error " [ERROR] ${1} (${strCFGScriptName}:Caller ${FUNCNAME[1]}) (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" 
+  echo "$FUNCNAME: The above error happened." >&2;read -n 1&&: #this is here in case the error happens in a subshell and such call has a protection against errors when the script returns from the subshell
   exit 1
 };export -f CFGFUNCerrorExit
 function CFGFUNCDevMeErrorExit() { #helpf <msg>
@@ -400,20 +401,19 @@ export nCFGSeedPredictiveRandom
 export iCFGRndMax
 function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to provide the same random result for the same request time. Be sure to use the same ID in the same context.
   local lstrID="$1"
-  declare -gA astrCFGIdForRandomVsCurrentIndex
+  declare -gA astrCFGIdForRandomVsCurrentIndex >&2
   #declare -p astrCFGIdForRandomVsCurrentIndex
   if ! echo "${!astrCFGIdForRandomVsCurrentIndex[@]}" |egrep -qw "$lstrID";then
     if ! [[ "$lstrID" =~ ^[a-zA-Z0-9_]*$ ]];then CFGFUNCDevMeErrorExit "invalid lstrID='$lstrID' to create an array";fi
     local lstrRndMany="`RANDOM=${nCFGSeedPredictiveRandom};for((i=0;i<iCFGPredictiveRandomCacheMax;i++));do echo -n "$RANDOM ";done`"
     eval 'declare -ga aiPredictiveRandom'"${lstrID}=($lstrRndMany)"
-    eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}"
+    eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2
     astrCFGIdForRandomVsCurrentIndex["$lstrID"]=0
-  else
-    local liIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
-    if((liIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
-    eval 'echo "${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"'
-    astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liIndex+1))
   fi
+  local liIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
+  if((liIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
+  eval 'echo "${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"' #OUTPUT
+  astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liIndex+1))
 }
 
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
