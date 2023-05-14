@@ -1019,19 +1019,24 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         
         #nYOffsetNew=${astrAllPrefabYOS[$strMissingPOI]}
         if((nYUpdatedFromPOIsOldVsNew<0));then
-          CFGFUNCinfo "WARN:nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' < 0"
+          CFGFUNCinfo "WARN:NewYLT0:nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' < 0"
         fi
-        if(( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) < 1 ));then
-          nYFixed=$(( (-1*nYOffsetNew) +1 ))
+        #if(( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) < 1 ));then
+          #nYFixed=$(( (-1*nYOffsetNew) +1 ))
+          #CFGFUNCinfo "WARN: fixing wrong too low Y: nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' strMissingPOI='$strMissingPOI' YOffset:${nYOffsetNew} nNewPOIHeight=$nNewPOIHeight iXLDFilterIndex=${iXLDFilterIndex} nYFixed=$nYFixed"
+          #nYUpdatedFromPOIsOldVsNew=$nYFixed
+        #fi
+        if(( nYUpdatedFromPOIsOldVsNew < 1 ));then
+          nYFixed=1
           CFGFUNCinfo "WARN: fixing wrong too low Y: nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' strMissingPOI='$strMissingPOI' YOffset:${nYOffsetNew} nNewPOIHeight=$nNewPOIHeight iXLDFilterIndex=${iXLDFilterIndex} nYFixed=$nYFixed"
           nYUpdatedFromPOIsOldVsNew=$nYFixed
         fi
-        if((nYUpdatedFromPOIsOldVsNew<1));then
-          CFGFUNCerrorExit "nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' is still < 1"
-        fi
-        if((nYOffsetNew<0)) && (( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) < 1 ));then
-          CFGFUNCerrorExit "nYOffsetNew='$nYOffsetNew' nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' is still < 1"
-        fi
+        #if((nYUpdatedFromPOIsOldVsNew<1));then
+          #CFGFUNCerrorExit "nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' is still < 1"
+        #fi
+        #if((nYOffsetNew<0)) && (( (nYUpdatedFromPOIsOldVsNew+nYOffsetNew) < 1 ));then
+          #CFGFUNCerrorExit "nYOffsetNew='$nYOffsetNew' nYUpdatedFromPOIsOldVsNew='$nYUpdatedFromPOIsOldVsNew' is still < 1"
+        #fi
         
         CFGFUNCexec xmlstarlet ed -P -L -u "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@position" -v "$nX,$nYUpdatedFromPOIsOldVsNew,$nZ" "$strFlPatched"
         
@@ -1069,27 +1074,32 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         if((iTryAddWildTrap>=iTryTrapEveryPOIcount));then
           : ${bCreateWildernessTraps:=true} #help they will be near POIs tho...
           if $bCreateWildernessTraps;then
-            iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
+            #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
             if [[ "$strBiome" == "PineForest" ]];then
-              strPrefabTrap="TNM_WildernessTrapForest"
-              iYOTrap=-4
+              strPrefabTrap="part_TNM_WildernessTrapForest"
+              #iYOTrap=-4
             fi
             if [[ "$strBiome" == "Snow" ]];then
-              strPrefabTrap="TNM_WildernessTrapSnow"
-              iYOTrap=-4
+              strPrefabTrap="part_TNM_WildernessTrapSnow"
+              #iYOTrap=-4
             fi
             if [[ "$strBiome" == "Desert" ]];then
-              strPrefabTrap="TNM_WildernessTrapDesert"
-              iYOTrap=-4
+              strPrefabTrap="part_TNM_WildernessTrapDesert"
+              #iYOTrap=-4
             fi
             if [[ "$strBiome" == "Wasteland" ]];then
-              strPrefabTrap="TNM_WildernessTrapWasteland"
-              iYOTrap=-4
+              strPrefabTrap="part_TNM_WildernessTrapWasteland"
+              #iYOTrap=-4
             fi
+            FUNCgetWHL "${astrAllPrefabSize[${strPrefabTrap}]}"
+            nTrapW=$nWidth
+            nTrapH=$nHeight
+            nTrapL=$nLength
             
-            #POI origin is always bottom left corner. this will place a trap around every POI following that square line
+            #POI origin is always bottom left corner. this will place a trap around every POI following that square line. X is +right -left. Z is +up -down.
             nTrapX=$nX
-            nTrapY=$((nY+iYOTrap))
+            #nTrapY=$((nY+(nYOffsetOld * -1)+iYOTrap))
+            nTrapY="`FUNCcalcPOINewY $nY "$strRWGoriginalPOI" "$strPrefabTrap"`"
             nTrapZ=$nZ
             CFGFUNCpredictiveRandom TrapVaryXorZ
             if((iPRandom%2==0));then #vary X
@@ -1097,14 +1107,18 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
               ((nTrapX+=iPRandom%nNewPOIWidth))&&: 
               CFGFUNCpredictiveRandom TrapZTop
               if((iPRandom%2==0));then #because the default is already on Z bottom
-                ((nTrapZ-=nNewPOILength))&&:
+                ((nTrapZ+=nNewPOILength+1))&&: #this ends already totally outside POI area
+              else
+                ((nTrapZ-=nLength+1))&&: #so the trap stays outside the POI area to not destroy its' edges
               fi
             else #vary Z
               CFGFUNCpredictiveRandom TrapZ
-              ((nTrapZ-=iPRandom%nNewPOILength))&&: #POI origin is always bottom left corner
+              ((nTrapZ+=iPRandom%nNewPOILength))&&: #POI origin is always bottom left corner
               CFGFUNCpredictiveRandom TrapXRight
               if((iPRandom%2==0));then #because the default is already on X left
-                ((nTrapX+=nNewPOIWidth))&&:
+                ((nTrapX+=nNewPOIWidth+1))&&: #this ends already totally outside POI area
+              else
+                ((nTrapX-=nTrapW+1))&&: #so the trap stays outside the POI area to not destroy its' edges
               fi
             fi
             CFGFUNCpredictiveRandom WildernessTrap
