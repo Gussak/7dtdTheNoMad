@@ -836,19 +836,19 @@ function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPref
         #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
         if [[ "$strBiome" == "PineForest" ]];then
           strPrefabTrap="part_TNM_WildernessTrapForest"
-          #iYOTrap=-4
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleForest";fi
         fi
         if [[ "$strBiome" == "Snow" ]];then
           strPrefabTrap="part_TNM_WildernessTrapSnow"
-          #iYOTrap=-4
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleSnow";fi
         fi
         if [[ "$strBiome" == "Desert" ]];then
           strPrefabTrap="part_TNM_WildernessTrapDesert"
-          #iYOTrap=-4
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleDesert";fi
         fi
         if [[ "$strBiome" == "Wasteland" ]];then
           strPrefabTrap="part_TNM_WildernessTrapWasteland"
-          #iYOTrap=-4
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleWasteland";fi
         fi
         FUNCgetWHL "${astrAllPrefabSize[${strPrefabTrap}]}"
         nTrapW=$nWidth
@@ -887,8 +887,163 @@ function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPref
     fi
     iTryAddWildTrap=0
   fi
+}
+function FUNCpatchFileCurrentIndex_TrapAdd_BugouOuNao() { #required input vars: astrAllPrefabSize strFlPatched nNewPOIWidth nNewPOILength strBiome strColorAtBiomeFile nX nY nZ strRWGoriginalPOI iXLDFilterIndex     nOrigPOIWidth    nOrigPOIHeight    nOrigPOILength
+
+  : ${iTryTrapEveryPOIcount:=1} #help was 3, now every POI will have a trap around it with this set to 1
+  : ${iTryAddWildTrap:=0}
+  ((iTryAddWildTrap++))&&:
+  if((iTryAddWildTrap>=iTryTrapEveryPOIcount));then
+    : ${bCreateWildernessTraps:=true} #help they will be near POIs tho. TODO find what file holds the elevation of any spot in the map
+    if $bCreateWildernessTraps;then
+      : ${liBiggestTrapSize:=4} #help traps are all square
+      : ${liTrapSizeGap:=4} #help between each trap there shall have this distance based in current trap size (but as positioning is random 1x1 this will never happen like a chessboard that would require random 4x4 but then it would be more predictable and less fun)
+      local liPseudoDistBetweenTraps=$((liBiggestTrapSize*liTrapSizeGap))
+      local liTrapTot=$(( 2*(nNewPOIWidth+nNewPOILength)/liPseudoDistBetweenTraps )) #the full perimeter length. 16 dist between each trap (but instead they will be placed randomly)
+      if((liTrapTot<1));then liTrapTot=1;fi
+      #for((liCurrentTrapIndex=0;liCurrentTrapIndex<liTrapTot;liCurrentTrapIndex++));do
+      local liCurrentTrapIndex=0
+      local lbAllowIncTotOnce=true
+      while true;do
+        #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
+        if [[ "$strBiome" == "PineForest" ]];then
+          strPrefabTrap="part_TNM_WildernessTrapForest"
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleForest";fi
+        fi
+        if [[ "$strBiome" == "Snow" ]];then
+          strPrefabTrap="part_TNM_WildernessTrapSnow"
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleSnow";fi
+        fi
+        if [[ "$strBiome" == "Desert" ]];then
+          strPrefabTrap="part_TNM_WildernessTrapDesert"
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleDesert";fi
+        fi
+        if [[ "$strBiome" == "Wasteland" ]];then
+          strPrefabTrap="part_TNM_WildernessTrapWasteland"
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleWasteland";fi
+        fi
+        FUNCgetWHL "${astrAllPrefabSize[${strPrefabTrap}]}"
+        nTrapW=$nWidth
+        nTrapH=$nHeight
+        nTrapL=$nLength
+        
+        #POI origin is always bottom left corner. this will place a trap around every POI following that square line. X is +right -left. Z is +up -down.
+        nTrapX=$nX
+        #nTrapY=$((nY+(nYOffsetOld * -1)+iYOTrap))
+        nTrapY="`FUNCcalcPOINewY $nY "$strRWGoriginalPOI" "$strPrefabTrap"`"
+        nTrapZ=$nZ
+        CFGFUNCpredictiveRandom TrapVaryXorZ
+        local lnDiffOrigNewTrapW=0 lnDiffOrigNewTrapL=0
+        if((iPRandom%2==0));then #vary X
+          CFGFUNCpredictiveRandom TrapX
+          ((nTrapX+=iPRandom%nNewPOIWidth))&&: 
+          CFGFUNCpredictiveRandom TrapZTop
+          if((iPRandom%2==0));then #because the default is already on Z bottom
+            ((nTrapZ+=nNewPOILength+1))&&: #this ends already totally outside POI area
+            lnDiffOrigNewTrapW=$((nOrigPOILength-nNewPOILength-nTrapL))
+            if((lnDiffOrigNewTrapW>0));then ((nTrapZ+=iPRandom%lnDiffOrigNewTrapW))&&:;fi #this will fit the trap in the available area between original and new POI, if original was bigger than new
+          else
+            ((nTrapZ-=nLength+1))&&: #so the trap stays outside the POI area to not destroy its' edges
+          fi
+        else #vary Z
+          CFGFUNCpredictiveRandom TrapZ
+          ((nTrapZ+=iPRandom%nNewPOILength))&&: #POI origin is always bottom left corner
+          CFGFUNCpredictiveRandom TrapXRight
+          if((iPRandom%2==0));then #because the default is already on X left
+            ((nTrapX+=nNewPOIWidth+1))&&: #this ends already totally outside POI area
+            lnDiffOrigNewTrapL=$((nOrigPOIWidth-nNewPOIWidth-nTrapW))
+            if((lnDiffOrigNewTrapL>0));then ((nTrapZ+=iPRandom%lnDiffOrigNewTrapL))&&:;fi #this will fit the trap in the available area between original and new POI, if original was bigger than new
+          else
+            ((nTrapX-=nTrapW+1))&&: #so the trap stays outside the POI area to not destroy its' edges
+          fi
+        fi
+        
+        if $lbAllowIncTotOnce && ((lnDiffOrigNewTrapW>0 || lnDiffOrigNewTrapL>0));then
+          #the full extra area from the area difference of OriginalPOI-NewPOI can fit many more traps.
+          #liTrapTot+=$(( 2*(lnDiffOrigNewTrapW+lnDiffOrigNewTrapL)/4 )) 
+          
+          ####### LBNW is the OriginalPOIArea
+          # LB LengthDiffArea BothLWDiffCornerArea
+          # NW NewPOIArea WitdhDiffArea
+          local lnAreaExtra=0
+          lnAreaExtra+=$((lnDiffOrigNewTrapW*nNewPOILength)) #WitdhDiffArea
+          lnAreaExtra+=$((lnDiffOrigNewTrapL*nNewPOIWidth)) #LengthDiffArea
+          lnAreaExtra+=$((lnDiffOrigNewTrapW*lnDiffOrigNewTrapL)) #BothLWDiffCornerArea
+          : ${nBiggestTrapArea:=16} #help
+          local lnGapBetweenTrapsAreas=1
+          local lnDivForTrapsAreas=$(((lnGapBetweenTrapsAreas+1)*2*nBiggestTrapArea))
+          ######### traps would be like this (if it was random 4x4 like a chessboard where each biggest trap means one square there)
+          # T T T
+          #     
+          # T T T     ???  ? is a possible new trap
+          #           GG?  G is the gap between traps
+          # T T T     TG?
+          #
+          # Obs.: BUT POSITIONING IS NOT 4x4 dist, it is 1x1! so results are intentionally probably overlapping. And... ahhhh whatever!! I will just test and see if it looks acceptable! this part will be messy to maintain anyway...
+          liTrapTot+=$((lnAreaExtra/lnDivForTrapsAreas)) 
+          lbAllowIncTotOnce=false
+        fi
+        if((iMaxTrapsInASinglePOI<liTrapTot));then iMaxTrapsInASinglePOI=$liTrapTot;fi
+        
+        CFGFUNCpredictiveRandom WildernessTrap
+        echo '  <decoration type="model" name="'"${strPrefabTrap}"'" help="'"${strBiome};${strColorAtBiomeFile};"'WildernessTrap('"$liCurrentTrapIndex/$liTrapTot"'):POIIndex:'"${iXLDFilterIndex}"'" position="'"$nTrapX,$nTrapY,$nTrapZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.WildernessTrap.xml"
+        ((iTotalTrapsInWorld++))&&:
+        
+        # loop control
+        ((liCurrentTrapIndex++))&&:
+        if((liCurrentTrapIndex>=liTrapTot));then break;fi
+      done
+    fi
+    iTryAddWildTrap=0
+  fi
 }      
-function FUNCpatchFileCurrentIndex_ExplosionAdd() {
+function FUNCpatchFileCurrentIndex_ExplosionAdd() { #requires: bSuccessfullyPlacedUnderground iXLDFilterIndex nX nY nZ strMissingPOI
+  #todoa try to create a prefab with a barrel or a car with earth below it. When placing it above a POI, it may fill up with more earth below that may auto collapse
+  bPlaceExplodeAbove=false
+  if ! $bSuccessfullyPlacedUnderground;then
+    : ${iTryExplAbove:=0}
+    : ${iTryExplodeAt:=1} #help every this POI count that is not underground and is not protected, a explosive POI will be placed
+    ((iTryExplAbove++))&&:
+    if((iTryExplAbove>=iTryExplodeAt));then #once every 10 POIs on surface
+      bPlaceExplodeAbove=true
+    fi
+  fi
+  : ${bAllowExplodeAbovePrefabs:=true} #help
+  if $bAllowExplodeAbovePrefabs && $bPlaceExplodeAbove;then 
+    #todo try to create some prefab that will explode just after being generated. FAIL: a single almost destroyed car prefab was not placed in the world in high position, the world generator ignored it
+    #nYSafeMargin=3 
+    #nYAboveBuildingMin=$((nY+nNewPOIHeight+nYSafeMargin))  #margin will give a minimum terrain to collapse
+    
+    #nYWorldMax=255 #todo confirm this by placing nerdpole blocks till reach the limit: 260?
+    #nYAboveBuildingLimit=30 #max collapsible
+    #nExplosivePOIHeight=$(FUNCgetWHL "${astrAllPrefabSize[${strExplPOI}]}";echo $nHeight)
+    strExplPOI="part_TNM_Explosion1"
+    
+    #CFGFUNCpredictiveRandom ExplosivePOIElevation
+    #nYExplPOI=$((nYAboveBuildingMin+(iPRandom%nYAboveBuildingLimit)))
+    #if(( (nYExplPOI+nExplosivePOIHeight+nYSafeMargin)>nYWorldMax ));then
+      #nYExplPOI=$((nYWorldMax-nYSafeMargin))
+      #if((nYExplPOI<nYAboveBuildingMin));then
+        #nYExplPOI=-1 #to fail
+      #fi
+    #fi
+    nYExplPOI=$nY
+    
+    if((nYExplPOI>-1));then
+      iDisplacementXZ=-1 #outside POI
+      #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todo)))
+      strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
+      CFGFUNCpredictiveRandom ExplosivePOIRotation
+      echo '  <decoration type="model" name="'"${strExplPOI}"'" help="'"${strBiome};${strColorAtBiomeFile}"'ExplosionPoleForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
+      CFGFUNCinfo "added explode pole nExplodeAboveCount=$nExplodeAboveCount strMissingPOI='$strMissingPOI'"
+      ((nExplodeAboveCount++))&&:
+      iTryExplAbove=0
+    fi
+  else
+    echo -n >>"${strFlPatched}.ExplodeAbove.xml" #this is just to at least create the file
+  fi
+}      
+function FUNCpatchFileCurrentIndex_ExplosionFailAdd() { #not working
   #todoa try to create a prefab with a barrel or a car with earth below it. When placing it above a POI, it may fill up with more earth below that may auto collapse
   bPlaceExplodeAbove=false
   if ! $bSuccessfullyPlacedUnderground;then
@@ -966,7 +1121,7 @@ function FUNCpatchFileCurrentIndex_HintAdd() {
     strUndergroundPrefabHint="${astrUnderGroundHinters[$((iPRandom%${#astrUnderGroundHinters[@]}))]}"
   fi
   CFGFUNCpredictiveRandom UndergroundHintRotation
-  echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};${strColorAtBiomeFile};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
+  echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};${strColorAtBiomeFile};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$((nX-1)),$nYHint,$((nZ-1))"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
 }      
 function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal() { 
   #CFGFUNCchkDenySubshellForGlobalVarsWork
@@ -980,11 +1135,16 @@ function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal
     MatchWHL #precise
     MatchWL #best fit W L is good enough too as the whole problem is adequating the terrain around it
     MatchWHLp1
+    MatchWHLdiff1 #new can be -2 or +2 size diff than original
     MatchWHLdiff2 #new can be -2 or +2 size diff than original
+    MatchWHLdiff3 #new can be -2 or +2 size diff than original
     MatchWLp1
     MatchWLp3 #new can be bigger than original by 3
     MatchWLm3 #new can be smaller than original by 3
     MatchWLm5 #new can be smaller than original by 5
+    MatchWLm10 #new can be smaller than original by 5
+    MatchWLm15 #new can be smaller than original by 5
+    MatchWLm20 #new can be smaller than original by 5
     MatchWLp5 #new can be bigger than original by 5
     BestMatchFailed_WillUseDefault #keep as last one
   )
@@ -1022,10 +1182,28 @@ function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal
         break;
       fi
       
+      if [[ "$lstrMatchMode" == "MatchWHLdiff1" ]] && ((
+        ( lnMW>=(lnOW-1) && lnMW<=(lnOW+1) ) &&
+        ( lnMH>=(lnOH-1) && lnMH<=(lnOH+1) ) &&
+        ( lnML>=(lnOL-1) && lnML<=(lnOL+1) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
       if [[ "$lstrMatchMode" == "MatchWHLdiff2" ]] && ((
         ( lnMW>=(lnOW-2) && lnMW<=(lnOW+2) ) &&
         ( lnMH>=(lnOH-2) && lnMH<=(lnOH+2) ) &&
         ( lnML>=(lnOL-2) && lnML<=(lnOL+2) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWHLdiff3" ]] && ((
+        ( lnMW>=(lnOW-3) && lnMW<=(lnOW+3) ) &&
+        ( lnMH>=(lnOH-3) && lnMH<=(lnOH+3) ) &&
+        ( lnML>=(lnOL-3) && lnML<=(lnOL+3) ) 
       ));then
         liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
         break;
@@ -1071,6 +1249,30 @@ function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal
         break;
       fi
       
+      if [[ "$lstrMatchMode" == "MatchWLm10" ]] && ((
+        ( lnMW<=lnOW && lnMW>=(lnOW-10) ) &&
+        ( lnML<=lnOL && lnML>=(lnOL-10) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLm15" ]] && ((
+        ( lnMW<=lnOW && lnMW>=(lnOW-15) ) &&
+        ( lnML<=lnOL && lnML>=(lnOL-15) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLm20" ]] && ((
+        ( lnMW<=lnOW && lnMW>=(lnOW-20) ) &&
+        ( lnML<=lnOL && lnML>=(lnOL-20) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
       if [[ "$lstrMatchMode" == "MatchWLp5" ]] && (( 
         ( lnMW>=lnOW && lnMW<=(lnOW+5) ) &&
         ( lnML>=lnOL && lnML<=(lnOL+5) ) 
@@ -1083,7 +1285,7 @@ function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal
     done
     if $lbOk;then break;fi
   done
-  astrPOIsMatchMode[${lstrMatchMode}]=$((${astrPOIsMatchMode[${lstrMatchMode}]}+1))
+  astrPOIsMatchMode[${lstrMatchMode}]=$((${astrPOIsMatchMode[${lstrMatchMode}]-0}+1))
   local lstrNewPOI="${astrMissingPOIsList[$liBestMatchMPOIindex]}"
   CFGFUNCinfo "BestMatchingPOIFor:lbOk=$lbOk;lstrMatchMode=$lstrMatchMode;index:$liBestMatchMPOIindex;Original(${lstrOriginalPOI},sz:${astrAllPrefabSize[${lstrOriginalPOI}]});New(${astrMissingPOIsList[$liBestMatchMPOIindex]},sz:${astrAllPrefabSize[${lstrNewPOI}]})"
   
@@ -1121,6 +1323,10 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
     #declare -p nX nY nZ
     strOriginalXYZ="$nX,$nY,$nZ" #This is the first original POI information.
     strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
+    FUNCgetWHL "${astrAllPrefabSize[${strRWGoriginalPOI}]}"
+    nOrigPOIWidth=$nWidth
+    nOrigPOIHeight=$nHeight
+    nOrigPOILength=$nLength
     CFGFUNCinfo "DupPOI: $strGPD iXLDFilterIndex=$iXLDFilterIndex XYZ=$strOriginalXYZ strRWGoriginalPOI='$strRWGoriginalPOI'"
     
     
@@ -1331,7 +1537,11 @@ for strRWGsinglePOI in "${astrRWGsinglePOIsList[@]}";do
   
   strRWGoriginalPOI="$strRWGsinglePOI"
   
-  FUNCpatchFileCurrentIndex_TrapAdd #all the above prepared the data required for this call
+  FUNCpatchFileCurrentIndex_TrapAdd #all the above prepared the data required for this calls
+  
+  bSuccessfullyPlacedUnderground=false
+  strMissingPOI="$strRWGsinglePOI"
+  FUNCpatchFileCurrentIndex_ExplosionAdd #all the above prepared the data required for this calls
 done
 
 CFGFUNCinfo "MAIN:Cleanup patcher file: ${strFlPatched}"
@@ -1520,9 +1730,9 @@ egrep "<decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"
 
 CFGFUNCinfo "MAIN:SUCCESS!"
 
-CFGFUNCprompt "MAIN: you should run ./createSpawnPoints.sh to update the spawn points file now!"
+CFGFUNCprompt "MAIN: you should update the spawn points file now! and install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder): ./createSpawnPoints.sh;./installSpecificFilesIntoGameFolder.sh"
 
-CFGFUNCprompt "MAIN: then run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
+#CFGFUNCprompt "MAIN: then run ./installSpecificFilesIntoGameFolder.sh to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
 #declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"
