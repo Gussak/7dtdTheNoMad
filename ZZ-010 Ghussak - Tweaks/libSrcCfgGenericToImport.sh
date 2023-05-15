@@ -102,10 +102,20 @@ function CFGFUNCgencodeApply() {
   SECONDS=$lSECONDS
 };export -f CFGFUNCgencodeApply
 
-function CFGFUNCwriteTotalScriptTimeOnSuccess() { #help use this before calling ./gencodeApply.sh as it opens merger app and you may delay there, or use CFGFUNCgencodeApply and place this function at the very end
+function CFGFUNCwriteTotalScriptTimeOnSuccess() { #helpf use this before calling ./gencodeApply.sh as it opens merger app and you may delay there, or use CFGFUNCgencodeApply and place this function at the very end
   astrCFGTotalRunTimeList["${strCFGScriptNameAsID}"]=$SECONDS
   declare -p astrCFGTotalRunTimeList >"${strCFGFlTotalRunTimeSrc}"
 };export -f CFGFUNCwriteTotalScriptTimeOnSuccess
+
+function CFGFUNCchkDenySubshellForGlobalVarsWork() {
+  if((BASH_SUBSHELL>0));then CFGFUNCDevMeErrorExit "functions that output global vars will also modify other global vars and shall NOT be called in a subshell.";fi
+};export -f CFGFUNCchkDenySubshellForGlobalVarsWork
+
+function CFGFUNCsetGlobals() { #helpf <global=value> [<global=value> ...] the same params used with `declare -g` ex.: CFGFUNCsetGlobals -a astrTmpList #will work as expected but for arrays, the values must be set on another line, only declare arrays this way!
+  CFGFUNCchkDenySubshellForGlobalVarsWork
+  eval declare -g "$@"
+  #eval "declare -g $*"
+};export -f CFGFUNCsetGlobals
 
 function CFGFUNCchkAvailHDAndGetFlSz() { #helpf <lstrRequiredBinaryFile> <liMultiplyFileSize> the liMultiplyFileSize param means that if you want to create a temporary and a backup you will need 2x the lstrRequiredBinaryFile file size in available HD space
   local lstrRequiredBinaryFile="$1";shift
@@ -397,24 +407,57 @@ function CFGFUNCfixId() {
 
 : ${nCFGSeedPredictiveRandom:=1337} #help this seed will give the same result anywhere anytime if the equivalent conditions (all the input data, files etc) is the same
 export nCFGSeedPredictiveRandom
-: ${iCFGPredictiveRandomCacheMax:=2500} #help max generated predictive random values
-export iCFGRndMax
+#: ${iCFGPredictiveRandomCacheMax:=2500} #he lp max generated predictive random values
+#export iCFGPredictiveRandomCacheMax
+: ${iCFGPredictiveRandomIncStep:=100} #help
+export iCFGPredictiveRandomIncStep
+function CFGFUNCpredictiveRandomUpdateArray_PRIVATE() { #requires: liCurrentSize lstrID liCurrentIndex
+  local lstrRndMany="`RANDOM=${nCFGSeedPredictiveRandom};for((i=0;i<(liCurrentSize+iCFGPredictiveRandomIncStep);i++));do echo -n "$RANDOM ";done`"
+  declare -p lstrID liCurrentIndex liCurrentSize |tee -a "${strCFGScriptLog}" >&2
+  #echo 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}=(${lstrRndMany})" |tee -a "${strCFGScriptLog}" >&2
+  #eval 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}=(${lstrRndMany})"
+  eval 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}"
+  eval 'aiPredictiveRandom'"${lstrID}=(${lstrRndMany})"
+  eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2
+}
+CFGFUNCsetGlobals -A astrCFGIdForRandomVsCurrentIndex
 function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to provide the same random result for the same request time. Be sure to use the same ID in the same context.
   local lstrID="$1"
-  declare -gA astrCFGIdForRandomVsCurrentIndex >&2
+  
+  local liCurrentSize=0
+  local liCurrentIndex=0
   #declare -p astrCFGIdForRandomVsCurrentIndex
-  if ! echo "${!astrCFGIdForRandomVsCurrentIndex[@]}" |egrep -qw "$lstrID";then
+  #if ! echo "${!astrCFGIdForRandomVsCurrentIndex[@]}" |egrep -qw "$lstrID";then
+  if ! CFGFUNCarrayContains "$lstrID" "${!astrCFGIdForRandomVsCurrentIndex[@]}";then #init
     if ! [[ "$lstrID" =~ ^[a-zA-Z0-9_]*$ ]];then CFGFUNCDevMeErrorExit "invalid lstrID='$lstrID' to create an array";fi
-    local lstrRndMany="`RANDOM=${nCFGSeedPredictiveRandom};for((i=0;i<iCFGPredictiveRandomCacheMax;i++));do echo -n "$RANDOM ";done`"
-    eval 'declare -ga aiPredictiveRandom'"${lstrID}=($lstrRndMany)"
-    eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2
+    #liCurrentSize=0
     astrCFGIdForRandomVsCurrentIndex["$lstrID"]=0
+    #local lstrRndMany="`RANDOM=${nCFGSeedPredictiveRandom};for((i=0;i<(liCurrentSize+iCFGPredictiveRandomIncStep);i++));do echo -n "$RANDOM ";done`"
+    #eval 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}=($lstrRndMany)"
+    #eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2
+    CFGFUNCpredictiveRandomUpdateArray_PRIVATE
   fi
-  local liIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
-  if((liIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
-  eval 'declare -g iPRandom="${aiPredictiveRandom'"${lstrID}"'['"${liIndex}"']}"' #OUTPUT
-  astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liIndex+1))
+  
+  liCurrentIndex=${astrCFGIdForRandomVsCurrentIndex[${lstrID}]}
+  #if((liCurrentIndex>=iCFGPredictiveRandomCacheMax));then CFGFUNCerrorExit "liCurrentIndex > iCFGPredictiveRandomCacheMax. You need to increase iCFGPredictiveRandomCacheMax value";fi
+  
+  eval 'liCurrentSize=${#aiPredictiveRandom'"${lstrID}"'[@]}'
+  if(( liCurrentIndex >= (liCurrentSize-1) ));then #increases
+    CFGFUNCpredictiveRandomUpdateArray_PRIVATE
+  fi
+  
+  eval 'CFGFUNCsetGlobals iPRandom="${aiPredictiveRandom'"${lstrID}"'['"${liCurrentIndex}"']}"' #OUTPUT
+  astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liCurrentIndex+1))
 }
+
+function CFGFUNCarrayContains() { # <lstrValueToChk> <array values...>
+  local lstrValueToChk="$1";shift
+  local lstr
+  for lstr in "${@}";do
+    if [[ "$lstrValueToChk" == "$lstr" ]];then return 0;fi
+  done
+  return 1
+};export -f CFGFUNCarrayContains
 
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi

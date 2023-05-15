@@ -39,6 +39,11 @@ set -Eeu
 #if [[ "${1-}" == --help ]];then source ./libSrcCfgGenericToImport.sh --help;exit 0;fi
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
+strFlCACHE="`basename "$0"`.CACHE.sh" #help if you delete the cache file it will be recreated
+source "$strFlCACHE"&&: #this file contents can be like: the last value appended for the save variable will win
+
+#CFGFUNCsetGlobals tst123=10 tstb="abc";declare -p tst123 tstb;for((i=0;i<201;i++));do CFGFUNCpredictiveRandom Tst1;declare -p iPRandom;done;exit #KEEP THESE TESTERS HERE COMMENTED
+
 strPrefabsXml="prefabs.xml"
 
 #strFlRunLog="`basename "$0"`.LastRun.log.txt"
@@ -48,7 +53,7 @@ strPrefabsXml="prefabs.xml"
 #: ${strGenWorldName:="East Nikazohi Territory"} #h elp
 #strFlGenPrefabsOrig="${strPathToUserData}/GeneratedWorlds/${strGenWorldName}/${strPrefabsXml}"
 
-CFGFUNCprompt "This is not highly optimized yet and not multithread. It takes 16min on my machine 3.2GHz 1 core (1 thread). If in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required. Or you can run it now already (21 is for A20) like: iReservedWastelandPOICountForMissingPOIs=21 $0"
+CFGFUNCprompt "This is not highly optimized yet and not multithread (uses only 1 core). It takes 16min on my machine 3.2GHz . If in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required. Or you can run it now already (21 is for A20) like: iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs $0"
 
 #: ${strFlGenPrefabsOrig:="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}"} #he lp you can set this file path directly here
 strFlOriginalBkp="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}${strCFGOriginalBkpSuffix}"
@@ -126,6 +131,7 @@ fi
 source "${strFlTownRect}"&&:
 iTownRectanglesOutsideWastelandCount=0
 function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert>] <lnX> <lnZ>
+  #CFGFUNCchkDenySubshellForGlobalVarsWork
   local lstrIgnoreBiome="";if [[ "$1" == --ignore ]];then shift;lstrIgnoreBiome="$1";shift;fi #this will let wasteland town rectangles be ignored when checking if it is in town
   local lnX=$1;shift
   local lnZ=$1;shift
@@ -142,7 +148,7 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
     if [[ -n "$lstrIgnoreBiome" ]] && [[ "${lstrIgnoreBiome}" =~ "$strPITBiome" ]];then continue;fi
     if [[ "${strCFGGeneratedWorldTNMFixedAsID}" == "${strPITWorldName}" ]] && [[ "${strCFGGeneratedWorldSpecificDataAsID}" == "${strPITRWGcfg}" ]];then
       if((lnX>=iXTopLeftPIT && lnX<=iXBottomRightPIT && lnZ<=iZTopLeftPIT && lnZ>=iZBottomRightPIT));then
-        declare -g strPITWorldName strPITRWGcfg strPITBiome strPITTownID iXTopLeftPIT iZTopLeftPIT iXBottomRightPIT iZBottomRightPIT
+        CFGFUNCsetGlobals strPITWorldName strPITRWGcfg strPITBiome strPITTownID iXTopLeftPIT iZTopLeftPIT iXBottomRightPIT iZBottomRightPIT
         CFGFUNCinfo "InTownLimits($lnX,$lnZ) $strPITBiome $strPITTownID ($iXTopLeftPIT,$iZTopLeftPIT,$iXBottomRightPIT,$iZBottomRightPIT)"
         return 0
       fi
@@ -160,7 +166,7 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
       ## topLeftXZ=645,-523;bottomRightXZ=1019,-899
       ##echo "${lstrMsg}InTown1Limits" |tee -a "$strFlRunLog" >/dev/stderr
       #CFGFUNCinfo "${lstrMsg}InTown1Limits"
-      #declare -g iTownIndex=1
+      #CFGFUNCsetGlobals iTownIndex=1
       #return 0
     #fi
     ## t2 x 2285 2516 2434 z -738 -730 -588
@@ -169,7 +175,7 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
       ##echo " >>> WARN:SKIPPING:InTown2Limits:$strGPD:strPos" |tee -a "$strFlRunLog" >/dev/stderr
       ##echo "${lstrMsg}InTown2Limits" |tee -a "$strFlRunLog" >/dev/stderr
       #CFGFUNCinfo "${lstrMsg}InTown2Limits"
-      #declare -g iTownIndex=2
+      #CFGFUNCsetGlobals iTownIndex=2
       #return 0
     #fi
     ## t3 x 3359 3338 3451 z -1259 -1351 -1359
@@ -178,7 +184,7 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
       ##echo " >>> WARN:SKIPPING:InTown3Limits:$strGPD:strPos" |tee -a "$strFlRunLog" >/dev/stderr
       ##echo "${lstrMsg}InTown3Limits" |tee -a "$strFlRunLog" >/dev/stderr
       #CFGFUNCinfo "${lstrMsg}InTown3Limits"
-      #declare -g iTownIndex=3
+      #CFGFUNCsetGlobals iTownIndex=3
       #return 0
     #fi
   #fi
@@ -186,41 +192,55 @@ function FUNCchkPosIsInTownPIT() { # [--ignore <Wasteland|Snow|PineForest|Desert
   #return 1
 }
 
-function FUNCgetV3() { #<lstrPosOrig> set global vars: n1 n2 n3
-  local lstrPosOrig="$1";shift
-  if [[ -z "$lstrPosOrig" ]];then CFGFUNCerrorExit "invalid lstrPosOrig='$lstrPosOrig'";fi
-  local lstrGlobals123="`echo "${lstrPosOrig}" |sed -r 's@([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*@declare -g n1=\1 n2=\2 n3=\3;@' |head -n 1`" #collect only the integer part
-  CFGFUNCinfo --dbg "`declare -p lstrPosOrig lstrGlobals123`"
+declare -A astrEvalV3cache
+function FUNCgetV3() { #<lstrV3> set global vars: n1 n2 n3
+  CFGFUNCchkDenySubshellForGlobalVarsWork
+  
+  local lstrV3="$1";shift
+  
+  if [[ -z "$lstrV3" ]];then CFGFUNCerrorExit "invalid lstrV3='$lstrV3'";fi
+  
+  local lstrGlobals123="${astrEvalV3cache[${lstrV3}]-}"
+  if [[ -z "${lstrGlobals123}" ]];then
+    lstrGlobals123="`echo "${lstrV3}" |sed -r 's@([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*, *([0-9-]*)[.]*[0-9]*@CFGFUNCsetGlobals n1=\1 n2=\2 n3=\3;@' |head -n 1`" #collect only the integer part
+    astrEvalV3cache[${lstrV3}]="${lstrGlobals123}"
+  fi
+  
+  #CFGFUNCinfo --dbg "`declare -p lstrV3 lstrGlobals123`"
+  
   eval "$lstrGlobals123"
 }
 function FUNCgetXYZ() { #<lstrPosOrig> set global vars: nX nY nZ
+  #CFGFUNCchkDenySubshellForGlobalVarsWork
   FUNCgetV3 "$1"
-  declare -g nX=$n1 nY=$n2 nZ=$n3
+  CFGFUNCsetGlobals nX=$n1 nY=$n2 nZ=$n3
   #local lstrPosOrig="$1";shift
   #if [[ -z "$lstrPosOrig" ]];then CFGFUNCerrorExit "invalid lstrPosOrig='$lstrPosOrig'";fi
-  #local lstrGlobalsXYZ="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
+  #local lstrGlobalsXYZ="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@CFGFUNCsetGlobals nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
   #declare -p lstrPosOrig lstrGlobalsXYZ |tee -a "$strCFGScriptLog"
   #eval "$lstrGlobalsXYZ" #nX nY nZ
 }
 function FUNCgetWHL() { #<lstrSize> set global vars: nWidth nHeight nLength
+  #CFGFUNCchkDenySubshellForGlobalVarsWork
   FUNCgetV3 "$1"
-  declare -g nWidth=$n1 nHeight=$n2 nLength=$n3
+  CFGFUNCsetGlobals nWidth=$n1 nHeight=$n2 nLength=$n3
   #local lstrSize="$1";shift
   #if [[ -z "$lstrSize" ]];then CFGFUNCerrorExit "invalid lstrSize='$lstrSize'";fi
-  #local lstrGlobalsWHL="`echo "${lstrSize}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@declare -g nWidth=\1 nHeight=\2 nLength=\3;@' |head -n 1`"
+  #local lstrGlobalsWHL="`echo "${lstrSize}" |sed -r 's@([.0-9-]*), *([.0-9-]*), *([.0-9-]*)@CFGFUNCsetGlobals nWidth=\1 nHeight=\2 nLength=\3;@' |head -n 1`"
   #declare -p lstrSize lstrGlobalsWHL |tee -a "$strCFGScriptLog"
   #eval "$lstrGlobalsWHL" #nWidth nHeight nLength
 }
-function FUNCgetXYZfromXmlLineXLD() { #<lstrXmlLine> set global vars: iXLDFilterIndex
+function FUNCgetXYZfromXmlLine_outXYZaXLDglobals() { #<lstrXmlLine> set global vars: iXLDFilterIndex
+  #CFGFUNCchkDenySubshellForGlobalVarsWork
   local lstrXmlLine="$1";shift
   local lstrPosOrig="`CFGFUNCxmlGetLinePropertyValue "$lstrXmlLine" "//decoration/@position"`"
   FUNCgetXYZ "$lstrPosOrig"
-  declare -g iXLDFilterIndex="`CFGFUNCxmlGetLinePropertyValue "$lstrXmlLine" "//decoration/@helpFilterIndex"`"
-  declare -g strXLDPrefabCurrentName="`CFGFUNCxmlGetLinePropertyValue "$lstrXmlLine" "//decoration/@name"`"
+  CFGFUNCsetGlobals iXLDFilterIndex="`CFGFUNCxmlGetLinePropertyValue "$lstrXmlLine" "//decoration/@helpFilterIndex"`"
+  CFGFUNCsetGlobals strXLDPrefabCurrentName="`CFGFUNCxmlGetLinePropertyValue "$lstrXmlLine" "//decoration/@name"`"
   #if [[ -z "$lstrPosOrig" ]];then CFGFUNCerrorExit "invalid lstrPosOrig='$lstrPosOrig'";fi
   ##declare -p lstrPosOrig >&2
-  ##local lstrPos="`echo "${lstrXmlLine}" |grep 'position="[^"]*"' -o |sed -r 's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
-  #local lstrPos="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
+  ##local lstrPos="`echo "${lstrXmlLine}" |grep 'position="[^"]*"' -o |sed -r 's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@CFGFUNCsetGlobals nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
+  #local lstrPos="`echo "${lstrPosOrig}" |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@CFGFUNCsetGlobals nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
   #eval "$lstrPos" #nX nY nZ
 }
 
@@ -305,14 +325,15 @@ else
   fi
 fi
 
-strFlCACHE="`basename "$0"`.CACHE.sh" #help if you delete the cache file it will be recreated
-source "$strFlCACHE"&&: #this file contents can be like: the last value appended for the save variable will win
+#strFlCACHE="`basename "$0"`.CACHE.sh" #help if you delete the cache file it will be recreated
+#source "$strFlCACHE"&&: #this file contents can be like: the last value appended for the save variable will win
 
 function FUNCwriteCacheFile(){ #call this after each var is set
   echo "#PREPARE_RELEASE:REVIEWED:OK" >"${strFlCACHE}"
   echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"${strFlCACHE}"
   declare -p iTotalChkBiome >>"${strFlCACHE}"
   declare -p iReservedWastelandPOICountForMissingPOIs >>"${strFlCACHE}"
+  declare -p astrEvalV3cache >>"${strFlCACHE}"
   # put all cache vars here!
 }
 
@@ -331,7 +352,7 @@ if $bUpdateBiomeCache;then
   for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
     ((iTotalChkBiome++))&&:
     CFGFUNCinfo "UpdateBiomeDataFor(${iTotalChkBiome}/${#astrRWGOriginalPOIdataLineList[@]}): ${strGenPOIdataLine}"
-    FUNCgetXYZfromXmlLineXLD "${strGenPOIdataLine}"
+    FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strGenPOIdataLine}"
     ./getBiomeData.sh "$nX,$nY,$nZ" #just to create the database
   done
   FUNCwriteCacheFile
@@ -365,7 +386,7 @@ if((${#astrAllPOIsList[@]}==0));then CFGFUNCerrorExit "astrAllPOIsList empty";fi
 
 CFGFUNCinfo "MAIN:colleting all POIs Y offset and size from prefabs"
 #strFlTmp="`mktemp`"
-strFlTmp="`pwd`/_tmp/`basename "$0"`.POIsYOS.tmp.txt" #todoa cache this. deleting it will refresh the cache
+strFlTmp="`pwd`/_tmp/`basename "$0"`.POIsYOS.tmp.txt" #todo cache this. deleting it will refresh the cache
 echo -n >"$strFlTmp"
 declare -A astrAllPrefabYOS
 declare -A astrAllPrefabSize
@@ -437,7 +458,7 @@ CFGFUNCinfo "MAIN:create help and sorter xml properties for all POIs"
 for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
   strGenPOIdataLine="${astrRWGOriginalPOIdataLineList[i]}"
   
-  FUNCgetXYZfromXmlLineXLD "${strGenPOIdataLine}"
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strGenPOIdataLine}"
   eval "$(CFGFUNCbiomeData "$nX,$nY,$nZ")" # iBiome strBiome strColorAtBiomeFile
   
   # helpFilterIndex would be used to grant no clashes will happen (but no clash will happen as position is already unique as POIs wont be placed above or below others)
@@ -454,7 +475,7 @@ declare -A astrRWGOriginalLocationVsPOI=()
 #for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
 for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
   strGenPOIdataLine="${astrRWGOriginalPOIdataLineList[i]}"
-  FUNCgetXYZfromXmlLineXLD "${strGenPOIdataLine}"
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strGenPOIdataLine}"
   strOriginalPOI="`FUNCxmlGetName "$strGenPOIdataLine"`"
   astrRWGOriginalLocationVsPOI["$nX,$nY,$nZ"]="${strOriginalPOI}"
   #astrRWGOriginalPOIdataLineList[$i]="`CFGFUNCxmlSetLinePropertyValue "${astrRWGOriginalPOIdataLineList[$i]}" "//decoration/@helpFilterIndex" "$i"`" #this index will be used to grant no clashes will happen (but no clash will happen as position is already unique as POIs wont be placed above or below others)
@@ -470,7 +491,7 @@ iTotalRemovedPOIsFromTownsOutsideWasteland=0
 declare -A astrVaporisedTownsRestoreOnePOIPerRectangle
 astrVaporisedTownsRestoreOnePOIPerRectangle=()
 for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
-  FUNCgetXYZfromXmlLineXLD "${strGenPOIdataLine}"
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strGenPOIdataLine}"
   if ! FUNCchkPosIsInTownPIT --ignore Wasteland $nX $nZ;then
     astrPatchedPOIdataLineList+=("${strGenPOIdataLine}")
     echo -n "." # ok POIs
@@ -507,22 +528,13 @@ astrAllPOIsList=("${astrAllPOIsList[@]}") #fixes the array after removing the en
 iTotalUniqueSpecialBuildings=${#astrSpecialBuildingList[@]}
 if((iTotalUniqueSpecialBuildings==0));then CFGFUNCerrorExit "invalid iTotalUniqueSpecialBuildings=0. Special POIs are required to prepare end game Wasteland region";fi
 
-function FUNCarrayContains() { # <lstrChk> <array values...>
-  local lstrChk="$1";shift
-  local lstr
-  for lstr in "${@}";do
-    if [[ "$lstrChk" == "$lstr" ]];then return 0;fi
-  done
-  return 1
-}
-
 CFGFUNCinfo "MAIN:replacing special buildings outside wasteland with a dup to be replaced again later with unique POIs"
 strDummyPOI="abandoned_house_01" #this simple POI may happen many times to be replaced
 iRemovedSpecialBuildingsFromNonWasteland=0
 for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   echo -en "$i/${#astrPatchedPOIdataLineList[@]}.\r"
   strPatchedPOIdataLine="${astrPatchedPOIdataLineList[i]}"
-  FUNCgetXYZfromXmlLineXLD "${strPatchedPOIdataLine}"
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strPatchedPOIdataLine}"
   eval "$(CFGFUNCbiomeData "$nX,$nY,$nZ")" # iBiome strBiome strColorAtBiomeFile
   #eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["$nX,$nY,$nZ"]}`" # iBiome strBiome strColorAtBiomeFile
   if [[ "$strBiome" != "Wasteland" ]];then
@@ -533,7 +545,7 @@ for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
      trader_joel
      trader_rekt
     )
-    if FUNCarrayContains "`FUNCxmlGetName "$strPatchedPOIdataLine"`" "${astrSpecialBuildingList[@]}" "${astrRemoveTradersIfOutsideWasteland[@]}";then
+    if CFGFUNCarrayContains "`FUNCxmlGetName "$strPatchedPOIdataLine"`" "${astrSpecialBuildingList[@]}" "${astrRemoveTradersIfOutsideWasteland[@]}";then
       CFGFUNCinfo "BEFORE:$strBiome: $strPatchedPOIdataLine"
       strSedReplaceId='s/name="[^"]*"/name="'"${strDummyPOI}"'"/'
       astrPatchedPOIdataLineList[i]="`echo "$strPatchedPOIdataLine" |sed -r "${strSedReplaceId}"`"
@@ -549,7 +561,7 @@ for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   echo -en "$i/${#astrPatchedPOIdataLineList[@]}.\r"
   strPatchedPOIdataLine="${astrPatchedPOIdataLineList[i]}"
   
-  FUNCgetXYZfromXmlLineXLD "${strPatchedPOIdataLine}"
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strPatchedPOIdataLine}"
   if FUNCchkPosIsInTownPIT $nX $nZ;then echo -n "Wt,";continue;fi #skip the wasteland town!
   
   #strPrefabCurrentName="`FUNCxmlGetName "${strPatchedPOIdataLine}"`"
@@ -600,7 +612,7 @@ while true;do #this loop will try to populate the whole wasteland (least the RGW
       strPatchedPOIdataLine="${astrPatchedPOIdataLineList[i]}"
       if [[ "$strPatchedPOIdataLine" =~ name=\"${strMarkToSkip}[^\"]*\" ]];then echo -n .;continue;fi
       
-      FUNCgetXYZfromXmlLineXLD "${strPatchedPOIdataLine}"
+      FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strPatchedPOIdataLine}"
       if FUNCchkPosIsInTownPIT $nX $nZ;then echo -n .;continue;fi #skip the wasteland town!
       
       eval "$(CFGFUNCbiomeData "$nX,$nY,$nZ")" # iBiome strBiome strColorAtBiomeFile
@@ -638,8 +650,8 @@ IFS=$'\n' read -d '' -r -a astrGenPOIsList < <(
   for strPatchedPOIdataLine in "${astrPatchedPOIdataLineList[@]}";do
     #echo "$strPatchedPOIdataLine" |egrep 'name="[^"]*"' -o |tr -d '"' |sed -r 's@name=@@'
     FUNCxmlGetName "$strPatchedPOIdataLine"
-  done |egrep -v "${strRegexIgnoreGen}" |sort
-)&&: # sort (non unique) is essential here to make replacing easier
+  done |egrep -v "${strRegexIgnoreGen}" |sort # sort (non unique) is essential here to make replacing easier
+)&&:
 if((${#astrGenPOIsList[@]}==0));then CFGFUNCerrorExit "astrGenPOIsList empty";fi
 
 CFGFUNCinfo "MAIN:searching for missing POIs (that RWG ignored or were removed from non wasteland town areas)"
@@ -735,7 +747,7 @@ declare -p astrMissingPOIsList |tr "[" "\n"
 #IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig")&&:
 #astrPatchedPOIdataLineList=()
 #for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
-  #FUNCgetXYZfromXmlLineXLD "${strGenPOIdataLine}"
+  #FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strGenPOIdataLine}"
   #if ! FUNCchkPosIsInTownPIT --ignore Wasteland $nX $nZ;then
     #astrPatchedPOIdataLineList+=("${strGenPOIdataLine}")
   #else
@@ -767,22 +779,33 @@ for strGenPOI in "${astrGenPOIsList[@]}";do
   #astrGenPOIsDupCountList["$strGenPOI"]=$((${astrGenPOIsDupCountList["$strGenPOI"]-0}+1))
   astrGenPOIsDupCountList["$strGenPOI"]="$(egrep "[ ]name=\"${strGenPOI}\"[ ]" "$strFlPatched" |wc -l)" #the dup count from file is granted
 done
+astrRWGsinglePOIsList=() #these POIs will not be replaced
 for strGPD in "${!astrGenPOIsDupCountList[@]}";do
   if((${astrGenPOIsDupCountList[$strGPD]}==1));then # clear non dups
     unset astrGenPOIsDupCountList[$strGPD]
+    #astrRWGsinglePOIsList+=("$strGPD")
   fi
+  astrRWGsinglePOIsList+=("$strGPD") #here because all/most dups will be replaced and then only one will remain
 done
 declare -p astrGenPOIsDupCountList |tr '[' '\n' |tee -a "$strCFGScriptLog"
 
-function FUNCgetXYZfor2ndMatchingPrefabOnPatcherFile() { #<lstrPrefab> works always on the 2nd match found, therefore the 1st remains unique in the end
+#function FUNCgetXYZfor2ndMatchingPrefabOnPatcherFile() { #<lstrPrefab> works always on the 2nd match found, therefore the 1st remains unique in the end
+  #local lstrPrefab="$1";shift
+  ##local lstrPos="`echo "$strGenPrefabsData" |grep "$lstrPrefab" |head -n 2 |tail -n 1`"
+  ##local lstrPos="`for strPatchedPOIdataLine in "${astrPatchedPOIdataLineList[@]}";do echo "${strPatchedPOIdataLine}";done |grep "$lstrPrefab" |head -n 2 |tail -n 1`"
+  #local lstrLine="$(egrep "[ ]name=\"${lstrPrefab}\"[ ]" "$strFlPatched" |head -n 2 |tail -n 1)" # do not use `` it will fail resulting in 0, only $() worked!!! why? anyway `` is deprecated for bash...
+  #FUNCgetXYZfromXmlLine_outXYZaXLDglobals "$lstrLine"
+#}
+function FUNCget2ndMatchingPrefabOnPatcherFile() { #<lstrPrefab> works always on the 2nd match found, therefore the 1st remains unique in the end
   local lstrPrefab="$1";shift
   #local lstrPos="`echo "$strGenPrefabsData" |grep "$lstrPrefab" |head -n 2 |tail -n 1`"
   #local lstrPos="`for strPatchedPOIdataLine in "${astrPatchedPOIdataLineList[@]}";do echo "${strPatchedPOIdataLine}";done |grep "$lstrPrefab" |head -n 2 |tail -n 1`"
   local lstrLine="$(egrep "[ ]name=\"${lstrPrefab}\"[ ]" "$strFlPatched" |head -n 2 |tail -n 1)" # do not use `` it will fail resulting in 0, only $() worked!!! why? anyway `` is deprecated for bash...
-  FUNCgetXYZfromXmlLineXLD "$lstrLine"
+  #FUNCgetXYZfromXmlLine_outXYZaXLDglobals "$lstrLine"
+  echo "$lstrLine"
 }
 #function FUNCgetXYZfor2ndMatchingPrefabOnPatcherFile() { #<strPrefab>
-  #strPos="`echo "$strGenPrefabsData" |grep "$strGPD" |head -n 2 |tail -n 1 |grep 'position="[^"]*"' -o |sed -r 's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@declare -g nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
+  #strPos="`echo "$strGenPrefabsData" |grep "$strGPD" |head -n 2 |tail -n 1 |grep 'position="[^"]*"' -o |sed -r 's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@CFGFUNCsetGlobals nX=\1 nY=\2 nZ=\3;@' |head -n 1`"
   #eval "$strPos" #nX nY nZ
 #}
 
@@ -796,7 +819,7 @@ function FUNCpatchFileCurrentIndex_HelpAppend() {
   lstrHelp+="$1"
   CFGFUNCexec xmlstarlet ed -P -L -u "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@help" -v "${lstrHelp}" "$strFlPatched"
 }      
-function FUNCpatchFileCurrentIndex_TrapAdd() {
+function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPrefabSize strFlPatched nNewPOIWidth nNewPOILength strBiome strColorAtBiomeFile nX nY nZ strRWGoriginalPOI iXLDFilterIndex 
   : ${iTryTrapEveryPOIcount:=1} #help was 3, now every POI will have a trap around it with this set to 1
   : ${iTryAddWildTrap:=0}
   ((iTryAddWildTrap++))&&:
@@ -861,6 +884,7 @@ function FUNCpatchFileCurrentIndex_TrapAdd() {
   fi
 }      
 function FUNCpatchFileCurrentIndex_ExplosionAdd() {
+  #todoa try to create a prefab with a barrel or a car with earth below it. When placing it above a POI, it may fill up with more earth below that may auto collapse
   bPlaceExplodeAbove=false
   if ! $bSuccessfullyPlacedUnderground;then
     : ${iTryExplAbove:=0}
@@ -892,7 +916,7 @@ function FUNCpatchFileCurrentIndex_ExplosionAdd() {
     
     if((nYExplPOI>-1));then
       iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may have no building. buildings are not terrain support right? 20 will try to place above buildings!
-      #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todoa)))
+      #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todo)))
       strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
       CFGFUNCpredictiveRandom ExplosivePOIRotation
       echo '  <decoration type="model" name="'"${strExplPOI}"'" help="'"${strBiome};${strColorAtBiomeFile}"'TryCollapseAndExplosionAboveForPOIIndex:'"${iXLDFilterIndex}"'" position="'"${strPOIExplPos}"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.ExplodeAbove.xml" 
@@ -925,7 +949,6 @@ function FUNCpatchFileCurrentIndex_HintAdd() {
   if $bPlaceObviousPrefabHintsForUndergroundPOIs;then
     nYHint=$((nY+nNewPOIHeight+nYExtraUndergroundDistFromSurface))
   fi
-  #todoa try to create a prefab with a single smoke like at REKT trader prefab. it is very tall and may help for some hints that still end underground
   : ${bUseUndergroundSmokePrefabHint:=true} #help otherwise it will use small static prefabs
   if $bUseUndergroundSmokePrefabHint;then
     if [[ "$strBiome" == "Snow" ]];then
@@ -940,9 +963,134 @@ function FUNCpatchFileCurrentIndex_HintAdd() {
   CFGFUNCpredictiveRandom UndergroundHintRotation
   echo '  <decoration type="model" name="'"${strUndergroundPrefabHint}"'" help="'"${strBiome};${strColorAtBiomeFile};"'UndergroundPOIHintForPOIIndex:'"${iXLDFilterIndex}"'" position="'"$nX,$nYHint,$nZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.UndergroundHints.xml" #that Y change is because it seems that engine RWG makes more precise calculations and my calcs here wont suffice as it may end below the ground for some reason. As these are just hints, even if they do not look good, that is what I can do in a script for now. #this wont suffice: nY+1 because all the hints were being placed a bit below surface, I dont know why.
 }      
+function FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal() { 
+  #CFGFUNCchkDenySubshellForGlobalVarsWork
+  local lstrOriginalPOI="$1"
+  
+  FUNCgetWHL "${astrAllPrefabSize[${lstrOriginalPOI}]}"
+  local lnOW=$nWidth lnOH=$nHeight lnOL=$nLength
+  
+  local liBestMatchMPOIindex=0
+  local lastrMatchModeList=(  # put best match modes in order here!
+    MatchWHL #precise
+    MatchWL #best fit W L is good enough too as the whole problem is adequating the terrain around it
+    MatchWHLp1
+    MatchWHLdiff2 #new can be -2 or +2 size diff than original
+    MatchWLp1
+    MatchWLp3 #new can be bigger than original by 3
+    MatchWLm3 #new can be smaller than original by 3
+    MatchWLm5 #new can be smaller than original by 5
+    MatchWLp5 #new can be bigger than original by 5
+    BestMatchFailed_WillUseDefault #keep as last one
+  )
+  CFGFUNCsetGlobals -A astrPOIsMatchMode
+  local lbOk=false
+  for lstrMatchMode in "${lastrMatchModeList[@]}";do
+    for liMisPOIIndex in "${!astrMissingPOIsList[@]}";do
+      local lstrMissingPOI="${astrMissingPOIsList[$liMisPOIIndex]}"
+      FUNCgetWHL "${astrAllPrefabSize[${lstrMissingPOI}]}"
+      local lnMW=$nWidth lnMH=$nHeight lnML=$nLength
+      
+      if [[ "$lstrMatchMode" == "MatchWHL" ]] && ((
+        lnMW==lnOW && 
+        lnMH==lnOH && 
+        lnML==lnOL
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+        
+      if [[ "$lstrMatchMode" == "MatchWL" ]] && ((
+        lnMW==lnOW && 
+        lnML==lnOL
+      ));then 
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWHLp1" ]] && ((
+        ( lnMW>=lnOW && lnMW<=(lnOW+1) ) &&
+        ( lnMH>=lnOH && lnMH<=(lnOH+1) ) &&
+        ( lnML>=lnOL && lnML<=(lnOL+1) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWHLdiff2" ]] && ((
+        ( lnMW>=(lnOW-2) && lnMW<=(lnOW+2) ) &&
+        ( lnMH>=(lnOH-2) && lnMH<=(lnOH+2) ) &&
+        ( lnML>=(lnOL-2) && lnML<=(lnOL+2) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLp1" ]] && ((
+        ( lnMW>=lnOW && lnMW<=(lnOW+1) ) &&
+        ( lnML>=lnOL && lnML<=(lnOL+1) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLdiff2" ]] && ((
+        ( lnMW>=(lnOW-2) && lnMW<=(lnOW+2) ) &&
+        ( lnML>=(lnOL-2) && lnML<=(lnOL+2) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLp3" ]] && ((
+        ( lnMW>=lnOW && lnMW<=(lnOW+3) ) &&
+        ( lnML>=lnOL && lnML<=(lnOL+3) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+
+      if [[ "$lstrMatchMode" == "MatchWLm3" ]] && ((
+        ( lnMW<=lnOW && lnMW>=(lnOW-3) ) &&
+        ( lnML<=lnOL && lnML>=(lnOL-3) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLm5" ]] && ((
+        ( lnMW<=lnOW && lnMW>=(lnOW-5) ) &&
+        ( lnML<=lnOL && lnML>=(lnOL-5) ) 
+      ));then
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if [[ "$lstrMatchMode" == "MatchWLp5" ]] && (( 
+        ( lnMW>=lnOW && lnMW<=(lnOW+5) ) &&
+        ( lnML>=lnOL && lnML<=(lnOL+5) ) 
+      ));then #this is already too much but better than more...
+        liBestMatchMPOIindex=$liMisPOIIndex;lbOk=true;
+        break;
+      fi
+      
+      if $lbOk;then break;fi
+    done
+    if $lbOk;then break;fi
+  done
+  astrPOIsMatchMode[${lstrMatchMode}]=$((${astrPOIsMatchMode[${lstrMatchMode}]}+1))
+  local lstrNewPOI="${astrMissingPOIsList[$liBestMatchMPOIindex]}"
+  CFGFUNCinfo "BestMatchingPOIFor:lbOk=$lbOk;lstrMatchMode=$lstrMatchMode;index:$liBestMatchMPOIindex;Original(${lstrOriginalPOI},sz:${astrAllPrefabSize[${lstrOriginalPOI}]});New(${astrMissingPOIsList[$liBestMatchMPOIindex]},sz:${astrAllPrefabSize[${lstrNewPOI}]})"
+  
+  CFGFUNCsetGlobals strBestMatchingPOI="${lstrNewPOI}" #OUTPUT. if not found, will be the 1st index 0
+  
+  unset astrMissingPOIsList[$liBestMatchMPOIindex]
+  astrMissingPOIsList=("${astrMissingPOIsList[@]}") #updates the array
+}
 #: ${strFlPatchUndergroundEvents:="${strTmpPath}/tmp.`basename "$0"`.`date +"${strCFGDtFmt}"`.GameEvents.${strGenTmpSuffix}"} #help strFlGenEve CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 bEnd=false
-iCountAtMissingPOIs=0
+iRestoredMissingPOIs=0
+#iCountAtMissingPOIs=0
 iSkippedAtRemainingTowns=0
 iSkippedWastelandNonDummyPOI=0
 iSkippedOriginalPOIs=0
@@ -961,12 +1109,15 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
   for((i=iDupCount;i>1;i--));do #i>1 means to replace only the dups, not the last one
     CFGFUNCinfo "Working with DupPOI($i): $strGPD dup $iDupCount"  
     egrep "[ ]name=\"${strGPD}\"[ ]" "$strFlPatched" |tee -a "$strCFGScriptLog"
-    FUNCgetXYZfor2ndMatchingPrefabOnPatcherFile "$strGPD" #as this file is being constantly updated here on this loop
+    #FUNCgetXYZfor2ndMatchingPrefabOnPatcherFile "$strGPD" #as this file is being constantly updated here on this loop. This is the first original POI information collection.
+    FUNCgetXYZfromXmlLine_outXYZaXLDglobals "`FUNCget2ndMatchingPrefabOnPatcherFile "$strGPD"`" #as this file is being constantly updated here on this loop. This is the first original POI information collection.
     #strPos="`echo "$strGenPrefabsData" |grep "$strGPD" |head -n 2 |tail -n 1 |grep 'position="[^"]*"' -o |sed -r  's@position=@@' |tr -d '"' |sed -r 's@([.0-9-]*),([.0-9-]*),([.0-9-]*)@nX=\1;nY=\2;nZ=\3;@' |head -n 1`"
     #eval "$strPos" #nX nY nZ
     #declare -p nX nY nZ
-    strOriginalXYZ="$nX,$nY,$nZ"
-    CFGFUNCinfo "DupPOI: $strGPD iXLDFilterIndex=$iXLDFilterIndex XYZ=$strOriginalXYZ "
+    strOriginalXYZ="$nX,$nY,$nZ" #This is the first original POI information.
+    strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
+    CFGFUNCinfo "DupPOI: $strGPD iXLDFilterIndex=$iXLDFilterIndex XYZ=$strOriginalXYZ strRWGoriginalPOI='$strRWGoriginalPOI'"
+    
     
     bSkip=false;
     #The remaining POIs from rectangles at towns may be DUPs, if that is the case they must be replaced properly. #if FUNCchkPosIsInTownPIT $nX $nZ;then bSkip=true;((iSkippedAtRemainingTowns++))&&:;CFGFUNCinfo "iSkippedAtRemainingTowns=$iSkippedAtRemainingTowns";fi # skip locations in towns to keep the RGW good looking quality
@@ -980,7 +1131,7 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
     #if [[ "$strBiome" == "Wasteland" ]];then bSkip=true;fi # skip wasteland that was already filled up with special buildings
     #help The wasteland biome was already filled with priority POIs as much as possible beyond the minimum and considering the reserved limit
     
-    strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
+    #strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
     #if [[ "${strRWGoriginalPOI}" =~ ^${strRegexProtectedPOIs}.*$ ]];then bSkip=true;((iSkippedOriginalPOIs++))&&:;fi #todo this seems wrong! should compare with the current name="" not the original!!!
     #strPrefabNameToCheck="`xmlstarlet sel -t -c "//decoration[@helpFilterIndex='${iXLDFilterIndex}']" "$strFlPatched"`"
     if [[ "${strXLDPrefabCurrentName}" =~ ^${strRegexProtectedPOIs}.*$ ]];then bSkip=true;((iSkippedProtectedPOIs++))&&:;CFGFUNCinfo "iSkippedProtectedPOIs=$iSkippedProtectedPOIs";fi
@@ -994,12 +1145,6 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
         ((iNotUsedReservedWastelandPOICountForMissingPOIs--))&&:
       fi
     fi
-
-    strMissingPOI="${astrMissingPOIsList[$iCountAtMissingPOIs]}"
-    FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}"
-    nNewPOIWidth=$nWidth
-    nNewPOIHeight=$nHeight
-    nNewPOILength=$nLength
     
     CFGFUNCexec -m "Query to be sure the entry exists for consistency" xmlstarlet sel -t -c "//decoration[@helpFilterIndex='${iXLDFilterIndex}']" "$strFlPatched";echo #this line is allowed to fail, do not protect with &&:
     if $bSkip;then
@@ -1012,8 +1157,16 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       
       #((iSkippedAtRemainingTowns++))&&: #add IGNORE mark strMarkToSkip so when perl runs, trying the 2nd match will ignore this one just because it will be different and invalid for now
     else
+      FUNCextractBestMatchingMissingPOIvsOriginalPOI_outBestMatchingPOIglobal "${strRWGoriginalPOI}"
+      strMissingPOI="${strBestMatchingPOI}"
+      #strMissingPOI="${astrMissingPOIsList[$iCountAtMissingPOIs]}"
+      FUNCgetWHL "${astrAllPrefabSize[${strMissingPOI}]}"
+      nNewPOIWidth=$nWidth
+      nNewPOIHeight=$nHeight
+      nNewPOILength=$nLength
+
       #strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
-      CFGFUNCinfo "Dup=$strGPD:$i:Orig=$strRWGoriginalPOI:Miss=$strMissingPOI($iCountAtMissingPOIs):($nX,$nY,$nZ):YOS(O=${astrAllPrefabYOS[$strRWGoriginalPOI]-}/M=${astrAllPrefabYOS[$strMissingPOI]-}/D=${astrAllPrefabYOS[$strGPD]-})" # |tee -a "$strFlRunLog"&&: >/dev/stderr
+      CFGFUNCinfo "Dup=$strGPD:$i:Orig=$strRWGoriginalPOI:Miss=$strMissingPOI:($nX,$nY,$nZ):YOS(O=${astrAllPrefabYOS[$strRWGoriginalPOI]-}/M=${astrAllPrefabYOS[$strMissingPOI]-}/D=${astrAllPrefabYOS[$strGPD]-})" # |tee -a "$strFlRunLog"&&: >/dev/stderr
       # this will change the 2nd match only of a dup entry strGPD
       #perl -i -w -0777pe 's/("'"$strGPD"'".*?)("'"$strGPD"'")/$1"'"$strMissingPOI"'"/s' "$strFlPatched"
       
@@ -1148,13 +1301,33 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
       fi
       astrRestoredPOIs+=("$strMissingPOI")
       
-      ((iCountAtMissingPOIs++))&&:
-      if((iCountAtMissingPOIs>=${#astrMissingPOIsList[@]}));then bEnd=true;break;fi
+      ((iRestoredMissingPOIs++))&&:
+      #((iCountAtMissingPOIs++))&&:
+      #if((iCountAtMissingPOIs>=${#astrMissingPOIsList[@]}));then bEnd=true;break;fi
+      if((${#astrMissingPOIsList[@]}==0));then bEnd=true;break;fi
     fi
   done
   if $bEnd;then break;fi
 done
 declar -p astrRestoredPOIs |tr '[' '\n' |tee -a "$strCFGScriptLog"
+
+CFGFUNCinfo "MAIN:preparing patch file: adding traps to non DUP (unique or finally unique) POIs"
+for strRWGsinglePOI in "${astrRWGsinglePOIsList[@]}";do
+  FUNCgetWHL "${astrAllPrefabSize[${strRWGsinglePOI}]}"
+  nNewPOIWidth=$nWidth
+  nNewPOIHeight=$nHeight
+  nNewPOILength=$nLength
+  
+  FUNCgetXYZfromXmlLine_outXYZaXLDglobals "`FUNCget2ndMatchingPrefabOnPatcherFile "$strRWGsinglePOI"`" #nX nY nZ iXLDFilterIndex 
+  
+  eval "$(CFGFUNCbiomeData "$nX,$nY,$nZ")" # iBiome strBiome strColorAtBiomeFile
+  #strOriginalXYZ="$nX,$nY,$nZ"
+  #strRWGoriginalPOI="${astrRWGOriginalLocationVsPOI[$nX,$nY,$nZ]}"
+  
+  strRWGoriginalPOI="$strRWGsinglePOI"
+  
+  FUNCpatchFileCurrentIndex_TrapAdd #all the above prepared the data required for this call
+done
 
 CFGFUNCinfo "MAIN:Cleanup patcher file: ${strFlPatched}"
 #sed -i -r 's"@@@""' "${strFlPatched}" #clean ignore mark to let game accept the data
@@ -1222,6 +1395,10 @@ fi
   #CFGFUNCprompt "WARN:iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs more than required."
 #fi
 
+FUNCwriteCacheFile #here for astrEvalV3cache etc
+
+declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"
+
 iMaxAllowedReservablePOIsInWasteland=$((iTotalWastelandPOIsLeastInTowns-iTotalUniqueSpecialBuildings))
 strFlResultsFinal="`basename "$0"`.AddedToRelease.LastRunStatus.txt" #help if you delete the cache file it will be recreated
 CFGFUNCinfo "MAIN:REPORT FINAL STATUS"
@@ -1231,7 +1408,7 @@ echo "POI places:total original RWG generated: ${#astrRWGOriginalPOIdataLineList
 echo "POI places:total removed POIs from NON wasteland towns: $iTotalRemovedPOIsFromTownsOutsideWasteland" >>"$strFlResultsFinal"
 echo "POI places:total remaining on patched file: `egrep "<decoration " "${strFlPatched}" |wc -l`" >>"$strFlResultsFinal"
 echo "Total missing POIs: ${#astrMissingPOIsList[@]}" >>"$strFlResultsFinal"
-echo "Missing POIs that were restored: $iCountAtMissingPOIs" >>"$strFlResultsFinal"
+echo "Missing POIs that were restored: $iRestoredMissingPOIs" >>"$strFlResultsFinal"
 #echo "Preserved POIs from remaining towns or just from anywhere in the wasteland: $iSkippedAtRemainingTowns" >>"$strFlResultsFinal"
 echo "iStillMissingPOIs=$iStillMissingPOIs (0 is good)" >>"$strFlResultsFinal"
 #${#astrGenPOIsList[@]}
@@ -1249,12 +1426,12 @@ echo "iTotalUniqueSpecialBuildings=$iTotalUniqueSpecialBuildings" >>"$strFlResul
 echo "iMaxAllowedReservablePOIsInWasteland=$iMaxAllowedReservablePOIsInWasteland" >>"$strFlResultsFinal"
 echo "iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs (0 is good)" >>"$strFlResultsFinal"
 echo "iUndergroundPOIs=$iUndergroundPOIs (expectedly fully underground)" >>"$strFlResultsFinal"
-declare -p astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strFlResultsFinal" #may be useful
+declare -p astrPOIsMatchMode astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strFlResultsFinal" #may be useful
 CFGFUNCinfo "`cat "$strFlResultsFinal"`"
 
-if(( ${#astrMissingPOIsList[@]} != iCountAtMissingPOIs+iStillMissingPOIs ));then
-  CFGFUNCDevMeErrorExit "values do not sum up: \${#astrMissingPOIsList[@]} != iCountAtMissingPOIs+iStillMissingPOIs: ${#astrMissingPOIsList[@]} != $iCountAtMissingPOIs+$iStillMissingPOIs"
-fi
+#if(( ${#astrMissingPOIsList[@]} != iCountAtMissingPOIs+iStillMissingPOIs ));then
+  #CFGFUNCDevMeErrorExit "values do not sum up: \${#astrMissingPOIsList[@]} != iCountAtMissingPOIs+iStillMissingPOIs: ${#astrMissingPOIsList[@]} != $iCountAtMissingPOIs+$iStillMissingPOIs"
+#fi
 
 CFGFUNCprompt "check totals and etc above"
 
@@ -1341,5 +1518,4 @@ CFGFUNCprompt "MAIN: you should run ./createSpawnPoints.sh to update the spawn p
 CFGFUNCprompt "MAIN: then run the install script to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
-declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"
-
+#declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"
