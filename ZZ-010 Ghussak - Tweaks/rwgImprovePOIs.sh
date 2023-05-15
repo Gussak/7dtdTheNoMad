@@ -819,6 +819,9 @@ function FUNCpatchFileCurrentIndex_HelpAppend() {
   lstrHelp+="$1"
   CFGFUNCexec xmlstarlet ed -P -L -u "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@help" -v "${lstrHelp}" "$strFlPatched"
 }      
+
+iTotalTrapsInWorld=0
+iMaxTrapsInASinglePOI=0
 function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPrefabSize strFlPatched nNewPOIWidth nNewPOILength strBiome strColorAtBiomeFile nX nY nZ strRWGoriginalPOI iXLDFilterIndex 
   : ${iTryTrapEveryPOIcount:=1} #help was 3, now every POI will have a trap around it with this set to 1
   : ${iTryAddWildTrap:=0}
@@ -828,6 +831,7 @@ function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPref
     if $bCreateWildernessTraps;then
       iTrapTot=$(( 2*(nNewPOIWidth+nNewPOILength)/16 )) #the full perimeter length. 16 dist between each trap (but instead they will be placed randomly)
       if((iTrapTot<1));then iTrapTot=1;fi
+      if((iMaxTrapsInASinglePOI<iTrapTot));then iMaxTrapsInASinglePOI=$iTrapTot;fi
       for((iCurrentTrapIndex=0;iCurrentTrapIndex<iTrapTot;iCurrentTrapIndex++));do
         #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
         if [[ "$strBiome" == "PineForest" ]];then
@@ -878,6 +882,7 @@ function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPref
         fi
         CFGFUNCpredictiveRandom WildernessTrap
         echo '  <decoration type="model" name="'"${strPrefabTrap}"'" help="'"${strBiome};${strColorAtBiomeFile};"'WildernessTrap('"$iCurrentTrapIndex/$iTrapTot"'):POIIndex:'"${iXLDFilterIndex}"'" position="'"$nTrapX,$nTrapY,$nTrapZ"'" rotation="'"$((iPRandom%4))"'"/>' >>"${strFlPatched}.WildernessTrap.xml"
+        ((iTotalTrapsInWorld++))&&:
       done
     fi
     iTryAddWildTrap=0
@@ -1426,6 +1431,8 @@ echo "iTotalUniqueSpecialBuildings=$iTotalUniqueSpecialBuildings" >>"$strFlResul
 echo "iMaxAllowedReservablePOIsInWasteland=$iMaxAllowedReservablePOIsInWasteland" >>"$strFlResultsFinal"
 echo "iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWastelandPOICountForMissingPOIs (0 is good)" >>"$strFlResultsFinal"
 echo "iUndergroundPOIs=$iUndergroundPOIs (expectedly fully underground)" >>"$strFlResultsFinal"
+echo "iTotalTrapsInWorld=$iTotalTrapsInWorld" >>"$strFlResultsFinal"
+echo "iMaxTrapsInASinglePOI=$iMaxTrapsInASinglePOI" >>"$strFlResultsFinal"
 declare -p astrPOIsMatchMode astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strFlResultsFinal" #may be useful
 CFGFUNCinfo "`cat "$strFlResultsFinal"`"
 
