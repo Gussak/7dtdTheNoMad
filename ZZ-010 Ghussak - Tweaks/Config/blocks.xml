@@ -114,10 +114,6 @@
   <set xpath="/blocks/block[starts-with(@name,'floatation')]/property[@name='CreativeMode']/@value">Player</set>
   <set xpath="/blocks/block[@name='cntLootChestHeroInsecureT1']/property[@name='LootList']/@value">GSKnotReinforcedChestT1</set>
   <set xpath="/blocks/block[@name='cntLootChestHeroInsecureT2']/property[@name='LootList']/@value">GSKnotReinforcedChestT2</set>
-  <set xpath="//property[@name='Stacknumber']/@value">99999</set>
-  <append xpath="/blocks/block">
-    <property name="Stacknumber" value="99999"/>
-  </append>
   <append xpath="/blocks/block[starts-with(@name,'gore') or starts-with(@name,'bodyBag')]">
     <property name="BuffsWhenWalkedOn" value="buffGSKGoreHazard"/>
   </append>
@@ -175,8 +171,43 @@
       <drop event="Destroy" count="0"/>
       <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
     </block>
+    <block name="trapMinePseudoLooseBoardGSK" help="this is meant to instantly trigger faster than loose boards and cause almost no damage to entities, but cause enough damage to trigger nearby loose boards and others of this same mine">
+      <property name="Extends" value="rScrapIronPlateMine"/>
+      <property name="CustomIcon" value="looseBoardsTrapPlate1x1"/>
+      <property name="CustomIconTint" value="0,180,180"/>
+      <property name="TriggerDelay" value="0.05"/>
+      <property name="Texture" value="342,342,173,173,173,173"/>
+      <property name="Explosion.ParticleIndex" value="0"/>
+      <property name="Explosion.BlockDamage" value="100"/>
+      <property name="Explosion.EntityDamage" value="1"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="StabilitySupport" value="true" help="meant to be like loose boards"/>
+    </block>
+    <block name="trapSpikesPoisonGSK">
+      <property name="Extends" value="trapSpikesWoodMaster"/>
+      <property name="CreativeMode" value="Dev"/>
+      <property name="Model" value="Entities/Traps/woodSpikesTrap2BloodPrefab"/>
+      <property class="RepairItems">
+        <property name="GSKsnakePoison" value="10"/>
+      </property>
+      <property name="Damage" value="1"/>
+      <property name="Damage_received" value="1"/>
+      <property name="MaxDamage" value="30"/>
+      <property name="FuelValue" value="50"/>
+      <property name="CustomIcon" value="trapSpikesWoodDmg2"/>
+      <property name="CustomIconTint" value="0,180,180"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="BuffsWhenWalkedOn" value="buffGSKSnakePoisonFromTrap1sDelay" help="the class TrunkTip apparently is what calls this buff like 10x/s!"/>
+      <property name="CanPickup" value="true"/>
+      <property name="Stacknumber" value="10"/>
+    </block>
   </append>
   <append xpath="/blocks/block[starts-with(@name,'chimney')]">
     <property name="CreativeMode" value="Player"/>
   </append>
+  <append xpath="/blocks/block[@name='cntATMSecure']">
+    <property name="Buff" value="buffShocked"/>
+  </append>
+  <!-- HELPGOOD: keep last! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+  <set xpath="//property[@name='Stacknumber' and not(@value='1')]/@value">65535</set>
 </GhussakTweaks>

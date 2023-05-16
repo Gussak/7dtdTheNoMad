@@ -339,11 +339,33 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKIsRainingOnPlayer" operation="set" value="0"/>
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKItSeemsToBeRaining" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0.01"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="@fPreviousWetness"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iPreventDrinkRainDelay" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKItSeemsToBeRaining" operation="set" value="1"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="You may drink rain, but dangerous w/o a purifier." compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="180"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="0.083"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="8"/>
@@ -4681,6 +4703,13 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKSnakePoisonFromTrap1sDelay">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoison"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKSnakePoison">
       <duration value="0.05"/>
       <effect_group>
@@ -5182,7 +5211,7 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="2" help="can be configured in-game using special items">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="9" help="can be configured in-game using special items">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s">
@@ -8804,10 +8833,15 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="shelter gives radiation resistance">
+      <effect_group help="RADS: shelter gives radiation resistance">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadResistWork22"/>
+      </effect_group>
+      <effect_group help="RADS: grant effect is off">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LTE" value="5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.0" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.0" fade="1.0"/>
       </effect_group>
       <effect_group help="exp loss, temporary by opening free bundles">
         <requirement name="CVarCompare" cvar="fGSKExpDebt" operation="GT" value="0"/>

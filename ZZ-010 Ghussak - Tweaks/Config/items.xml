@@ -2053,7 +2053,7 @@
     </item>
     <item name="GSKNPCHiredGetsPowerArmor">
       <property name="Extends" value="NPCConsumableBase"/>
-      <property name="DescriptionKey" value="dkTooHighFails"/>
+      <property name="DescriptionKey" value="dkNPCkits"/>
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property name="CustomIconTint" value="00a0ff"/>
       <effect_group tiered="false">
@@ -2065,7 +2065,7 @@
     </item>
     <item name="GSKNPCHiredHeals30perc">
       <property name="Extends" value="NPCConsumableBase"/>
-      <property name="DescriptionKey" value="dkTooHighFails"/>
+      <property name="DescriptionKey" value="dkNPCkits"/>
       <property name="CustomIcon" value="medicalFirstAidBandage"/>
       <property name="CustomIconTint" value="00a0ff"/>
       <effect_group tiered="false" help="min hp is 187 and max is 687 with high charisma as seen on the game. TODO: if that changes, this needs to be updated (round to 5).">
@@ -2099,7 +2099,7 @@
     </item>
     <item name="GSKNPCHiredHeals180perc">
       <property name="Extends" value="NPCConsumableBase"/>
-      <property name="DescriptionKey" value="dkTooHighFails"/>
+      <property name="DescriptionKey" value="dkNPCkits"/>
       <property name="CustomIcon" value="medicalFirstAidKit"/>
       <property name="CustomIconTint" value="00a0ff"/>
       <effect_group tiered="false">
@@ -5113,6 +5113,20 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="thrownAmmoPoisonBomb">
+      <property name="Extends" value="thrownAmmoPipeBomb"/>
+      <property name="CustomIcon" value="thrownAmmoPipeBomb"/>
+      <property name="Explosion.BlastPower" value="15"/>
+      <property name="CustomIconTint" value="0,180,0"/>
+      <property name="EconomicValue" value="75"/>
+      <effect_group tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="3"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="10"/>
+        <display_value name="dExRadius" value="4"/>
+        <display_value name="dFuseTime" value="4"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison"/>
+      </effect_group>
+    </item>
     <item name="GSKsnakePoison">
       <property name="Extends" value="resourceTestosteroneExtract"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
@@ -5571,6 +5585,9 @@
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="0"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="1"/>
     </effect_group>
+  </append>
+  <append xpath="/items/item[@name='thrownAmmoFlare']">
+    <property name="CreativeMode" value="Player"/>
   </append>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
