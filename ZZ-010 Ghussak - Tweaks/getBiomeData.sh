@@ -50,7 +50,7 @@ function FUNCtranslateColor() { #<strColorAtBiomeFile>
   declare -p iBiome strBiome strColorAtBiomeFile #help this return result is meant to be eval
   echo "declare -g iBiome strBiome strColorAtBiomeFile"
 }
-if [[ "$1" == -t ]];then #help <strColorAtBiomeFile> just translate color
+if [[ "${1-}" == -t ]];then #help <strColorAtBiomeFile> just translate color
   shift
   FUNCtranslateColor "$1"
   exit
@@ -64,9 +64,12 @@ strFlPosVsBiomeColorCACHE="`basename "$0"`.PosVsBiomeColor.CACHE.sh" #help if yo
 declare -A astrPosVsBiomeColor=()
 source "${strFlPosVsBiomeColorCACHE}"&&:
 
-bVerbose=false;if [[ "$1" == -v ]];then bVerbose=true;shift;fi
+bVerbose=false;if [[ "${1-}" == -v ]];then bVerbose=true;shift;fi
+bJustWorldData=false;if [[ "${1-}" == "-w" ]];then bJustWorldData=true;shift;fi #help just get the world data
 
-strPosV3="$1";shift #help <strPosV3> ex.: 476,38,-1243 use no spaces as this is a key
+if ! $bJustWorldData;then
+  strPosV3="$1";shift #help <strPosV3> ex.: 476,38,-1243 use no spaces as this is a key
+fi
 
 strFlBiomes="${strCFGGeneratedWorldTNMFolder}/biomes.png"
 
@@ -77,20 +80,24 @@ if [[ -z "${strSHA1SUMBiomesFile-}" ]] || [[ "$strSHA1SUMBiomesFile" != "$strSHA
   bNeedsUpdate=true
 fi
 
-#if [[ -z "${nBiomesW-}" ]] || [[ -z "${nBiomesH}" ]];then
+#if [[ -z "${nWorldW-}" ]] || [[ -z "${nWorldH}" ]];then
 if $bNeedsUpdate;then
   strBiomeFileInfo="`identify "${strFlBiomes}" |egrep " [0-9]*x[0-9]* " -o |tr -d ' ' |tr 'x' ' '`";
-  nBiomesW="`echo "${strBiomeFileInfo}" |cut -d' ' -f1`";
-  nBiomesH="`echo "${strBiomeFileInfo}" |cut -d' ' -f2`";
+  nWorldW="`echo "${strBiomeFileInfo}" |cut -d' ' -f1`";
+  nWorldH="`echo "${strBiomeFileInfo}" |cut -d' ' -f2`";
 fi
-if $bVerbose;then declare -p nBiomesW nBiomesH >&2;fi
+if $bVerbose;then declare -p nWorldW nWorldH >&2;fi
+if $bJustWorldData;then #help just get the world data
+  declare -p nWorldW nWorldH
+  exit
+fi
 
 nNewRequested=0
 strColorAtBiomeFile="${astrPosVsBiomeColor[${strPosV3}]-}"&&:
 if [[ -z "${strColorAtBiomeFile}" ]];then
   iXSP="`echo "${strPosV3}" |cut -d, -f1`"
   iZSP="`echo "${strPosV3}" |cut -d, -f3`"
-  strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nBiomesW/2)+iXSP)),$(((nBiomesH/2)-iZSP))"'}]' info:-`" #the center of the map is X,Z=0,0. North from center is Z positive in game, but for imagemagick convert, it is inverted because the topleft image picture is the 0,0 origin
+  strColorAtBiomeFile="`convert "${strCFGGeneratedWorldTNMFolder}/biomes.png" -format '%[hex:u.p{'"$(((nWorldW/2)+iXSP)),$(((nWorldH/2)-iZSP))"'}]' info:-`" #the center of the map is X,Z=0,0. North from center is Z positive in game, but for imagemagick convert, it is inverted because the topleft image picture is the 0,0 origin
   ((nNewRequested++))&&:
 fi
 
@@ -105,7 +112,7 @@ if((nNewRequested>0)) || $bNeedsUpdate;then
   echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlPosVsBiomeColorCACHE" #trunc/init
   echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$strFlPosVsBiomeColorCACHE"
   echo "# avoid unnecessary requests, the bigger this file is the slower it will get" >>"$strFlPosVsBiomeColorCACHE"
-  declare -p strSHA1SUMBiomesFile nBiomesW nBiomesH >>"$strFlPosVsBiomeColorCACHE"
+  declare -p strSHA1SUMBiomesFile nWorldW nWorldH >>"$strFlPosVsBiomeColorCACHE"
   declare -p astrPosVsBiomeColor >>"$strFlPosVsBiomeColorCACHE" #TODO sha1sum the biome file and if it changes, recreate the array
 fi
 

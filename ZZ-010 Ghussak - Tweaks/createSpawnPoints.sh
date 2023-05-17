@@ -66,6 +66,7 @@ CFGFUNCtrash "${strFlGenBuf}TeleSpawnBiomeId${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}ChooseRandomSpawnInBiome${strGenTmpSuffix}"&&:
 CFGFUNCtrash "${strFlGenBuf}TeleportUnder${strGenTmpSuffix}"&&:
 
+#astrPrefabsList evals: strNm iX iY iZ iRot
 IFS=$'\n' read -d '' -r -a astrPrefabsList < <( \
   cat "${strPathWork}/prefabs.xml" \
     |egrep 'position="[^"]*"' \
@@ -145,17 +146,19 @@ astrAllow=(
   "_trailer_"
 )
 strAllow="`echo "${astrAllow[@]}" |tr ' ' '|'`";declare -p strAllow
-astrRectAll=(
-  -5000  5000 #top left XZ
-   5000 -5000 #bottom right XZ
+eval "`./getBiomeData.sh -w`" #gets world size
+nVanillaDeadlyRadiationMargin=128
+astrRect=( #this is the region spawn points are allowed to be created
+  -$((nWorldW/2 + nVanillaDeadlyRadiationMargin))  $((nWorldH/2 - nVanillaDeadlyRadiationMargin)) #top left XZ
+   $((nWorldW/2 - nVanillaDeadlyRadiationMargin)) -$((nWorldH/2 + nVanillaDeadlyRadiationMargin)) #bottom right XZ
 )
-astrRectNormal=(
-  -5000  5000 #top left XZ
-  -2300 -2000 #bottom right XZ
-)
-function FUNCisNormalZone() {
-  if((iX > ${astrRectNormal[0]} && iX < ${astrRectNormal[2]}));then
-    if((iZ < ${astrRectNormal[1]} && iZ > ${astrRectNormal[3]}));then
+#astrRectNormal=(
+  #-$((nWorldW/2 + nVanillaDeadlyRadiationMargin))  $((nWorldH/2 - nVanillaDeadlyRadiationMargin)) #top left XZ
+  #-2300 -2000 #bottom right XZ
+#)
+function FUNCisAllowedZone() {
+  if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
+    if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
       return 0
     fi
   fi
@@ -187,7 +190,7 @@ if [[ ! -f "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh" ]];then
 fi
 source "./getBiomeData.sh.PosVsBiomeColor.CACHE.sh"&&:
 
-for str in "${astrPrefabsList[@]}";do
+for str in "${astrPrefabsList[@]}";do #astrPrefabsList evals: strNm iX iY iZ iRot
 #for((i=0;i<"${#astrPrefabsList[@]}";i+=2));do
   #iX=${astrPrefabsList[i]}
   #iZ=${astrPrefabsList[i+1]}
@@ -195,6 +198,7 @@ for str in "${astrPrefabsList[@]}";do
   eval "$str" #the rotation is of the prefab not the lookat
   #if echo "$strNm" |egrep "^(${strDeny})";then continue;fi
   if ! echo "$strNm" |egrep "${strAllow}";then continue;fi
+  if ! FUNCisAllowedZone;then continue;fi
   
   #NORMAL DIFFICULTY SPAWNS from -5000 5000 to -2300 -2000
   iYOrig=$iY
@@ -209,40 +213,40 @@ for str in "${astrPrefabsList[@]}";do
     iY=$((iYOrig+2))&&:;
   fi
   
-  : ${bUseAll:=true} #help
-  if $bUseAll;then
-    astrRect=("${astrRectAll[@]}")
-  else
-    astrRect=("${astrRectNormal[@]}")
-  fi
+  #: ${bUseAll:=true} #help
+  #if $bUseAll;then
+    #astrRect=("${astrRectAll[@]}")
+  #else
+    #astrRect=("${astrRectNormal[@]}")
+  #fi
   #declare -p iX iZ astrRect
   #set -x
   iDisplacementXZ=20 #minimum =3 to avoid the corners of POIs that may bug the auto player placent. 20 will try to place player above buildings
   #if((iX > ${astrRect[0]} && iX < ${astrRect[2]}));then
     #if((iZ < ${astrRect[1]} && iZ > ${astrRect[3]}));then
-  bNormalZone=false;if FUNCisNormalZone;then bNormalZone=true;fi
-  #if $bUseAll || $bNormalZone;then
+  #bAllowedZone=false;if FUNCisAllowedZone;then bAllowedZone=true;fi
+  #if $bUseAll || $bAllowedZone;then
       #strPos="$((iX+iDisplacementXZ)),$iY,$((iZ+iDisplacementXZ))"
       #strTeleport="original teleport $iX $iYOrig $iZ"
       #strHelp="index=${iTeleportIndex};prefab=${strNm};${strTeleport}"
       #echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
   #fi
   
-  bCreateAutoTeleport=false
-  : ${bUseOnlyNormalDifficultySpawns:=false} #help
-#  if $bUseOnlyNormalDifficultySpawns && $bNormalZone;then bCreateAutoTeleport=true;fi
-  if $bUseOnlyNormalDifficultySpawns;then
-    if $bNormalZone;then
-      bCreateAutoTeleport=true
-    fi
-  else # allow all spawns everywhere
-    bCreateAutoTeleport=true 
-  fi
+  #bCreateAutoTeleport=false
+  #: ${bUseOnlyNormalDifficultySpawns:=false} #help
+##  if $bUseOnlyNormalDifficultySpawns && $bAllowedZone;then bCreateAutoTeleport=true;fi
+  #if $bUseOnlyNormalDifficultySpawns;then
+    #if $bAllowedZone;then
+      #bCreateAutoTeleport=true
+    #fi
+  #else # allow all spawns everywhere
+    #bCreateAutoTeleport=true 
+  #fi
   
-  if $bCreateAutoTeleport;then #create initial spawns to teleport to
+  #if $bCreateAutoTeleport;then #create initial spawns to teleport to
     ((iTeleportIndex++))&&:
     
-    if $bUseAll || $bNormalZone;then
+    #if $bUseAll || $bAllowedZone;then
         iXSP=$((iX+iDisplacementXZ))
         iZSP=$((iZ+iDisplacementXZ))
         strSpawnPos="$iXSP,$iY,$iZSP"
@@ -277,7 +281,7 @@ for str in "${astrPrefabsList[@]}";do
         strTeleport="prefabPosCmd: teleport $iX $iYOrig $iZ"
         strHelp="index=${iTeleportIndex};prefab=${strNm};biome=${strColorAtBiomeFile},${strBiome},${iBiome};spawnPos=${strSpawnPos};${strTeleport}"
         echo '    <spawnpoint helpSort="'"${strNm},Z=${iZ}"'" position="'"${strSpawnPos}"'" rotation="0,0,0" help="'"${strHelp}"'"/>' >>"${strFlGenSpa}${strGenTmpSuffix}"
-    fi
+    #fi
     
     if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
     strTeleportIndex="`printf %03d $iTeleportIndex`"
@@ -318,7 +322,7 @@ for str in "${astrPrefabsList[@]}";do
     iTeleportMaxIndex=$iTeleportIndex
     if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
     #((iTeleportIndex++))&&:
-  fi
+  #fi
   
   
   

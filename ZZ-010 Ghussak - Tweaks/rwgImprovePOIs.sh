@@ -836,19 +836,19 @@ function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPref
         #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
         if [[ "$strBiome" == "PineForest" ]];then
           strPrefabTrap="part_TNM_WildernessTrapForest"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleForest";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltForest";fi
         fi
         if [[ "$strBiome" == "Snow" ]];then
           strPrefabTrap="part_TNM_WildernessTrapSnow"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleSnow";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltSnow";fi
         fi
         if [[ "$strBiome" == "Desert" ]];then
           strPrefabTrap="part_TNM_WildernessTrapDesert"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleDesert";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltDesert";fi
         fi
         if [[ "$strBiome" == "Wasteland" ]];then
           strPrefabTrap="part_TNM_WildernessTrapWasteland"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleWasteland";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltWasteland";fi
         fi
         FUNCgetWHL "${astrAllPrefabSize[${strPrefabTrap}]}"
         nTrapW=$nWidth
@@ -908,19 +908,19 @@ function FUNCpatchFileCurrentIndex_TrapAdd_BugouOuNao() { #required input vars: 
         #iYOTrap=0 #TODO is the YOffset used only by RWG to place POIs? so, when the game is running it will ignore YOffset as RWG already calculated using it right?
         if [[ "$strBiome" == "PineForest" ]];then
           strPrefabTrap="part_TNM_WildernessTrapForest"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleForest";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltForest";fi
         fi
         if [[ "$strBiome" == "Snow" ]];then
           strPrefabTrap="part_TNM_WildernessTrapSnow"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleSnow";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltSnow";fi
         fi
         if [[ "$strBiome" == "Desert" ]];then
           strPrefabTrap="part_TNM_WildernessTrapDesert"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleDesert";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltDesert";fi
         fi
         if [[ "$strBiome" == "Wasteland" ]];then
           strPrefabTrap="part_TNM_WildernessTrapWasteland"
-          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapPoleWasteland";fi
+          if((iTotalTrapsInWorld%2==0));then strPrefabTrap="part_TNM_TrapAltWasteland";fi
         fi
         FUNCgetWHL "${astrAllPrefabSize[${strPrefabTrap}]}"
         nTrapW=$nWidth
