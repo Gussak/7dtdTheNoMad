@@ -610,6 +610,14 @@
         <passive_effect name="LootQuantity" operation="perc_add" value="-0.90" help="base_add, set, or perc_add"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKNPClimitLootHired1">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <passive_effect name="LootDropProb" operation="perc_add" value="-1.0" help="base_add, set, or perc_add"/>
+        <passive_effect name="LootQuantity" operation="perc_add" value="-1.0" help="base_add, set, or perc_add"/>
+      </effect_group>
+    </buff>
     <buff name="buffLeaderLimitsHiredNPCsAmount94" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -619,9 +627,9 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffLeaderLimitsHiredNPCsAmount94"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPClimitLoot1" target="selfAOE" range="60" help="a hired or dismissed NPC shall not be an easy source of extra goods.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPClimitLootHired1" target="selfAOE" range="60" help="a hired or dismissed NPC shall not be an easy source of extra goods.">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="!HasBuff" target="other" buff="buffGSKNPClimitLoot1"/>
+          <requirement name="!HasBuff" target="other" buff="buffGSKNPClimitLootHired1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>

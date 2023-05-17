@@ -80,6 +80,7 @@ astrBuffBNList=(
   "buffGSKMutant_ChkAndApplyOnMobs"
   "buffGSKNearDeath"
   "buffGSKNPClimitLoot"
+  "buffGSKNPClimitLootHired"
   "buffGSKPermanentGenericCheck"
   "buffGSKProperSwimming"
   "buffGSKProperSwimmingWork"
