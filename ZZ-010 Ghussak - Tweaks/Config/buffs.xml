@@ -1338,9 +1338,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimmingWork33"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimmingWork33"/>
         <passive_effect name="WalkSpeed" operation="perc_add" value="2.0"/>
-        <!-- HELPGOOD: run seems to not work in water? speed doesnt seem to change
-      <passive_effect name="RunSpeed"     operation="perc_add" value="2.5"/> 
--->
+        <passive_effect name="RunSpeed" operation="perc_add" value="2.5" help="run seems to not work in water? speed doesnt seem to change"/>
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork33"/>
       </effect_group>
     </buff>
@@ -3857,6 +3855,18 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKHazardWDryAirIndicator" hidden="false" remove_on_death="true" description_key="dkbuffGSKHazardWDryAirIndicator" icon="ui_game_symbol_thirst" icon_blink="true" icon_color="255,255,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKNearDeathDryHotLvl"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryAirIndicator">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHazardWDryness28" icon="7dtdGskHazardDesert2" description_key="buffGSKHazardWDrynessDesc" name_key="DryAirHazard">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -3912,6 +3922,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="5"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryAirIndicator">
+          <requirement name="!HasBuff" buff="buffGSKHazardWDryAirIndicator"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
