@@ -629,6 +629,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCincHiredCountEachOtherAndTryDismiss" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="!HasBuff" target="other" buff="buffNPCincHiredCountEachOtherAndTryDismiss"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animal"/>
+          <requirement name="!EntityTagCompare" target="other" tags="melee"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPCnoFallDamage4" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -1384,11 +1386,15 @@
   </append>
   <append xpath="/buffs">
     <buff name="buffGSKRespawnPreventWaterBkp1" hidden="true" remove_on_death="true">
-      <duration value="10"/>
+      <duration value="120"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKRespawnPreventWaterBkp1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKRespawnPreventWaterBkp1"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKRespawnPreventWaterBkp1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnPreventWaterBkp1">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKShowWaterBkp10" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
@@ -1396,8 +1402,10 @@
       <display_value value="fGSKWaterPercBkp"/>
       <display_value_key value="{0:0.00}"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp10">
-          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@fGSKWaterPercBkp"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
         </triggered_effect>
       </effect_group>
     </buff>

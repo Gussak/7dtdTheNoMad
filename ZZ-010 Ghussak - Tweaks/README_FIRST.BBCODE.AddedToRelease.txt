@@ -129,6 +129,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 --------- v1.0aRC1 -----------  
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge, it is worth the try!
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
+- fixed hazmat armor glove mod
 - melee build: if you have high charisma and is using only melee weapons, you can have at most 3 NPCs following you
 - free dog companion per respawn within the configured limit
 - removed newbie coat protection
@@ -158,6 +159,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - some chance to ragdoll player on fallimpact, higher chance if leg is hurt
 - improved rwgImprovePOIs.sh to place tall buildings only on wasteland and to remove towns that are not on the wasteland
 - drinking rain may be dangerous now, unless you use a water filter. you can collect rain also with an empty jar.
+- added traps around POIs (they can be usefull too)
 .  
 --------- v0.9a -----------  
 - initial release.  
