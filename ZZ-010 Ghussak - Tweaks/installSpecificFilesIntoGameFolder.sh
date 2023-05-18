@@ -58,7 +58,9 @@ function FUNCinstall() {
   echo >&2
   CFGFUNCinfo " ===================== WORKING WITH: $lstrFl =================="
   
-  if ! egrep --silent "$strCFGInstallToken" "$lstrFl";then CFGFUNCDevMeErrorExit "token $strCFGInstallToken missing at $lstrFl";fi
+  if ! [[ "$lstrFl" =~ ^.*[.](png)$ ]];then
+    if ! egrep --silent "$strCFGInstallToken" "$lstrFl";then CFGFUNCDevMeErrorExit "token $strCFGInstallToken missing at '$lstrFl'";fi
+  fi
   
   if cmp "$lstrFl" "$lstrFlDest" 2>/dev/null;then
     CFGFUNCinfo "Skipping identical file '$lstrFl' that is already installed!"
