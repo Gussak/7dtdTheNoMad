@@ -360,7 +360,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="You may drink rain, but dangerous w/o a purifier." compare_type="or">
-          <requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="60"/>
           <requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="180"/>
         </triggered_effect>
       </effect_group>
@@ -9247,6 +9247,46 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="SetDancing" enabled="true"/>
         <triggered_effect trigger="onSelfBuffRemove" action="SetDancing" enabled="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGasMaskWork" hidden="true" help="vs miasma Todo: show?">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="@.iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="set" value="@fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="subtract" value="@.iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="multiply" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@.iGSKMiasmaBlock"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskBandana"/>
+          <requirement name="!HasBuff" buff="buffGSKGasMaskPro"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGasMaskPro" hidden="true" help="vs miasma">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="add" value="0.75" help="because the skin is not protected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="add" value="-0.75"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGasMaskBandana" hidden="true" help="vs miasma">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="add" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="add" value="-0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>
