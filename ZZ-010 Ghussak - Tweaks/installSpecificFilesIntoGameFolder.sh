@@ -155,6 +155,8 @@ FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/prefa
   "$strCFGGeneratedWorldTNMFolder"
 FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/spawnpoints.xml" \
   "$strCFGGeneratedWorldTNMFolder"
+FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/radiation.png" \
+  "$strCFGGeneratedWorldTNMFolder"
 #FUNCmanualInstallInstructions "./GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/readme.ManualInstallRequired.txt"
 
 echo >&2

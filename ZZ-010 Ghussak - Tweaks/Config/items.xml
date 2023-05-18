@@ -5531,9 +5531,14 @@
  ++++++++++++++++++++++++++++++++++++++++++++ KEEP LAST ++++++++++++++++++++++++++++++++++++++++++++++++++ 
 -->
   <!-- HELPGOOD: CODEGEN:HELPER: clear;egrep '<item name="(drug|med|food)[^" ]*"' ../* -iRIwho -\-include="items.xml" 2>/dev/null |sort -u |egrep -v "Schem|Desc|Admin" |sed -r 's#<item name=(.*)#@name=\1 or#' |tr '"' "'"    -->
-  <append xpath="/items/item[       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKAntiRadiationSlow'    or       @name='drugGSKAntiRadiationStrong'  or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKsnakePoisonAntidote'  or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSteroids'          or       @name='drugSugarButts'        or       @name='medicalBloodBagEmpty'     ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+  <append xpath="/items/item[       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKsnakePoisonAntidote'  or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSteroids'          or       @name='drugSugarButts'        or       @name='medicalBloodBagEmpty'     ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
     <effect_group name="ADD chem use hp block" tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.01,0.02)"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[       @name='drugGSKAntiRadiationSlow'    or       @name='drugGSKAntiRadiationStrong'       ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+    <effect_group name="ADD chem use hp block" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.10,0.20)"/>
     </effect_group>
   </append>
   <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drugAntibiotics'         or       @name='drugHealthBar'           or       @name='drugHerbalAntibiotics'   or       @name='drugPainkillers'         or       @name='drugVitamins'            or       @name='medicalAloeCream'        or       @name='medicalBandage'          or       @name='medicalBloodBag'         or       @name='medicalFirstAidBandage'  or       @name='medicalPlasterCast'      or       @name='medicalSplint'           or       starts-with(@name,'food')     ]" help="rationale: anything that is used to actively heal or feed">
@@ -5550,12 +5555,59 @@
       </triggered_effect>
     </effect_group>
   </append>
+  <!-- HELPGOOD: you can carry many drinkJarEmpty around, but to get water is just a few drinkJarEmptyToGetWater because the engine fills all the bottles with a single water block -->
+  <remove xpath="/items/item[@name='drinkJarEmpty']/property[@class='Action1']"/>
+  <append xpath="/items/item[@name='drinkJarEmpty']">
+    <property class="Action0">
+      <property name="Class" value="OpenBundle"/>
+      <property name="Delay" value="0"/>
+      <property name="Use_time" value="0"/>
+      <property name="Create_item" value="drinkJarEmptyToGetWater"/>
+      <property name="Create_item_count" value="1"/>
+    </property>
+    <property class="Action1">
+      <property name="Class" value="OpenBundle"/>
+      <property name="Delay" value="0"/>
+      <property name="Use_time" value="0"/>
+      <property name="Create_item" value="drinkJarEmptyToGetWater"/>
+      <property name="Create_item_count" value="1"/>
+    </property>
+  </append>
+  <append xpath="/items">
+    <item name="drinkJarEmptyToGetWater">
+      <property name="HoldType" value="3"/>
+      <property name="CustomIcon" value="drinkJarEmpty"/>
+      <property name="CustomIconTint" value="128,128,168"/>
+      <property name="Meshfile" value="#Other/Items?Food/emptyJarPrefab.prefab"/>
+      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mglass"/>
+      <property name="Stacknumber" value="6"/>
+      <property name="Weight" value="10"/>
+      <property name="EconomicValue" value="6"/>
+      <property name="CraftingIngredientTime" value="9"/>
+      <property class="Action1">
+        <property name="Class" value="ExchangeItem"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Change_item_to" value="drinkJarRiverWater"/>
+        <property name="Do_block_action" value="deplete1"/>
+        <property name="Focused_blockname_1" value="water"/>
+        <property name="Focused_blockname_2" value="waterMoving"/>
+        <property name="Focused_blockname_3" value="waterStaticBucket"/>
+        <property name="Focused_blockname_4" value="waterMovingBucket"/>
+        <property name="Focused_blockname_5" value="terrWaterPOI"/>
+        <property name="Sound_start" value="bucketfill_water"/>
+      </property>
+      <property name="Group" value="Resources"/>
+    </item>
+  </append>
   <!--  HELPGOOD: to avoid spending a huge lot of time looking at the inventory and managing resources on nearby camps... and spend more time exploring and fighting. this is the limit after reloading the game -->
   <set xpath="//property[@name='Stacknumber' and not(@value='1')]/@value">65535</set>
   <!--  HELPGOOD: items with stack greater than 1 wont accept mods-->
   <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
+  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
+  <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->
   <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: other things that had no Stacknumber but should -->
