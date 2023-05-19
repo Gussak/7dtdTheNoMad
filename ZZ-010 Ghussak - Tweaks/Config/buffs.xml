@@ -3770,6 +3770,9 @@
     <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/>
   </append>
   <remove xpath="/buffs/buff[@name='buffRadiation03']/effect_group/triggered_effect[@trigger='onSelfBuffStart' and @action='ModifyScreenEffect' and @effect_name='Radiation']"/>
+  <set xpath="/buffs/buff[@name='buffRadiation03']/@icon">7dtdCosmicRayBeam</set>
+  <set xpath="/buffs/buff[@name='buffRadiation03']/@icon_color">220,128,128</set>
+  <set xpath="/buffs/buff[@name='buffRadiation03']/effect_group/passive_effect[@name='HealthChangeOT' and @operation='base_subtract' and @duration='0,10']/@value">0.1,1</set>
   <append xpath="/buffs">
     <buff name="buffGSKRadiationScrEffOff" hidden="true" help="this will make screen radiation bearable making everything visible for a short time. buffRadiation01 has update_rate 3s. The effects there have 2s fade in. this buff must work just after that (after 2s) and complement it (1s) before the next loop there.">
       <stack_type value="replace"/>
@@ -8698,7 +8701,12 @@
         <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike1"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicRayStrike1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiation03"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKCosmicRayStrikeChk2:StrukByACosmicRayBeam"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="1"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKCosmicRadMessDNA"/>
       </effect_group>
     </buff>
     <buff name="buffGSKCosmicRayStrike1" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
@@ -8736,6 +8744,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="add" value="1" help="this prevents energy usage on tele finalize etc"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKExternalForceTeleport"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrikeChk2:RandomDirTeleport"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.01"/>
       </effect_group>
     </buff>
     <buff name="buffGSKPermanentGenericCheck9" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false">
@@ -9049,6 +9061,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKElctrnHero"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="only way to fix the DNA damage is resurrection"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
@@ -9520,8 +9533,6 @@
       </effect_group>
     </buff>
   </append>
-  <set xpath="/buffs/buff[@name='buffRadiation03']/@icon">7dtdCosmicRayBeam</set>
-  <set xpath="/buffs/buff[@name='buffRadiation03']/@icon_color">128,128,128</set>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" tags="animalSpider01"/>
