@@ -95,7 +95,37 @@ astrDirList=(
 
 strMayhemRnd='
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="'"${iCVarIndexRange}"'"/>
-  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="multiply" value="randomInt(1,'"${nOptsMax}"')" help="distances"/>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="set" value="randomInt(1,'"${nOptsMax}"')" help="distances">
+    <requirement name="CVarCompare" cvar=".iGSKTeleRndDistIndexMax" operation="Equals" value="0" help="no limit, and if .iGSKTeleRndDistIndexMax==1 it will just not multiply"/>
+  </triggered_effect>'
+for((iOptCurrent=2;iOptCurrent<=nOptsMax;iOptCurrent++));do
+  strCmdMaxMode="Equals";if((iOptCurrent==nOptsMax));then strCmdMaxMode="GTE";fi
+  strMayhemRnd+='
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="set" value="randomInt(1,'"${iOptCurrent}"')" help="distances">
+    <requirement name="CVarCompare" cvar=".iGSKTeleRndDistIndexMax" operation="'"${strCmdMaxMode}"'" value="'"${iOptCurrent}"'"/>
+  </triggered_effect>'
+done
+strMayhemRnd+='
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="set" value="@iGSKTeleRndDistIndexMax" help="a negative value is meant to force that specific abs positive distance">
+    <requirement name="CVarCompare" cvar=".iGSKTeleRndDistIndexMax" operation="LT" value="0"/>
+  </triggered_effect>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="multiply" value="-1">
+    <requirement name="CVarCompare" cvar=".iGSKTeleRndDistIndexMax" operation="LT" value="0"/>
+  </triggered_effect>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleRndDistIndexMax" operation="set" value="0" help="consume/reset/default for next call if it does not cfg it"/>
+  
+  <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleRndDist" compare_type="or" help="log invalid to help fix the logic">
+    <requirement name="CVarCompare" cvar=".iGSKElctrnTeleRndDist" operation="LT" value="1"/>
+    <requirement name="CVarCompare" cvar=".iGSKElctrnTeleRndDist" operation="GT" value="'"${nOptsMax}"'"/>
+  </triggered_effect>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="set" value="1">
+    <requirement name="CVarCompare" cvar=".iGSKElctrnTeleRndDist" operation="LT" value="1"/>
+  </triggered_effect>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleRndDist" operation="set" value="'"${nOptsMax}"'">
+    <requirement name="CVarCompare" cvar=".iGSKElctrnTeleRndDist" operation="GT" value="'"${nOptsMax}"'"/>
+  </triggered_effect>
+  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="multiply" value="@.iGSKElctrnTeleRndDist" help="distances"/>
+  
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="set" value="randomInt(0,2)" help="0down 1noElevation 2up"/>
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTDUpMidDown" operation="multiply" value="10" help="1-9down 11-19noElevantion 21-29up"/>
   <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="add" value="@.iGSKTTDUpMidDown"/>

@@ -59,6 +59,7 @@ astrBuffBNList=(
   "buffGSKCalcPercRoundTT"
   "buffGSKCalcPercRoundWL"
   "buffGSKChemUseSideEffects"
+  "buffGSKCosmicRayStrikeChk"
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
   "buffGSKHazardousWBloodLoss"
