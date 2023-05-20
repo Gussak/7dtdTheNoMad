@@ -162,6 +162,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - drinking rain may be dangerous now, unless you use a water filter. you can collect rain also with an empty jar.
 - added traps around POIs (they can be usefull too)
 - new hazard: cosmic rays/radiation piercing thru ozone layer
+- sneaking with a NPC follower at night is possible now (the workaround may look weird tho), craft GSKCFGNPCproperSneakingWorkaround to enable it
 .  
 --------- v0.9a -----------  
 - initial release.  

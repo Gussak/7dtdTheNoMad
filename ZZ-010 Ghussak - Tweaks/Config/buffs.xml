@@ -616,6 +616,34 @@
         <passive_effect name="LootQuantity" operation="perc_add" value="-0.90" help="base_add, set, or perc_add"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
+      <stack_type value="replace"/>
+      <duration value="30"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.9"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.9"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1000"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKNPCproperSneaking1" help="intended to be able to explore the wilderness at night with a follower">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group help="WORKAROUND: prevent NPCs luring mobs while sneaking (initial idea, but did not work)">
+        <requirement name="CVarCompare" cvar="iGSKLeaderPseudoDistance" operation="LTE" value="10"/>
+        <requirement name="CVarCompare" cvar="iGSKLeaderSheltered" operation="Equals" value="0"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="FAILS: still lures zombies TODO: how to make NPCs invisible to zombies instead?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="15" force="50000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now. Obs.: There seems to have some max limit for the force also, 5000?">
+          <requirement name="CVarCompare" cvar="ragdoll" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="2" target_tags="zombie,animal"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKNPClimitLootHired1">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -632,7 +660,31 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffLeaderLimitsHiredNPCsAmount94"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffLeaderLimitsHiredNPCsAmount94"/>
       </effect_group>
+      <effect_group help="pseudo distances, the farer should be on top to be overwritten by nearest ones">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="60" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="10" target="selfAOE" range="10" help="used by buffGSKNPCproperSneaking1">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="5" target="selfAOE" range="5" help="used by buffGSKNPCproperSneaking1">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderSheltered" operation="set" value="1" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking1">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderSheltered" operation="set" value="0" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking1">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneaking1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPClimitLootHired1" target="selfAOE" range="60" help="a hired or dismissed NPC shall not be an easy source of extra goods.">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPClimitLootHired1"/>
@@ -9533,11 +9585,19 @@
       </effect_group>
     </buff>
   </append>
-  <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
+  <append xpath="/buffs/buff[@name='buffCrouching']">
+    <effect_group help="prevent NPCs luring mobs while sneaking">
+      <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+      <requirement name="EntityTagCompare" tags="npc"/>
+      <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="1.0 would be enough? THIS FAILS..."/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="10000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now TODO: seems overpowered, allow only if player in less than 5m"/>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change. TODO: add a buff that just slow spiders to 0.01 speed instead -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
-    <requirement name="!EntityTagCompare" tags="animalSpider01"/>
-    <requirement name="!EntityTagCompare" tags="animalSpider02"/>
-    <requirement name="!EntityTagCompare" tags="animalSpider03"/>
+    <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
+    <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
+    <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
   </append>
   <!-- HELPGOOD: alternative god mode -->
   <set xpath="//requirement[(@name='HasBuff' or @name='!HasBuff' or @name='NotHasBuff') and @buff='god']/@buff">buffGSKGodMode</set>
