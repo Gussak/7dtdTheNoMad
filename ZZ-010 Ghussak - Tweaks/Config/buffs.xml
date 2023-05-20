@@ -618,7 +618,7 @@
     </buff>
     <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
       <stack_type value="replace"/>
-      <duration value="30"/>
+      <duration value="60" help="must be more than buffGSKNPCproperSneaking1 ragdoll duration"/>
       <effect_group>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.95"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.95"/>
@@ -638,7 +638,7 @@
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="FAILS: still lures zombies TODO: how to make NPCs invisible to zombies instead?"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="25" force="50000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now. Obs.: There seems to have some max limit for the force also, 5000?">
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="50" force="50000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now. Obs.: There seems to have some max limit for the force also, 5000?">
           <requirement name="CVarCompare" cvar="ragdoll" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="2" target_tags="zombie,animal"/>
@@ -8748,10 +8748,23 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
-      <effect_group help="CosmicRays">
+      <effect_group help="chk allowed">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCosmicStrikeAllowed" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="chk allowed">
         <requirement name="!HasBuff" buff="god"/>
         <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike1"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCosmicStrikeAllowed" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="chk allowed">
+        <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCosmicStrikeAllowed" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="CosmicRays">
+        <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeAllowed" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicRayStrike1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiation03"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKCosmicRayStrikeChk2:StrukByACosmicRayBeam"/>
@@ -8766,12 +8779,13 @@
       <display_value value="iGSKCosmicStrikeCooldown"/>
       <display_value_key value="{0:0}s"/>
       <duration value="0"/>
-      <update_rate value="1"/>
+      <update_rate value="2" help="this also controls the dig down mode speed. sync with iGSKCosmicStrikeCooldown subtraction below"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicStrikeCooldown" operation="set" value="300"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicStrikeCooldown" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicRayStrike1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicStrikeCooldown" operation="add" value="-2" help="sync with update_rate time!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicRayStrike1" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicStrikeCooldown" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
