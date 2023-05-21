@@ -51,6 +51,7 @@ astrBuffBNList=(
   "buffGSKAllHazardsCheck"
   "buffGSKBkpWaterVal"
   "buffGSKBloodmoonZombiesPowerChk"
+  "buffGSKBloodMoonStuff"
   "buffGSKCalcPercRoundHL"
   "buffGSKCalcPercRoundNV"
   "buffGSKCalcPercRoundTA"

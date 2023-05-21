@@ -131,6 +131,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - fixed hazmat armor glove mod
 - scrap armor makes much more noise, so iron armor becomes valuable
+- melee build: parry chance
 - melee build: if you have high charisma and is using only melee weapons, you can have at most 3 NPCs following you
 - free dog companion per respawn within the configured limit
 - removed newbie coat protection

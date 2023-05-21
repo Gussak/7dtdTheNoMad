@@ -634,7 +634,7 @@
       <duration value="0"/>
       <effect_group help="WORKAROUND: prevent NPCs luring mobs while sneaking (initial idea, but did not work)">
         <requirement name="CVarCompare" cvar="iGSKLeaderPseudoDistance" operation="LTE" value="10"/>
-        <requirement name="CVarCompare" cvar="iGSKLeaderSheltered" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKLeaderSheltered" operation="Equals" value="0" help="use IsIndoors?"/>
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="FAILS: still lures zombies TODO: how to make NPCs invisible to zombies instead?"/>
@@ -4576,6 +4576,9 @@
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You take a good bath."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.025">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="1.0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKTakeCatBath">
@@ -4600,6 +4603,9 @@
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You take a slow and relaxing bath like a cat :3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.01">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="1.0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKFenceSpikes" icon="ui_game_symbol_critical" icon_color="255,0,0" icon_blink="true">
@@ -5216,38 +5222,25 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
-          <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="93617" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="0"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndexMax" operation="set" value="6" helpgencode="DoNotModify:run:createTeleportRanges.sh" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportBaseDist" operation="set" value="7" helpgencode="DoNotModify:run:createTeleportRanges.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKAllowMiasmaIndicator" operation="set" value="2" help="1 off, 2 on">
-          <requirement name="CVarCompare" cvar=".iGSKAllowMiasmaIndicator" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="0"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyDistIndexMax" operation="set" value="6" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleportBaseToSkyDist" operation="set" value="2000"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnLAST" operation="set" value="50161" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMin" operation="set" value="0.15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMinx100" operation="set" value="15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMax" operation="set" value="0.42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMaxx100" operation="set" value="42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTUnderFreeDelay" operation="set" value="11"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSlowFallConsumeEnergy" operation="set" value="15"/>
       </effect_group>
-      <effect_group help="all below are teleport sections up to integer limit 65535">
+      <effect_group help="TELEPORT: all below are teleport sections up to integer limit 65535">
         <!-- HELPGOOD: all nearby directions are below .iGSKElctrnTeleSpecialBEGIN value -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionBEGIN" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleNearDirectionBEGIN"/>
@@ -5303,16 +5296,30 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnEND"/>
         <!-- HELPGOOD: LIMIT is 65535? -->
       </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1"/>
+      <effect_group help="CONDITIONAL CONFIGS: where value 0 means invalid and the user may use a cfg tool in-game.  or other reasons">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1" help="after used, it will become 2 and be disabled forever">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="9" help="can be configured in-game using special items">
-          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="must set this on 1st spawn only"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s">
-          <requirement name="CVarCompare" cvar="fGSKPseudoSlowFallTimeoutLim" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSlowFallConsumeEnergy" operation="set" value="15">
-          <requirement name="CVarCompare" cvar="iGSKSlowFallConsumeEnergy" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKAllowMiasmaIndicator" operation="set" value="2" help="1 off, 2 on">
+          <requirement name="CVarCompare" cvar=".iGSKAllowMiasmaIndicator" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="2" help="1 off, 2 on">
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
+          <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -8656,6 +8663,9 @@
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@fGSKCleanTheDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.20">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="2.0" help="this kind of bath will last more"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBathMsgCooldownTime" operation="set" value="120">
           <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
@@ -8816,10 +8826,74 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.01"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKBloodMoonStuff1">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10" help="count 6 is 1min"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(20,40)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="-15" help="15*10=150=2.5mins=1gameHourIn24perDayMode"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(0,10)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="GTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(0,3)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,7)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="GTE" value="7"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="GTE" value="12"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombNormal">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff1">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff1">
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKPermanentGenericCheck9" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="bloodmoon stuff">
+        <requirement name="IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff1">
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff1"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="ragdoll: by foe">
         <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
@@ -9359,7 +9433,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperSomeSchematicBundles" operation="add" value="1"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="2" help="2 disables it on the above checks"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantRandomChaos" icon="7dtdMutantRabbit" icon_blink="true" description_key="buffGSKMutantRandomChaosDesc" remove_on_death="true">
@@ -9438,15 +9512,21 @@
         <triggered_effect trigger="onSelfBuffRemove" action="SetDancing" enabled="false"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGasMaskWork" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma Todo: show?" description_key="dkbuffGSKGasMaskWork">
+    <buff name="buffGSKGasMaskWork" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="@.iGSKMiasmaPrevious"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="set" value="@fGSKMiasmaDirty"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="subtract" value="@.iGSKMiasmaPrevious"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="multiply" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="subtract" value="@.iGSKMiasmaPrevious" help="diff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="set" value="@iGSKMiasmaBlockPerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="add" value="@iGSKMiasmaBlockPercExtra"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercTmp" operation="set" value="0.99" help="as this will just change the reduction amount, but not 100%">
+          <requirement name="CVarCompare" cvar=".iGSKMiasmaBlockPercTmp" operation="GT" value="0.99"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlock" operation="multiply" value="@.iGSKMiasmaBlockPercTmp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@.iGSKMiasmaBlock"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="-0.001"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty"/>
@@ -9460,8 +9540,8 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="set" value="0.75" help="because the skin is not protected"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.75" help="because the skin is not protected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
           <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
         </triggered_effect>
@@ -9471,11 +9551,32 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="set" value="0.25"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKMiasmaBlockPerc" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
           <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
         </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMeleeParry" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryPrevHP" operation="add" value="1">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@.iGSKMeleeParryPrevHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryPrevHP" operation="add" value="-1">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.iGSKMeleeParryPrevHP"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMeleeParryOnce" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMeleeParryOnce"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMeleeParryPrevHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="set" value="@.iGSKMeleeParryPrevHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKMeleeParry:RetoredHealthAsDamageWasParried"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="set" value="0" help="consume"/>
       </effect_group>
     </buff>
   </append>
