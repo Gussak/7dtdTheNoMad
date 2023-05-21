@@ -164,6 +164,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - added traps around POIs (they can be usefull too)
 - new hazard: cosmic rays/radiation piercing thru ozone layer
 - sneaking with a NPC follower at night is possible now (the workaround may look weird tho), craft GSKCFGNPCproperSneakingWorkaround to enable it
+- extra bloodmoon spawns (optional)
 .  
 --------- v0.9a -----------  
 - initial release.  
