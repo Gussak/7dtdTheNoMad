@@ -127,7 +127,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 ################## CHANGES ##############  
 --------- v1.0aRC1 -----------  
-- it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge, it is worth the try!
+- it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge and overall gameplay, it is worth the try! (but in case you are just trying to update, !NotRecommended!, you will see several missing buff classes, it just means that they were updated and I forced a name change on them to keep your game in sync)
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - fixed hazmat armor glove mod
 - scrap armor makes much more noise, so iron armor becomes valuable
