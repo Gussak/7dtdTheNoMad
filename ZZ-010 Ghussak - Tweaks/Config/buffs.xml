@@ -636,6 +636,8 @@
         <requirement name="CVarCompare" cvar="iGSKLeaderPseudoDistance" operation="LTE" value="10"/>
         <requirement name="CVarCompare" cvar="iGSKLeaderSheltered" operation="Equals" value="0" help="use IsIndoors?"/>
         <requirement name="IsNight"/>
+        <requirement name="!IsIndoors"/>
+        <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="FAILS: still lures zombies TODO: how to make NPCs invisible to zombies instead?"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="50" force="50000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now. Obs.: There seems to have some max limit for the force also, 5000?">
@@ -680,8 +682,13 @@
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1" help="off"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="HasBuff" target="other" buff="buffGSKNPCproperSneaking1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneaking1" target="selfAOE" range="60">
-          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="2" help="on"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking1"/>
         </triggered_effect>
@@ -4943,7 +4950,7 @@
       <duration value="0"/>
       <update_rate value="2.5"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantTeleport" help="this wont work right?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantTeleportSelf" help="this wont work right?"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantFlashSpeed" help="workaround to not being able to teleport mobs, no explosions tho :( TODO: not working anyway.."/>
       </effect_group>
     </buff>
@@ -4980,7 +4987,7 @@
         <passive_effect name="RunSpeed" operation="perc_add" value="20"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKMutantTeleport" help="TODO: events dont work with mobs?">
+    <buff name="buffGSKMutantTeleportSelf" help="TODO: events dont work with mobs?">
       <stack_type value="ignore"/>
       <duration value="1.0"/>
       <update_rate value="0.05"/>
@@ -4989,7 +4996,7 @@
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleport:eventGSKMutantTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleportSelf:eventGSKMutantTeleport"/>
       </effect_group>
       <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
         <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork43"/>
@@ -5005,7 +5012,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantTeleportSelf"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantRabbits">
@@ -5320,6 +5327,12 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-15">
+          <requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2" help="2on 1off">
+          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -8816,6 +8829,7 @@
       <effect_group help="random dir telep">
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeMode" operation="LT" value="5"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="0" help="random dir is rare to happen, so will just be ignored on normal/nonDigging mode to not mess the player intent"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleRndDistIndexMax" operation="set" value="1" help="this limits the random distance of buffGSKElctrnTeleChoseRandomDirection"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="add" value="1" help="this prevents energy usage on tele finalize etc"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKExternalForceTeleport"/>
@@ -8830,34 +8844,34 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="10" help="count 6 is 1min"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="0"/>
+      <effect_group help="hold spawnings control">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(3,40)" help="min is the smallest counter limit value"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(20,40)">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="-15" help="15*10=150=2.5mins=1gameHourIn24perDayMode"/>
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="update counters based on limits">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(0,10)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="GTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(0,10)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(9,11)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(0,3)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="GTE" value="3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(0,3)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(2,4)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,7)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="GTE" value="7"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,7)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(6,8)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="GTE" value="12"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(11,13)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>

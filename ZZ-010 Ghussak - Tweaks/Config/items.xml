@@ -2478,26 +2478,36 @@
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGNPCproperSneakingWorkaround"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGAllowExtraBloodMoonSpawns">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="DescriptionKey" value="dkGSKAllowExtraBloodMoonSpawns"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </item>
     <item name="GSKCosmicRayBeamDigger">
-      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="CustomIcon" value="7dtdCosmicRayBeam"/>
       <property name="DescriptionKey" value="dkGSKCosmicRayBeamDigger"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCcosmicRayDigger" operation="set" value="1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCcosmicRayDigger" operation="set" value="0"/>
-      </effect_group>
-    </item>
-    <item name="GSKAllowExtraBloodMoonSpawns">
-      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
-      <property name="CustomIcon" value="7dtdShockTip"/>
-      <property name="DescriptionKey" value="dkGSKAllowExtraBloodMoonSpawns"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="0"/>
       </effect_group>
     </item>
     <item name="GSKCFGRespawnFreeBundlesLimit">
