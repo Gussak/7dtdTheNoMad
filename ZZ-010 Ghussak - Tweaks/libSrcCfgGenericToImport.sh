@@ -459,6 +459,13 @@ function CFGFUNCarrayContains() { # <lstrValueToChk> <array values...>
   return 1
 };export -f CFGFUNCarrayContains
 
+function CFGFUNCgetNewestSavegamePath() {
+  local lstrPath="`ls -1tr "${strCFGSavesPathIgnorable}/"*"/Player/Steam_"*".ttp" |tail -n 1`"
+  lstrPath="${lstrPath#${strCFGSavesPathIgnorable}/}"
+  lstrPath="`echo "$lstrPath" |cut -d/ -f1`"
+  echo "${strCFGSavesPathIgnorable}/$lstrPath"
+}
+
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
 export strScriptName="`basename "$0"`" #MUST OVERWRITE (HERE) FOR EVERY SCRIPT CALLED FROM ANOTHER. but must also be exported to work on each script functions called from `find -e xec bash`
@@ -534,7 +541,8 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   trap 'CFGFUNCerrorChk' EXIT
   
   : ${strCFGSavesPathIgnorable:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
-  : ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #help
+  #: ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #he lp
+  : ${strCFGNewestSavePathIgnorable:="`CFGFUNCgetNewestSavegamePath`"}&&: #help
   : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}/ConfigsDump/"}&&: #help
   export strCFGSavesPathIgnorable
   export strCFGNewestSavePathIgnorable

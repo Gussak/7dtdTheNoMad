@@ -36,7 +36,9 @@ source ./libSrcCfgGenericToImport.sh
 #: ${strCFGSavesPath:="$WINEPREFIX/drive_c/users/$USER/Application Data/7DaysToDie/Saves/East Nikazohi Territory/"} #help
 #: ${strCFGNewestSavePath:="${strCFGSavesPath}/`ls -1tr "$strCFGSavesPath" |tail -n 1`"} #help
 declare -p strCFGNewestSavePathConfigsDumpIgnorable
-IFS=$'\n' read -d '' -r -a aiIdList < <(egrep 'id="[0-9]*"' "${strCFGNewestSavePathConfigsDumpIgnorable}/loot.xml" -o |egrep "[0-9]*" -o|sort -n)&&:
+strFlChk="${strCFGNewestSavePathConfigsDumpIgnorable}/loot.xml"
+declare -p strFlChk
+IFS=$'\n' read -d '' -r -a aiIdList < <(egrep 'id="[0-9]*"' "$strFlChk" -o |egrep "[0-9]*" -o|sort -n)&&:
 declare -p aiIdList
 
 iIdMax=1023
@@ -109,7 +111,7 @@ echo
 
 if((iDupCount>0));then
   echo "DUPS: ${astrDups[@]}"
-  echo "ERROR: duplicated loot IDs above clashed, fix it!!!" >&2
+  echo "ERROR: duplicated loot IDs above clashed in the file '$strFlChk', fix it!!!" >&2
   exit 1
 fi
 
