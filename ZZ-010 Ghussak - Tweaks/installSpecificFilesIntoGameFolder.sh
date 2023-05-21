@@ -127,7 +127,8 @@ if CFGFUNCprompt -q "This is an automatic installer for all files and folders th
 fi
 
 CFGFUNCprompt "Close the game now if it is running!"
-while pgrep -fa "C:.*7DaysToDie[.]exe";do
+#while pgrep -fa "C:.*7DaysToDie[.]exe";do
+while ps -o comm -A |egrep "^7DaysToDie[.]exe$";do
   CFGFUNCprompt "Close the game now!"
   if CFGFUNCprompt -q "Tho.. if you know what you are doing, you can continue this script anyway. Continue now?";then
     break
