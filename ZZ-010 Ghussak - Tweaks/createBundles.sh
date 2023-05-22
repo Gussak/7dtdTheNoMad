@@ -40,7 +40,7 @@ strCraftBundlePrefixID="GSK${strModNameForIDs}CreateRespawnBundle"
 strPartToken="_TOKEN_NEWPART_MARKER_"
 strSchematics="Schematics"
 strSCHEMATICS_BEGIN_TOKEN="${strPartToken}:${strSchematics}"
-strExpLossInfo="CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0.00)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n RealTimeHoursRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0.0)}\nOpening free bundles that increase exp loss beyond the maximum will only increase the remaining time."
+strExpLossInfo="CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n RealTimeHoursRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0.0)}\nOpening free bundles that increase exp loss beyond the maximum will only increase the remaining time."
 astrDKAndDescList=("dkGSKFreeBundleExpLossInfo_NOTE,\"${strExpLossInfo}\"")
 astrBundlesItemsLeastLastOne=()
 astrBundlesSchematics=()
@@ -741,6 +741,7 @@ astr=(
   drugHerbalAntibioticsSchematic 1
   foodBoiledMeatBundleSchematic 1
   foodBoiledMeatSchematic 1
+  modArmorWaterPurifierSchematic 1
 );FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
 
 astr=(
@@ -782,6 +783,18 @@ astr=(
   resourceRockSmall    15
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}"
+
+astr=(
+  NOTE_LostTribe 1
+  qt_taylor 1
+  qt_nickole 1
+  qt_stephan 1
+  qt_jennifer 1
+  qt_claude 1
+  qt_sarah 1
+  qt_raphael 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles --color "166,148,128" "Maps" "bundleBooks" "My tribe..." "${astr[@]}"
 
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
