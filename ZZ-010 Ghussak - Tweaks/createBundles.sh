@@ -86,8 +86,8 @@ function FUNCprepareCraftBundle() {
   local lbLightColor=false
   local lbSchematic=false
   while [[ "${1:0:2}" == "--" ]];do
-    if [[ "$1" == "--lightcolor" ]];then lbLightColor=true;shift;fi
-    if [[ "$1" == "--schematic" ]];then lbSchematic=true;shift;fi
+    if [[ "$1" == --lightcolor ]];then lbLightColor=true;shift;fi
+    if [[ "$1" == --schematic ]];then lbSchematic=true;shift;fi
   done
   local lbIgnTopList="$1";shift
   local lstrBundleID="$1";shift
@@ -95,6 +95,7 @@ function FUNCprepareCraftBundle() {
   local lstrIcon="$1";shift
   local lstrType="$1";shift
   local liExpDebt="$1";shift
+  local lbOpenOnceOnly="$1";shift
   
   local liR=90 liG=90 liB=90
   if $lbLightColor;then ((liR+=20,liG+=20,liB+=20))&&:;fi
@@ -124,14 +125,14 @@ function FUNCprepareCraftBundle() {
   strXmlCraftBundleCreateRecipesXml+='
     <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"></recipe>'
   # not using onSelfDied anymore, unnecessary
-  if ! $lbSchematic;then
-    strXmlCraftBundleCreateBuffsXml+='
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
-  else
+  if $lbSchematic || $lbOpenOnceOnly;then
     strXmlCraftBundleCreateBuffsXml+='
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1" />
         </triggered_effect>'
+  else
+    strXmlCraftBundleCreateBuffsXml+='
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="1"/>'
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
     #strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has experience penalty time (inside parenthesis). Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
@@ -357,6 +358,7 @@ function FUNCprepareBundlePart() {
   local lstrBundleDesc="$1";shift
   local lbCheckMissingItemIds="$1";shift
   local lbExpLoss="$1";shift
+  local lbOpenOnceOnly="$1";shift
   local lastrItemAndCountList=("$@")
   
   local lastrOpt=()
@@ -541,7 +543,7 @@ function FUNCprepareBundlePart() {
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
-    FUNCprepareCraftBundle ${lastrOpt[*]} "$lbIgnTopList" "${strFUNCprepareBundlePart_BundleID_OUT}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}" "${liExpDebt}"
+    FUNCprepareCraftBundle ${lastrOpt[*]} "$lbIgnTopList" "${strFUNCprepareBundlePart_BundleID_OUT}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}" "${liExpDebt}" "${lbOpenOnceOnly}"
   fi
 }
 
@@ -552,6 +554,7 @@ function FUNCprepareBundles() {
   local lbIgnTopList=false
   local lbCheckMissingItemIds=true
   local lbExpLoss=true
+  local lbOpenOnceOnly=false
   while [[ "${1:0:2}" == "--" ]];do
     if [[ "$1" == --ignoreTopList ]];then shift;lbIgnTopList=true;fi
     if [[ "$1" == --choseRandom ]];then shift;lbRnd=true;fi
@@ -559,6 +562,7 @@ function FUNCprepareBundles() {
     if [[ "$1" == --color ]];then shift;lstrColor="$1";shift;fi #help <lstrColor>
     if [[ "$1" == --noCheckMissingItemIds ]];then shift;lbCheckMissingItemIds=false;fi #help <lstrColor>
     if [[ "$1" == --noExpLoss ]];then shift;lbExpLoss=false;fi
+    if [[ "$1" == --openOnceOnly ]];then lbOpenOnceOnly=true;shift;fi
   done
   
   local lstrBundleName="$1";shift
@@ -566,7 +570,7 @@ function FUNCprepareBundles() {
   local lstrBundleDesc="$1";shift
   local lastrItemAndCountList=("$@")
   
-  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds" "$lbExpLoss")
+  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds" "$lbExpLoss" "$lbOpenOnceOnly")
   
   declare -p lastrItemAndCountList |tr '[' '\n'
   
@@ -794,7 +798,7 @@ astr=(
   qt_sarah 1
   qt_raphael 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --color "166,148,128" "Maps" "bundleBooks" "My tribe..." "${astr[@]}"
+);FUNCprepareBundles --openOnceOnly --color "166,148,128" "Maps" "bundleBooks" "My tribe is gone, what will I do now.." "${astr[@]}"
 
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list

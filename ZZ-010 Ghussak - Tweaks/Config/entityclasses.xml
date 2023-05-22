@@ -92,11 +92,15 @@
   </append>
   <remove xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider')]/property[@name='LootDropProb']"/>
   <remove xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider')]/property[@name='LootDropEntityClass']"/>
-  <set xpath="/entity_classes/entity_class[contains(@name, 'zombie')]/property[contains(@name, 'LootDropProb')]/@value">0.05</set>
-  <set xpath="/entity_classes/entity_class[contains(@name, 'npc')]/property[contains(@name, 'LootDropProb')]/@value">0.33</set>
-  <set xpath="/entity_classes/entity_class[contains(@name, 'Raider') or starts-with(@name,'npcHarley')]/property[contains(@name, 'LootDropProb')]/@value">1.00</set>
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcHarley')]/property[contains(@name, 'LootDropProb')]/@value">1.00</set>
-  <!-- HELPGOOD: only npcHarley is set as bandit, must be set after 'npc' -->
+  <append xpath="/entity_classes/entity_class[contains(@name, 'zombie')]" help="this prevents a huge lot of drop bags, to compensate, upped the item count on loot.xml, the idea is to loot less often and each be more rewarding">
+    <property name="LootDropProb" value="0.05"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]" help="was 0.33. but a friendly npc shall not drop stuff so easily, only by luck. This is also good for a hired NPC following you or patrolling or waiting.">
+    <property name="LootDropProb" value="0.05"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
+    <property name="LootDropProb" value="1.00"/>
+  </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]">
     <property name="LootDropProb" value="0.50"/>
   </append>
@@ -201,7 +205,16 @@
     <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncher,ammoNPCRocketHE"/>
   </append>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'zombie')]/property[@name='TimeStayAfterDeath']/@value">6</set>
-  <!-- HELPGOOD: A patch to friendly raiders to show up in the hired followers list -->
+  <!-- HELPGOOD: A patch to friendly raiders to show up in the hired followers list 
+    ex.: the idea is to upgrade from npcClubTemplate to npcAdvancedClubTemplate
+      originally:
+        <entity_class name="RaiderJayneClub" extends="npcClubTemplate"> 
+        <entity_class name="npcRaiderJayneClub" extends="RaiderJayneClub"> 
+      final: this was is important to keep the model
+        <entity_class name="RaiderJayneClub" extends="npcAdvancedClubTemplate"> 
+        <entity_class name="npcRaiderJayneClub" extends="RaiderJayneClub"> 
+      so the "npc" (friendly) is further patched in the last line with the missing tags
+  -->
   <set xpath="/entity_classes/entity_class[starts-with(@name,'Raider') and contains(@name,'Club')]/@extends">npcAdvancedClubTemplate</set>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'Raider') and contains(@name,'Knife')]/@extends">npcAdvancedKnifeTemplate</set>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'Raider') and contains(@name,'Bat')]/@extends">npcAdvancedBatTemplate</set>
@@ -215,6 +228,297 @@
   <set xpath="/entity_classes/entity_class[starts-with(@name,'Raider') and contains(@name,'M60')]/@extends">npcAdvancedM60Template</set>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'Raider') and contains(@name,'RocketL')]/@extends">npcAdvancedRocketLTemplate</set>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'npcRaider')]/property[@name='Tags']/@value">,cp,DRMid</append>
+  <!-- HELPGOOD: ambushers BELOW the friendly patch above to keep the correct extends value below, or add above a not(name has ambush) there -->
+  <append xpath="/entity_classes" help="treasure Ambushers have very low loot drop chance, just flee is better as you were there for the treasure (and they too)">
+    <!-- HELPGOOD: for treasure AMBUSH: extended raiders that drop prob 0.10 only for treasure ambushers, a simple script to create it:CODEGEN:
+    clear;egrep '<entity_class name="(Raider|npcHarley)[^>]*>' -o _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml |egrep -v Ambush|sort |sed -r -e 's@(.*)name="([^"]*)" *extends="([^"]*)"(.*)@    \1 name="\2Ambush" extends="\2"><property name="LootDropProb" value="0.01"/></entity_class>@'
+    -->
+    <entity_class name="npcHarleyAK47Ambush" extends="npcHarleyAK47">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyAShotgunAmbush" extends="npcHarleyAShotgun">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyAxeAmbush" extends="npcHarleyAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyBatAmbush" extends="npcHarleyBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyBMEmptyHandAmbush" extends="npcHarleyBMEmptyHand">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyClubAmbush" extends="npcHarleyClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyDPistolAmbush" extends="npcHarleyDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyEmptyHandAmbush" extends="npcHarleyEmptyHand">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyHRifleAmbush" extends="npcHarleyHRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyKnifeAmbush" extends="npcHarleyKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyLBowAmbush" extends="npcHarleyLBow">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyM60Ambush" extends="npcHarleyM60">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyMacheteAmbush" extends="npcHarleyMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPipeMGAmbush" extends="npcHarleyPipeMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPipePistolAmbush" extends="npcHarleyPipePistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPipeRifleAmbush" extends="npcHarleyPipeRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPipeShotgunAmbush" extends="npcHarleyPipeShotgun">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPistolAmbush" extends="npcHarleyPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyPShotgunAmbush" extends="npcHarleyPShotgun">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyRocketLAmbush" extends="npcHarleyRocketL">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleySMGAmbush" extends="npcHarleySMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleySpearAmbush" extends="npcHarleySpear">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleySRifleAmbush" extends="npcHarleySRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyTRifleAmbush" extends="npcHarleyTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyVomitHandAmbush" extends="npcHarleyVomitHand">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="npcHarleyXBowAmbush" extends="npcHarleyXBow">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBeatzAK47Ambush" extends="RaiderBeatzAK47">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBeatzBatAmbush" extends="RaiderBeatzBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBeatzClubAmbush" extends="RaiderBeatzClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBeatzDPistolAmbush" extends="RaiderBeatzDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBeatzSMGAmbush" extends="RaiderBeatzSMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyAxeAmbush" extends="RaiderBettyAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyBatAmbush" extends="RaiderBettyBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyClubAmbush" extends="RaiderBettyClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyDPistolAmbush" extends="RaiderBettyDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyKnifeAmbush" extends="RaiderBettyKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyMacheteAmbush" extends="RaiderBettyMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettySMGAmbush" extends="RaiderBettySMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderBettyTRifleAmbush" extends="RaiderBettyTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaAxeAmbush" extends="RaiderGinaAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaBatAmbush" extends="RaiderGinaBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaClubAmbush" extends="RaiderGinaClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaDPistolAmbush" extends="RaiderGinaDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaKnifeAmbush" extends="RaiderGinaKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaMacheteAmbush" extends="RaiderGinaMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaSMGAmbush" extends="RaiderGinaSMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGinaTRifleAmbush" extends="RaiderGinaTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyAxeAmbush" extends="RaiderGypsyAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyBatAmbush" extends="RaiderGypsyBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyClubAmbush" extends="RaiderGypsyClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyDPistolAmbush" extends="RaiderGypsyDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyKnifeAmbush" extends="RaiderGypsyKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyMacheteAmbush" extends="RaiderGypsyMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsySMGAmbush" extends="RaiderGypsySMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderGypsyTRifleAmbush" extends="RaiderGypsyTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyAxeAmbush" extends="RaiderHedyAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyBatAmbush" extends="RaiderHedyBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyClubAmbush" extends="RaiderHedyClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyDPistolAmbush" extends="RaiderHedyDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyKnifeAmbush" extends="RaiderHedyKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyMacheteAmbush" extends="RaiderHedyMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedySMGAmbush" extends="RaiderHedySMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderHedyTRifleAmbush" extends="RaiderHedyTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneAxeAmbush" extends="RaiderJayneAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneBatAmbush" extends="RaiderJayneBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneClubAmbush" extends="RaiderJayneClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneDPistolAmbush" extends="RaiderJayneDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneKnifeAmbush" extends="RaiderJayneKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneMacheteAmbush" extends="RaiderJayneMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneSMGAmbush" extends="RaiderJayneSMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderJayneTRifleAmbush" extends="RaiderJayneTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercAK47Ambush" extends="RaiderMercAK47">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercClubAmbush" extends="RaiderMercClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercDPistolAmbush" extends="RaiderMercDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercKnifeAmbush" extends="RaiderMercKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercMacheteAmbush" extends="RaiderMercMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMercTRifleAmbush" extends="RaiderMercTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMotoAK47Ambush" extends="RaiderMotoAK47">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMotoAxeAmbush" extends="RaiderMotoAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMotoBatAmbush" extends="RaiderMotoBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMotoDPistolAmbush" extends="RaiderMotoDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderMotoTRifleAmbush" extends="RaiderMotoTRifle">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestAxeAmbush" extends="RaiderPestAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestBatAmbush" extends="RaiderPestBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestClubAmbush" extends="RaiderPestClub">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestDPistolAmbush" extends="RaiderPestDPistol">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestKnifeAmbush" extends="RaiderPestKnife">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestMacheteAmbush" extends="RaiderPestMachete">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestPipeMGAmbush" extends="RaiderPestPipeMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderPestSMGAmbush" extends="RaiderPestSMG">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderSluggerAK47Ambush" extends="RaiderSluggerAK47">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderSluggerAxeAmbush" extends="RaiderSluggerAxe">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderSluggerBatAmbush" extends="RaiderSluggerBat">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderSluggerM60Ambush" extends="RaiderSluggerM60">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+    <entity_class name="RaiderSluggerRocketLAmbush" extends="RaiderSluggerRocketL">
+      <property name="LootDropProb" value="0.01"/>
+    </entity_class>
+  </append>
   <append xpath="/entity_classes/entity_class[@name='animalSnake' or starts-with(@name,'animalSpider')]">
     <drop event="Harvest" name="GSKsnakePoison" count="1,5" tag="butcherHarvest"/>
   </append>

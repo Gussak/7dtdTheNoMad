@@ -192,12 +192,6 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnRaidersChancePerc" operation="multiply" value="0.85" help="5 waves will be down to 50% chance"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnRaidersWave" operation="add" value="1"/>
       </effect_group>
-      <effect_group help="limit raiders loot drop to not be a source of extra goods. opening a treasure shall be a threat, not an advantage. so the best option may be to flee.">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPClimitLoot2" target="selfAOE" range="60">
-          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!HasBuff" target="other" buff="buffGSKNPClimitLoot2"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKSpawnRaidersWave" operation="GT" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="It feels safer, raiders are probably gone now..."/>
@@ -271,6 +265,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" action="ModifyCVar" cvar="bGSKDebug" operation="set" value="@bGSKDebug">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -609,11 +605,14 @@
         <passive_effect name="HealthMax" operation="base_add" value="50"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPClimitLoot2">
+    <buff name="_buffGSKNPClimitLoot2" remove_on_death="false" help="using instead new entity classes name appended with Ambush TODO: how to make this work?">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
-        <passive_effect name="LootQuantity" operation="perc_add" value="-0.90" help="base_add, set, or perc_add"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKNPClimitLoot2"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKNPClimitLoot2"/>
+        <!-- HELPGOOD: should keep the default for bandits set elsewhere -->
+        <passive_effect name="LootQuantity" operation="perc_add" value="-0.90" help="base_add, or perc_add, set errors"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
@@ -646,12 +645,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="2" target_tags="zombie,animal"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPClimitLootHired2">
+    <buff name="_buffGSKNPClimitLootHired2" remove_on_death="false" help="just lowered their drop to 0.05 TODO: how to make this work?">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
-        <passive_effect name="LootDropProb" operation="perc_add" value="-1.0" help="base_add, set, or perc_add"/>
-        <passive_effect name="LootQuantity" operation="perc_add" value="-1.0" help="base_add, set, or perc_add"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKNPClimitLootHired2"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKNPClimitLootHired2"/>
+        <passive_effect name="LootDropProb" operation="perc_add" value="-1.0" help="base_add, or perc_add, set errors"/>
+        <passive_effect name="LootQuantity" operation="perc_add" value="-1.0"/>
       </effect_group>
     </buff>
     <buff name="buffLeaderLimitsHiredNPCsAmount95" hidden="true" remove_on_death="true">
@@ -665,58 +666,80 @@
       <effect_group help="pseudo distances, the farer should be on top to be overwritten by nearest ones">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="60" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="10" target="selfAOE" range="10" help="used by buffGSKNPCproperSneaking2">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderPseudoDistance" operation="set" value="5" target="selfAOE" range="5" help="used by buffGSKNPCproperSneaking2">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderSheltered" operation="set" value="1" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking2">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderSheltered" operation="set" value="0" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking2">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking2" target="selfAOE" range="60">
           <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1" help="off"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="HasBuff" target="other" buff="buffGSKNPCproperSneaking2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneaking2" target="selfAOE" range="60">
           <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="2" help="on"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking2"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPClimitLootHired2" target="selfAOE" range="60" help="a hired or dismissed NPC shall not be an easy source of extra goods.">
-          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="!HasBuff" target="other" buff="buffGSKNPClimitLootHired2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCincHiredCountEachOtherAndTryDismiss" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffNPCincHiredCountEachOtherAndTryDismiss"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPCnoFallDamage5" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffHiredNPCnoFallDamage5"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCAddExpDebitToLeader10" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffNPCAddExpDebitToLeader10"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPChudInfo" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffHiredNPChudInfo"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCHiredFollowingHeal" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit" help="some raiders had this buff on log on death, so better be sure this way to prevent that"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCHiredFollowingHeal"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="10" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH buffLeaderLimitsHiredNPCsAmount95 update_rate!!!!!"/>
@@ -725,6 +748,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCSelfPreventDismissSecsAdd10" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="subtract" value="@fTransferNPCPDS" target="self">
@@ -735,6 +760,8 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCRepairSelfArmorAddPerc5" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fRepairNPCArmor" operation="subtract" value="0.05" target="self">
@@ -743,17 +770,23 @@
         <!-- HELPGOOD: followers limit. iGSKNPCFollowAboveLimit is meant to be compared using Equals so if it is 2, the limit is 1-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="2" target="selfAOE" range="60" help="limit is 1">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="3" target="selfAOE" range="60" help="limit is 2">
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="2"/>
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LTE" value="3"/>
           <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="4" target="selfAOE" range="60" help="limit is 3">
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="Equals" value="4"/>
           <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -1286,6 +1319,8 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="EntityID"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoSpent"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKNPCarmorDmgPercent">
@@ -1349,6 +1384,8 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!EntityTagCompare" target="other" tags="animal"/>
           <requirement name="!EntityTagCompare" target="other" tags="melee"/>
         </triggered_effect>
@@ -2306,6 +2343,8 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="EntityID"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKBattMaxChargeCurrent"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKBattMaxCharge"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKDmgPercHL"/>
@@ -9469,7 +9508,9 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperBasicCampingKit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperMinimalSurvivalKit" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperMaps" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperMaps" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperSomeSchematicBundles" operation="add" value="1"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="2" help="2 disables it on the above checks"/>
