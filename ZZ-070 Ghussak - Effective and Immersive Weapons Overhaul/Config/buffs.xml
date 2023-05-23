@@ -80,6 +80,18 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceKnockdown">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="TODO: spiders seems to not have ragdoll error: NullReferenceException at EModelBase.FrameUpdateRagdoll () at EModelBase.Update (). comment this group when spiders get ragdoll">
+        <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStun" operation="set" value="@iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="iEWChanceStun" operation="LT" value="@iEWChanceKnockdown"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStunHarder" operation="set" value="@iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="iEWChanceStunHarder" operation="LT" value="@iEWChanceKnockdown"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceKnockdown" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWAutoCalcChanceStun" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iEWChanceStun" operation="Equals" value="0"/>
         </triggered_effect>
@@ -92,6 +104,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceStun">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWAutoCalcChanceStunHarder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iEWChanceStunHarder" operation="Equals" value="0"/>
         </triggered_effect>

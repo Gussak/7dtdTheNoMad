@@ -5106,23 +5106,6 @@
   <append xpath="/items/item[@name='meleeHandAnimalSnake' or starts-with(@name,'meleeHandAnimalSpider')]">
     <effect_group name="poison and paralyze" tiered="false">
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="0" target="other" target_tags="zombie,animal,npc,bandit">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKParalizeTimeIndex" operation="set" value="randomInt(-6,3)" help="-6 -5 -4 -3 -2 -1 0 (1 2 3) = 30%"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKParalizeTimeIndex" operation="multiply" value="3"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="3" force="0" target="other" target_tags="player">
-        <requirement name="CVarCompare" target="other" cvar="ragdoll" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKParalizeTimeIndex" operation="Equals" value="3"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="6" force="0" target="other" target_tags="player">
-        <requirement name="CVarCompare" target="other" cvar="ragdoll" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKParalizeTimeIndex" operation="Equals" value="6"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="0" target="other" target_tags="player">
-        <requirement name="CVarCompare" target="other" cvar="ragdoll" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKParalizeTimeIndex" operation="Equals" value="9"/>
-      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/items">
@@ -5875,11 +5858,5 @@
   </append>
   <append xpath="/items/item[@name='thrownAmmoFlare']">
     <property name="CreativeMode" value="Player"/>
-  </append>
-  <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change -->
-  <append xpath="//triggered_effect[@action='Ragdoll']">
-    <requirement name="!EntityTagCompare" tags="animalSpider01"/>
-    <requirement name="!EntityTagCompare" tags="animalSpider02"/>
-    <requirement name="!EntityTagCompare" tags="animalSpider03"/>
   </append>
 </GhussakTweaks>

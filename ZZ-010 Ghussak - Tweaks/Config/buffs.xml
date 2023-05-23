@@ -5600,29 +5600,28 @@
           <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork44"/>
         </triggered_effect>
       </effect_group>
-      <!-- HELPGOOD: cannot self ragdoll right? see meleeHandAnimalSpider instead
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" force="0">
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33" />
+      <effect_group help="NPCs">
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33"/>
           <requirement name="EntityTagCompare" tags="zombie,animal,npc,bandit"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0" />
+      <effect_group help="player">
+        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
         <requirement name="EntityTagCompare" tags="player"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="set" value="randomInt(-6,3)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="set" value="randomInt(-6,3)" help="-6 -5 -4 -3 -2 -1 0 (1 2 3) = 30%"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="multiply" value="3"/>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3" force="0">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3" />
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKParalizeTime"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6" force="0">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6" />
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" force="0">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9" />
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9"/>
         </triggered_effect>
       </effect_group>
--->
     </buff>
     <buff name="buffGSKSnakePoisonWork44" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <stack_type value="ignore"/>
