@@ -631,8 +631,12 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="add" value="-1" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="set" value="120" help="sync iGSKPlayerAttackedDisableNPCSneakTime limit">
+          <requirement name="CVarCompare" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="GT" value="120"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="add" value="-1" help="sync with update_rate">
+          <requirement name="CVarCompare" cvar="iGSKLeaderAttackedDisableNPCSneakTime" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="WORKAROUND: prevent NPCs luring mobs while sneaking (initial idea, but did not work)">
         <requirement name="CVarCompare" cvar="iGSKLeaderPseudoDistance" operation="LTE" value="10"/>
@@ -707,7 +711,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="set" value="0" help="consume"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlAtkDsbNPCSnTMP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="add" value="@.iGSKPlAtkDsbNPCSnTMP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="120" help="TODO: could use player sneak skill to lower this but not less than 60, to avoid overpowering NPC sneak workaround!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="120" help="sync with iGSKLeaderAttackedDisableNPCSneakTime at buffGSKNPCproperSneaking2 TODO: could use player sneak skill to lower this but not less than 60, to avoid overpowering NPC sneak workaround!">
           <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GT" value="120"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
