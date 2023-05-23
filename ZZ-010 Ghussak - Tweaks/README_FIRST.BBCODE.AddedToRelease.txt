@@ -168,6 +168,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - wetness helps against desert heat now
 - poison can paralyze (the player too) now for a short time
 - fix: prevented most POIs from being above the ground that (despite fun) makes things easier
+- animal spiders will jump now
 .  
 --------- v0.9a -----------  
 - initial release.  

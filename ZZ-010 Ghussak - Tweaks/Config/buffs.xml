@@ -5593,18 +5593,19 @@
       </effect_group>
     </buff>
     <buff name="buffGSKSnakePoison" help="that is the whole point of sneaky poisonous animals, to be successful on the 1st byte">
-      <duration value="0.05"/>
+      <duration value="0.10"/>
+      <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(200,900)"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork44">
           <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork44"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NPCs">
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9">
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33"/>
-          <requirement name="EntityTagCompare" tags="zombie,animal,npc,bandit"/>
-        </triggered_effect>
+      <effect_group help="FAILED: NPCs (this ragdoll wont affect the player)">
+        <requirement name="!EntityTagCompare" tags="player"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="9" help="nothing happens..."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRagdollRequestedOnMob" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBeastFangsHoldup"/>
       </effect_group>
       <effect_group help="player">
         <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
@@ -5612,15 +5613,16 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="set" value="randomInt(-6,3)" help="-6 -5 -4 -3 -2 -1 0 (1 2 3) = 30%"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="multiply" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKParalizeTime"/>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3">
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s">
           <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6">
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze6s">
           <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9">
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze9s">
           <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBeastFangsHoldup" help="to compensate not being able to control player ragdoll time. to work also like spider net TODO: spider net thru ranged attack"/>
       </effect_group>
     </buff>
     <buff name="buffGSKSnakePoisonWork44" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
@@ -9729,7 +9731,15 @@
           <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff2"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="ragdoll: by foe">
+      <effect_group help="FAILED: ragdoll: player applies ragdoll on foe requested by some npc">
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" force="0" target="selfAOE" range="60" target_tags="zombie,npc,animal">
+          <requirement name="CVarCompare" target="other" cvar="iGSKRagdollRequestedOnMob" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRagdollRequestedOnMob" operation="set" value="0" target="selfAOE" range="60" target_tags="zombie,npc,animal">
+          <requirement name="CVarCompare" target="other" cvar="iGSKRagdollRequestedOnMob" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="ragdoll: player got ragdolled by foe">
         <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
       </effect_group>
