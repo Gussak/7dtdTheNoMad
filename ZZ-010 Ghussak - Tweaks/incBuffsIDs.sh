@@ -31,13 +31,15 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
+
 echo "HELP:"
 echo " this script is important when making tests in a running game or when releasing an updated mod version, because the savegame may keep an outdated running buff that prevents the new one from running right?"
 echo " also, some buffs may completely fail to kick in, so create a debug item to make them start working or, may be, restart the game application (close and run it again)"
 
 set -eu
-trap 'echo ERROR nLnErr=$nLnErr' ERR
-trap 'echo "!!!!DO_NOT_INTERRUPT_THIS!!!!"' INT #todo make this work reversible, apply the patch on new files first and ask in the end if you want to apply it
+trap 'echo ERROR nLnErr=${nLnErr-} >&2' ERR
+#trap 'echo "!!!!DO_NOT_INTERRUPT_THIS!!!!"' INT #todo make this work reversible, apply the patch on new files first and ask in the end if you want to apply it
 
 bDecrement=false;
 if [[ "${1-}" == --dec ]];then #help decrement instead
@@ -66,8 +68,8 @@ astrBuffBNList=(
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
   "buffGSKHazardousWBloodLoss"
-  "buffGSKHazardousWCold"
-  "buffGSKHazardousWDesert"
+  #"buffGSKHazardousWCold"
+  #"buffGSKHazardousWDesert"
   "buffGSKHazardousWeather"
   "buffGSKHazardousWElementColdHook"
   "buffGSKHazardousWElementHotHook"
@@ -81,9 +83,10 @@ astrBuffBNList=(
   "buffGSKHeatColdProtClothDmgAdd"
   "buffGSKHeatColdProtClothDmgKeep"
   "buffGSKInPineForestBiomeMonstersThrive"
+  "buffGSKMeleeParry"
   "buffGSKMutant_ChkAndApplyOnMobs"
   "buffGSKNearDeath"
-  "buffGSKNPClimitLoot"
+  #"buffGSKNPClimitLoot"
   "buffGSKNPClimitLootHired"
   "buffGSKNPCproperSneaking"
   "buffGSKPermanentGenericCheck"
@@ -93,6 +96,7 @@ astrBuffBNList=(
   "buffGSKRadLowerSlow"
   "buffGSKRadRemover"
   "buffGSKRadResistWork"
+  "buffGSKRespawnPreventWaterBkp"
   "buffGSKShowWaterBkp"
   "buffGSKSnakePoisonWork"
   "buffGSKSpawnTreasure"
@@ -106,13 +110,21 @@ astrBuffBNList=(
 )
 astrBuffBNList=(`echo "${astrBuffBNList[@]}" |tr " " "\n" |sort -u`) # grant unique entries
 declare -p astrBuffBNList |tr '[' '\n'
+#astrBuffBNList=(buffGSKNPClimitLoot) #todo RM
 
 function FUNCgetCurrentIndex() {
 #  egrep "${1}[0-9]*" --include="*.xml" -irIho |sort -u |egrep "[0-9]*" -o
   local lstr
-  nLnErr=$LINENO;lstr="$(egrep "${1}[0-9]*" --include="*.xml" -rIowh)"
+  local lastrCmdGrep=(egrep "<buff +name=\"${1}[0-9]+\"[ >]" --include="*.xml" -rI)
+  CFGFUNCinfo "${lastrCmdGrep[@]}"
+  nLnErr=$LINENO;lstr="$("${lastrCmdGrep[@]}"h)"
+  CFGFUNCinfo "$lstr"
+  nLnErr=$LINENO;lstr="$(echo "$lstr" |egrep "${1}[0-9]+" -ow)"
+  CFGFUNCinfo "$lstr"
   nLnErr=$LINENO;lstr="$(echo "$lstr" |sort -u)"
-  nLnErr=$LINENO;lstr="$(echo "$lstr" |egrep "[0-9]*" -o)"
+  CFGFUNCinfo "$lstr"
+  nLnErr=$LINENO;lstr="$(echo "$lstr" |egrep "[0-9]+" -o)"
+  CFGFUNCinfo "$lstr"
   echo "$lstr"
 }
 
@@ -120,11 +132,44 @@ iErrorCount=0
 strErr=""
 #set -x
 iVal=1;if $bDecrement;then iVal=-1;fi
+#for strBuffBN in "${astrBuffBNList[@]}";do
+  #iId="$(FUNCgetCurrentIndex "${strBuffBN}")"
+  #declare -p iId strBuffBN
+  #if((`echo "$iId" |wc -l`!=1));then 
+    #egrep "${strBuffBN}[0-9]*" --include="*.xml" -rIwn
+    #echo "$LINENO:ERROR:should be just one line result for the current index numeric value";
+    #exit 1;
+  #fi
+  
+  #IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" -rnIc |grep -v :0 |cut -d: -f1)&&:
+  #declare -p astrFlList |tr '[' '\n'
+  #for strFl in "${astrFlList[@]}";do
+    #declare -p strFl
+    #iIdNew=$((iId+iVal))&&:
+    #if((iIdNew<1));then iIdNew=1;fi
+    #sed -i.bkp -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "$strFl"
+    #if colordiff "${strFl}.bkp" "${strFl}";then
+      #strErr+="ERROR: should have patched for $strBuffBN"
+      #echo "$strErr"
+      #((iErrorCount++))&&:
+    #fi
+  #done
+#done
+strDtTm="`date +"${strCFGDtFmt}"`"
+astrFlAllFilesPatchedList=()
+astrBuffNotFoundList=()
 for strBuffBN in "${astrBuffBNList[@]}";do
   iId="$(FUNCgetCurrentIndex "${strBuffBN}")"
+  if [[ -z "$iId" ]];then 
+    astrBuffNotFoundList+=("$strBuffBN")
+    CFGFUNCinfo "WARN:iId is empty for '$strBuffBN', you just need to remove it from the array here.";
+    continue;
+  fi
+  
   declare -p iId strBuffBN
   if((`echo "$iId" |wc -l`!=1));then 
-    egrep "${strBuffBN}[0-9]*" --include="*.xml" -rIwn
+    #egrep "${strBuffBN}[0-9]*" --include="*.xml" -rIwn
+    echo "iId is (((${iId})))"
     echo "$LINENO:ERROR:should be just one line result for the current index numeric value";
     exit 1;
   fi
@@ -132,21 +177,57 @@ for strBuffBN in "${astrBuffBNList[@]}";do
   IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" -rnIc |grep -v :0 |cut -d: -f1)&&:
   declare -p astrFlList |tr '[' '\n'
   for strFl in "${astrFlList[@]}";do
+    if [[ "${strFl}" =~ .*\ .* ]];then CFGFUNCerrorExit "dir or filename with spaces, not expected..";fi
     declare -p strFl
+    strFlPatching="./_tmp/${strFl}.incBuffIDs.${strDtTm}.tmp"
+    mkdir -vp "`dirname "${strFlPatching}"`"
+    if ! [[ -f "${strFlPatching}" ]];then cat "${strFl}" >"${strFlPatching}";fi
     iIdNew=$((iId+iVal))&&:
-    if((iIdNew<1));then iIdNew=1;fi
-    sed -i.bkp -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "$strFl"
-    if colordiff "${strFl}.bkp" "${strFl}";then
+    if((iIdNew<2));then CFGFUNCerrorExit "invalid iIdNew=$iIdNew < 2, iId=$iId, iVal=$iVal";fi
+    strData="`sed -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "${strFlPatching}"`"
+    echo "$strData" >"${strFlPatching}"
+    ls -l "$strFlPatching"
+    if colordiff "${strFl}" "${strFlPatching}";then
       strErr+="ERROR: should have patched for $strBuffBN"
       echo "$strErr"
       ((iErrorCount++))&&:
     fi
+    astrFlAllFilesPatchedList+=("${strFlPatching}:${strFl}")
   done
+  #if [[ "$strBuffBN" == "buffGSKNPClimitLoot" ]];then exit 1;fi
 done
+IFS=$'\n' read -d '' -r -a astrFlAllFilesPatchedList < <(for strFlNew in "${astrFlAllFilesPatchedList[@]}";do echo "${strFlNew}";done |sort -u)&&:
+declare -p astrFlAllFilesPatchedList
+declare -p astrFlAllFilesPatchedList |tr '[' '\n'
+declare -p astrBuffNotFoundList |tr '[' '\n'
 
-if((iErrorCount==0));then
-  echo "SUCCESS!!!"
-else
-  echo "PROBLEM: iErrorCount=$iErrorCount"
-  echo "$strErr"
+#clear;
+for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
+  strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
+  strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
+  CFGFUNCexec --noErrorExit colordiff "${strFlOld}" "${strFlNew}"&&:
+  CFGFUNCexec cp -vf "${strFlOld}" "${strFlOld}.incBuffIDs.OLD.bkp"
+done
+find -name "*.incBuffIDs.OLD.bkp"
+
+for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
+  strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
+  strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
+  echo meld "${strFlOld}" "${strFlNew}"
+done
+if CFGFUNCprompt -q "everything looks ok? there is backups suffixed with '.incBuffIDs.OLD.bkp'. accepting will move the new file over the final file.";then
+  for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
+    strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
+    strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
+    CFGFUNCexec mv -vf "${strFlNew}" "${strFlOld}"
+  done
+
+  if((iErrorCount==0));then
+    echo "SUCCESS!!!"
+  else
+    echo "PROBLEM: iErrorCount=$iErrorCount"
+    echo "$strErr"
+  fi
 fi
+
+declare -p astrBuffNotFoundList |tr '[' '\n'
