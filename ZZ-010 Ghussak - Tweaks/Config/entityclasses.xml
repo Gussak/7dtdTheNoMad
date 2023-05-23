@@ -10,7 +10,7 @@
       <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1" help="TODO: this seems to triggen when harvesting animals? should not in this cvar then.">
         <!-- HELPGOOD: use the same requirements from buffGSKNPCproperSneaking2 -->
         <requirement name="IsNight"/>
         <requirement name="!IsIndoors"/>
@@ -108,14 +108,16 @@
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
     <property name="LootDropProb" value="1.00"/>
   </append>
-  <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]">
-    <property name="LootDropProb" value="0.50"/>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]" help="no easy loot from friendlies">
+    <property name="LootDropProb" value="0.05"/>
   </append>
-  <set xpath="/entity_classes/entity_class[contains(@name, 'animal')]/property[contains(@name, 'LootDropProb')]/@value">0.25</set>
+  <append xpath="/entity_classes/entity_class[contains(@name,'animal')]" help="animals are to harvest only">
+    <property name="LootDropProb" value="0.0"/>
+  </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'animal')]">
     <property name="TimeStayAfterDeath" value="3600"/>
   </append>
-  <append xpath="/entity_classes/entity_class[contains(@name, 'animalZombie')]">
+  <append xpath="/entity_classes/entity_class[contains(@name, 'animalZombie')]" help="their flesh is contamined by zombie virus and will last longer">
     <property name="TimeStayAfterDeath" value="7200"/>
   </append>
   <append xpath="/entity_classes">

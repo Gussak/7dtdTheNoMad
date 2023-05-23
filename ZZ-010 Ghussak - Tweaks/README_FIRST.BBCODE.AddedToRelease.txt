@@ -169,6 +169,8 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - poison can paralyze (the player too) now for a short time
 - fix: prevented most POIs from being above the ground that (despite fun) makes things easier
 - animal spiders will jump now
+- fix: effective weapons mod: spiders wont be put in ragdoll mode now
+- no more somehow easy loot drop from friendly NPCs
 .  
 --------- v0.9a -----------  
 - initial release.  
