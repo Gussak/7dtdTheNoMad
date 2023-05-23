@@ -37,6 +37,7 @@ echo " also, some buffs may completely fail to kick in, so create a debug item t
 
 set -eu
 trap 'echo ERROR nLnErr=$nLnErr' ERR
+trap 'echo "!!!!DO_NOT_INTERRUPT_THIS!!!!"' INT #todo make this work reversible, apply the patch on new files first and ask in the end if you want to apply it
 
 bDecrement=false;
 if [[ "${1-}" == --dec ]];then #help decrement instead

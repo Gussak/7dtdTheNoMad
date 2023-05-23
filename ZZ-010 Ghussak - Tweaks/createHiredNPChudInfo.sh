@@ -35,18 +35,17 @@
 
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
+iMaxEntries=120
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
 
-astrCVarList=(
+# PERCENTS
+astrCVarForPercentsList=(
   ".iGSKPlayerNPCInfoAmmoLeftPerc"
   ".iGSKPlayerNPCInfoArmorDmgPercent"
   ".iGSKPlayerNPCInfoPermanentArmorDmg"
   ".iGSKPlayerNPCInfoRepairSelfArmor"
-  #".iGSKPlayerNPCInfoHealingMedicine"
 )
-
-# PERCENTS
-for strCVar in "${astrCVarList[@]}";do
+for strCVar in "${astrCVarForPercentsList[@]}";do
   strIndent="      "
   echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="0" target="selfAOE" range="60">
 '"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LTE" value="0.0" />
@@ -72,25 +71,50 @@ for strCVar in "${astrCVarList[@]}";do
   CFGFUNCgencodeApply --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 done
 
-# SECONDS
-iStep=15
-iLim=666
-strCVar=".iGSKPlayerNPCInfoSelfPreventDismissSecs"
-bBreak=false
-for((i=13;i<=iLim;i+=iStep));do
-  if((i+iStep>=iLim));then
-    i=$iLim
-    iStep=99999; #any absurd value will work
-    bBreak=true
-  fi
-  echo '      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="'$i'" target="selfAOE" range="60">
-        <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="GTE" value="'$i'" />
-        <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="'$((i+iStep))'" />
-        <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />
-      </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
-  if $bBreak;then break;fi
+# SECONDS or values w/o limit
+nCols=5
+astrCVarNoLimitList=(
+  #0:strCVarNPC                           1:strCVarPlayer                               2:iBeginValue 3:iStep 4:iMaxValue
+  "fGSKNPCSelfPreventDismissSecs"         ".iGSKPlayerNPCInfoSelfPreventDismissSecs"               13      15         666
+  "iGSKNPCHealingMedicine"                ".iGSKPlayerNPCInfoHealingMedicine"                      5       11        1235 #todo: xmlstarlet to at items.xml look for iGSKNPCHealingMedicine.*NPCMedkitMaxHealValue
+  "iGSKLeaderAttackedDisableNPCSneakTime" ".iGSKPlayerNPCInfoDenySneak"                             5       5         120
+)
+#for strCVar in "${astrCVarNoLimitList[@]}";do
+for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
+  strCVarNPC="${astrCVarNoLimitList[iC+0]}"
+  strCVarPlayer="${astrCVarNoLimitList[iC+1]}"
+  iBeginValue=${astrCVarNoLimitList[iC+2]}
+  iStep=${astrCVarNoLimitList[iC+3]}
+  iMaxValue=${astrCVarNoLimitList[iC+4]}
+  
+  iCountEntries=`bc <<< "($iMaxValue-$iBeginValue)/$iStep"`;if((iCountEntries>iMaxEntries));then CFGFUNCerrorExit "too many entries ($iCountEntries>$iMaxEntries) may break the game (may not work at all)";fi
+  
+  bBreak=false
+  iCountEntries=1
+  echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="0" target="selfAOE" range="60" help="entry '$iCountEntries'">
+    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="Equals" value="0" />
+    '"${strLeaderReq}"'
+  </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+  for((i=iBeginValue;i<=iMaxValue;i+=iStep));do
+    iStepNext=$((i+iStep))
+    strHelp=""
+    if((iStepNext>iMaxValue));then
+      i=$iMaxValue
+      iStepNext=$((iMaxValue+99999));strHelp='help="any absurd value bigger than the max limit will work here"'
+      bBreak=true
+    fi
+    
+    ((iCountEntries++))&&:;if((iCountEntries>iMaxEntries));then CFGFUNCerrorExit "too many entries may break the game (may not work at all)";fi
+    
+    echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="'$i'" target="selfAOE" range="60" help="entry '$iCountEntries'">
+    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="GTE" value="'$i'" />
+    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="LT" value="'$iStepNext'" '"${strHelp}"'/>
+    '"${strLeaderReq}"'
+  </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+        
+    if $bBreak;then break;fi
+  done
+  CFGFUNCgencodeApply --subTokenId "`echo ${strCVarPlayer} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 done
-
-CFGFUNCgencodeApply --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 CFGFUNCwriteTotalScriptTimeOnSuccess
