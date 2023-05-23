@@ -10,6 +10,13 @@
       <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1">
+        <!-- HELPGOOD: use the same requirements from buffGSKNPCproperSneaking2 -->
+        <requirement name="IsNight"/>
+        <requirement name="!IsIndoors"/>
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <set xpath="/entity_classes/entity_class[@name='animalBoar']/property[@name='Faction']/@value">aggressiveanimalsmedium</set>

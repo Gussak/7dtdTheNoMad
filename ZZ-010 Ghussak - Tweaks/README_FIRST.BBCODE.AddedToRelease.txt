@@ -150,7 +150,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - added one hired NPC info on the HUD
 - added near death lvls for Overhydrated Bloated ChemUse
 - added some Notes about buffs. They have dynamic values that would be shown for buffs that have no icon and were bloating the detailed buffs list.
-- automatic turn on Elctrn mods if all checks are ok
+- it now automatic turns on Elctrn mods if all checks are ok (if it is safe)
 - reorganized notes/journal to be easyer to read
 - some beasts may byte and hold your leg for a few seconds preventing you from moving, others may even knock you down.
 - attacking mutant zombies may make them teleport you, more info on the docs
@@ -165,6 +165,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - new hazard: cosmic rays/radiation piercing thru ozone layer
 - sneaking with a NPC follower at night is possible now (the workaround may look weird tho), craft GSKCFGNPCproperSneakingWorkaround to enable it
 - extra bloodmoon spawns (optional)
+- wetness helps against desert heat now
+- poison can paralyze (the player too) now for a short time
+- fix: prevented most POIs from being above the ground that (despite fun) makes things easier
 .  
 --------- v0.9a -----------  
 - initial release.  
