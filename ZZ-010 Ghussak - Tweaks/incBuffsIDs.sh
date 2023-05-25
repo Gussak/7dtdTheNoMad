@@ -115,7 +115,7 @@ declare -p astrBuffBNList |tr '[' '\n'
 function FUNCgetCurrentIndex() {
 #  egrep "${1}[0-9]*" --include="*.xml" -irIho |sort -u |egrep "[0-9]*" -o
   local lstr
-  local lastrCmdGrep=(egrep "<buff +name=\"${1}[0-9]+\"[ >]" --include="*.xml" -rI)
+  local lastrCmdGrep=(egrep "<buff +name=\"${1}[0-9]+\"[ >]" --include="*.xml" --exclude-dir="_*" -rI)
   CFGFUNCinfo "${lastrCmdGrep[@]}"
   nLnErr=$LINENO;lstr="$("${lastrCmdGrep[@]}"h)"
   CFGFUNCinfo "$lstr"
@@ -174,7 +174,7 @@ for strBuffBN in "${astrBuffBNList[@]}";do
     exit 1;
   fi
   
-  IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" -rnIc |grep -v :0 |cut -d: -f1)&&:
+  IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" --exclude-dir="_*" -rnIc |grep -v :0 |cut -d: -f1)&&:
   declare -p astrFlList |tr '[' '\n'
   for strFl in "${astrFlList[@]}";do
     if [[ "${strFl}" =~ .*\ .* ]];then CFGFUNCerrorExit "dir or filename with spaces, not expected..";fi
@@ -182,12 +182,14 @@ for strBuffBN in "${astrBuffBNList[@]}";do
     strFlPatching="./_tmp/${strFl}.incBuffIDs.${strDtTm}.tmp"
     mkdir -vp "`dirname "${strFlPatching}"`"
     if ! [[ -f "${strFlPatching}" ]];then cat "${strFl}" >"${strFlPatching}";fi
-    iIdNew=$((iId+iVal))&&:
-    if((iIdNew<2));then CFGFUNCerrorExit "invalid iIdNew=$iIdNew < 2, iId=$iId, iVal=$iVal";fi
+    iIdNew=$((iId+iVal))&&: #may be decrementing
+    if((iVal== 1 && iIdNew<2));then CFGFUNCerrorExit "invalid increment where iIdNew=$iIdNew < 2, iId=$iId, iVal=$iVal";fi
+    if((iVal==-1 && iIdNew==0));then iIdNew=1;fi
+    if((iVal==-1 && iIdNew<0));then CFGFUNCerrorExit "invalid decrement where iIdNew=$iIdNew < 0, iId=$iId, iVal=$iVal";fi
     strData="`sed -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "${strFlPatching}"`"
     echo "$strData" >"${strFlPatching}"
     ls -l "$strFlPatching"
-    if colordiff "${strFl}" "${strFlPatching}";then
+    if CFGFUNCexec --noErrorExit colordiff "${strFl}" "${strFlPatching}";then
       strErr+="ERROR: should have patched for $strBuffBN"
       echo "$strErr"
       ((iErrorCount++))&&:
@@ -210,6 +212,42 @@ for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
 done
 find -name "*.incBuffIDs.OLD.bkp"
 
+if true;then #slow but ok
+  iValidationErrors=0
+  for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
+    strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
+    strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
+    declare -p strFlOld strFlNew 
+    #strDataOld="`cat "${strFlOld}"`"
+    #strDataNew="`cat "${strFlNew}"`"
+    strDataOld="`diff "${strFlOld}" "${strFlNew}" |egrep "^<"`"
+    strDataNew="`diff "${strFlOld}" "${strFlNew}" |egrep "^>"`"
+    iTot=${#strDataOld};if((iTot<${#strDataNew}));then iTot=${#strDataNew};fi
+    #for((iOld=0,iNew=0;iOld<iTot;));do
+    iOld=0;iNew=0
+    while true;do
+      if((iOld>=iTot || iNew>=iTot));then break;fi
+      echo -ne "Old(${iOld}/${#strDataOld}),New(${iNew}/${#strDataNew})\r"
+      if [[ "${strDataOld:iOld:1}" == "${strDataNew:iNew:1}" ]];then ((iOld++,iNew++))&&:;continue;fi #(*1)
+      if [[ "${strDataOld:iOld:1}" =~ \< ]] && [[ "${strDataNew:iNew:1}" =~ \> ]];then ((iOld++,iNew++))&&:;continue;fi #accepts diff token char
+      if [[ "${strDataOld:iOld:1}" =~ [0-9] ]] && [[ "${strDataNew:iNew:1}" =~ [0-9] ]];then ((iOld++,iNew++))&&:;continue;fi #accepts numeric differences w/o calculating them (blindly)
+      if ! [[ "${strDataOld:iOld:1}" =~ [0-9] ]];then #when inrementing the next char on New file may match the current in Old file (because the  old number could be 9 and the new 10)
+        if [[ "${strDataOld:iOld:1}" == "${strDataNew:iNew+1:1}" ]];then ((iNew++));continue;fi #will be success at (*1)
+      fi
+      if ! [[ "${strDataNew:iNew:1}" =~ [0-9] ]];then #when decrementing (invert the above explanation pls ;))
+        if [[ "${strDataOld:iOld+1:1}" == "${strDataNew:iNew:1}" ]];then ((iOld++));continue;fi #will be success at (*1)
+      fi
+      CFGFUNCinfo "WARN: Unexpected char difference Old[$iOld]='${strDataOld:iOld:1}' != New[$iNew]='${strDataNew:iNew:1}'"
+      ((iOld++,iNew++))&&:
+      ((iValidationErrors++))&&:
+    done
+    echo
+  done
+  if((iValidationErrors>0));then
+    CFGFUNCerrorExit "FAILED, see above errors..."
+  fi
+fi
+
 for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
   strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
   strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
@@ -230,4 +268,9 @@ if CFGFUNCprompt -q "everything looks ok? there is backups suffixed with '.incBu
   fi
 fi
 
-declare -p astrBuffNotFoundList |tr '[' '\n'
+if((${#astrBuffNotFoundList[*]}>0));then
+  declare -p astrBuffNotFoundList |tr '[' '\n'
+  CFGFUNCinfo "you should remove from the cfg the above buffs not found in files anymore.."
+fi
+
+CFGFUNCwriteTotalScriptTimeOnSuccess

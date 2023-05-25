@@ -74,10 +74,10 @@ done
 # SECONDS or values w/o limit
 nCols=5
 astrCVarNoLimitList=(
-  #0:strCVarNPC                           1:strCVarPlayer                               2:iBeginValue 3:iStep 4:iMaxValue
-  "fGSKNPCSelfPreventDismissSecs"         ".iGSKPlayerNPCInfoSelfPreventDismissSecs"               13      15         666
-  "iGSKNPCHealingMedicine"                ".iGSKPlayerNPCInfoHealingMedicine"                      5       11        1235 #todo: xmlstarlet to at items.xml look for iGSKNPCHealingMedicine.*NPCMedkitMaxHealValue
-  "iGSKLeaderAttackedDisableNPCSneakTime" ".iGSKPlayerNPCInfoDenySneak"                             5       5         120
+  #0:strCVarNPC                              1:strCVarPlayer                               2:iBeginValue 3:iStep 4:iMaxValue
+  "fGSKNPCSelfPreventDismissSecs"            ".iGSKPlayerNPCInfoSelfPreventDismissSecs"               13      15         666
+  "iGSKNPCHealingMedicine"                   ".iGSKPlayerNPCInfoHealingMedicine"                       5      11        1235 #todo: xmlstarlet to at items.xml look for iGSKNPCHealingMedicine.*NPCMedkitMaxHealValue
+  "iGSKNPCfollowingDenySneakTimer"           ".iGSKPlayerNPCInfoDenySneak"                             5       5         120
 )
 #for strCVar in "${astrCVarNoLimitList[@]}";do
 for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
