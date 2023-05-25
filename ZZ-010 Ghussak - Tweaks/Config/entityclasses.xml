@@ -10,13 +10,24 @@
       <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
       </triggered_effect>
+      <!-- HELPGOOD: use the same possible requirements from buffGSKNPCproperSneaking3, just remember this runs on the player and not on the NPC-->
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1">
-        <!-- HELPGOOD: use the same possible requirements from buffGSKNPCproperSneaking3, just remember this runs on the player and not on the NPC-->
         <requirement name="IsNight"/>
         <requirement name="!IsIndoors"/>
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="5" help="needs to tell NPC to completely stop attacking">
+        <requirement name="IsNight"/>
+        <requirement name="!IsIndoors"/>
+        <requirement name="!IsBloodMoon"/>
+        <!-- HELPGOOD: walk crouched is _crouching=0 for NPCs right?
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" />
+-->
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" tags="npc"/>
       </triggered_effect>
     </effect_group>
   </append>
