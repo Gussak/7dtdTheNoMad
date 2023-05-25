@@ -7107,6 +7107,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnFreeBundlesLimit" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
       </effect_group>
     </buff>
@@ -9692,6 +9693,15 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.01"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKBloodMoonStuff3">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -9708,6 +9718,7 @@
       </effect_group>
       <effect_group help="update counters based on limits">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="8"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="as the player may have moved away from where it happened">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0"/>
@@ -9736,6 +9747,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="8"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
         </triggered_effect>
@@ -9750,6 +9762,14 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCBloodMoonAskFoeIsAlive" target="selfAOE" range="60" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
