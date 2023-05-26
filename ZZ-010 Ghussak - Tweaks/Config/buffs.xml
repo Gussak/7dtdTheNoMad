@@ -2085,13 +2085,24 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCExpCredit">
+          <requirement name="CVarCompare" cvar="iNPCExpCredit" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader">
+          <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="EntityID">
           <requirement name="CVarCompare" cvar="EntityID" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCfollowingDenySneakTimer"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoSpent"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCfollowingDenySneakTimer">
+          <requirement name="CVarCompare" cvar="iGSKNPCfollowingDenySneakTimer" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoSpent">
+          <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCAmmoLimit">
+          <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKNPCarmorDmgPercent">
           <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GT" value="0"/>
         </triggered_effect>
@@ -5632,7 +5643,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoison"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKSnakePoison" help="that is the whole point of sneaky poisonous animals, to be successful on the 1st byte">
+    <buff name="buffGSKSnakePoison">
       <duration value="0.10"/>
       <update_rate value="0.05"/>
       <effect_group>
@@ -5641,29 +5652,25 @@
           <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork45"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="FAILED: NPCs (this ragdoll wont affect the player)">
-        <requirement name="!EntityTagCompare" tags="player"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="9" help="nothing happens..."/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRagdollRequestedOnMob" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBeastFangsHoldup"/>
-      </effect_group>
+      <!-- HELPGOOD: this didnt work as expected
       <effect_group help="player">
-        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0" />
         <requirement name="EntityTagCompare" tags="player"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="set" value="randomInt(-6,3)" help="-6 -5 -4 -3 -2 -1 0 (1 2 3) = 30%"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="multiply" value="3"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKParalizeTime"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKParalizeTime"/> 
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze6s">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze9s">
-          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9"/>
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBeastFangsHoldup" help="to compensate not being able to control player ragdoll time. to work also like spider net TODO: spider net thru ranged attack"/>
       </effect_group>
+-->
     </buff>
     <buff name="buffGSKSnakePoisonWork45" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <stack_type value="ignore"/>
@@ -5713,13 +5720,41 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiatedRegenBlock"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKSpiderNet1" hidden="false" icon_blink="true" icon="7dtdShockTip" icon_color="255,255,255" help="TODO: spider net icon" description_key="dkbuffGSKSpiderNet" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.33"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.50"/>
+        <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet" help="the playe have to act for it to work">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfStand" action="RemoveBuff" buff="buffGSKSpiderNet" help="the playe have to act for it to work">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet" help="the playe have to act for it to work">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet" help="the playe have to act for it to work">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet" help="like 3% per second">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKInPineForestBiomeMonstersThrive5" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="7.5"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="2.5" target="selfAOE" range="60" target_tags="zombie">
-        <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
-      </triggered_effect>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="2.5" target="selfAOE" range="60" target_tags="zombie">
+          <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
     <buff name="buffGSKRadiationAura">
       <stack_type value="ignore"/>
@@ -6081,6 +6116,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="15" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount96"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="113617" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
@@ -7096,6 +7134,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="Teleport Underground NOW!">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
         </triggered_effect>
@@ -9349,7 +9388,6 @@
     <buff name="buffGSKBeastFangsHoldup" hidden="false" description_key="dkbuffGSKBeastFangsHoldup" name_key="BeastFangsHoldUp" icon="7dtdGskFangHoldUp" icon_blink="true">
       <stack_type value="replace"/>
       <duration value="3"/>
-      <update_rate value="0.05"/>
       <effect_group>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
@@ -9702,8 +9740,10 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKBloodMoonStuff3">
+    <buff name="buffGSKBloodMoonStuff3" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false">
       <stack_type value="replace"/>
+      <display_value value=".iGSKBMFoeAliveCount"/>
+      <display_value_key value="{0:0}"/>
       <duration value="0"/>
       <update_rate value="10" help="count 6 is 1min"/>
       <effect_group help="hold spawnings control">
@@ -9718,7 +9758,7 @@
       </effect_group>
       <effect_group help="update counters based on limits">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="8"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="as the player may have moved away from where it happened">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0"/>
@@ -9747,7 +9787,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="8"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
         </triggered_effect>
@@ -9785,6 +9825,14 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="stumbling npcs and mobs">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCstumble2" target="selfAOE" range="60" target_tags="zombie,npc,animal,bandit">
+          <requirement name="!HasBuff" buff="buffGSKNPCstumble2"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01" help="spiders have no ragdoll (yet?)"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="bloodmoon stuff">
         <requirement name="IsBloodMoon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff3">
@@ -10114,6 +10162,32 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKElctrnHero"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="only way to fix the DNA damage is resurrection"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKNPCstumble2">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfFallImpact" action="Ragdoll" duration="1" force="1" help="this wont trigger on NPCs right?">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_fallSpeed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="1">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="0.50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="1">
+          <requirement name="EntityTagCompare" tags="zombie"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15" help="they are careless"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="1">
+          <requirement name="EntityTagCompare" tags="npc,bandit"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5" help="there are stones in their path"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="1">
+          <requirement name="EntityTagCompare" tags="animal"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1" help="they have 4 legs but anyway"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">

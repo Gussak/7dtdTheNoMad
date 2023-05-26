@@ -12,7 +12,7 @@ Beware tho, you may initially spawn (1st game join) in a very difficult place; t
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.
 This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.  
-But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons, sounds, anything that could be improved), you can create a pull request on github for review, thx!  
+But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons (like more realistic or better drawn), sounds, anything that could be improved), you can create a pull request on github for review, thx!  
 .  
 ############################## MOD FEATURES OVERVIEW: ##############################   
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
@@ -169,7 +169,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - poison can paralyze (the player too) now for a short time
 - fix: prevented most POIs from being above the ground that (despite fun) makes things easier
 - animal spiders will jump now
-- fix: effective weapons mod: spiders wont be put in ragdoll mode now
+- fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - no more somehow easy loot drop from friendly NPCs
 .  
 --------- v0.9a -----------  

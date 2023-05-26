@@ -2595,6 +2595,21 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKCfgBMCountOnHoldLimit"/>
       </effect_group>
     </item>
+    <item name="GSKCFGExtraBloodMoonFoeLimit">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="DescriptionKey" value="dkGSKCFGExtraBloodMoonFoeLimit"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="add" value="2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="add" value="-2">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="GTE" value="4" help="min is 2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKBMFoeAliveMax"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKBMFoeAliveMax"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </item>
     <item name="GSKCosmicRayBeamDigger">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="CustomIcon" value="7dtdCosmicRayBeam"/>
@@ -5877,5 +5892,52 @@
     <effect_group tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="1.0"/>
     </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimalSpider')]">
+    <property class="Action1">
+      <property name="Class" value="Vomit"/>
+      <property name="Hitmask_override" value="Arrow"/>
+      <property name="Delay" value=".5"/>
+      <property name="Infinite_ammo" value="true"/>
+      <property name="Magazine_items" value="ammoProjectileSpiderNet"/>
+      <property name="Sound_warning" value=""/>
+      <property name="Sound_start" value="swoosh"/>
+      <property name="Sound_repeat" value=""/>
+      <property name="Sound_end" value=""/>
+      <property name="Sound_empty" value=""/>
+      <property name="Sound_reload" value=""/>
+    </property>
+    <effect_group name="meleeHandAnimalSpider" tiered="false">
+      <passive_effect name="ModSlots" operation="base_set" value="0"/>
+      <passive_effect name="MagazineSize" operation="base_set" value="1"/>
+      <passive_effect name="BurstRoundCount" operation="base_set" value="2"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="6"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="15"/>
+      <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
+      <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
+      <passive_effect name="MaxRange" operation="base_set" value="50"/>
+    </effect_group>
+  </append>
+  <append xpath="/items">
+    <item name="ammoProjectileSpiderNet">
+      <property name="Meshfile" value="#Other/Items?Misc/snowballPrefab.prefab"/>
+      <property name="Material" value="Morganic"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="255,255,255"/>
+      <property class="Action1">
+        <property name="Class" value="Projectile"/>
+        <property name="DamageEntity" value="1"/>
+        <property name="DamageBlock" value="1"/>
+        <property name="Explosion.ParticleIndex" value="7"/>
+        <property name="Velocity" value="18"/>
+        <property name="FlyTime" value="0.2"/>
+        <property name="LifeTime" value="4"/>
+        <property name="CollisionRadius" value=".5"/>
+        <property name="DamageBonus.earth" value="0"/>
+        <property name="Gravity" value="-1"/>
+        <property name="Buff" value="buffGSKSpiderNet1"/>
+      </property>
+    </item>
   </append>
 </GhussakTweaks>
