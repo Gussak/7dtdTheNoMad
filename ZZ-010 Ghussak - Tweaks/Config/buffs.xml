@@ -9959,7 +9959,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="fat help on avoiding death too">
-        <requirement name="StatCompareCurrent" stat="food" operation="LT" value="1.0"/>
+        <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LTE" value=".02" help="the same check to add buffStatusHungry03"/>
         <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="food" operation="add" value="1"/>
@@ -10501,7 +10501,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="SetDancing" enabled="false"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGasMaskWork" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
+    <buff name="buffGSKGasMaskWork2" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
       <stack_type value="ignore"/>
       <update_rate value="3"/>
       <duration value="0"/>
@@ -10509,6 +10509,9 @@
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="@.iGSKMiasmaPrevious"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="set" value="@fGSKMiasmaDirty"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="subtract" value="@.iGSKMiasmaPrevious" help="diff"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="set" value="0"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKMiasmaDelta" operation="GTE" value="1"/>
@@ -10522,14 +10525,21 @@
         <requirement name="CVarCompare" cvar=".iGSKMiasmaBlockPercTmp" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="multiply" value="@.iGSKMiasmaBlockPercTmp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@.iGSKMiasmaDelta"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKMiasmaDelta" operation="LT" value="0"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="-0.0033" help="+-1800s=30min, half a day in rt1h/gameday, sync with update_rate"/>
       </effect_group>
       <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="@.iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKGasMaskWork2:ERROR:CalcTooMuch,gasMaskIsToLowerTheIncOnly"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaDelta"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKMiasmaBlockPercExtra"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaBlockPercTmp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="@iGSKMiasmaPrevious"/>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty"/>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork">
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork2">
           <requirement name="!HasBuff" buff="buffGSKGasMaskBandana"/>
           <requirement name="!HasBuff" buff="buffGSKGasMaskPro"/>
         </triggered_effect>
@@ -10541,8 +10551,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.75" help="because the skin is not protected"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
-          <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork2">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork2"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -10552,8 +10562,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork">
-          <requirement name="!HasBuff" buff="buffGSKGasMaskWork"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork2">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork2"/>
         </triggered_effect>
       </effect_group>
     </buff>

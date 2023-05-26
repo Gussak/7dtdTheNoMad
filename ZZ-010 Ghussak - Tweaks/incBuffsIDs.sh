@@ -67,6 +67,7 @@ astrBuffBNList=(
   "buffGSKCosmicRayStrikeChk"
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
+  "buffGSKGasMaskWork"
   "buffGSKHazardousWBloodLoss"
   #"buffGSKHazardousWCold"
   #"buffGSKHazardousWDesert"
