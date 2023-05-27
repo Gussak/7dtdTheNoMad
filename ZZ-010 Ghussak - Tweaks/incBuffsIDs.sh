@@ -67,6 +67,7 @@ astrBuffBNList=(
   "buffGSKCosmicRayStrikeChk"
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
+  "buffGSKFallOverLandingHit"
   "buffGSKGasMaskWork"
   "buffGSKHazardousWBloodLoss"
   #"buffGSKHazardousWCold"
@@ -216,6 +217,7 @@ done
 find -name "*.incBuffIDs.OLD.bkp"
 
 if true;then #slow but ok
+  CFGFUNCinfo "Validating if only numbers were changed where expected, a very restrictive check"
   iValidationErrors=0
   for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
     strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
@@ -252,11 +254,13 @@ if true;then #slow but ok
 fi
 
 for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
-  strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
-  strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
-  echo meld "${strFlOld}" "${strFlNew}"
+  strFlNew="$(realpath $(echo "$strFlOldFlNew" |cut -d: -f1))"
+  strFlOld="$(realpath $(echo "$strFlOldFlNew" |cut -d: -f2))"
+  echo "meld '${strFlOld}' '${strFlNew}'"
 done
-if CFGFUNCprompt -q "everything looks ok? there is backups suffixed with '.incBuffIDs.OLD.bkp'. accepting will move the new file over the final file.";then
+
+find -name "*.incBuffIDs.OLD.bkp"
+if CFGFUNCprompt -q "everything looks ok? the final files were not changed yet. Accepting will move the new file over the final file. There are backups suffixed with '.incBuffIDs.OLD.bkp'";then
   for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
     strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
     strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
