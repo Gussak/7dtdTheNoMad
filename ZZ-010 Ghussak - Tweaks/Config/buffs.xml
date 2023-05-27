@@ -741,6 +741,15 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
       </effect_group>
+      <effect_group help="NPCSNEAK:light WL">
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+          <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="add" value="10" help="same as the update_rate"/>
+      </effect_group>
       <effect_group help="NPCSNEAK:fix TODO: prevent this happening">
         <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="NotEquals" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
