@@ -9836,6 +9836,12 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="proper bath benefits decrease with time">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="-0.0011" help="perc of 2.0 200% will last +-30min=1800s=1800;2.0/1800=0.0011*update_rate=0.0011, half a day in rt1h/gameday, sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="fall over enemy damage">
         <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKFallOverLandingHit6"/>
       </effect_group>
@@ -10566,10 +10572,6 @@
         <requirement name="CVarCompare" cvar=".iGSKMiasmaBlockPercTmp" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="multiply" value="@.iGSKMiasmaBlockPercTmp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@.iGSKMiasmaDelta"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="-0.0033" help="+-1800s=30min, half a day in rt1h/gameday, sync with update_rate"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0"/>
-        </triggered_effect>
       </effect_group>
       <effect_group help="DBG">
         <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
