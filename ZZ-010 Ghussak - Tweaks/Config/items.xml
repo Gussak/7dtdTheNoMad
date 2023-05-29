@@ -105,30 +105,6 @@
   <append xpath="/items/item[       starts-with(@name, 'meleeWpnSpearT3SteelSpear') or       starts-with(@name, 'meleeWpnClubT3SteelClub') or       starts-with(@name, 'meleeWpnSledgeT3SteelSledgehammer') or       starts-with(@name, 'meleeWpnBladeT3Machete') or       starts-with(@name, 'meleeWpnKnucklesT3SteelKnuckles') or       starts-with(@name, 'armorSteel')     ]">
     <property name="RepairTools" value="resourceForgedSteel"/>
   </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T0')]">
-    <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="25"/>
-      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1')]">
-    <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="40"/>
-      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2')]" help="if someone creates it">
-    <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
-      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3')]">
-    <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70"/>
-      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
-    </effect_group>
-  </append>
   <set xpath="/items/item[       starts-with(@name, 'gunBowT1') or        starts-with(@name, 'gunBowT3')     ]/property[@name='RepairTools']/@value">gunBowT1WoodenBowParts</set>
   <set xpath="/items/item[starts-with(@name, 'gunHandgun')]/property[@name='RepairTools']/@value">gunHandgunT1PistolParts</set>
   <set xpath="/items/item[starts-with(@name, 'gunShotgun')]/property[@name='RepairTools']/@value">gunShotgunT1DoubleBarrelParts</set>
@@ -5859,20 +5835,6 @@
       <property name="Group" value="Resources"/>
     </item>
   </append>
-  <!--  HELPGOOD: to avoid spending a huge lot of time looking at the inventory and managing resources on nearby camps... and spend more time exploring and fighting. this is the limit after reloading the game -->
-  <set xpath="//property[@name='Stacknumber' and not(@value='1')]/@value">65535</set>
-  <!--  HELPGOOD: items with stack greater than 1 wont accept mods-->
-  <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
-  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
-  <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
-  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
-  <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
-  <!-- HELPGOOD: other things that call or should be only 1 -->
-  <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
-  <!-- HELPGOOD: other things that had no Stacknumber but should -->
-  <append xpath="/items/item[@name='meleeToolTorch']">
-    <property name="Stacknumber" value="65535"/>
-  </append>
   <append xpath="/items/item[starts-with(@name,'gun') or starts-with(@name,'melee')]" help="mutant zombies may teleport who hits them">
     <effect_group tiered="false">
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
@@ -5992,4 +5954,47 @@
       </triggered_effect>
     </effect_group>
   </append>
+  <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
+  <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
+  <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
+  <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
+  <append xpath="/items/item[(starts-with(@name,'melee') and contains(@name,'T0')) or @name='meleeToolFlashlight02']">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="25"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1')]">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="40"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2')]" help="if someone creates it">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3')]">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <!--  HELPGOOD: to avoid spending a huge lot of time looking at the inventory and managing resources on nearby camps... and spend more time exploring and fighting. this is the limit after reloading the game -->
+  <set xpath="//property[@name='Stacknumber' and not(@value='1')]/@value">65535</set>
+  <!--  HELPGOOD: items with stack greater than 1 wont accept mods-->
+  <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
+  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
+  <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
+  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
+  <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
+  <!-- HELPGOOD: other things that call or should be only 1 -->
+  <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
+  <!-- HELPGOOD: other things that had no Stacknumber but should -->
+  <append xpath="/items/item[@name='meleeToolTorch']">
+    <property name="Stacknumber" value="65535"/>
+  </append>
+  <!-- HELPGOOD: =================================== PUT NOTHING BELOW HERE ====================== -->
 </GhussakTweaks>

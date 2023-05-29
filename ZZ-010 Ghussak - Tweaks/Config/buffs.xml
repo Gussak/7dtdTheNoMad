@@ -10535,7 +10535,7 @@
       <update_rate value="3"/>
       <duration value="0"/>
       <effect_group help="DBG">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="1"/>
       </effect_group>
       <effect_group help="DBG">
         <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
@@ -10825,6 +10825,21 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKModFoodTmp" operation="set" value="randomInt(5,15)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="subtract" value="@.fGSKModFoodTmp"/>
       </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffGSKMarkedForJumpKick" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="3.0"/>
+    </buff>
+    <buff name="buffGSKCheckJumpKick" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="3.0"/>
+      <update_rate value="0.1"/>
+      <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="3" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
+        <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
+      </triggered_effect>
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffCrouching']">

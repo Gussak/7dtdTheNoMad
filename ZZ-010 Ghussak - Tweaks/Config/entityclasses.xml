@@ -6,9 +6,16 @@
   <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[@trigger='onSelfRespawn' and @action='AddBuff' and @target='self']/@buff">,buffGSKDetectRespawn,buffGSKRespawnNoMadBundlesAllowCrafting,buffGSKGodModeRespawn</append>
   <!-- HELPGOOD: only after death/resurrect. buffGSKDetectRespawn must be b4 buffGSKRespawnNoMadBundlesAllowCrafting -->
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
-    <effect_group help="TODO: let it parry only melee attacks? despite ranged is actually cool in a sense">
-      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
+    <effect_group>
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="TODO: let it parry only melee attacks? despite ranged is actually cool in a ninja sense">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="3" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: this trigger works here? see buffGSKCheckJumpKick too">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
+        <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
       </triggered_effect>
       <!-- HELPGOOD: use the same possible requirements from buffGSKNPCproperSneaking7, just remember this runs on the player and not on the NPC-->
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1">
