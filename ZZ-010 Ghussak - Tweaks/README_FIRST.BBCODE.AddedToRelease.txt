@@ -171,6 +171,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - animal spiders will jump now
 - fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - no more somehow easy loot drop from friendly NPCs
+- added workaround to brink NPC near player: vehicleGSKNPChelperPlaceable
 .  
 --------- v0.9a -----------  
 - initial release.  

@@ -646,6 +646,7 @@ astr=(
   modGunFlashlightSchematic 1
   vehicleBicycleChassisSchematic 1
   vehicleBicycleHandlebarsSchematic 1
+  vehicleGSKNPChelperPlaceable 1
 );FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho)." "${astr[@]}"
 
 astr=( #TEMPLATE
