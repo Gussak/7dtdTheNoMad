@@ -817,17 +817,17 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --openOnceOnly --color "166,148,128" "Maps" "bundleBooks" "My tribe is gone, what will I do now.." "${astr[@]}"
 
+#########################################################################################
+#########################################################################################
+###################################### KEEP AS LAST ONES!!! ##############################
+#########################################################################################
+#########################################################################################
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --noExpLoss "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 #);FUNCprepareBundles --noCheckMissingItemIds "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
 
-#########################################################################################
-#########################################################################################
-###################################### KEEP AS LAST ONE!!! ##############################
-#########################################################################################
-#########################################################################################
 astr=(
   # notes
   GSKTRNotesBundle 1 #from createNotesTips.sh

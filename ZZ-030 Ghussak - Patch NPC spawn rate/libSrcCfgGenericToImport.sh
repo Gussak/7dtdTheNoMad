@@ -559,6 +559,8 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${strModNameForIDs:="TheNoMadOverhaul"} #and for backup filenames
   export strModNameForIDs
   if ! [[ "$strModNameForIDs" =~ ^[a-zA-Z0-9_]*$ ]];then CFGFUNCerrorExit " (CFG)ERROR: invalid chars at strModNameForIDs='$strModNameForIDs'";fi
+  : ${strModNameShortForIDs:="TNM"}
+  export strModNameShortForIDs
   
   #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh
   
