@@ -5917,7 +5917,7 @@
       </effect_group>
     </item>
   </append>
-  <append xpath="/items/item[starts-with(@name,'meleeHandAnimalSpider')]">
+  <append xpath="/items/item[@name='meleeHandAnimalSpider']">
     <property class="Action1">
       <property name="Class" value="Vomit"/>
       <property name="Hitmask_override" value="Arrow"/>
@@ -5933,7 +5933,31 @@
     </property>
     <effect_group name="meleeHandAnimalSpider" tiered="false">
       <passive_effect name="ModSlots" operation="base_set" value="0"/>
-      <passive_effect name="MagazineSize" operation="base_set" value="1"/>
+      <passive_effect name="MagazineSize" operation="base_set" value="3"/>
+      <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="0.33"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="0.33"/>
+      <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
+      <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
+      <passive_effect name="MaxRange" operation="base_set" value="50"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeHandAnimalSpiderFeral']">
+    <effect_group name="meleeHandAnimalSpiderFeral" tiered="false">
+      <passive_effect name="ModSlots" operation="base_set" value="0"/>
+      <passive_effect name="MagazineSize" operation="base_set" value="6"/>
+      <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="0.33"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="0.33"/>
+      <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
+      <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
+      <passive_effect name="MaxRange" operation="base_set" value="50"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeHandAnimalSpiderQueen']">
+    <effect_group name="meleeHandAnimalSpiderQueen" tiered="false">
+      <passive_effect name="ModSlots" operation="base_set" value="0"/>
+      <passive_effect name="MagazineSize" operation="base_set" value="9"/>
       <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
       <passive_effect name="SpreadDegreesVertical" operation="base_set" value="0.33"/>
       <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="0.33"/>
@@ -5943,15 +5967,47 @@
     </effect_group>
   </append>
   <append xpath="/items">
+    <item name="meleeHandAnimalSpiderMini">
+      <property name="Extends" value="meleeHandAnimalSpider"/>
+      <property class="Action0">
+        <property name="DamageEntity" value="3"/>
+        <property name="DamageBlock" value="4"/>
+      </property>
+      <effect_group name="meleeHandAnimalSpiderMini" tiered="false">
+        <passive_effect name="ModSlots" operation="base_set" value="0"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="1"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="0.33"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="0.33"/>
+        <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
+        <passive_effect name="MaxRange" operation="base_set" value="50"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items">
     <item name="ammoProjectileSpiderNet">
       <property name="Meshfile" value="#Other/Items?Misc/snowballPrefab.prefab"/>
       <property name="Material" value="Morganic"/>
       <property name="CreativeMode" value="Player"/>
-      <property name="CustomIcon" value="7dtdShockTip"/>
-      <property name="CustomIconTint" value="255,255,255"/>
+      <property name="CustomIcon" value="resourceSnowBall"/>
+      <property name="CustomIconTint" value="128,180,128"/>
       <property name="ExplodeOnHit" value="true"/>
       <property name="StickPercent" value="1.0"/>
       <property name="ThrowableDecoy" value="false"/>
+      <property class="Action0" help="tweaked from spear">
+        <property name="Class" value="ThrownWeapon"/>
+        <property name="Hitmask_override" value="Bullet"/>
+        <property name="Delay" value="1.2"/>
+        <property name="Throw_strength_default" value="6"/>
+        <property name="Throw_strength_max" value="18"/>
+        <property name="Max_strain_time" value="1"/>
+        <property name="Sound_start" value="spear_throw"/>
+        <property name="Explosion.ParticleIndex" value="7"/>
+        <property name="FlyTime" value="0"/>
+        <property name="Gravity" value="-7.5"/>
+        <property name="LifeTime" value="60"/>
+      </property>
       <property class="Action1">
         <property name="Class" value="Projectile"/>
         <property name="DamageEntity" value="1"/>
@@ -6004,37 +6060,42 @@
       </triggered_effect>
     </effect_group>
   </append>
+  <append xpath="/items/item[@name='foodCropYuccaFruit']">
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="10"/>
+    </effect_group>
+  </append>
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <append xpath="/items/item[(starts-with(@name,'melee') and contains(@name,'T0')) or @name='meleeToolFlashlight02']">
     <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="25"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1')]">
     <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="40"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="65"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2')]" help="if someone creates it">
     <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="75"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3')]">
     <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="85"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeWpnBatonT0PipeBaton')]" help="special case">
     <effect_group name="parry chance" tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="50"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>

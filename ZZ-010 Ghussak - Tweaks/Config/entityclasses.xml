@@ -7,9 +7,8 @@
   <!-- HELPGOOD: only after death/resurrect. buffGSKDetectRespawn must be b4 buffGSKRespawnNoMadBundlesAllowCrafting -->
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
     <effect_group>
-      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="TODO: let it parry only melee attacks? despite ranged is actually cool in a ninja sense">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
-      </triggered_effect>
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1"/>
+      <triggered_effect trigger="onOtherAttackedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
@@ -571,6 +570,7 @@
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalSnake' or starts-with(@name,'animalSpider')]">
     <drop event="Harvest" name="GSKsnakePoison" count="1,5" tag="butcherHarvest"/>
+    <drop event="Harvest" name="ammoProjectileSpiderNet" count="1,5" tag="butcherHarvest"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider')]">
     <property name="AITask-1" value="BreakBlock"/>
@@ -584,6 +584,16 @@
     <property name="AITask-9" value=""/>
     <property name="CanClimbVertical" value="true"/>
     <property name="JumpMaxDistance" value="10, 13"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') and contains(@name,'Mini')]">
+    <property name="HandItem" value="meleeHandAnimalSpiderMini"/>
+    <property name="SoundRandom" value="" help="small spiders will be sneaky now"/>
+    <property name="SoundAlert" value=""/>
+    <property name="SoundHurt" value="animalspiderhurt"/>
+    <property name="SoundDeath" value="animalspiderdeath"/>
+    <property name="SoundAttack" value="animalspiderattack"/>
+    <property name="SoundSense" value=""/>
+    <property name="SoundGiveUp" value="animalspiderroam"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') or @name='zombieSpider']">
     <property name="Buffs" value="buffGSKNPCLeapHit,buffGSKNPCSpiderTouchNet"/>

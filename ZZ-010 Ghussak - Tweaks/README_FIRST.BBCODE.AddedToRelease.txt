@@ -171,7 +171,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - animal spiders will jump now
 - fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - no more somehow easy loot drop from friendly NPCs
-- added workaround to brink NPC near player: vehicleGSKNPChelperPlaceable
+- added workaround to place a follower NPC near the player: vehicleGSKNPChelperPlaceable
 .  
 --------- v0.9a -----------  
 - initial release.  
@@ -182,7 +182,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 ###FileDescription v1.0aRC1:###  
-Friendly 1st spawn and respawns. Starting a new game is recommended. Run `./installSpecificFilesIntoGameFolder.sh` on cygwin to prepare files outside the modlet folder (and create bkps). Details on changelog.  
+More friendly 1st spawn and respawns. Starting a new game is recommended. Run `./installSpecificFilesIntoGameFolder.sh` on cygwin to prepare files outside the modlet folder (and create bkps). Details on changelog.  
 .  
 ###FileDescription v0.9a:###  
 More friendly first spawn. WIP:Overhaul + DEV tools.For the whole experience,it is better you run `./installSpecificFilesIntoGameFolder.sh` on cygwin, it will guide you on what to do to prepare The NoMad world with files that are outside the modlet folder (and create backups).  

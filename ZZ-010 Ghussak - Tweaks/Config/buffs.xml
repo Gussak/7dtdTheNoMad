@@ -5228,7 +5228,7 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.15"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.15"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.80" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" help="vibrant actually helps on darkening the screen. intensity was 0.80 but becomes too dark at night"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="5.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
       </effect_group>
@@ -5689,7 +5689,12 @@
       </effect_group>
 -->
     </buff>
-    <buff name="buffGSKSnakePoisonWork49" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+    <buff name="buffGSKSnakePoisonDmgIndicator" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+      <damage_type value="Toxic"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
+    <buff name="buffGSKSnakePoisonWork49" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <damage_type value="Toxic"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5731,6 +5736,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="LTE" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSnakePoisonDmgIndicator">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSnakePoisonDmgIndicator">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKSnakePoisonDmgIndicator"/>
       </effect_group>
       <effect_group help="poison prevents radiated zombie regen power">
         <requirement name="EntityTagCompare" tags="radiated"/>
@@ -5748,6 +5760,7 @@
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.90"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.50"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(50,200)"/>
         <!-- HELPGOOD: the player have to act for it to work -->
         <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet5">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
@@ -9710,6 +9723,24 @@
         <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKCosmicRadMessDNA"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKCosmicBloodMoon1" icon="7dtdCosmicRayShield" icon_color="128,255,128" hidden="false" name_key="CosmicBloodMoon" description_key="dkbuffGSKCosmicBloodMoon" remove_on_death="false" help="this also works like a cooldown">
+      <stack_type value="ignore"/>
+      <display_value value="iGSKCosmicBloodMoonCoolDown"/>
+      <display_value_key value="{0:0}s"/>
+      <duration value="0"/>
+      <update_rate value="5" help="sync with iGSKCosmicBloodMoonCoolDown subtraction below"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="add" value="-5" help="sync with update_rate time!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon1" compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="15" force="500" target="selfAOE" range="30" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="-0.10"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKCosmicRayStrike7" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
       <stack_type value="ignore"/>
       <display_value value="iGSKCosmicStrikeCooldown"/>
@@ -9736,7 +9767,7 @@
       <effect_group help="telep in place, down a bit">
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeMode" operation="GTE" value="5"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTeleDown1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKCosmicRayStrike"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrike7:TeleportInPlaceDown1DigMode"/>
       </effect_group>
       <effect_group help="random dir telep">
@@ -9750,7 +9781,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.01"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.10"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
@@ -10192,7 +10223,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKElctrnHero"/>
-        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="only way to fix the DNA damage is resurrection"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="resurrection completely removes DNA damage"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCstumble6">
@@ -10642,14 +10673,27 @@
     <buff name="buffGSKMeleeParry6" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked, create a debuff to apply that on the next weapon/tool use. TODO: remove applied debuffs too like broken limb etc, anything that a parry could deny">
       <stack_type value="replace"/>
       <duration value="0"/>
-      <update_rate value="0.05"/>
-      <effect_group help="restore HP properly if requested">
-        <requirement name="CVarCompare" cvar=".iGSKMeleeParryOnce" operation="GT" value="0"/>
+      <update_rate value="0.5" help="TODO: why 0.05 didnt work well?"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryDoIt" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="check">
+        <requirement name="CVarCompare" cvar=".iGSKMeleeParryOnce" operation="GT" value="0" help="TODO: allow only if equals 1 (can only parry one attack)? TODO: add a cooldown 0.33s before allowing next parry?"/>
         <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@.iGSKMeleeParryPrevHP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKMeleeParry6:RetoredHealthAsDamageWasParried"/>
+        <requirement name="StatCompareCurrent" stat="stamina" operation="GTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryChkChance" operation="set" value="randomInt(0,100)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMeleeParryChkChance"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMeleeParryOnce"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMeleeParryPrevHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryDoIt" operation="set" value="1">
+          <requirement name="CVarCompare" cvar=".iGSKMeleeParryChkChance" operation="LT" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="restore HP properly if requested">
+        <requirement name="CVarCompare" cvar=".iGSKMeleeParryDoIt" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKMeleeParry6:RetoredHealthAsDamageWasParried"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="set" value="@.iGSKMeleeParryPrevHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="set" value="0" help="consume"/>
       </effect_group>
       <effect_group help="track HP value">
