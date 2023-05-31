@@ -2094,6 +2094,7 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCExpCredit">
           <requirement name="CVarCompare" cvar="iNPCExpCredit" operation="GT" value="0"/>
         </triggered_effect>
@@ -6148,7 +6149,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="15" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="113618" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="120123" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
           <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
         </triggered_effect>
@@ -9722,6 +9723,12 @@
         <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="1"/>
         <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKCosmicRadMessDNA"/>
       </effect_group>
+      <effect_group help="Cosmic Blood Moon">
+        <requirement name="IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
+        <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicBloodMoon1"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKCosmicBloodMoon1" icon="7dtdCosmicRayShield" icon_color="128,255,128" hidden="false" name_key="CosmicBloodMoon" description_key="dkbuffGSKCosmicBloodMoon" remove_on_death="false" help="this also works like a cooldown">
       <stack_type value="ignore"/>
@@ -9734,6 +9741,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="add" value="-5" help="sync with update_rate time!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon1" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0.75" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="3.0">
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="135" help="sync with maxTime-ragdollTime"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="15" force="500" target="selfAOE" range="30" target_tags="zombie,animal,bandit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="25"/>
@@ -10455,16 +10466,23 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploring" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringSchematics" operation="add" value="1">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringNPC" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringVisibility" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringVisibilitySchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringMobility" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringMobilitySchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringETC" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeleportHelpers" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperElctrnEnergy" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperElctrnEnergySchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
@@ -10568,6 +10586,8 @@
       <duration value="0.05"/>
       <effect_group help="reset all">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0" target="selfAOE" range="60" target_tags="npc"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="add" value="1"/>
@@ -10580,6 +10600,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".fGSKDbgGasMaskWork"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="GSK:DBG:.fGSKDbgGasMaskWork"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1" target="selfAOE" range="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKDbgNpcInfo"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="GSK:DBG:.iGSKDbgNpcInfo"/>
       </effect_group>
     </buff>
     <buff name="buffGSKGasMaskWork6" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">

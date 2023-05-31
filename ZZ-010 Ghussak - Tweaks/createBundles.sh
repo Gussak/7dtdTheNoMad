@@ -616,38 +616,51 @@ astr=(
   toolForgeCrucibleSchematic 1 
 );FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
 
+strExploringBase="Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho).\n"
+astr=(
+  casinoCoin 666
+  foodRawMeat 1 #for dog companion
+  GSKspawnDogCompanion 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}"
 astr=(
   apparelNightvisionGoggles 1
-  bedrollBlue 33
-  casinoCoin 666
-  "cobblestoneShapes:VariantHelper" 66
-  drinkJarBoiledWater 33
-  drinkCanEmptyCookingOneUse 33
-  drugJailBreakers 3
-  foodRawMeat 1 #for dog companion
   GlowStickGreen       33
   GSKfireFuel 13
-  GSKsimpleBeer        33
-  GSKspawnDogCompanion 1
-  ladderWood            66
   meleeToolFlashlight02 1
   meleeToolTorch 1
   NightVisionBattery    66
-  #meleeWpnSpearT0StoneSpear 1
-  resourceCloth 33
-  resourceDuctTape 1
-  resourceFeather        1
-  resourceLockPick 1
-  resourceRockSmall    222
-  resourceWood         66
-  resourceYuccaFibers  33
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorHelmetLightSchematic 1
   modGunFlashlightSchematic 1
+);FUNCprepareBundles "ExploringVisibility" "bundleVehicle4x4" "${strExploringBase}This helps on seeing the world." "${astr[@]}"
+astr=(
+  bedrollBlue 33
+  "cobblestoneShapes:VariantHelper" 66
+  drinkJarBoiledWater 33 #for the desert
+  drugSteroids  13
+  GSKsimpleBeer        33
+  ladderWood            66
+  RepairColdProt 13 #w/o this you wont go far overheating or freezing
+  RepairHeatProt 13
+  resourceCloth 33 #to help fix cold/heat protection cloths, and create bandana etc
+  resourceRockSmall    222 #to lure mobs away
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
   vehicleBicycleChassisSchematic 1
   vehicleBicycleHandlebarsSchematic 1
   vehicleGSKNPChelperPlaceable 1
-);FUNCprepareBundles "Exploring" "bundleVehicle4x4" "Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho)." "${astr[@]}"
+);FUNCprepareBundles "ExploringMobility" "bundleVehicle4x4" "${strExploringBase}This helps on moving thru the world." "${astr[@]}"
+astr=(
+  drinkCanEmptyCookingOneUse 33
+  drugJailBreakers 3
+  #meleeWpnSpearT0StoneSpear 1
+  resourceDuctTape 1
+  resourceFeather        1
+  resourceLockPick 1
+  resourceWood         66
+  resourceYuccaFibers  33
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "ExploringETC" "bundleVehicle4x4" "${strExploringBase}This have a few other things to help open locked containers, cooking, etc" "${astr[@]}"
 
 astr=( #TEMPLATE
   ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
@@ -686,20 +699,23 @@ astr=( #TEMPLATE
   #armorScrapLegs 1
   armorClothPants 1
   armorClothBoots 1
-  RepairColdProt 13
-  RepairHeatProt 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
 astr=(
-  ammoJunkTurretRegular 222
+  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
+  GSKElctrnTeleportUndergroundFreeAndSafeCall 1
+  GSKElctrnTeleportToBiomeFreeAndSafeCall 1
+  GSKteleToBackpackFreeAndSafeCall 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}"
+
+astr=(
+  ammoJunkTurretRegular 666
   armorClothHat 1 # this is to be able to install one of the mods
   drugOhShitzDrops 1 # just in case the auto protection doesnt kick in..
   gunBotT2JunkTurret 1
-  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
   GSKNoteElctrnTeleporToSkyFirstTime 1
-  GSKElctrnTeleportUndergroundFreeAndSafeCall 1
-  GSKElctrnTeleportToBiomeFreeAndSafeCall 1
   #GSKElctrnTeleportDirection 1
   #GSKElctrnTeleportToSky 1
   modGSKEnergyThorns     1
@@ -721,7 +737,6 @@ astr=(
   drinkJarBoiledWater 13
   drugAntibiotics 4
   drugPainkillers 1
-  drugSteroids  13
   drugVitamins 1
   foodHoney 1
   drugGSKAntiRadiation 13
@@ -731,6 +746,7 @@ astr=(
   drugGSKRadiationResist 13
   drugGSKsnakePoisonAntidote 3
   medicalBloodBag 13
+  medicalBloodBagEmpty 9
   medicalFirstAidBandage 13
   medicalSplint 3
   potionRespec 1
