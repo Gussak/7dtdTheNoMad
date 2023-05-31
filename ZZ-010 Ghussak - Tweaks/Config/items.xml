@@ -5937,8 +5937,8 @@
       <passive_effect name="ModSlots" operation="base_set" value="0"/>
       <passive_effect name="MagazineSize" operation="base_set" value="3"/>
       <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
-      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="10"/>
-      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="10"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="1"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="1"/>
       <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
       <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
       <passive_effect name="MaxRange" operation="base_set" value="50"/>
@@ -5949,8 +5949,8 @@
       <passive_effect name="ModSlots" operation="base_set" value="0"/>
       <passive_effect name="MagazineSize" operation="base_set" value="6"/>
       <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
-      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="20"/>
-      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="20"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="3"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="3"/>
       <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
       <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
       <passive_effect name="MaxRange" operation="base_set" value="50"/>
@@ -5961,8 +5961,8 @@
       <passive_effect name="ModSlots" operation="base_set" value="0"/>
       <passive_effect name="MagazineSize" operation="base_set" value="9"/>
       <passive_effect name="BurstRoundCount" operation="base_set" value="1"/>
-      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="30"/>
-      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="30"/>
+      <passive_effect name="SpreadDegreesVertical" operation="base_set" value="5"/>
+      <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="5"/>
       <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
       <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
       <passive_effect name="MaxRange" operation="base_set" value="50"/>
@@ -6017,6 +6017,11 @@
     </item>
     <item name="ammoProjectileSpiderWebPlayer">
       <property name="Extends" value="thrownGrenadeContact"/>
+      <property name="Meshfile" value="#Other/Items?Misc/snowballPrefab.prefab"/>
+      <property name="HandMeshfile" value="#Other/Items?Misc/snowball_FP_Prefab.prefab"/>
+      <property name="DropMeshfile" value="#Other/Items?Misc/snowballPrefab.prefab"/>
+      <property name="DropScale" value="1.5"/>
+      <property name="Material" value="Morganic"/>
       <property name="CustomIcon" value="resourceSnowBall"/>
       <property name="CustomIconTint" value="128,180,128"/>
       <property name="Material" value="Mcloth"/>
@@ -6035,9 +6040,14 @@
         <property name="Buff" value="buffGSKSpiderNet5"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="LT" value=".98"/>
       </property>
+      <property class="Action1">
+        <property name="Sound_start" value="swoosh"/>
+      </property>
       <effect_group name="ammoProjectileSpiderWebPlayer" tiered="false">
         <passive_effect name="ModSlots" operation="base_set" value="0"/>
         <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet5"/>
+        <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet5"/>
+        <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet5"/>
       </effect_group>
     </item>
   </append>
