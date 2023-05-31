@@ -10670,10 +10670,10 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKMeleeParry6" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked, create a debuff to apply that on the next weapon/tool use. TODO: remove applied debuffs too like broken limb etc, anything that a parry could deny">
+    <buff name="buffGSKMeleeParry6" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked, create a debuff to apply that on the next weapon/tool use. TODO: block/remove applied debuffs too like broken limb etc, anything that a parry could deny">
       <stack_type value="replace"/>
       <duration value="0"/>
-      <update_rate value="0.5" help="TODO: why 0.05 didnt work well?"/>
+      <update_rate value="0.33" help="TODO: why 0.05 didnt work well?"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryDoIt" operation="set" value="0"/>
       </effect_group>
@@ -10901,9 +10901,12 @@
       <stack_type value="replace"/>
       <duration value="3.0"/>
       <update_rate value="0.1"/>
-      <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="9" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="9" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: add sound for kick. let spiders get stunned instead">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
         <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
       </triggered_effect>
     </buff>
   </append>
