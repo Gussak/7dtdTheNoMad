@@ -9824,7 +9824,7 @@
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="as the player may have moved away from where it happened">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="keep 1 as the player may have moved away from where it happened">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="add" value="-1"/>
@@ -9849,12 +9849,15 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="lure foes">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="spawn foes">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0"/>
         </triggered_effect>
