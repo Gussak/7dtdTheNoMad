@@ -622,6 +622,8 @@ astr=(
   casinoCoin 666
   foodRawMeat 1 #for dog companion
   GSKspawnDogCompanion 1
+  GSKCFGNPCproperSneakingWorkaround 1
+  vehicleGSKNPChelperPlaceable 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}"
 astr=(

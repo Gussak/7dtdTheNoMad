@@ -2913,7 +2913,7 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)" help="todoa is the max value always (or like 95% of the times) returned in case of a random that is less than 1.0? gotta review all logic everywhere if that is the case :("/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.05,0.20)">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
@@ -4750,7 +4750,7 @@
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWBloodLoss47">
-          <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LTE" value="0.14"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -10193,7 +10193,7 @@
         <requirement name="CVarCompare" cvar="fGSKExpDebt" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="@.fGSKExpDebtDecPerSec"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="@fGSKExpDebtMaxAllTime"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="div" value="@fGSKAllFreeBundlesSumExpDebit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="multiply" value="0.05" help="every 100% exp debit increases 5 on the debit cap"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="add" value="0.50" help="minimum exp perc debit cap"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="0.95">
@@ -10874,11 +10874,11 @@
       <display_value value=".iGSKGodModeRespawnTm"/>
       <display_value_key value="{0:0}/20s"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="LT" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1" help="only on respawns"/>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="20"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
