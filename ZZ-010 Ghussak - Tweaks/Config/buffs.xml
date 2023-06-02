@@ -10869,17 +10869,17 @@
     </buff>
     <buff name="buffGSKGodModeRespawn" hidden="false" help="do not create a recipe to activate this duh. " tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="100,250,200" icon_blink="true">
       <stack_type value="ignore"/>
-      <duration value="20"/>
+      <duration value="60" help="controlled by .iGSKGodModeRespawnTm tho"/>
       <update_rate value="1"/>
       <display_value value=".iGSKGodModeRespawnTm"/>
-      <display_value_key value="{0:0}/20s"/>
+      <display_value_key value="{0:0}s"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="LT" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="20"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="30" help="it may take some seconds to generate the world in the new location, was 20s only"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
@@ -10887,6 +10887,9 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode">
           <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeRespawnTm" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
