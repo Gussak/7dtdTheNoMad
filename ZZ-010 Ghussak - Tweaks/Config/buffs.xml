@@ -6150,6 +6150,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="15" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="120123" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="25200" help="7days*3600s(1h), this means to deplet exp debit it needs 7 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
           <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
         </triggered_effect>
@@ -9844,7 +9846,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(11,13)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(10,14)">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
@@ -9864,11 +9866,19 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombNormal">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -9888,10 +9898,27 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKPermanentGenericCheck15" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false">
+    <buff name="buffGSKPermanentGenericCheck15" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="steroids long term effects">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKSteroidsLongTermEffect" operation="add" value="-0.00004" help="1/(7*3600)=0.0000396825 lasts 7 days">
+          <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GT" value="0"/>
+        </triggered_effect>
+        <passive_effect name="CarryCapacity" operation="base_add" value="@fGSKSteroidsLongTermEffect">
+          <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GTE" value="1"/>
+        </passive_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="set" value="@fGSKSteroidsLongTermEffect"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="divide" value="1000" help="having used enough steroids to add 100 slots will increase water and food consumption by 10%"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="set" value="@.fGSKSteroidsLongTermEffectFoodWaterTmp"/>
+        <passive_effect name="FoodLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+          <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+        </passive_effect>
+        <passive_effect name="WaterLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+          <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+        </passive_effect>
+      </effect_group>
       <effect_group help="proper bath benefits decrease with time">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="-0.0011" help="perc of 2.0 200% will last +-30min=1800s=1800;2.0/1800=0.0011*update_rate=0.0011, half a day in rt1h/gameday, sync with update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="set" value="0">
@@ -10164,18 +10191,39 @@
       </effect_group>
       <effect_group help="exp loss, temporary by opening free bundles">
         <requirement name="CVarCompare" cvar="fGSKExpDebt" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="@.fGSKExpDebtDecPerSec"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="@fGSKExpDebtMaxAllTime"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="div" value="@fGSKAllFreeBundlesSumExpDebit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="multiply" value="0.05" help="every 100% exp debit increases 5 on the debit cap"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="add" value="0.50" help="minimum exp perc debit cap"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="0.95">
+          <requirement name="CVarCompare" cvar=".fGSKExpDebtMaxPerc" operation="GT" value="0.95"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="set" value="@fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="@.fGSKExpDebtDecPerSec" help="seconds"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="60" help="minutes"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="60" help="hours"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="@fGSKExpDebt"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="0.95">
-          <requirement name="CVarCompare" cvar=".fGSKExpDebtPercTmp" operation="GT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="@.fGSKExpDebtMaxPerc">
+          <requirement name="CVarCompare" cvar=".fGSKExpDebtPercTmp" operation="GT" value="@.fGSKExpDebtMaxPerc"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="multiply" value="-1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPerc" operation="set" value="@.fGSKExpDebtPercTmp" help="to avoid varying values during above lines"/>
-        <passive_effect name="PlayerExpGain" operation="perc_add" value="@.fGSKExpDebtPerc"/>
+        <passive_effect name="PlayerExpGain" operation="perc_add" value="@.fGSKExpDebtPerc" help="this final value is negative from 0.0 to -1.0"/>
+        <!-- HELPGOOD: This exp defit per death is easier than vanilla, but the game is overall a huge lot more difficult now. -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="set" value="0.01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="multiply" value="@$LastPlayerLevel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="set" value="0.10">
+          <requirement name="CVarCompare" cvar=".fGSKExpDefPerDeathPerc" operation="GT" value="0.10" help="limit is vanilla"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="set" value="0.05"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="multiply" value="@$LastPlayerLevel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="set" value="0.50">
+          <requirement name="CVarCompare" cvar=".fGSKExpDefMaxPerc" operation="GT" value="0.50" help="limit is vanilla"/>
+        </triggered_effect>
+        <passive_effect name="ExpDeficitPerDeathPercentage" operation="base_set" value="@.fGSKExpDefPerDeathPerc"/>
+        <passive_effect name="ExpDeficitMaxPercentage" operation="base_set" value="@.fGSKExpDefMaxPerc"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="set" value="@.fGSKExpDebtPerc"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="multiply" value="100"/>
       </effect_group>
@@ -10888,7 +10936,7 @@
   <append xpath="/buffs/buff[@name='buffNewbieCoat']">
     <display_value value=".iGSKVeteranTmOut"/>
     <display_value_key value="{0:0}s"/>
-    <effect_group help="CoatlessVeteran: this is intended just to keep the above passives about water food and health and anything else new that may take just a few seconds to be stabilized">
+    <effect_group help="CoatlessVeteran: this is intended just to keep the above passives about water food and health and anything else new that may take just a few seconds to be stabilized by the engine as was documented">
       <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="set" value="60"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVeteranTmOut" operation="subtract" value="1"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNewbieCoat">
@@ -10927,17 +10975,33 @@
       <stack_type value="replace"/>
       <duration value="3.0"/>
     </buff>
+    <buff name="buffGSKWorkaroundJumpKick" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="9.0" help="same of ragdoll duration"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.99"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKCheckJumpKick" hidden="true">
       <stack_type value="replace"/>
       <duration value="3.0"/>
       <update_rate value="0.1"/>
-      <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="9" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: add sound for kick. let spiders get stunned instead">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
-        <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
-      </triggered_effect>
+      <effect_group>
+        <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKWorkaroundJumpKick">
+          <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
+          <requirement name="EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="9" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: add sound for kick. let spiders get stunned instead">
+          <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKCheckJumpKick"/>
+      </effect_group>
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffCrouching']">
@@ -10948,6 +11012,7 @@
       <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="10000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now TODO: seems overpowered, allow only if player in less than 5m"/>
     </effect_group>
   </append>
+  <set xpath="/buffs/buff[@name='buffEncumberedInv']/effect_group/triggered_effect[@action='ModifyCVar' and @cvar='$encumbranceEffect' and @operation='multiply']/@value" help="was 0.002 (move -20%) by 160 slots inv mod. we get 60 slots (3 lines) on start and 100 available (5 lines). 100*0.006=0.60 = move -60%. This much is to make the player really need to use steroids and create better pockets.">0.006</set>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change. TODO: add a buff that just slow spiders to 0.01 speed instead -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>

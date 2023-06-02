@@ -538,6 +538,7 @@ function FUNCprepareBundlePart() {
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-'"${liExpDebt}"'" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="'"${liExpDebt}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="'"${liExpDebt}"'"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"

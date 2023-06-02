@@ -12,13 +12,18 @@
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" target_tags="zombie,animal,bandit">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <!-- HELPGOOD: this is an alternative to buffGSKCheckJumpKick
       <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="6" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: this trigger works here? see buffGSKCheckJumpKick too">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
-        <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
+        <requirement name="HasBuff" target="other" buff="buffGSKMarkedForJumpKick" />
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01" />
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02" />
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03" />
       </triggered_effect>
+-->
       <!-- HELPGOOD: use the same possible requirements from buffGSKNPCproperSneaking7, just remember this runs on the player and not on the NPC-->
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1">
         <requirement name="IsNight"/>
