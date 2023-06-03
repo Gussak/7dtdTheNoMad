@@ -37,6 +37,7 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 iMaxEntries=120
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
+: ${fRange:=3.0} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good.
 
 # PERCENTS
 astrCVarForPercentsList=(
@@ -47,7 +48,7 @@ astrCVarForPercentsList=(
 )
 for strCVar in "${astrCVarForPercentsList[@]}";do
   strIndent="      "
-  echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="0" target="selfAOE" range="60">
+  echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="0" target="selfAOE" range="'"${fRange}"'">
 '"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LTE" value="0.0" />
 '"${strIndent}"'  '"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
@@ -56,14 +57,14 @@ for strCVar in "${astrCVarForPercentsList[@]}";do
   for((i=0;i<100;i+=iStep));do
     fMin="`bc <<< "scale=2;$i/100"`"
     fMax="`bc <<< "scale=2;$((i+iStep))/100"`"
-    echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="'$((i+(iStep/2)))'" target="selfAOE" range="60">
+    echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="'$((i+(iStep/2)))'" target="selfAOE" range="'"${fRange}"'">
 '"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GT" value="'$fMin'" />
 '"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LT" value="'$fMax'" />
 '"${strIndent}"'  '"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   done
   
-  echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="100" target="selfAOE" range="60">
+  echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="100" target="selfAOE" range="'"${fRange}"'">
 '"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GTE" value="1.00" />
 '"${strIndent}"'  '"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
@@ -91,7 +92,7 @@ for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
   
   bBreak=false
   iCountEntries=1
-  echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="0" target="selfAOE" range="60" help="entry '$iCountEntries'">
+  echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="0" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
     <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="Equals" value="0" />
     '"${strLeaderReq}"'
   </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
@@ -106,7 +107,7 @@ for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
     
     ((iCountEntries++))&&:;if((iCountEntries>iMaxEntries));then CFGFUNCerrorExit "too many entries may break the game (may not work at all)";fi
     
-    echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="'$i'" target="selfAOE" range="60" help="entry '$iCountEntries'">
+    echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="'$i'" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
     <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="GTE" value="'$i'" />
     <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="LT" value="'$iStepNext'" '"${strHelp}"'/>
     '"${strLeaderReq}"'

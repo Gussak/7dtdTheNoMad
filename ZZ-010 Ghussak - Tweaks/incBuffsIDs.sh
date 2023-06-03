@@ -35,7 +35,7 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 echo "HELP:"
 echo " this script is important when making tests in a running game or when releasing an updated mod version, because the savegame may keep an outdated running buff that prevents the new one from running right?"
-echo " also, some buffs may completely fail to kick in, so create a debug item to make them start working or, may be, restart the game application (close and run it again)"
+echo " this script seems useful only to let changes in some buffs with <stack_type value=\"ignore\"/>, that never stop running, work. but is harmless for all others anyway."
 
 set -eu
 trap 'echo ERROR nLnErr=${nLnErr-} >&2' ERR
