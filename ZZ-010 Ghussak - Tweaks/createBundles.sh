@@ -706,10 +706,10 @@ astr=( #TEMPLATE
 );FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
 astr=(
-  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
   GSKElctrnTeleportUndergroundFreeAndSafeCall 1
   GSKElctrnTeleportToBiomeFreeAndSafeCall 1
   GSKteleToBackpackFreeAndSafeCall 1
+  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}"
 

@@ -520,18 +520,9 @@
       </effect_group>
     </buff>
   </append>
-  <append xpath="/buffs">
-    <buff name="buffRagdollAIsToEasyCPU" hidden="true" remove_on_death="true">
-      <stack_type value="ignore"/>
-      <update_rate value="1"/>
-      <duration value="10"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffRagdollAIsToEasyCPU"/>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="60" force="0" target="selfAOE" range="250" target_tags="zombie"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffRagdollAIsToEasyCPU"/>
-      </effect_group>
-    </buff>
-  </append>
+  <append xpath="/buffs"><buff name="buffRagdollAIsToEasyCPU" hidden="true" remove_on_death="true"><stack_type value="ignore"/><update_rate value="1"/><duration value="10"/><effect_group><triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffRagdollAIsToEasyCPU"/><triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="60" force="0" target="selfAOE" range="250" target_tags="zombie"/><triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffRagdollAIsToEasyCPU"/></effect_group></buff>
+  buffGSKNPCCosmicRayHit todoa
+</append>
   <append xpath="/buffs">
     <buff name="buffPlayerEnhancesNearbyFriendlyNPCs1" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -9478,7 +9469,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTTUnderPhase" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode60s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeNewbie"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATESPAWNPOINTS_TeleportUnder_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createSpawnPoints.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToPrefab50013" help="index=50013;prefab=cabin_05;biome=FFE477FF,Desert,5;spawnPos=-1264,260,2711;prefabPosCmd: teleport -1284 92 2691">
           <requirement name="CVarCompare" cvar=".iGSKTTUnderSpawnSimpleIndex" operation="Equals" value="1"/>
@@ -10194,9 +10185,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="@.fGSKExpDebtDecPerSec"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="@fGSKExpDebtMaxAllTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="multiply" value="0.05" help="every 100% exp debit increases 5 on the debit cap"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="add" value="0.50" help="minimum exp perc debit cap"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="0.95">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="multiply" value="0.10" help="every 100% exp debit (respawn and open all bundles) increases that on the debit cap"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="add" value="0.25" help="minimum exp perc debit cap"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="0.95" help="min+inc*7 (7 full bundles reaches max cap)">
           <requirement name="CVarCompare" cvar=".fGSKExpDebtMaxPerc" operation="GT" value="0.95"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="set" value="@fGSKExpDebt"/>
@@ -10869,7 +10860,7 @@
     </buff>
     <buff name="buffGSKGodModeRespawn" hidden="false" help="do not create a recipe to activate this duh. " tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="100,250,200" icon_blink="true">
       <stack_type value="ignore"/>
-      <duration value="60" help="controlled by .iGSKGodModeRespawnTm tho"/>
+      <duration value="0" help="controlled by .iGSKGodModeRespawnTm tho"/>
       <update_rate value="1"/>
       <display_value value=".iGSKGodModeRespawnTm"/>
       <display_value_key value="{0:0}s"/>
@@ -10879,7 +10870,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="30" help="it may take some seconds to generate the world in the new location, was 20s only"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="60" help="it may take some seconds to generate the world in the new location and the player may need time to decide to use the teleport to backpack item before dieing again, was 20s only"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
@@ -10895,29 +10886,36 @@
     </buff>
     <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200" icon_blink="true">
       <stack_type value="ignore"/>
-      <duration value="60"/>
+      <duration value="0"/>
       <display_value value=".iGSKGodModeFirstSpawnTm"/>
-      <display_value_key value="{0:0}/60s"/>
+      <display_value_key value="{0:0}s"/>
       <requirements>
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
       </requirements>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode60s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeNewbie"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKGodMode60s" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+    <buff name="buffGSKGodModeNewbie" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
       <stack_type value="ignore"/>
-      <duration value="60"/>
+      <duration value="0"/>
       <display_value value=".iGSKGodModeFirstSpawnTm"/>
-      <display_value_key value="{0:0}/60s"/>
+      <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="120"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeNewbie">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
       </effect_group>

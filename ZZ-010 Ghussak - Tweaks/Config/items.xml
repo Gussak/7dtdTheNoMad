@@ -262,6 +262,12 @@
       <property name="CustomIconTint" value="128,180,180"/>
       <property name="DescriptionKey" value="dkGSKElctrnTeleportToSkyFirstTime"/>
     </item>
+    <item name="GSKNoteResurrectTips">
+      <property name="Extends" value="GSKNoteBase"/>
+      <property name="CustomIcon" value="challengeQuestMaster"/>
+      <property name="CustomIconTint" value="180,128,128"/>
+      <property name="DescriptionKey" value="dkGSKNoteResurrectTips"/>
+    </item>
     <item name="GSKNoteStartNewGameSurvivingFirstDay">
       <property name="Extends" value="GSKNoteBase"/>
       <property name="CustomIconTint" value="255,90,90"/>
@@ -1368,6 +1374,7 @@
       <property name="EconomicValue" value="2500" help="prepare before going, will be very handy."/>
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKTeleBackpackFree"/>
       </effect_group>
     </item>
@@ -2579,7 +2586,7 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportUndergroundFree"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodMode60s"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
       </effect_group>
     </item>
@@ -2607,7 +2614,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodMode60s"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
@@ -2789,7 +2796,8 @@
     </item>
     <item name="GSKCFGAllowExtraBloodMoonSpawns">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
-      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIcon" value="7dtdBloodMoonBuffed"/>
+      <property name="CustomIconTint" value="180,128,128"/>
       <property name="DescriptionKey" value="dkGSKAllowExtraBloodMoonSpawns"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="2">
@@ -2812,7 +2820,7 @@
     </item>
     <item name="GSKCFGExtraBloodMoonFoeLimit">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
-      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIcon" value="7dtdBloodMoonBuffed"/>
       <property name="DescriptionKey" value="dkGSKCFGExtraBloodMoonFoeLimit"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="add" value="2"/>
@@ -5363,7 +5371,7 @@
     <item name="drugGSKPsyonicsResist">
       <property name="Extends" value="resourceTestosteroneExtract"/>
       <property name="DescriptionKey" value="PsyonicsResistanceDesc"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
+      <property name="CustomIcon" value="7dtdPsyShield"/>
       <property name="CustomIconTint" value="50,50,250"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
@@ -5390,7 +5398,7 @@
     </item>
     <item name="drugGSKRadiationResist">
       <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
+      <property name="CustomIcon" value="7dtdRadShield"/>
       <property name="CustomIconTint" value="180,100,100"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
@@ -5418,8 +5426,8 @@
     </item>
     <item name="drugGSKAntiRadiation">
       <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="180,180,0"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="128,128,128"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
       <property name="Stacknumber" value="10"/>
@@ -5446,8 +5454,8 @@
     </item>
     <item name="drugGSKAntiRadiationStrong">
       <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="250,250,150"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="180,180,128"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
       <property name="EconomicValue" value="100"/>
@@ -5474,8 +5482,8 @@
     </item>
     <item name="drugGSKAntiRadiationSlow">
       <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="100,100,200"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="180,128,180"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
       <property name="Stacknumber" value="10"/>
@@ -5503,8 +5511,8 @@
     <item name="drugGSKsnakePoisonAntidote">
       <property name="Extends" value="resourceTestosteroneExtract"/>
       <property name="DescriptionKey" value="buffGSKSnakePoisonDesc"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="0,180,170"/>
+      <property name="CustomIcon" value="7dtdPoison"/>
+      <property name="CustomIconTint" value="128,128,128"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
       <property name="Stacknumber" value="10"/>
@@ -5577,7 +5585,7 @@
     </item>
     <item name="GSKsnakePoison">
       <property name="Extends" value="resourceTestosteroneExtract"/>
-      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
+      <property name="CustomIcon" value="7dtdGskPoison"/>
       <property name="CustomIconTint" value="0,180,0"/>
       <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
