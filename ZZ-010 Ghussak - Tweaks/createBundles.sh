@@ -136,7 +136,7 @@ function FUNCprepareCraftBundle() {
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
     #strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has experience penalty time (inside parenthesis). Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"'"'"'CB:'"'"' items craftable freely.Dont rush to ur backpack.Each bundle has (exp penalty).Resurrect adds 1 to remain bundles(least schematics/maps)that u can open(up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"'"'"'CB:'"'"' items craftable freely (can be dropped).Dont rush to ur backpack.Each bundle has (exp penalty).Resurrect adds 1 to remain bundles(least schematics/maps)that u can open(up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)}(${liExpDebt}),"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -624,6 +624,11 @@ astr=(
   GSKspawnDogCompanion 1
   GSKCFGNPCproperSneakingWorkaround 1
   vehicleGSKNPChelperPlaceable 1
+  GSKNPCHiredHeals30perc 13
+  GSKNPCHiredHeals180perc 1
+  GSKNPCHiredGetsPowerArmor 1
+  RepairNPCArmor 6
+  NPCPreventDismiss60s 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}"
 astr=(

@@ -89,7 +89,6 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 .  
 .  
 .  
-.  
   Advanced:  
 .  
     Only these scripts may interest the end user:  

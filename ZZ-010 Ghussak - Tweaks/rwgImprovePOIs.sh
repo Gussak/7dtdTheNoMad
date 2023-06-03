@@ -53,7 +53,13 @@ strPrefabsXml="prefabs.xml"
 #: ${strGenWorldName:="East Nikazohi Territory"} #h elp
 #strFlGenPrefabsOrig="${strPathToUserData}/GeneratedWorlds/${strGenWorldName}/${strPrefabsXml}"
 
-CFGFUNCprompt "This is not highly optimized yet and not multithread (uses only 1 core). It takes 16min on my machine 3.2GHz . If in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required. Or you can run it now already (21 is for A20) like: iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs $0"
+CFGFUNCinfo "MainGoal: place ALL AVAILABLE POIs in a SINGLE WORLD."
+CFGFUNCinfo " OtherGoal: place POIs in the underground with collapsing ceiling what is overall fun and a good trap against the player."
+CFGFUNCinfo " OtherGoal: place custom small traps around all POIs, bigger POIs will have more traps, they are actually useful if you do not fall on them."
+CFGFUNCinfo " OtherGoal: prepare spawn points to be used by TheNoMad teleportation devices. Tracked spawn points also help to protect new players and help choosing a starting biome/difficulty."
+CFGFUNCinfo "This is not highly optimized yet and not multithread (uses only 1 core). It takes 16min on my machine 3.2GHz."
+CFGFUNCinfo "If in the end there are still missing POIs, you may want to run this script again to try to add all of them, but that is not required."
+CFGFUNCprompt "It will be run now ($iReservedWastelandPOICountForMissingPOIs is for A20) like this: iReservedWastelandPOICountForMissingPOIs=$iReservedWastelandPOICountForMissingPOIs $0 #later will be asked if you want it to be zeroed, just keep hitting Enter to accept all defaults."
 
 #: ${strFlGenPrefabsOrig:="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}"} #he lp you can set this file path directly here
 strFlOriginalBkp="${strCFGGeneratedWorldTNMFolder}/${strPrefabsXml}${strCFGOriginalBkpSuffix}"
@@ -332,9 +338,12 @@ function FUNCwriteCacheFile(){ #call this after each var is set
   echo "#PREPARE_RELEASE:REVIEWED:OK" >"${strFlCACHE}"
   echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"${strFlCACHE}"
   declare -p iTotalChkBiome >>"${strFlCACHE}"
-  declare -p iReservedWastelandPOICountForMissingPOIs >>"${strFlCACHE}"
+  #declare -p iReservedWastelandPOICountForMissingPOIs >>"${strFlCACHE}"
   declare -p astrEvalV3cache >>"${strFlCACHE}"
   # put all cache vars here!
+  
+  # cfg vars can go like this:
+  echo ': ${iReservedWastelandPOICountForMissingPOIs:='"${iReservedWastelandPOICountForMissingPOIs-0}"'}' >>"${strFlCACHE}"
 }
 
 bUpdateBiomeCache=false
