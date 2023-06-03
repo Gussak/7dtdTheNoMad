@@ -10110,9 +10110,20 @@
         <!-- HELPGOOD: it is not free food, there is side effects. the ND values, if you are taking care it wont cause trouble, but if you are on the limit it will be a problem. The screen effects will all be fixed by the ND main buff. -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="water" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.001"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="90">
+          <requirement name="InBiome" biome="5"/>
+          <!-- HELPGOOD: desert -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="90">
+          <requirement name="InBiome" biome="1"/>
+          <!-- HELPGOOD: snow -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="900" help="pine forest strong miasma will be worse in a starving person">
+          <requirement name="InBiome" biome="3" help="PineForest"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="-100" help="outside pine forest, starving will help clean the body from miasma by eliminating weak cells faster (weak and sick cells will die first in a starving body)">
+          <requirement name="!InBiome" biome="3" help="PineForest"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="1.0"/>
