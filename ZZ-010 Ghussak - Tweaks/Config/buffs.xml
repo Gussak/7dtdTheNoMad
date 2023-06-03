@@ -777,14 +777,16 @@
           <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NPCSNEAK:fix TODO: prevent this happening">
-        <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="NotEquals" value="0"/>
-        <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:NPCSNEAK:Fix:iGSKPlayerAttackedDisableNPCSneakTime"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="0"/>
-      </effect_group>
+      <!-- HELPGOOD: mmm...
+    <effect_group help="NPCSNEAK:fix TODO: prevent this happening">
+      <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="NotEquals" value="0"/>
+      <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:NPCSNEAK:Fix:iGSKPlayerAttackedDisableNPCSneakTime"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="0"/>
+    </effect_group>
+-->
       <effect_group help="NPCSNEAK:transfer value">
         <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GTE" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
@@ -796,7 +798,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="subtract" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
+          <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
       </effect_group>
@@ -920,6 +922,16 @@
     </buff>
     <buff name="buffHiredNPChudInfo">
       <duration value="0.05"/>
+      <effect_group help="BOOL: weapon type">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoMeleeOrRanged" operation="set" value="0" target="selfAOE" range="60">
+          <requirement name="EntityTagCompare" tags="melee"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoMeleeOrRanged" operation="set" value="1" target="selfAOE" range="60">
+          <requirement name="EntityTagCompare" tags="ranged"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="PERCENT: Ammo left PERCENT info">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fNPCCalcPercTmp" operation="set" value="@iNPCAmmoLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fNPCCalcPercTmp" operation="subtract" value="@iNPCAmmoSpent"/>
@@ -10663,9 +10675,11 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0" target="selfAOE" range="60" target_tags="npc"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="GT" value="1" help="sync last index here"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="2" help="last">
+          <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="LT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="GT" value="2" help="sync last index here"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
