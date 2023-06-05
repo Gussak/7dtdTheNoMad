@@ -33,9 +33,11 @@
 
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
-echo "HELP:"
-echo " this script is important when making tests in a running game or when releasing an updated mod version, because the savegame may keep an outdated running buff that prevents the new one from running right?"
-echo " this script seems useful only to let changes in some buffs with <stack_type value=\"ignore\"/>, that never stop running, work. but is harmless for all others anyway."
+echo "HELP:
+  This script is important (for developers) when making tests in a running game (instead of creating a new game) or when releasing an updated mod version for end users.
+  Buffs with stack_type 'ignore' will directly benefit from this script, right?
+  Buffs with values being set onSelfBuffStart and with other kinds of stack_type than 'ignore' also seem to require this script to be run or the changes on that trigger wont kick in, right?
+"
 
 set -eu
 trap 'echo ERROR nLnErr=${nLnErr-} >&2' ERR

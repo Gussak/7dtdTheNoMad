@@ -10,14 +10,14 @@
   - NPCS: the player cannot set a @variable value cvar on NPCs too right? must be a constant value or use a buff to transfer values bit by bit.
 -->
   <append xpath="/buffs">
-    <buff name="buffHiredNPCnoFallDamage10" hidden="true" remove_on_death="false">
+    <buff name="buffHiredNPCnoFallDamage11" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffHiredNPCnoFallDamage10"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:END:buffHiredNPCnoFallDamage10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffHiredNPCnoFallDamage11"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:END:buffHiredNPCnoFallDamage11"/>
       </effect_group>
       <effect_group help="FAIL: fall dmg resistance">
         <passive_effect name="BuffResistance" operation="base_add" value="10000" tags="buffPlayerFallingDamage"/>
@@ -117,12 +117,12 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffHiredNPCnoFallDamage10">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffHiredNPCnoFallDamage11">
           <requirement name="CVarCompare" cvar="Leader" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKSpawnTreasure9" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
+    <buff name="buffGSKSpawnTreasure10" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3"/>
@@ -194,12 +194,12 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKSpawnRaidersWave" operation="GT" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="It feels safer, raiders are probably gone now..."/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpawnTreasure9"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpawnTreasure10"/>
       </effect_group>
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffPlayerFallingDamage']/effect_group/triggered_effect[@action='ModifyStats' and @stat='Health' and @operation='subtract']">
-    <requirement name="!HasBuff" buff="buffHiredNPCnoFallDamage10"/>
+    <requirement name="!HasBuff" buff="buffHiredNPCnoFallDamage11"/>
   </append>
   <append xpath="/buffs">
     <buff name="buffGSKNPCHiredFollowingHeal" hidden="true" remove_on_death="false">
@@ -309,13 +309,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iRainBlur"/>
       </effect_group>
     </buff>
-    <buff name="buffDrinkRainWater72" hidden="true" remove_on_death="true">
+    <buff name="buffDrinkRainWater73" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffDrinkRainWater72"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffDrinkRainWater72"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffDrinkRainWater73"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffDrinkRainWater73"/>
       </effect_group>
       <effect_group help="this is the wetness the player is really tracking">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="@$WetTempModifierDisplay"/>
@@ -426,7 +426,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="randomFloat(0.15,0.35)"/>
       </effect_group>
     </buff>
-    <buff name="buffHiredNPCdamageArmor97" hidden="true" remove_on_death="false">
+    <buff name="buffHiredNPCdamageArmor98" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="36000"/>
       <requirements>
@@ -465,7 +465,7 @@
   </append>
   <append xpath="/buffs/buff[       @name='buffInjuryAbrasion' or       @name='buffInjuryBleeding' or       @name='buffInjuryConcussion' or       @name='buffInjuryCrippled01' or       @name='buffInjuryKnockdown01' or       @name='buffInjuryKnockdown02' or       @name='buffInjuryStunned00' or       @name='buffInjuryStunned01' or       @name='buffInjuryStunned02' or       @name='buffInjuryStunned03' or       @name='buffInjuryUnconscious'     ]">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffHiredNPCdamageArmor97">
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffHiredNPCdamageArmor98">
         <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
@@ -640,7 +640,7 @@
     </buff>
     <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
       <stack_type value="replace"/>
-      <duration value="120" help="must be more than buffGSKNPCproperSneaking7 ragdoll duration"/>
+      <duration value="120" help="must be more than buffGSKNPCproperSneaking8 ragdoll duration"/>
       <effect_group>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="1.00,0.95,0.20" duration="0,70,120" help="0to60 is ragdolled"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="1.00,0.95,0.20" duration="0,70,120" help="0to60 is ragdolled"/>
@@ -659,11 +659,11 @@
         <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="5">
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="CVarCompare" target="other" cvar="_crouching" operation="Equals" value="1"/>
-          <requirement name="CVarCompare" target="other" cvar="iGSKNPCfollowingDenySneakTimer" operation="LT" value="15" help="used by buffGSKNPCproperSneaking7. must be constant value (to compare too?): keep in sync with .iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
+          <requirement name="CVarCompare" target="other" cvar="iGSKNPCfollowingDenySneakTimer" operation="LT" value="15" help="used by buffGSKNPCproperSneaking8. must be constant value (to compare too?): keep in sync with .iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPCproperSneaking7" help="intended to be able to explore the wilderness at night with a follower TODO: the ideal would be NPCs follow the player sneak value but have lure priority. TODO: if player is in light (street light, torch, lantern) disable sneak for 15s">
+    <buff name="buffGSKNPCproperSneaking8" help="intended to be able to explore the wilderness at night with a follower TODO: the ideal would be NPCs follow the player sneak value but have lure priority. TODO: if player is in light (street light, torch, lantern) disable sneak for 15s">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.00"/>
@@ -706,13 +706,13 @@
         <passive_effect name="LootQuantity" operation="perc_add" value="-1.0"/>
       </effect_group>
     </buff>
-    <buff name="buffLeaderLimitsHiredNPCsAmount100" hidden="true" remove_on_death="true">
+    <buff name="buffLeaderLimitsHiredNPCsAmount101" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3" help="IMPORTANT!!!! keep fTransferNPCPDS, iGSKPlayerAttackedDisableNPCSneakTime, .buffLeaderLimitsHiredNPCsAmount_update_rate in sync with this update_rate!!!"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffLeaderLimitsHiredNPCsAmount100"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffLeaderLimitsHiredNPCsAmount100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffLeaderLimitsHiredNPCsAmount101"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffLeaderLimitsHiredNPCsAmount101"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffLeaderLimitsHiredNPCsAmount_update_rate" operation="set" value="3"/>
       </effect_group>
       <effect_group help="pseudo distances, the farer should be on top to be overwritten by nearest ones">
@@ -721,25 +721,25 @@
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="10" target="selfAOE" range="10" help="used by buffGSKNPCproperSneaking7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="10" target="selfAOE" range="10" help="used by buffGSKNPCproperSneaking8">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="5" target="selfAOE" range="5" help="used by buffGSKNPCproperSneaking7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="5" target="selfAOE" range="5" help="used by buffGSKNPCproperSneaking8">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderSheltered" operation="set" value="1" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking7">
+      <effect_group help="NPCSNEAK: leader sheltered">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderSheltered" operation="set" value="1" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking8">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderSheltered" operation="set" value="0" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderSheltered" operation="set" value="0" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking8">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -754,7 +754,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="set" value="0" help="consume"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlAtkDsbNPCSnTMP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="add" value="@.iGSKPlAtkDsbNPCSnTMP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="120" help="sync with iGSKNPCfollowingDenySneakTimer at buffGSKNPCproperSneaking7 TODO: could use player sneak skill to lower this but not less than 60, to avoid overpowering NPC sneak workaround!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="120" help="sync with iGSKNPCfollowingDenySneakTimer at buffGSKNPCproperSneaking8 TODO: could use player sneak skill to lower this but not less than 60, to avoid overpowering NPC sneak workaround!">
           <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GT" value="120"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
@@ -768,7 +768,7 @@
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="add" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" help="same as the update_rate">
-          <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
+          <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer" help="to disable sneak just for a short time"/>
         </triggered_effect>
       </effect_group>
       <!-- HELPGOOD: mmm...
@@ -785,7 +785,7 @@
         <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GTE" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="15" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking7. must be constant value: keep in sync with .iGSKPlayerAttackedDisableNPCSneakTimeTransfer">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="15" target="selfAOE" range="60" help="used by buffGSKNPCproperSneaking8. must be constant value: keep in sync with .iGSKPlayerAttackedDisableNPCSneakTimeTransfer">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -797,19 +797,19 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking7" target="selfAOE" range="60">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking8" target="selfAOE" range="60">
           <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1" help="off"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="HasBuff" target="other" buff="buffGSKNPCproperSneaking7"/>
+          <requirement name="HasBuff" target="other" buff="buffGSKNPCproperSneaking8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneaking7" target="selfAOE" range="60">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneaking8" target="selfAOE" range="60">
           <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="2" help="on"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking7"/>
+          <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking8"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -822,17 +822,17 @@
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffNPCincHiredCountEachOtherAndTryDismiss"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPCnoFallDamage10" target="selfAOE" range="60">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPCnoFallDamage11" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!HasBuff" target="other" buff="buffHiredNPCnoFallDamage10"/>
+          <requirement name="!HasBuff" target="other" buff="buffHiredNPCnoFallDamage11"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCAddExpDebitToLeader15" target="selfAOE" range="60">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCAddExpDebitToLeader16" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!HasBuff" target="other" buff="buffNPCAddExpDebitToLeader15"/>
+          <requirement name="!HasBuff" target="other" buff="buffNPCAddExpDebitToLeader16"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPChudInfo" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -846,7 +846,7 @@
           <requirement name="!EntityTagCompare" target="other" tags="bandit" help="some raiders had this buff on log on death, so better be sure this way to prevent that"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCHiredFollowingHeal"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH buffLeaderLimitsHiredNPCsAmount100 update_rate!!!!!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH buffLeaderLimitsHiredNPCsAmount101 update_rate!!!!!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fNPCPreventDismissSecs">
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
         </triggered_effect>
@@ -894,7 +894,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffNPCAddExpDebitToLeader15" hidden="true" remove_on_death="true">
+    <buff name="buffNPCAddExpDebitToLeader16" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="10"/>
@@ -910,7 +910,7 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="100" help="sync at buffNPCAddExpDebitToLeader15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="100" help="sync at buffNPCAddExpDebitToLeader16"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </buff>
@@ -2254,26 +2254,26 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.75" duration="6"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKProperSwimming39" hidden="true">
+    <buff name="buffGSKProperSwimming40" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimming39"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimming39"/>
-        <triggered_effect trigger="onSelfSwimStart" action="AddBuff" buff="buffGSKProperSwimmingWork39"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimming40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimming40"/>
+        <triggered_effect trigger="onSelfSwimStart" action="AddBuff" buff="buffGSKProperSwimmingWork40"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKProperSwimmingWork39" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
+    <buff name="buffGSKProperSwimmingWork40" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.25"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimmingWork39"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimmingWork39"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimmingWork40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimmingWork40"/>
         <passive_effect name="WalkSpeed" operation="perc_add" value="2.0"/>
         <passive_effect name="RunSpeed" operation="perc_add" value="2.5" help="run seems to not work in water? speed doesnt seem to change"/>
-        <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork39"/>
+        <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork40"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHealthTreatment" hidden="false" description_key="dkdrugGSKHealthTreatment">
@@ -2287,29 +2287,29 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="_buffGSKProperSwimming39" hidden="true">
+    <buff name="_buffGSKProperSwimming40" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimming39"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimming39"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKProperSwimmingWork39">
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimming40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimming40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKProperSwimmingWork40">
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
-          <requirement name="!HasBuff" buff="buffGSKProperSwimmingWork39"/>
+          <requirement name="!HasBuff" buff="buffGSKProperSwimmingWork40"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="_buffGSKProperSwimmingWork39" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
+    <buff name="_buffGSKProperSwimmingWork40" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.25"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimmingWork39"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimmingWork39"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKProperSwimmingWork40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffGSKProperSwimmingWork40"/>
         <passive_effect name="WalkSpeed" operation="perc_add" value="2.0"/>
         <passive_effect name="RunSpeed" operation="perc_add" value="2.5"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKProperSwimmingWork39">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKProperSwimmingWork40">
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -2329,48 +2329,48 @@
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="add" value="15"/>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKRespawnPreventWaterBkp6" hidden="true" remove_on_death="true">
+    <buff name="buffGSKRespawnPreventWaterBkp7" hidden="true" remove_on_death="true">
       <duration value="120"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKRespawnPreventWaterBkp6"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKRespawnPreventWaterBkp6"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKRespawnPreventWaterBkp7"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKRespawnPreventWaterBkp7"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnPreventWaterBkp6">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnPreventWaterBkp7">
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKShowWaterBkp16" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
+    <buff name="buffGSKShowWaterBkp17" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
       <duration value="0"/>
       <display_value value="fGSKWaterPercBkp"/>
       <display_value_key value="{0:0.00}"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp16">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp17">
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKBkpWaterVal67" hidden="true" remove_on_death="true">
+    <buff name="buffGSKBkpWaterVal68" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.5"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKBkpWaterVal67"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKBkpWaterVal67"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKBkpWaterVal68"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKBkpWaterVal68"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
-          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp6"/>
+          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp7"/>
         </triggered_effect>
         <!-- HELPGOOD: only lower the bkp after buffNearDeathRegen has ended because water is being raised there!-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="subtract" value="0.025">
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="@fGSKWaterPercBkp"/>
           <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp6"/>
+          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp7"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="0.05">
           <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="0.05"/>
@@ -2585,7 +2585,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
       </effect_group>
     </buff>
@@ -2708,13 +2708,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="multiply" value="100"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKElctrnOverchargeDmg68" hidden="false" remove_on_death="true" icon="ui_game_symbol_electric_power" icon_blink="true" description_key="dkbuffGSKElctrnOverchargeDmg" icon_color="200,0,0">
+    <buff name="buffGSKElctrnOverchargeDmg69" hidden="false" remove_on_death="true" icon="ui_game_symbol_electric_power" icon_blink="true" description_key="dkbuffGSKElctrnOverchargeDmg" icon_color="200,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3.0"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBattMaxChargeCurrent"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnOverchargeDmg68"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnOverchargeDmg69"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKBattMaxChargeCurrent" operation="GT" value="0"/>
@@ -2818,7 +2818,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKBloodmoonZombiesPowerChk23" hidden="true" remove_on_death="false">
+    <buff name="buffGSKBloodmoonZombiesPowerChk24" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="60"/>
@@ -2948,7 +2948,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHeatColdProtClothDmgAdd26" hidden="true" remove_on_death="false">
+    <buff name="buffGSKHeatColdProtClothDmgAdd27" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <requirements>
@@ -2965,7 +2965,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKHeatColdProtClothDmgKeep26" hidden="true" remove_on_death="false">
+    <buff name="buffGSKHeatColdProtClothDmgKeep27" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="5"/>
@@ -3013,7 +3013,7 @@
         </passive_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKChemUseSideEffects25" hidden="true" remove_on_death="false">
+    <buff name="buffGSKChemUseSideEffects26" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="10"/>
@@ -3312,7 +3312,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTA" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -3356,7 +3356,7 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTP" operation="set" value="0"/>
@@ -3386,7 +3386,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTS" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -3463,7 +3463,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTT" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTT" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -3507,7 +3507,7 @@
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LTE" value="0.95" />
         </triggered_effect>
 -->
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -3535,7 +3535,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTH" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -3565,7 +3565,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="bGSKEnergyTB" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg68">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg69">
           <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -4307,7 +4307,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffNightVisionUsesBatteries115" hidden="true" remove_on_death="false">
+    <buff name="buffNightVisionUsesBatteries116" hidden="true" remove_on_death="false">
       <update_rate value="0.25"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4555,7 +4555,7 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="self" buff="buffNightVisionUsesBatteries115"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="self" buff="buffNightVisionUsesBatteries116"/>
       </effect_group>
     </buff>
   </append>
@@ -4716,7 +4716,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationScrEffOff"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWRadiation34" icon_blink="true" icon="ui_game_symbol_radiation" icon_color="200,200,128" description_key="buffGSKHazardousWRadiationDesc" name_key="RadiationHazard">
+    <buff name="buffGSKHazardousWRadiation35" icon_blink="true" icon="ui_game_symbol_radiation" icon_color="200,200,128" description_key="buffGSKHazardousWRadiationDesc" name_key="RadiationHazard">
       <damage_type value="Radiation"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4725,8 +4725,8 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWRadiation34"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWRadiation34"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWRadiation35"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWRadiation35"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="0">
@@ -4747,12 +4747,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="5">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="92"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWRadiation34">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWRadiation35">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="20"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWBloodLoss47" icon_blink="true" icon="7dtdGskBloodLoss" description_key="buffGSKHazardousWBloodLossDesc">
+    <buff name="buffGSKHazardousWBloodLoss48" icon_blink="true" icon="7dtdGskBloodLoss" description_key="buffGSKHazardousWBloodLossDesc">
       <damage_type value="BloodLoss"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4761,8 +4761,8 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWBloodLoss47"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWBloodLoss47"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWBloodLoss48"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWBloodLoss48"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LTE" value="0.14"/>
@@ -4793,7 +4793,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWBloodLoss47">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWBloodLoss48">
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -4811,7 +4811,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardWDryness34" icon="7dtdGskHazardDesert2" description_key="buffGSKHazardWDrynessDesc" name_key="DryAirHazard">
+    <buff name="buffGSKHazardWDryness35" icon="7dtdGskHazardDesert2" description_key="buffGSKHazardWDrynessDesc" name_key="DryAirHazard">
       <damage_type value="Dehydration"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4820,8 +4820,8 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWDryness34"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWDryness34"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWDryness35"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWDryness35"/>
         <!-- HELPGOOD: cfg -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazDesWtrLim" operation="set" value="0.75"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazDesWetLim" operation="set" value="0.10"/>
@@ -4877,7 +4877,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardWWetFreezingAndHunger21" name_key="FreezingHazard" icon="7dtdGskHazardSnow" description_key="buffGSKHazardWWetFreezingAndHungerDesc">
+    <buff name="buffGSKHazardWWetFreezingAndHunger22" name_key="FreezingHazard" icon="7dtdGskHazardSnow" description_key="buffGSKHazardWWetFreezingAndHungerDesc">
       <damage_type value="Cold"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4886,8 +4886,8 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWWetFreezingAndHunger21"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWWetFreezingAndHunger21"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWWetFreezingAndHunger22"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWWetFreezingAndHunger22"/>
         <!-- HELPGOOD: cfg -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoFodLim" operation="set" value="0.75"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoWetLim" operation="set" value="0.10"/>
@@ -4930,7 +4930,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="0"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWMiasmaDirtyB39" icon="7dtdGskMiasma" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWMiasmaDirtyBDesc" name_key="HazardousMiasma">
+    <buff name="buffGSKHazardousWMiasmaDirtyB40" icon="7dtdGskMiasma" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWMiasmaDirtyBDesc" name_key="HazardousMiasma">
       <damage_type value="Toxic"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -4939,13 +4939,13 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWMiasmaDirtyB39"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWMiasmaDirtyB40"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWMiasmaDirtyB39"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWMiasmaDirtyB40"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="3200" help="after 3600 danger, needs to drop below 3200 for safety"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWMiasmaDirtyB39"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWMiasmaDirtyB40"/>
       </effect_group>
       <effect_group help="set miasma ND lvl">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathMiasmaLvl" operation="set" value="0">
@@ -4997,7 +4997,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWElementColdHook34" icon="7dtdGskHazardSnow" icon_blink="true" hidden="false" remove_on_death="true" name_key="HypothermyHazard" description_key="buffGSKHazardousWElementColdHookDESC">
+    <buff name="buffGSKHazardousWElementColdHook35" icon="7dtdGskHazardSnow" icon_blink="true" hidden="false" remove_on_death="true" name_key="HypothermyHazard" description_key="buffGSKHazardousWElementColdHookDESC">
       <damage_type value="Cold"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5006,9 +5006,9 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementColdHook34"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementColdHook34"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementColdHook34">
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementColdHook35"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementColdHook35"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementColdHook35">
           <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
@@ -5084,7 +5084,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKHWHeatingTmSub"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWElementHotHook34" icon="7dtdGskHazardDesert" icon_blink="true" hidden="false" remove_on_death="true" name_key="OverheatHazard" description_key="buffGSKHazardousWElementHotHookDESC">
+    <buff name="buffGSKHazardousWElementHotHook35" icon="7dtdGskHazardDesert" icon_blink="true" hidden="false" remove_on_death="true" name_key="OverheatHazard" description_key="buffGSKHazardousWElementHotHookDESC">
       <damage_type value="Heat"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5093,9 +5093,9 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementHotHook34"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementHotHook34"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementHotHook34">
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementHotHook35"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementHotHook35"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementHotHook35">
           <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
@@ -5155,7 +5155,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKWetVsHeat"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWeather52" icon="7dtdGskHazardWeather" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWeatherDesc" name_key="HazardousWeatherAndEnvironment">
+    <buff name="buffGSKHazardousWeather53" icon="7dtdGskHazardWeather" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWeatherDesc" name_key="HazardousWeatherAndEnvironment">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -5172,7 +5172,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathHazadousWeatherLvl" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWeather52"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWeather53"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathHazadousWeatherLvl" operation="set" value="@iGSKNDHWTime"/>
@@ -5182,7 +5182,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKNearDeath34" hidden="false" remove_on_death="true" icon="ui_game_symbol_near_death_trauma" icon_color="255,128,128" icon_blink="true" description_key="buffGSKNearDeathDesc" name_key="NearDeathLevels">
+    <buff name="buffGSKNearDeath35" hidden="false" remove_on_death="true" icon="ui_game_symbol_near_death_trauma" icon_color="255,128,128" icon_blink="true" description_key="buffGSKNearDeathDesc" name_key="NearDeathLevels">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -5230,7 +5230,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathChemUse">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathChemUse"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath34">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath35">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -5327,7 +5327,7 @@
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fHWBlockageStam"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath34">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath35">
           <requirement name="HasBuff" buff="god"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="10"/>
@@ -5337,13 +5337,13 @@
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffElementFreezing' or @name='buffElementCold']/effect_group">
-    <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWElementColdHook34">
-      <requirement name="!HasBuff" buff="buffGSKHazardousWElementColdHook34"/>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWElementColdHook35">
+      <requirement name="!HasBuff" buff="buffGSKHazardousWElementColdHook35"/>
     </triggered_effect>
   </append>
   <append xpath="/buffs/buff[@name='buffElementSweltering' or @name='buffElementHot' ]/effect_group">
-    <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWElementHotHook34">
-      <requirement name="!HasBuff" buff="buffGSKHazardousWElementHotHook34"/>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWElementHotHook35">
+      <requirement name="!HasBuff" buff="buffGSKHazardousWElementHotHook35"/>
     </triggered_effect>
   </append>
   <append xpath="/buffs/buff[@name='buffInjuryConcussion']">
@@ -5466,7 +5466,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You take a good bath."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.025">
-          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="1.00"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -5493,7 +5493,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="You take a slow and relaxing bath like a cat :3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.01">
-          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0.5"/>
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0.50"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -5527,7 +5527,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKRadLowerSlow17" icon="7dtdLowerRadiation" icon_color="128,128,180" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
+    <buff name="buffGSKRadLowerSlow18" icon="7dtdLowerRadiation" icon_color="128,128,180" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
       <stack_type value="effect"/>
       <display_value value="fGSKRadRmDur"/>
       <display_value_key value="{0:0}s"/>
@@ -5538,13 +5538,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadLowerSlow17">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadLowerSlow18">
           <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadRmDur" operation="subtract" value="1"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKRadRemover27" icon="7dtdLowerRadiation" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
+    <buff name="buffGSKRadRemover28" icon="7dtdLowerRadiation" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
       <stack_type value="effect"/>
       <display_value value="fGSKRadRmVal"/>
       <display_value_key value="-{0:0}%"/>
@@ -5564,7 +5564,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadRemover27">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadRemover28">
           <requirement name="CVarCompare" cvar="fGSKRadRmVal" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -5573,7 +5573,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKPsyResistWork22" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
+    <buff name="buffGSKPsyResistWork23" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
       <stack_type value="effect"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -5587,7 +5587,7 @@
           <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="GT" value="120"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork22">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork23">
           <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -5609,10 +5609,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistDur" operation="set" value="600">
           <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRadResistWork28"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRadResistWork29"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKRadResistWork28" icon="7dtdRadShield" name_key="RadiationResistance" description_key="RadiationResistanceDesc" remove_on_death="false">
+    <buff name="buffGSKRadResistWork29" icon="7dtdRadShield" name_key="RadiationResistance" description_key="RadiationResistanceDesc" remove_on_death="false">
       <stack_type value="ignore"/>
       <display_value value="fGSKRadResistDur"/>
       <display_value_key value="{0:0}s"/>
@@ -5686,7 +5686,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResChemDiv" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadResistWork28">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadResistWork29">
           <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0"/>
         </triggered_effect>
@@ -5704,8 +5704,8 @@
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(200,900)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork49">
-          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork50">
+          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         </triggered_effect>
       </effect_group>
       <!-- HELPGOOD: this didnt work as expected
@@ -5733,7 +5733,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKSnakePoisonWork49" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+    <buff name="buffGSKSnakePoisonWork50" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <damage_type value="Toxic"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5760,7 +5760,7 @@
       </effect_group>
       <effect_group name="poison damage">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="subtract" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSnakePoisonWork49">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSnakePoisonWork50">
           <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="LTE" value="0"/>
         </triggered_effect>
@@ -5789,7 +5789,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiatedRegenBlock"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKSpiderNet5" hidden="false" icon_blink="true" icon="7dtdSpiderNet" icon_color="255,255,255" help="TODO: spider net icon" description_key="dkbuffGSKSpiderNet" remove_on_death="true">
+    <buff name="buffGSKSpiderNet6" hidden="false" icon_blink="true" icon="7dtdSpiderNet" icon_color="255,255,255" help="TODO: spider net icon" description_key="dkbuffGSKSpiderNet" remove_on_death="true">
       <damage_type value="Stun"/>
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -5801,24 +5801,24 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.50"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(50,200)"/>
         <!-- HELPGOOD: the player have to act for it to work -->
-        <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet5">
+        <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfStand" action="RemoveBuff" buff="buffGSKSpiderNet5">
+        <triggered_effect trigger="onSelfStand" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet5">
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet5">
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet5" help="like 3% per second">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6" help="like 3% per second">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKInPineForestBiomeMonstersThrive9" hidden="true">
+    <buff name="buffGSKInPineForestBiomeMonstersThrive10" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="7.5"/>
@@ -5870,7 +5870,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKMutant_ChkAndApplyOnMobs15" hidden="true">
+    <buff name="buffGSKMutant_ChkAndApplyOnMobs16" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="10"/>
@@ -5917,7 +5917,7 @@
       <stack_type value="ignore"/>
       <duration value="0.5"/>
       <effect_group>
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
@@ -5929,7 +5929,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <requirement name="CVarCompare" cvar=".bGSKMutFlash" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".bGSKMutFlash"/>
         <passive_effect name="WalkSpeed" operation="perc_add" value="10"/>
@@ -5941,14 +5941,14 @@
       <duration value="1.0"/>
       <update_rate value="0.05"/>
       <effect_group help="random teleport in front nearby TODO: does not work on mobs?">
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleportSelf:eventGSKMutantTeleport"/>
       </effect_group>
       <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
@@ -5975,22 +5975,22 @@
       <effect_group help="Mode:RadiationAura">
         <requirement name="EntityTagCompare" tags="mutant"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="RadiatedParticlesOnMesh" param1="SetShapeToMesh0">
-          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49" />
+          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="RadiatedParticlesOnMesh">
-          <requirement name="HasBuff" buff="buffGSKSnakePoisonWork49" />
+          <requirement name="HasBuff" buff="buffGSKSnakePoisonWork50" />
         </triggered_effect>
       </effect_group>
 -->
       <effect_group help="Mode:RadiationAura">
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadiationAura">
           <requirement name="!HasBuff" buff="buffGSKRadiationAura"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="Mode:Miasma">
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationAura">
           <requirement name="HasBuff" buff="buffGSKRadiationAura"/>
@@ -6000,7 +6000,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(50,100)" target="selfAOE" range="30" target_tags="player"/>
       </effect_group>
       <effect_group help="RandomChaos">
-        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork49"/>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.45" target="selfAOE" range="5" target_tags="player"/>
         <!-- HELPGOOD: it is the sum for all distances on nearest -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="15" target_tags="player"/>
@@ -6093,13 +6093,13 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKAllHazardsCheck34" hidden="true">
+    <buff name="buffGSKAllHazardsCheck35" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
       <!-- HELPGOOD: these buffs change the near death levels -->
       <effect_group help="hazard blood loss">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss47">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss48">
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.14"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="0.0000002" help="it is like about 1.73 percent per day (0.0000002*3600*24), natural regeneration"/>
@@ -6109,30 +6109,30 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLossShow" operation="set" value="@fGSKBloodLoss"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLossShow" operation="multiply" value="100"/>
       </effect_group>
-      <!-- HELPGOOD: miasma&dirty iGSKNearDeathMiasmaLvl tho is controlled by buffGSKHazardWeatherMiasmaDirty53 as it permanently happens everywhere -->
+      <!-- HELPGOOD: miasma&dirty iGSKNearDeathMiasmaLvl tho is controlled by buffGSKHazardWeatherMiasmaDirty54 as it permanently happens everywhere -->
       <effect_group help="dry air">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness34" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness35" compare_type="or">
           <requirement name="InBiome" biome="5" help="desert"/>
           <requirement name="InBiome" biome="8" help="wasteland"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness34">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness35">
           <requirement name="!InBiome" biome="5" help="desert"/>
           <requirement name="!InBiome" biome="8" help="wasteland"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="freezing: in snow. in wasteland at night only">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger22">
           <requirement name="InBiome" biome="1" help="snow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger22">
           <requirement name="InBiome" biome="8" help="wasteland"/>
           <requirement name="IsNight"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger22">
           <requirement name="!InBiome" biome="1" help="snow"/>
           <requirement name="!InBiome" biome="8" help="wasteland"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger22">
           <requirement name="InBiome" biome="8" help="wasteland"/>
           <requirement name="!IsNight"/>
         </triggered_effect>
@@ -6171,12 +6171,12 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWRadiation34">
-          <requirement name="NotHasBuff" buff="buffGSKHazardousWRadiation34"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWRadiation35">
+          <requirement name="NotHasBuff" buff="buffGSKHazardousWRadiation35"/>
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="20"/>
         </triggered_effect>
       </effect_group>
-      <!-- HELPGOOD: iGSKNearDeathPoisonLvl is controlled by buffGSKSnakePoisonWork49 -->
+      <!-- HELPGOOD: iGSKNearDeathPoisonLvl is controlled by buffGSKSnakePoisonWork50 -->
       <effect_group>
         <requirements compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
@@ -6191,7 +6191,7 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
         </requirements>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath34"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath35"/>
       </effect_group>
     </buff>
     <buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations">
@@ -6202,7 +6202,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="15" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="15" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount101"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="122069" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="25200" help="7days*3600s(1h), this means to deplet exp debit it needs 7 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
@@ -7043,7 +7043,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTeleLandclaim">
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialLandClaim"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnExplodeExtra17">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnExplodeExtra18">
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialZero" help="tele 0,0,0"/>
         </triggered_effect>
       </effect_group>
@@ -7117,18 +7117,18 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportFinalize"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKElctrnExplodeExtra17" help="TODO:review, seems useless...">
+    <buff name="buffGSKElctrnExplodeExtra18" help="TODO:review, seems useless...">
       <stack_type value="replace"/>
       <duration value="10" help="should be time enough even on slow machine for the boom"/>
       <update_rate value="0.25"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKElctrnExplodeExtra17"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKElctrnExplodeExtra18"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEventFeedbackTeleportPhase"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnExplodeExtra17"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra17"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnExplodeExtra18"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra18"/>
       </effect_group>
     </buff>
     <buff name="buffNVBatteryCreateConsumeEnergy">
@@ -9596,7 +9596,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnTeleportUndergroundFree"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardWeatherMiasmaDirty53" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty" help="permanent buff, there is miasma everywhere">
+    <buff name="buffGSKHazardWeatherMiasmaDirty54" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty" help="permanent buff, there is miasma everywhere">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -9631,7 +9631,7 @@
           <!-- HELPGOOD: caveceiling fetid gases accumulating there -->
         </triggered_effect>
       </effect_group>
-      <effect_group help="bathing underwater">
+      <effect_group help="bathing underwater or rain or just wet">
         <requirements compare_type="or">
           <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
@@ -9650,6 +9650,11 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@fGSKCleanTheDirty"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.20">
           <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="2.0" help="this kind of bath will last more"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.10">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0.75" help="like between cat bath and normal bath"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBathMsgCooldownTime" operation="set" value="120">
           <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="0"/>
@@ -9720,8 +9725,8 @@
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="3600"/>
         <!-- HELPGOOD: like 1 baths a day -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKMiasmaDirtyTooMuch" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWMiasmaDirtyB39">
-          <requirement name="NotHasBuff" buff="buffGSKHazardousWMiasmaDirtyB39"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWMiasmaDirtyB40">
+          <requirement name="NotHasBuff" buff="buffGSKHazardousWMiasmaDirtyB40"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -9739,7 +9744,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKCosmicRayStrikeChk8" hidden="true">
+    <buff name="buffGSKCosmicRayStrikeChk9" hidden="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
@@ -9748,7 +9753,7 @@
       </effect_group>
       <effect_group help="chk allowed">
         <requirement name="!HasBuff" buff="god"/>
-        <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike7"/>
+        <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike8"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
         <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="0"/>
         <requirement name="!IsBloodMoon"/>
@@ -9762,9 +9767,9 @@
       </effect_group>
       <effect_group help="CosmicRays">
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeAllowed" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicRayStrike7"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicRayStrike8"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiation03"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKCosmicRayStrikeChk8:StrukByACosmicRayBeam"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKCosmicRayStrikeChk9:StrukByACosmicRayBeam"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="1"/>
@@ -9774,10 +9779,10 @@
         <requirement name="IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
         <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicBloodMoon1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCosmicBloodMoon2"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKCosmicBloodMoon1" icon="7dtdCosmicRayShield" icon_color="128,255,128" hidden="false" name_key="CosmicBloodMoon" description_key="dkbuffGSKCosmicBloodMoon" remove_on_death="false" help="this also works like a cooldown">
+    <buff name="buffGSKCosmicBloodMoon2" icon="7dtdCosmicRayShield" icon_color="128,255,128" hidden="false" name_key="CosmicBloodMoon" description_key="dkbuffGSKCosmicBloodMoon" remove_on_death="false" help="this also works like a cooldown">
       <stack_type value="ignore"/>
       <display_value value="iGSKCosmicBloodMoonCoolDown"/>
       <display_value_key value="{0:0}s"/>
@@ -9786,7 +9791,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150" help="maxTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="add" value="-5" help="sync with update_rate time!"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon1" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon2" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0.75" fade="1.0"/>
@@ -9809,7 +9814,7 @@
         <passive_effect name="WalkSpeed" operation="perc_add" duration="0,30,60" value="2.5,2.5,0"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKCosmicRayStrike7" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
+    <buff name="buffGSKCosmicRayStrike8" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
       <stack_type value="ignore"/>
       <display_value value="iGSKCosmicStrikeCooldown"/>
       <display_value_key value="{0:0}s"/>
@@ -9818,7 +9823,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicStrikeCooldown" operation="set" value="300"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicStrikeCooldown" operation="add" value="-2" help="sync with update_rate time!"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicRayStrike7" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicRayStrike8" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicStrikeCooldown" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="1"/>
         </triggered_effect>
@@ -9836,7 +9841,7 @@
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeMode" operation="GTE" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKCosmicRayStrike"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrike7:TeleportInPlaceDown1DigMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrike8:TeleportInPlaceDown1DigMode"/>
       </effect_group>
       <effect_group help="random dir telep">
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
@@ -9845,7 +9850,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleRndDistIndexMax" operation="set" value="1" help="this limits the random distance of buffGSKElctrnTeleChoseRandomDirection"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="add" value="1" help="this prevents energy usage on tele finalize etc"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKExternalForceTeleport"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrike7:RandomDirTeleport"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKCosmicRayStrike8:RandomDirTeleport"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
@@ -9862,7 +9867,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKBloodMoonStuff7" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false">
+    <buff name="buffGSKBloodMoonStuff8" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false">
       <stack_type value="replace"/>
       <display_value value=".iGSKBMFoeAliveCount"/>
       <display_value_key value="{0:0}"/>
@@ -9946,15 +9951,15 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff8">
           <requirement name="!IsBloodMoon"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff8">
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="NotEquals" value="2"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKPermanentGenericCheck15" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
+    <buff name="buffGSKPermanentGenericCheck16" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -9982,11 +9987,11 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="fall over enemy damage">
-        <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKFallOverLandingHit6"/>
+        <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKFallOverLandingHit7"/>
       </effect_group>
       <effect_group help="stumbling npcs and mobs">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCstumble6" target="selfAOE" range="60" target_tags="zombie,npc,animal,bandit">
-          <requirement name="!HasBuff" buff="buffGSKNPCstumble6"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCstumble7" target="selfAOE" range="60" target_tags="zombie,npc,animal,bandit">
+          <requirement name="!HasBuff" buff="buffGSKNPCstumble7"/>
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider01" help="spiders have no ragdoll (yet?)"/>
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
@@ -9994,9 +9999,9 @@
       </effect_group>
       <effect_group help="bloodmoon stuff">
         <requirement name="IsBloodMoon"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff7">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff8">
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="2"/>
-          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff7"/>
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff8"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="FAILED: ragdoll: player applies ragdoll on foe requested by some npc">
@@ -10056,9 +10061,9 @@
         <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedRagDollCheckLuck"/>
       </effect_group>
       <effect_group help="rad slow remover: to make sure it is still working mainly after resurrect">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadLowerSlow17">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadLowerSlow18">
           <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="GT" value="0"/>
-          <requirement name="!HasBuff" buff="buffGSKRadLowerSlow17"/>
+          <requirement name="!HasBuff" buff="buffGSKRadLowerSlow18"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathBloated:ResetLvl">
@@ -10273,7 +10278,7 @@
       <effect_group help="RADS: shelter gives radiation resistance">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadResistWork28"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadResistWork29"/>
       </effect_group>
       <effect_group help="RADS: grant effect is off">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LTE" value="5"/>
@@ -10336,7 +10341,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKExternalForceTeleport"/>
       </effect_group>
       <effect_group help="hazard: weather apply and fix time">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather52">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWeather53">
           <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
@@ -10379,7 +10384,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="resurrection completely removes DNA damage"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPCstumble6">
+    <buff name="buffGSKNPCstumble7">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3"/>
@@ -10668,7 +10673,7 @@
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-        <requirement name="!HasBuff" buff="buffGSKPsyResistWork22"/>
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork23"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffBurningElement"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="3"/>
@@ -10677,7 +10682,7 @@
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="2"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-        <requirement name="!HasBuff" buff="buffGSKPsyResistWork22"/>
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork23"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="add" value="3.0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffShocked"/>
@@ -10686,16 +10691,16 @@
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="3"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-        <requirement name="!HasBuff" buff="buffGSKPsyResistWork22"/>
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork23"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(15,75)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork49"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork50"/>
       </effect_group>
       <effect_group help="bleed">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="4"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-        <requirement name="!HasBuff" buff="buffGSKPsyResistWork22"/>
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork23"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryBleedingTwo"/>
       </effect_group>
@@ -10753,7 +10758,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="GSK:DBG:.iGSKDbgNpcInfo"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKGasMaskWork6" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
+    <buff name="buffGSKGasMaskWork7" hidden="false" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
       <stack_type value="replace"/>
       <update_rate value="3"/>
       <duration value="0"/>
@@ -10762,7 +10767,7 @@
       </effect_group>
       <effect_group help="DBG">
         <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKGasMaskWork6:loop"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKGasMaskWork7:loop"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaPrevious"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKMiasmaBlockPercExtra"/>
@@ -10813,7 +10818,7 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty"/>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork6">
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork7">
           <requirement name="!HasBuff" buff="buffGSKGasMaskBandana"/>
           <requirement name="!HasBuff" buff="buffGSKGasMaskPro"/>
         </triggered_effect>
@@ -10825,8 +10830,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.75" help="because the skin is not protected"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork6">
-          <requirement name="!HasBuff" buff="buffGSKGasMaskWork6"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork7">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork7"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -10836,12 +10841,12 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.25"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork6">
-          <requirement name="!HasBuff" buff="buffGSKGasMaskWork6"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork7">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork7"/>
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKMeleeParry6" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked, create a debuff to apply that on the next weapon/tool use. TODO: block/remove applied debuffs too like broken limb etc, anything that a parry could deny">
+    <buff name="buffGSKMeleeParry7" hidden="true" help="for melee build, will negate all incoming damage. TODO: degrade melee weapon much faster, 5% per hit blocked, create a debuff to apply that on the next weapon/tool use. TODO: block/remove applied debuffs too like broken limb etc, anything that a parry could deny">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.33" help="TODO: why 0.05 didnt work well?"/>
@@ -10862,7 +10867,7 @@
       </effect_group>
       <effect_group help="restore HP properly if requested">
         <requirement name="CVarCompare" cvar=".iGSKMeleeParryDoIt" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKMeleeParry6:RetoredHealthAsDamageWasParried"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKMeleeParry7:RetoredHealthAsDamageWasParried"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="set" value="@.iGSKMeleeParryPrevHP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="set" value="0" help="consume"/>
@@ -10878,14 +10883,14 @@
     </buff>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKFallOverLandingHit6" hidden="true" help="are these ever triggered for the player?">
+    <buff name="buffGSKFallOverLandingHit7" hidden="true" help="are these ever triggered for the player?">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.2"/>
       <effect_group>
         <triggered_effect trigger="onSelfLandJump" action="Ragdoll" duration="60" force="10" target="selfAOE" range="2" target_tags="zombie,animal,npc,bandit"/>
-        <triggered_effect trigger="onSelfLandJump" action="LogMessage" message="GSK:buffGSKFallOverLandingHit6"/>
-        <triggered_effect trigger="onSelfLandJump" action="RemoveBuff" buff="buffGSKFallOverLandingHit6"/>
+        <triggered_effect trigger="onSelfLandJump" action="LogMessage" message="GSK:buffGSKFallOverLandingHit7"/>
+        <triggered_effect trigger="onSelfLandJump" action="RemoveBuff" buff="buffGSKFallOverLandingHit7"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCSpiderTouchNet" help="TODO: remove when buffGSKNPCLeapHit works">
@@ -10893,8 +10898,8 @@
       <duration value="0"/>
       <update_rate value="0.1"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSpiderNet5" target="selfAOE" range="1">
-          <requirement name="!HasBuff" buff="buffGSKSpiderNet5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSpiderNet6" target="selfAOE" range="1">
+          <requirement name="!HasBuff" buff="buffGSKSpiderNet6"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -10907,7 +10912,7 @@
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfLandJump" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s" target_tags="player"/>
-        <triggered_effect trigger="onSelfLandJump" action="AddBuff" buff="buffGSKSpiderNet5" target="selfAOE" range="1">
+        <triggered_effect trigger="onSelfLandJump" action="AddBuff" buff="buffGSKSpiderNet6" target="selfAOE" range="1">
           <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfLandJump" action="LogMessage" message="GSK:buffGSKNPCLeapHit"/>
@@ -10915,7 +10920,7 @@
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s" target_tags="player"/>
-        <triggered_effect trigger="onSelfFallImpact" action="AddBuff" buff="buffGSKSpiderNet5" target="selfAOE" range="1">
+        <triggered_effect trigger="onSelfFallImpact" action="AddBuff" buff="buffGSKSpiderNet6" target="selfAOE" range="1">
           <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfFallImpact" action="LogMessage" message="GSK:buffGSKNPCLeapHit"/>
