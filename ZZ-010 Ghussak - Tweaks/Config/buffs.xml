@@ -4873,11 +4873,8 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="!InBiome" biome="5"/>
-        <!-- HELPGOOD: desert -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness34"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardWWetFreezingAndHunger21" name_key="FreezingHazard" icon="7dtdGskHazardSnow" description_key="buffGSKHazardWWetFreezingAndHungerDesc">
@@ -4929,11 +4926,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingLvl" operation="divide" value="60"/>
       </effect_group>
       <effect_group>
-        <requirement name="!InBiome" biome="1"/>
-        <!-- HELPGOOD: snow -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingLvl" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger21"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathFreezingLvl" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardousWMiasmaDirtyB39" icon="7dtdGskMiasma" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWMiasmaDirtyBDesc" name_key="HazardousMiasma">
@@ -5840,17 +5834,17 @@
       <update_rate value="2.5"/>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,2.50)" target="selfAOE" range="8" target_tags="player" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(1.50,2.50)" target="selfAOE" range="3.5" target_tags="player" compare_type="or" help="melee distance, player should avoid it">
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.25,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="8.5" target_tags="player" compare_type="or" help="nearby distance, to call more the player attention">
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.50)" target="selfAOE" range="30" target_tags="player"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.20)" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHealMonster" operation="set" value="randomInt(15,50)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iGSKHealMonster" target="selfAOE" range="12" target_tags="zombie">
           <requirement name="!HasBuff" buff="buffRadiatedRegenBlock" target="other" help="if other regen is blocked, wont be regenerated by this zombie"/>
@@ -5859,13 +5853,16 @@
       </effect_group>
       <effect_group help="timeout control">
         <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="10">
-          <requirement name="!InBiome" biome="3" help="not at pineforest (all monsters thrive more difficultly)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="15" help="must be mult of updrate">
+          <requirement name="InBiome" biome="5" help="desert"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="7.5">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="10" help="must be mult of updrate">
+          <requirement name="InBiome" biome="1" help="snow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="7.5" help="must be mult of updrate">
           <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="5.0">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="5.0" help="must be mult of updrate">
           <requirement name="InBiome" biome="8" help="Wasteland (all monsters are empowered by radiation)"/>
         </triggered_effect>
       </effect_group>
@@ -6113,11 +6110,31 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLossShow" operation="multiply" value="100"/>
       </effect_group>
       <!-- HELPGOOD: miasma&dirty iGSKNearDeathMiasmaLvl tho is controlled by buffGSKHazardWeatherMiasmaDirty53 as it permanently happens everywhere -->
-      <effect_group>
-        <requirement name="InBiome" biome="1"/>
-        <!-- HELPGOOD: snow -->
+      <effect_group help="dry air">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness34" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert"/>
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness34">
+          <requirement name="!InBiome" biome="5" help="desert"/>
+          <requirement name="!InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="freezing: in snow. in wasteland at night only">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
-          <requirement name="NotHasBuff" buff="buffGSKHazardWWetFreezingAndHunger21"/>
+          <requirement name="InBiome" biome="1" help="snow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+          <requirement name="IsNight"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+          <requirement name="!InBiome" biome="1" help="snow"/>
+          <requirement name="!InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger21">
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+          <requirement name="!IsNight"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcHeating"/>
       </effect_group>
@@ -6151,13 +6168,6 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="LT" value="0"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness34">
-          <requirement name="NotHasBuff" buff="buffGSKHazardWDryness34"/>
-          <requirement name="InBiome" biome="5"/>
-          <!-- HELPGOOD: desert -->
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -9774,19 +9784,29 @@
       <duration value="0"/>
       <update_rate value="5" help="sync with iGSKCosmicBloodMoonCoolDown subtraction below"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150" help="maxTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="add" value="-5" help="sync with update_rate time!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon1" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0.75" fade="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="3.0">
-          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="135" help="sync with maxTime-ragdollTime"/>
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="120" help="sync with maxTime-ragdollTime"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="15" force="500" target="selfAOE" range="30" target_tags="zombie,animal,bandit"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="25"/>
+      </effect_group>
+      <effect_group help="main effects good and bad">
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="-0.10"/>
+      </effect_group>
+      <effect_group help="over time buffs to let the player clear mobs in melee or ranged, the ending at 60s is meant to let the player run back to a safe location">
+        <passive_effect name="StaminaChangeOT" operation="base_add" duration="0,30,60" value="10,10,0"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" duration="0,30,60" value="10,10,0"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" duration="0,30,60" value="2,2,0"/>
+        <passive_effect name="JumpStrength" operation="perc_add" duration="0,30,60" value="2.5,2.5,0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" duration="0,30,60" value="2.5,2.5,0"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" duration="0,30,60" value="2.5,2.5,0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKCosmicRayStrike7" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
@@ -9830,6 +9850,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6" force="250" target="selfAOE" range="15" target_tags="zombie,animal,bandit" help="this actually expectedly helps the player a bit"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
@@ -10951,7 +10972,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="60" help="it may take some seconds to generate the world in the new location and the player may need time to decide to use the teleport to backpack item before dieing again, was 20s only"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="15" help="it may take some seconds to generate the world in the new location, also about 5s for the engine wakeup animation, and the player may need time to decide to use the teleport to backpack item before dieing again. shall not be enough time to the player get back the backpack"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
