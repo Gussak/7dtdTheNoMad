@@ -6380,19 +6380,28 @@
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="selfAOE" range="20" buff="buffNPCModAttacking"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="ShowToolbeltMessage" message="Call followers' help!"/>
       </effect_group>
+      <effect_group name="itemNPCStayFollow:ApplyHints" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="1001"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="2">
+          <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="1002"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group name="itemNPCStayFollow:Stay" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="1" help="follow"/>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="2" target="selfAOE" range="6" help="Stay"/>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="GuardThere, SCore" target="selfAOE" range="6"/>
-        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1002"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Stay"/>
       </effect_group>
       <effect_group name="itemNPCStayFollow:Follow" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="2" help="stay"/>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="1" target="selfAOE" range="6" help="Follow"/>
-        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1001"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Follow"/>
       </effect_group>
     </item>
