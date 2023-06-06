@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <!-- HELPGOOD: tech tips
+  BUFFS: instead of (that may not work)
+      <property name="Buffs" value="buffSomeBuff,buffSomeOtherBuff" /> 
+    use (that seems to always work)
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffSomeBuff" />
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffSomeOtherBuff" />
+-->
   <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[(@trigger='onSelfEnteredGame' or @trigger='onSelfRespawn') and @action='AddBuff' and @target='self']/@buff">,buffPlayerEnhancesNearbyFriendlyNPCs1,buffLeaderLimitsHiredNPCsAmount101,buffDrinkRainWater73,buffGSKRespawnPreventWaterBkp7,buffGSKShowWaterBkp17,buffGSKBkpWaterVal68,buffGSKHazardWeatherMiasmaDirty54,buffGSKDenyGoreHarvest,buffGSKProperSwimming40,buffGSKAllHazardsCheck35,buffGSKRadResistWork29,buffGSKRadRemover28,buffGSKHeatColdProtClothDmgKeep27,buffGSKChemUseSideEffects26,buffGSKBloodmoonZombiesPowerChk24,buffGSKElctrnOverchargeDmg69,buffGSKPermanentGenericCheck16,buffGSKMutant_ChkAndApplyOnMobs16,buffGSKInPineForestBiomeMonstersThrive10,buffGSKCosmicRayStrikeChk9,buffGSKMeleeParry7,buffGSKFallOverLandingHit7</append>
   <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[@trigger='onSelfEnteredGame' and @action='AddBuff' and @target='self']/@buff">,buffGSKDetectEnterGame,buffGSKConfigGeneric,buffGSKGodModeFirstSpawn</append>
   <!-- HELPGOOD: everytime player joins the game. the 1st random teleport to ground MUST be after the enter game detection -->
@@ -238,12 +245,9 @@
   <set xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='JumpStrength' and @tags='crouching']/@value">0.16</set>
   <set xpath="/entity_classes/entity_class[@name='playerMale']/property[     @name='ItemsOnEnterGame.GameModeSurvival'   or     @name='ItemsOnEnterGame.GameModeSurvivalSP' or     @name='ItemsOnEnterGame.GameModeSurvivalMP'    ]/@value">GSKElctrnTeleportUndergroundFreeAndSafeCall,GSKCFGTeleUndergroundFreeDelay,GSKElctrnTeleportToBiomeFreeAndSafeCall,GSKNoteResurrectTips,GSKTRFirstSpawnBundle</set>
   <append xpath="/entity_classes/entity_class[@name='sc_General']">
-    <property name="Buffs" value="buffGSKAirDropHighlight"/>
-    <property name="Tags" value="perkAT01,perkAT02,perkAT03"/>
-    <property name="TrackerIcon" value="map_supply_crate"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[@name='sc_General']">
-    <property name="Buffs" value="buffGSKAirDropHighlight"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKAirDropHighlight"/>
+    </effect_group>
     <property name="Tags" value="perkAT01,perkAT02,perkAT03"/>
     <property name="TrackerIcon" value="map_supply_crate"/>
   </append>
@@ -262,6 +266,9 @@
     <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncher,ammoNPCRocketHE"/>
   </append>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'zombie')]/property[@name='TimeStayAfterDeath']/@value">6</set>
+  <append xpath="/entity_classes/entity_class[       @name='npcTattooGurlTRifle' or        @name='npcAirForceTRifle'     ]" help="this fix copes with ranged NPC follower limiter. had to be a full property append because had to remove melee from it TODO: find other rangeds that require fixing thru bash script xmlstarlet, or use contains npc TRifle and any other ranged suffixes and append to them even if it ends up dupped">
+    <property name="Tags" value="entity,female,npc,UMA2,ranged"/>
+  </append>
   <!-- HELPGOOD: A patch to friendly raiders to show up in the hired followers list 
     ex.: the idea is to upgrade from npcClubTemplate to npcAdvancedClubTemplate
       originally:
@@ -620,35 +627,49 @@
     <property name="SoundGiveUp" value="animalspiderroam"/>
   </append>
   <append xpath="/entity_classes/entity_class[@name='zombieTemplateMale' or @name='animalTemplateTimid' or @name='animalTemplateHostile']">
-    <property name="Buffs" value="buffGSKNPCCosmicRayTrap"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCCosmicRayTrap"/>
+    </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') or @name='zombieSpider']">
-    <property name="Buffs" value="buffGSKNPCLeapHit,buffGSKNPCSpiderTouchNet,buffGSKNPCCosmicRayHit"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCLeapHit"/>
+    </effect_group>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCSpiderTouchNet"/>
+    </effect_group>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCCosmicRayHit"/>
+    </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieMutated')]/property[@name='Tags']/@value">,mutant</append>
   <append xpath="/entity_classes/entity_class[@name='animalRabbit' or @name='zombieMutated' or @name='animalZombieVultureRadiated']">
-    <property name="Buffs" value="buffGSKMutantRabbits"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKMutantRabbits"/>
+    </effect_group>
     <property name="ParticleOnSpawn" value="ParticleEffects/RadiatedParticlesOnMesh" param1="SetShapeToMesh0" help="ISSUE: this particle here will error on log, but only once! so not a problem..."/>
     <drop event="Harvest" name="drugGSKAntiRadiation" count="7,28" tag="butcherHarvest"/>
     <drop event="Harvest" name="GSKsnakePoison" count="0,2" tag="butcherHarvest"/>
     <drop event="Harvest" name="drugGSKPsyonicsResist" count="0,3" tag="butcherHarvest"/>
   </append>
-  <append xpath="/entity_classes/entity_class[@name='zombieMutated']">
-    <property name="Buffs" value="buffGSKMutantZombies"/>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieMutated')]">
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKMutantZombies"/>
+    </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name,'Radiated')]">
-    <property name="Buffs" value="buffGSKRadiationAura"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKRadiationAura"/>
+    </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[@name='zombieMutatedRadiated']">
-    <property name="Buffs" value="buffGSKMutantZombies,buffGSKRadiationAura"/>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieWight')]">
+    <property name="MoveSpeedAggro" value="6.0, 8.0" help="doesnt seem to work, using buffGSKWightPower instead"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKWightPower"/>
+    </effect_group>
   </append>
+  <append xpath="/entity_classes/entity_class[contains(@name,'Wight')]/property[@name='Tags']/@value">,wight</append>
   <set xpath="/entity_classes/entity_class[@name='zombieArlene']/property[@name='DanceType']/@value">1</set>
-  <append xpath="/entity_classes/entity_class[@name='zombieWightFeral']">
-    <property name="MoveSpeedAggro" value="0.6, 8.0"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[@name='zombieWightRadiated']">
-    <property name="MoveSpeedAggro" value="0.6, 12.0"/>
-  </append>
   <append xpath="/entity_classes/entity_class[@name='zombieDemolition']">
     <property name="Explosion.Buff" value="buffGSKRadExplosionA"/>
     <property name="Explosion.RadiusBlocks" value="10"/>

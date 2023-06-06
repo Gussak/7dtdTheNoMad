@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <!-- HELPGOOD: tech tips
+  <!-- HELPGOOD: tech tips (all all correct?)
   - BUFFS: calling many buffs like: onSelfBuffStart addBuff may not work? needs to be onSelfBuffUpdate right?
   - PASSIVEEFFECTS: passive effects must use a unique cvar (not a temp shared one) as it will use the value after the var is changed elsewhere at any time
   - NPCS: NPCs can't change cvar on player but can apply buffs to transfer cvar values bit by bit!
@@ -8,6 +8,8 @@
       THISWORKS: <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="testA" operation="set" value="123" target="selfAOE" range="60"><requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" /></triggered_effect>
       ThisFails: <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="testA" operation="set" value="@iVarTst" target="selfAOE" range="60"><requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" /></triggered_effect>
   - NPCS: the player cannot set a @variable value cvar on NPCs too right? must be a constant value or use a buff to transfer values bit by bit.
+  - NPCS: aiming an NPC and holding shift with the F3 debug info enabled, will show that NPC buffs and cvars
+  - DEBUG:DM: holding shift and pressing numpad_dot to crouch (that's my cfg), will crouch instead of ragdoll!
 -->
   <append xpath="/buffs">
     <buff name="buffHiredNPCnoFallDamage11" hidden="true" remove_on_death="false">
@@ -44,14 +46,22 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="set" value="@.fGSKHiredNPCHPprev"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHiredNPCHPprevLess50" operation="add" value="-50"/>
       </effect_group>
-      <effect_group help="HPUP:log and heal">
+      <effect_group help="HPUP: log and heal">
         <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".fGSKHiredNPCHPprevLess50" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="Equals" value="0"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="@.fGSKHiredNPCHPprevLess50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKHiredNPCHPprev"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_fallSpeed"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="set" value="@.fGSKHiredNPCHPprev"/>
+      </effect_group>
+      <effect_group help="HPUP: resets skipper used by explosions">
+        <requirement name="CVarCompare" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="NotEquals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKHiredNPCSkipHealHPOnce"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="set" value="0"/>
       </effect_group>
       <effect_group help="HPUP: update backup HP (repeated add/sub to update faster per loop) TODO: can cvar be directly set to #health ? Entity variables can be considered like game variables (or these are game globals)?">
         <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
@@ -424,6 +434,7 @@
       <duration value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="randomFloat(0.15,0.35)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="add" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffHiredNPCdamageArmor98" hidden="true" remove_on_death="false">
@@ -713,7 +724,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffLeaderLimitsHiredNPCsAmount101"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffLeaderLimitsHiredNPCsAmount101"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffLeaderLimitsHiredNPCsAmount_update_rate" operation="set" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffLeaderLimitsHiredNPCsAmount_update_rate" operation="set" value="3"/>
       </effect_group>
       <effect_group help="pseudo distances, the farer should be on top to be overwritten by nearest ones">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="60" target="selfAOE" range="60">
@@ -796,7 +807,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="NPCSNEAK:">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking8" target="selfAOE" range="60">
           <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="1" help="off"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -811,17 +822,8 @@
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCproperSneaking8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
-          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCincHiredCountEachOtherAndTryDismiss" target="selfAOE" range="60">
-          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!HasBuff" target="other" buff="buffNPCincHiredCountEachOtherAndTryDismiss"/>
-        </triggered_effect>
+      </effect_group>
+      <effect_group help="etc">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffHiredNPCnoFallDamage11" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
@@ -849,8 +851,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH buffLeaderLimitsHiredNPCsAmount101 update_rate!!!!!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fNPCPreventDismissSecs">
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
+          <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCSelfPreventDismissSecsAdd10" target="selfAOE" range="60">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="3" help="IMPORTANT!!!! has to be constant value, KEEP IN SYNC WITH fTransferNPCPDS=.buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -871,8 +874,25 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fRepairNPCArmor" operation="subtract" value="0.05" target="self">
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="RangedNPClimit: NPC buff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCincHiredCountEachOtherAndTryDismiss" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+          <requirement name="!HasBuff" target="other" buff="buffNPCincHiredCountEachOtherAndTryDismiss"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="RangedNPClimit: sets the var that NPCs will use to self leave the party.  More than one NPC follower is only allowed when the player UNequips a ranged weapon. This is for the melee build. Obs.: There is no limit for melee NPCs following the player at any time.">
+        <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="1"/>
         <!-- HELPGOOD: followers limit. iGSKNPCFollowAboveLimit is meant to be compared using Equals so if it is 2, the limit is 1-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="2" target="selfAOE" range="60" help="limit is 1">
+          <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LTE" value="1"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -880,14 +900,20 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="3" target="selfAOE" range="60" help="limit is 2">
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="2"/>
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LTE" value="3"/>
-          <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="4" target="selfAOE" range="60" help="limit is 3">
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="Equals" value="4"/>
-          <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="RangedNPClimit: when the player equips a ranged weapon, the ranged NPC follow limit is always 1. If the player is using a ranged weapon, (s)he can only have one ranged NPC follower.">
+        <requirement name="CVarCompare" cvar="iGSKNPCFollowAllowMany" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="2" target="selfAOE" range="60" help="force limit 1 at any charisma lvl">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -916,6 +942,12 @@
     </buff>
     <buff name="buffHiredNPChudInfo">
       <duration value="0.05"/>
+      <effect_group help="BOOL: weapon type">
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCRandomID" operation="set" value="randomInt(100000,999999)" help="using big value to try to be unique TODO: is there some other unique NPC id cvar readonly value? there is a number ex.: 21757 when pressing numpad0 on dm above NPC's head, but it is not a cvar">
+          <requirement name="CVarCompare" cvar="iGSKNPCRandomID" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="BOOL: weapon type">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoMeleeOrRanged" operation="set" value="0" target="selfAOE" range="3.0">
@@ -2125,26 +2157,22 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCRepairSelfArmor" operation="add" value="@fTransferNPCRepairArmor"/>
       </effect_group>
     </buff>
-    <buff name="buffNPCSelfPreventDismissSecsAdd10">
-      <duration value="0.05"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="3" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH .buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="@fTransferNPCPDS"/>
-      </effect_group>
-    </buff>
     <buff name="buffNPCincHiredCountEachOtherAndTryDismiss">
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCExpCredit">
-          <requirement name="CVarCompare" cvar="iNPCExpCredit" operation="GT" value="0"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader">
           <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="EntityID">
           <requirement name="CVarCompare" cvar="EntityID" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID">
+          <requirement name="CVarCompare" cvar="iGSKNPCRandomID" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iNPCExpCredit">
+          <requirement name="CVarCompare" cvar="iNPCExpCredit" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCfollowingDenySneakTimer">
           <requirement name="CVarCompare" cvar="iGSKNPCfollowingDenySneakTimer" operation="GT" value="0"/>
@@ -2167,6 +2195,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKNPCSelfPreventDismissSecs">
           <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="GT" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCFollowAboveLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:npcHasCustomPowerArmor">
           <requirement name="HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
         </triggered_effect>
@@ -2200,32 +2230,30 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol"/>
       </effect_group>
-      <effect_group help="self put on patrol mode if hired ranged beyond limit">
-        <requirement name="!EntityTagCompare" tags="animal"/>
-        <requirement name="!EntityTagCompare" tags="melee"/>
+      <effect_group help="self put on patrol mode if hired ranged self count reached limit">
+        <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol"/>
       </effect_group>
-      <effect_group help="add 1 to other npcs hired limit">
-        <requirement name="!EntityTagCompare" tags="animal"/>
-        <requirement name="!EntityTagCompare" tags="melee"/>
+      <effect_group help="add 1 to other ranged npcs hired limit count if self count below limit">
+        <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="LT" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
-          <requirement name="!EntityTagCompare" target="other" tags="animal"/>
-          <requirement name="!EntityTagCompare" target="other" tags="melee"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="last thing is to update the grace time">
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="subtract" value="@fTransferNPCPDS">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="subtract" value="3" help="IMPORTANT!!!! KEEP IN SYNC WITH fTransferNPCPDS=.buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!">
           <requirements compare_type="or">
             <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
             <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
@@ -2326,7 +2354,7 @@
     <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
   </append>
   <append xpath="/buffs/buff[@name='buffOrderFollow']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="add" value="15"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item"/>
   </append>
   <append xpath="/buffs">
     <buff name="buffGSKRespawnPreventWaterBkp7" hidden="true" remove_on_death="true">
@@ -5728,12 +5756,12 @@
       </effect_group>
 -->
     </buff>
-    <buff name="buffGSKSnakePoisonDmgIndicator" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+    <buff name="buffGSKSnakePoisonDmgIndicator" hidden="false" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <damage_type value="Toxic"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKSnakePoisonWork50" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+    <buff name="buffGSKSnakePoisonWork50" hidden="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
       <damage_type value="Toxic"/>
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5799,7 +5827,6 @@
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.90"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.50"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(50,200)"/>
         <!-- HELPGOOD: the player have to act for it to work -->
         <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
@@ -5813,7 +5840,31 @@
         <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet6">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6" help="like 3% per second">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+          <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+          <requirement name="EntityTagCompare" tags="bear"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="4"/>
+          <requirement name="EntityTagCompare" tags="mountainlion"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3"/>
+          <requirement name="EntityTagCompare" tags="boar"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="2"/>
+          <requirement name="EntityTagCompare" tags="dog"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="2"/>
+          <requirement name="EntityTagCompare" tags="wolf"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet6" help="like 3% per second?">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
         </triggered_effect>
       </effect_group>
@@ -10733,11 +10784,11 @@
       <duration value="0.05"/>
       <effect_group help="reset all">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0" target="selfAOE" range="60" target_tags="npc"/>
       </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="2" help="last">
+      <effect_group help="values loop">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="2" help="sync last index here">
           <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="LT" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="1">
@@ -10753,7 +10804,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="Equals" value="2"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1" target="selfAOE" range="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="1" target="selfAOE" range="60" target_tags="npc"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKDbgNpcInfo"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="GSK:DBG:.iGSKDbgNpcInfo"/>
       </effect_group>
@@ -11075,6 +11126,34 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="subtract" value="@.fGSKModWaterTmp"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKModFoodTmp" operation="set" value="randomInt(5,15)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="subtract" value="@.fGSKModFoodTmp"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightPower" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="33"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="8.0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="8.0" help="here as entityclass' MoveSpeedAggro seems to change nothing, why? too big values also seem to not work?"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightPowerDisable" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="60"/>
+      <effect_group>
+        <requirement name="EntityTagCompare" tags="wight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" force="0" target="self"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="1.00,0.95,0" duration="0,45,60"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="1.00,0.95,0" duration="0,45,60"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!EntityTagCompare" tags="wight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKWightPowerDisable"/>
       </effect_group>
     </buff>
   </append>

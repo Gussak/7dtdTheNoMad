@@ -1436,6 +1436,7 @@
   <append xpath="/items">
     <item name="GlowStickGreen">
       <property name="CustomIcon" value="7dtdGskGlowStickGreen"/>
+      <property name="DescriptionKey" value="dkGlowStickGreen"/>
       <property name="Tags" value="ammo,weapon,attPerception"/>
       <property name="ItemTypeIcon" value="explosion"/>
       <property name="DisplayType" value="ammoGrenadeContact"/>
@@ -1477,16 +1478,16 @@
         <property name="Delay" value="1"/>
         <property name="Sound_start" value="grenade_pullpin"/>
       </property>
-      <property name="ThrowableDecoy" value="true"/>
+      <property name="ThrowableDecoy" value="true" help="explode on hit does not work with decoy right?"/>
       <property name="DistractionTags" value="zombie,requires_contact"/>
       <effect_group name="decoy" tiered="false">
         <passive_effect name="DistractionRadius" operation="base_set" value="50"/>
         <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
         <passive_effect name="DistractionStrength" operation="base_set" value="100"/>
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
-        <passive_effect name="EntityDamage" operation="base_set" value="0"/>
-        <triggered_effect trigger="onProjectileImpact" action="AddBuff" buff="buffGSKDancingZombies" target="otherAOE" range="10"/>
-        <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKDancingZombies"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="10" help="if 0 wouldnt trigger luring but would also not add buff to wight. 10 seems the minimum to trigger onSelfExplosionAttackedOther right?"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="wight" buff="buffGSKWightPowerDisable"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="wight" buff="buffGSKWightPowerDisable"/>
       </effect_group>
     </item>
     <item name="GlowStickGreenDecoy" help="TODO:not working as decoy yet..">
@@ -5415,6 +5416,7 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork23"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="1" help="TODO: let player have a psyonic credit to use for teleporting or other things"/>
       </effect_group>
     </item>
     <item name="GSKRadiationResist" help="TODO:RMMAJORVERSION">
@@ -6017,7 +6019,7 @@
  ++++++++++++++++++++++++++++++++++++++++++++ KEEP LAST ++++++++++++++++++++++++++++++++++++++++++++++++++ 
 -->
   <!-- HELPGOOD: CODEGEN:HELPER: clear;egrep '<item name="(drug|med|food)[^" ]*"' ../* -iRIwho -\-include="items.xml" 2>/dev/null |sort -u |egrep -v "Schem|Desc|Admin" |sed -r 's#<item name=(.*)#@name=\1 or#' |tr '"' "'"    -->
-  <append xpath="/items/item[       @name='GSKsimpleBeer'         or       @name='drinkJarBeer'          or       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKsnakePoisonAntidote'  or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSugarButts'        or       @name='medicalBloodBagEmpty'     ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+  <append xpath="/items/item[       @name='GSKsimpleBeer'         or       @name='drinkJarBeer'          or       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSugarButts'             ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
     <effect_group name="ADD chem use hp block" tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.01,0.02)"/>
     </effect_group>
@@ -6246,12 +6248,12 @@
       <property name="CustomIcon" value="resourceSnowBall"/>
       <property name="CustomIconTint" value="128,180,128"/>
       <property name="ExplodeOnHit" value="true"/>
-      <property name="StickPercent" value="1.0"/>
+      <property name="StickPercent" value="0"/>
       <property name="ThrowableDecoy" value="false"/>
       <property class="Action1">
         <property name="Class" value="Projectile"/>
-        <property name="DamageEntity" value="1"/>
-        <property name="DamageBlock" value="1"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
         <property name="Explosion.ParticleIndex" value="7"/>
         <property name="Velocity" value="12.0"/>
         <property name="FlyTime" value="1.0"/>
@@ -6295,10 +6297,14 @@
         <property name="Sound_start" value="swoosh"/>
       </property>
       <effect_group name="ammoProjectileSpiderWebPlayer" tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="0"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="10" help="10 seems the minimum to trigger onSelfExplosionAttackedOther right?"/>
         <passive_effect name="ModSlots" operation="base_set" value="0"/>
         <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet6"/>
         <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet6"/>
         <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet6"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet6"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet6"/>
       </effect_group>
     </item>
     <item name="NPCCfgAllInOne" help="just a mix from the many NPC configurators">
@@ -6369,21 +6375,25 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$varNPCModStopAttackingChange" operation="set" value="0"/>
       </effect_group>
-      <effect_group name="itemNPCHelp" tiered="false">
+      <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player?">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="selfAOE" range="20" buff="buffNPCModAttacking"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ShowToolbeltMessage" message="Call followers' help!"/>
       </effect_group>
-      <effect_group name="itemNPCStayFollow" tiered="false">
+      <effect_group name="itemNPCStayFollow:Stay" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="2" target="selfAOE" range="6" help="stay, that range are the ones following you">
-          <requirement name="CVarCompare" cvar="CurrentOrder" target="other" operation="Equals" value="1" help="only for the ones following you"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="GuardThere, SCore" target="selfAOE" range="6" help="stay, that range are the ones following you">
-          <requirement name="CVarCompare" cvar="CurrentOrder" target="other" operation="Equals" value="1" help="only for the ones following you"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="1" target="selfAOE" range="6" help="follow">
-          <requirement name="CVarCompare" cvar="CurrentOrder" target="other" operation="Equals" value="2" help="only for the ones waiting for you"/>
-        </triggered_effect>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="1" help="follow"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="2" target="selfAOE" range="6" help="Stay"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="GuardThere, SCore" target="selfAOE" range="6"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Stay"/>
+      </effect_group>
+      <effect_group name="itemNPCStayFollow:Follow" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="2" help="stay"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="1" target="selfAOE" range="6" help="Follow"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Follow"/>
       </effect_group>
     </item>
   </append>
