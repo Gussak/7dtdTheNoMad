@@ -37,7 +37,7 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 iMaxEntries=120
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
-: ${fRange:=1.5} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good.
+: ${fRange:=2.0} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good.
 
 # PERCENTS
 astrCVarForPercentsList=(
