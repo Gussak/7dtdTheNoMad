@@ -4858,7 +4858,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWDryness36"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWDryness36"/>
         <!-- HELPGOOD: cfg -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazDesWtrLim" operation="set" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazDesWtrLim" operation="set" value="0.66"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazDesWetLim" operation="set" value="0.10"/>
       </effect_group>
       <effect_group>
@@ -4924,7 +4924,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardWWetFreezingAndHunger23"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardWWetFreezingAndHunger23"/>
         <!-- HELPGOOD: cfg -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoFodLim" operation="set" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoFodLim" operation="set" value="0.66"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoWetLim" operation="set" value="0.10"/>
       </effect_group>
       <effect_group>
@@ -10212,18 +10212,18 @@
         <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="food" operation="add" value="1"/>
-        <!-- HELPGOOD: it is not free food, there is side effects. the ND values, if you are taking care it wont cause trouble, but if you are on the limit it will be a problem. The screen effects will all be fixed by the ND main buff. -->
+        <!-- HELPGOOD: it is not free food, there is side effects. the ND values, if you are taking care it wont cause trouble, but if you are on the limit it will be a problem, these are only meant to worsen an existing problem, not to create it out of thin air. The screen effects will all be fixed by the ND main buff if they every happen. -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="water" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.001"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="90">
-          <requirement name="InBiome" biome="5"/>
-          <!-- HELPGOOD: desert -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="30">
+          <requirement name="InBiome" biome="5" help="desert" compare_type="or"/>
+          <requirement name="InBiome" biome="8" help="Wasteland"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="90">
-          <requirement name="InBiome" biome="1"/>
-          <!-- HELPGOOD: snow -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="30">
+          <requirement name="InBiome" biome="1" help="snow" compare_type="or"/>
+          <requirement name="InBiome" biome="8" help="Wasteland"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="900" help="pine forest strong miasma will be worse in a starving person">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="300" help="pine forest strong miasma will be worse in a starving person">
           <requirement name="InBiome" biome="3" help="PineForest"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="1" help="max rads is 100.0. Starving will make the body weaker vs radiation.">
@@ -10235,7 +10235,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="0.1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="Player$Hungry" play_in_head="true"/>
       </effect_group>
