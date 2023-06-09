@@ -35,8 +35,9 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 echo "HELP:
   This script is important (for developers) when making tests in a running game (instead of creating a new game) or when releasing an updated mod version for end users.
-  Buffs with stack_type 'ignore' will directly benefit from this script, right?
-  Buffs with values being set onSelfBuffStart and with other kinds of stack_type than 'ignore' also seem to require this script to be run or the changes on that trigger wont kick in, right?
+  Buffs with stack_type 'ignore' will directly benefit from this script, right? TODO chk
+  Buffs with stack_type 'replace' will also benefit from this script because only the duration is reset but the running code wouldnt be replaced, right? TODO chk
+  Buffs with values being set onSelfBuffStart and with other kinds of stack_type than 'ignore' also seem to require this script to be run or the changes on that trigger wont kick in, right? TODO chk
 "
 
 set -eu
