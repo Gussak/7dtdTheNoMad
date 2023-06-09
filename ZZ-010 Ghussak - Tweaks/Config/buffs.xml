@@ -9858,8 +9858,9 @@
       <update_rate value="5" help="sync with iGSKCosmicBloodMoonCoolDown subtraction below"/>
       <effect_group help="init and effects">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150" help="maxTime"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKCosmicBloodMoonRageTmTot" operation="set" value="60" help="sync with more than ragdoll duration"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTm" operation="set" value="@iGSKCosmicBloodMoonCoolDown"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTm" operation="subtract" value="30" help="sync with ragdoll duration"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTm" operation="subtract" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="add" value="-5" help="sync with update_rate time!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicBloodMoon4" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
@@ -9870,10 +9871,17 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="main effects good and bad">
-        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok. sync duration with iGSKCosmicBloodMoonRageTm subtraction"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="-0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="@.iGSKCosmicBloodMoonRageTmTot"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffDrugOhShitzDrops">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="GTE" value="@iGSKCosmicBloodMoonRageTm"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathProtectionCBM" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="GTE" value="@iGSKCosmicBloodMoonRageTm"/>
         </triggered_effect>
@@ -9902,6 +9910,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKCosmicRayStrike10" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKCosmicStrikeCooldown" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="1"/>
+          <requirement name="IsBloodMoon"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
