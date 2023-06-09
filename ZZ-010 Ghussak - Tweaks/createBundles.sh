@@ -387,20 +387,28 @@ function FUNCprepareBundlePart() {
       #if [[ -n "${iFRSPV_EcVal_OUT-}" ]] && [[ "${liItemCount}" =~ ^[0-9]*$ ]] && ((iFRSPV_EcVal_OUT>0));then
       if FUNCchkNum "${iFRSPV_EcVal_OUT}";then
         : #successfully used the cache
+      elif [[ "$lstrItemID" =~ ^${strCraftBundlePrefixID} ]];then
+        iFRSPV_EcVal_OUT=1 # craft bundles are pseudo temporary items created by this script
       else
         #for lstrFlCfgChkFullPath in "${astrFlCfgChkFullPathList[@]}";do
+        local bFoundSomething=false
         for((j=0;j<${#astrXmlToken1VsFile2List[@]};j+=2));do 
           local lstrXmlToken="${astrXmlToken1VsFile2List[j]}"
           local lstrFlCfgChkFullPath="${astrXmlToken1VsFile2List[j+1]}"
-          if FUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
+          if FUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then # FRSPV
           #if FUNCrecursiveSearchPropertyValue "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
+            bFoundSomething=true
             break
           fi
         done
+        if ! $bFoundSomething;then 
+          CFGFUNCinfo "WARN: nothing found for lstrItemID='$lstrItemID'";
+          #bFRSPV_CanSell_OUT=true
+        fi
         #lbCanSell="${bFRSPV_CanSell_OUT}"
         #liEcVal="${iFRSPV_EcVal_OUT}"
         #if $lbCanSell && [[ -z "$liEcVal" ]];then CFGFUNCerrorExit "Can be sold but missing economic value for lstrItemID='${lstrItemID}'";fi
-        if $bFRSPV_CanSell_OUT;then
+        if ! $bFoundSomething || $bFRSPV_CanSell_OUT;then #if nothing was found, the user can enter a value manually too now.
           if ((iFRSPV_EcVal_OUT==0));then
             #if [[ "$lstrItemID" == "modGunScopeSmall" ]];then
               #iFRSPV_EcVal_OUT=378
@@ -409,11 +417,14 @@ function FUNCprepareBundlePart() {
             #else
               CFGFUNCinfo "WARN: Can be sold but missing economic value for lstrItemID='${lstrItemID}'"
               while true;do
-                local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills:" liItemValueResp&&:
+                local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think it is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
                 #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
                 if FUNCchkNum "${liItemValueResp}";then
                   iFRSPV_EcVal_OUT="${liItemValueResp}"
-                  break
+                  iFRSPV_EcVal_OUT=$((iFRSPV_EcVal_OUT*5/15))&&:
+                  if CFGFUNCprompt -q "guessed economic value is ${iFRSPV_EcVal_OUT}, is that ok? (if not, put 3x the much you think it should be)";then
+                    break
+                  fi
                 else
                   CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
                 fi
@@ -436,6 +447,7 @@ function FUNCprepareBundlePart() {
         CFGFUNCinfo "NEW: astrItem1Value2List[${lstrItemID}]=${astrItem1Value2List[${lstrItemID}]}"
       fi
     else
+      CFGFUNCinfo "WARN: configsdump path not being used, using generic value, not good tho..."
       ((liExpDebt+=100))&&:
     fi
     
@@ -711,12 +723,16 @@ astr=( #TEMPLATE
 );FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
 astr=(
-  GSKElctrnTeleportUndergroundFreeAndSafeCall 1
   GSKElctrnTeleportToBiomeFreeAndSafeCall 1
   GSKteleToBackpackFreeAndSafeCall 1
-  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}"
+
+astr=(
+  GSKElctrnTeleportUndergroundFreeAndSafeCall 1 #this is meant only for the first time the player joins the game, to give time to read understand the new things of it. Allowing more will let the player tele underground just before bloodmoons making it too easy to survive.
+  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles --openOnceOnly --color "220,148,128" "TeleHelp1stSpawn" "bundleBatteryBank" "Use this if it is the first time you join The NoMad world." "${astr[@]}"
 
 astr=(
   ammoJunkTurretRegular 666
