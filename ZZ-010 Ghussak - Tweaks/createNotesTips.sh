@@ -86,7 +86,7 @@ if $bGenAll;then
   exit
 fi
 
-: ${nWidth:=60} #help max text width to prevent too tiny letters
+: ${nWidth:=120} #help max text width to prevent too tiny letters, for vanilla windows.xml would be 60
 : ${nMaxLines:=11} #help max lines to prevent too tiny letters
 strFl="NotesTips.AddedToRelease.txt"
 

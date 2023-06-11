@@ -136,7 +136,7 @@ function FUNCprepareCraftBundle() {
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
     #strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has experience penalty time (inside parenthesis). Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"'"'"'CB:'"'"' items craftable freely (can be dropped).Dont rush to ur backpack.Each bundle has (exp penalty).Resurrect adds 1 to remain bundles(least schematics/maps)that u can open(up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"'"'"'CB:'"'"' items craftable freely (can be dropped). Dont rush to your backpack. Each bundle has (exp penalty). Resurrect adds 1 to remaining bundles (least schematics/maps) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)}(${liExpDebt}),"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -503,7 +503,9 @@ function FUNCprepareBundlePart() {
   if [[ -z "${lstrIcon}" ]];then
     lstrIcon="cntStorageGeneric"
   fi
-  ((iAllFreeBundlesSumExpDebit+=liExpDebt))&&:
+  if ! $lbOpenOnceOnly;then # not adding the lbOpenOnceOnly bundles will make it more difficult because reaching max exp debit will happen faster. Also the lbOpenOnceOnly items are only once and make no sense anyway to be part of the sum for bundles that can be opened many times.
+    ((iAllFreeBundlesSumExpDebit+=liExpDebt))&&:
+  fi
   
   local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
   if [[ "${lstrBundleDesc}" == "--autoDK" ]];then

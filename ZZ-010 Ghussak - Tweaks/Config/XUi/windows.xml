@@ -28,6 +28,7 @@
   <append xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']">
     <combobox depth="3" name="cbxLockedSlots" pos="-150,-7" width="300" height="30" tooltip_key="xuiStashLockedSlots" type="ComboBoxInt" value_min="0" value_max="160" value="80" value_wrap="false" value_increment="20" color="[green]"/>
   </append>
+  <remove xpath="/windows/window[@name='windowBackpack']/sprite[@name='spriteDesign1001']" help="cleans the view"/>
   <!-- HELPGOOD: better places some buttons to avoid missclicking -->
   <set xpath="/windows/window[@name='windowLooting' or @name='windowVehicleStorage']/     panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnSort']/@pos">74, -22</set>
   <set xpath="/windows/window[@name='windowLooting' or @name='windowVehicleStorage']/     panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnMoveFillAndSmart']/@pos">174, -22</set>
@@ -37,4 +38,18 @@
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="must contrast with all backgrounds">[green]</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
   <!-- HELPGOOD: in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla r15 c1 -->
+  <!-- HELPGOOD: more space for items descriptions -->
+  <set xpath="//rect[@name='description']/@width">908</set>
+  <set xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']//rect[@name='description' and not(@visible='{showstatanddescription}')]/sprite[@name='backgroundMain' and @fillcenter='false']/@width">913</set>
+  <remove xpath="//window[@name='itemInfoPanel']//rect[@name='description' and @visible='{showstatanddescription}']/sprite[@name='backgroundMain' and @fillcenter='false']" help="the stat remaining short dont look good with the large border line"/>
+  <set xpath="//label[@name='descriptionText' and (@text='{itemdescription}' or @text='{buffdescription}')]/@width">900</set>
+  <remove xpath="//rect[starts-with(@name,'content')]//sprite[@width='603' and @name='backgroundMain' and @sprite='menu_empty3px' and @fillcenter='false']" help="wont look good but wont be over the text at least"/>
+  <!-- HELPGOOD: more space for journal entries -->
+  <set xpath="//window[@name='windowJournalEntryDescription']/@width">1050</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/rect[@name='content']/sprite[@name='backgroundMain']/@width">1050</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/rect/label[@name='descriptionText']/@width">1045</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/@height">860</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/rect[@name='content']/@height">814</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/rect[@name='content']/sprite[@name='backgroundMain']/@height">800</set>
+  <set xpath="//window[@name='windowJournalEntryDescription']/rect/label[@name='descriptionText']/@height">800</set>
 </GhussakTweaks>
