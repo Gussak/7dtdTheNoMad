@@ -96,12 +96,15 @@ function FUNCprepareCraftBundle() {
   local lstrType="$1";shift
   local liExpDebt="$1";shift
   local lbOpenOnceOnly="$1";shift
+  local lstrBundleDK="$1";shift
+  local lstrCvar="$1";shift
   
   local liR=90 liG=90 liB=90
   if $lbLightColor;then ((liR+=20,liG+=20,liB+=20))&&:;fi
   if $lbSchematic;then ((liB+=130));fi
   local lstrColor="$liR,$liG,$liB"
-  local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
+  #local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
+  local lstrCB="'CB:' items are craftable freely (can be dropped). Don't rush to your backpack. Each bundle has (exp penalty). Resurrecting adds 1 to remaining bundles (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now). "
   strFUNCprepareCraftBundle_CraftBundleID_OUT="${strCraftBundlePrefixID}${lstrBundleShortName}"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
@@ -109,7 +112,7 @@ function FUNCprepareCraftBundle() {
       <property name="Extends" value="GSKTRBaseBundle" />
       <property name="CustomIcon" value="'"${lstrIcon}"'" />'"${lstrType}"'
       <property name="CustomIconTint" value="'"${lstrColor}"'" />
-      <property name="DescriptionKey" value="dkGSKTheNoMadCreateRespawnBundle" />
+      <property name="DescriptionKey" value="'"${lstrBundleDK}"'" />
       <property class="Action0">
         <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="GT" value="0" />
         <property name="Create_item" value="'"${lstrBundleID}"'" />
@@ -136,7 +139,7 @@ function FUNCprepareCraftBundle() {
   fi
   if [[ -z "$strDKCraftAvailableBundles" ]];then
     #strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"After you die, '"'"'CB:'"'"' items can be crafted for free. You dont need to rush to your dropped backpack. Open each bundle only when you need it as it has experience penalty time (inside parenthesis). Respawning adds 1 to the remaining bundles (least schematics) that you can open (up to more {cvar(iGSKFreeBundlesRemaining:0)} now): '
-    strDKCraftAvailableBundles+='dkGSKTheNoMadCreateRespawnBundle,"'"'"'CB:'"'"' items craftable freely (can be dropped). Dont rush to your backpack. Each bundle has (exp penalty). Resurrect adds 1 to remaining bundles (least schematics/maps) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now): '
+    strDKCraftAvailableBundles+="dkGSKTheNoMadCreateRespawnBundle,\"${lstrCB}: "
   fi
   strDKCraftAvailableBundles+=" ${lstrBundleShortName}={cvar(${lstrCvar}:0)}(${liExpDebt}),"
   astrCraftBundleNameList+=("${strFUNCprepareCraftBundle_CraftBundleID_OUT},\"${strModName}CB:${lstrBundleShortName}\"")
@@ -354,14 +357,18 @@ function FUNCprepareBundlePart() {
   local lstrBundlePartName="$1";shift
   local lstrIcon="$1";shift
   local lstrColor="$1";shift
-  local lbCB=$1;shift
+  local lbCB="$1";shift
   local lstrBundleDesc="$1";shift
   local lbCheckMissingItemIds="$1";shift
   local lbExpLoss="$1";shift
   local lbOpenOnceOnly="$1";shift
+  local lbExternalDK="$1";shift
   local lastrItemAndCountList=("$@")
   
   local lastrOpt=()
+  
+  local lstrBundleShortName="${lstrBundleName}${lstrBundlePartName}"
+  local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   
   if [[ "${lstrBundleName}" =~ .*\ .* ]];then
     echo "ERROR: cant have spaces lstrBundleName='$lstrBundleName'"
@@ -373,12 +380,15 @@ function FUNCprepareBundlePart() {
   
   bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=false
   strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT=""
-  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode="" liExpDebt=0 liTotItems=0
+  local lstrItems="" lstrCounts="" lstrSep="" lstrSpecifiItemsCode="" liExpDebt=0 liTotItems=0 lstrDkItems=""
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
     ((liTotItems++))&&:
     if((i>0));then lstrSep=",";fi;
     local lstrItemID="${lastrItemAndCountList[i]}"
-    lstrItems+="$lstrSep${lstrItemID}"
+    local liItemCount="${lastrItemAndCountList[i+1]}"
+    
+    lstrItems+="${lstrSep}${lstrItemID}"
+    lstrDkItems+="${lstrSep} ${lstrItemID}+${liItemCount}"
     #local lstrParent=""
     #local liEcVal=0
     #local lbCanSell=true
@@ -451,7 +461,6 @@ function FUNCprepareBundlePart() {
       ((liExpDebt+=100))&&:
     fi
     
-    local liItemCount="${lastrItemAndCountList[i+1]}"
     if ! [[ "${liItemCount}" =~ ^[0-9]*$ ]];then CFGFUNCerrorExit "invalid liItemCount='${liItemCount-}', should be a positive integer";fi
     if((iFRSPV_EcVal_OUT>0));then
       (( liExpDebt+=(iFRSPV_EcVal_OUT*liItemCount) ))&&:
@@ -480,12 +489,13 @@ function FUNCprepareBundlePart() {
   
   local lstrAddDesc=""
   if $bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT;then
-    lstrAddDesc+=" Obs.: Some of these equipment or devices are severely damaged and wont last long w/o repairs.\n"
+    lstrAddDesc+=" Obs.: Some of these equipment or devices are severely damaged and wont last long w/o repairs."
   fi
   
   #strDK=""
   #astrDescriptionKeyList+=()
   #dkGSKstartNewGameItemsBundle
+  local lstrOpenOnceOnly=""
   local lstrType=""
   if [[ "$lstrBundlePartName" == "$strSchematics" ]];then
     #lstrIcon="bundleBooks"
@@ -493,6 +503,7 @@ function FUNCprepareBundlePart() {
     #astrBundlesSchematics+=("$strFUNCprepareBundlePart_BundleID_OUT" 1)
     lastrOpt+=(--lightcolor)
     lastrOpt+=(--schematic)
+    lstrOpenOnceOnly=" (This bundle can only be opened ONCE!)"
     #((liExpDebt*=5))&&:
   else
     if ! $lbIgnTopList;then
@@ -503,24 +514,31 @@ function FUNCprepareBundlePart() {
   if [[ -z "${lstrIcon}" ]];then
     lstrIcon="cntStorageGeneric"
   fi
-  if ! $lbOpenOnceOnly;then # not adding the lbOpenOnceOnly bundles will make it more difficult because reaching max exp debit will happen faster. Also the lbOpenOnceOnly items are only once and make no sense anyway to be part of the sum for bundles that can be opened many times.
+  if $lbOpenOnceOnly;then # not adding the lbOpenOnceOnly bundles will make it more difficult because reaching max exp debit will happen faster. Also the lbOpenOnceOnly items are only once and make no sense anyway to be part of the sum for bundles that can be opened many times.
+    lstrOpenOnceOnly=" (This bundle can only be opened ONCE!)"
+  else
     ((iAllFreeBundlesSumExpDebit+=liExpDebt))&&:
   fi
   
+  local lstrBundleCountID="i${strFUNCprepareBundlePart_BundleID_OUT}Count"
   local lstrBundleDK="dk${strFUNCprepareBundlePart_BundleID_OUT}"
-  if [[ "${lstrBundleDesc}" == "--autoDK" ]];then
-    lstrBundleDesc="$lstrBundleDK"
+  #if $lbExternalDK;then
+    #lstrBundleDesc="$lstrBundleDK" #todo this is a bit confusing, improve it
+  #fi
+  if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then #NO... the description is static at Localization.txt
+    #lstrBundleDK="$lstrBundleDesc"
+    CFGFUNCerrorExit "lstrBundleDesc='${lstrBundleDesc}' code gets too confusing, not supported anymore... put the description on this script or cfg instead of just saying it is at the Localization.txt by starting it with 'dk'."
   fi
-  if [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
-    lstrBundleDK="$lstrBundleDesc"
-  else
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle: ${liExpDebt}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrAddDesc}\"")
+  #else #dynamic description
+  if ! $lbExternalDK;then
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle${lstrOpenOnceOnly}(Remaining open count {cvar(${lstrCvar}:0)}): ${liExpDebt}*({cvar(${lstrBundleCountID}:0)}+1)/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrDkItems}\n ${lstrAddDesc}\"")
   fi
-  if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
-    if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
-       CFGFUNCerrorExit "ugh..."
-    fi
-  fi
+  #fi
+  #if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
+    #if ! CFGFUNCprompt -q "has external bundle description '$lstrBundleDesc' and also has added description '$lstrAddDesc' that will be lost! ignore this now?";then
+       #CFGFUNCerrorExit "ugh..."
+    #fi
+  #fi
   
   #if [[ "$lstrBundleName" == "$strModNameForIDs" ]];then
     ##strColor="220,180,128" #TODO use same color of GSKTheNoMadOverhaulBundleNoteBkp thru xmlstarlet get value
@@ -551,14 +569,17 @@ function FUNCprepareBundlePart() {
       </property>'"${lstrSpecifiItemsCode}"'
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-'"${liExpDebt}"'" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="'"${liExpDebt}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="'"${lstrBundleCountID}"'" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="'"${liExpDebt}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@'"${lstrBundleCountID}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="'"${liExpDebt}"'"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>' |tee -a "${strFlGenIte}${strGenTmpSuffix}"
   
   if $lbCB;then
-    FUNCprepareCraftBundle ${lastrOpt[*]} "$lbIgnTopList" "${strFUNCprepareBundlePart_BundleID_OUT}" "${lstrBundleName}${lstrBundlePartName}" "${lstrIcon}" "${lstrType}" "${liExpDebt}" "${lbOpenOnceOnly}"
+    FUNCprepareCraftBundle ${lastrOpt[*]} "$lbIgnTopList" "${strFUNCprepareBundlePart_BundleID_OUT}" "${lstrBundleShortName}" "${lstrIcon}" "${lstrType}" "${liExpDebt}" "${lbOpenOnceOnly}" "${lstrBundleDK}" "${lstrCvar}"
   fi
 }
 
@@ -570,7 +591,9 @@ function FUNCprepareBundles() {
   local lbCheckMissingItemIds=true
   local lbExpLoss=true
   local lbOpenOnceOnly=false
+  local lbExternalDK=false
   while [[ "${1:0:2}" == "--" ]];do
+    if [[ "$1" == --ExternalDK ]];then shift;lbExternalDK=true;fi
     if [[ "$1" == --ignoreTopList ]];then shift;lbIgnTopList=true;fi
     if [[ "$1" == --choseRandom ]];then shift;lbRnd=true;fi
     if [[ "$1" == --noCB ]];then shift;lbCB=false;fi
@@ -585,7 +608,7 @@ function FUNCprepareBundles() {
   local lstrBundleDesc="$1";shift
   local lastrItemAndCountList=("$@")
   
-  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds" "$lbExpLoss" "$lbOpenOnceOnly")
+  local lastrParams=("$lstrIcon" "$lstrColor" "$lbCB" "$lstrBundleDesc" "$lbCheckMissingItemIds" "$lbExpLoss" "$lbOpenOnceOnly" "$lbExternalDK")
   
   declare -p lastrItemAndCountList |tr '[' '\n'
   
@@ -657,9 +680,10 @@ astr=(
   modGunFlashlightSchematic 1
 );FUNCprepareBundles "ExploringVisibility" "bundleVehicle4x4" "${strExploringBase}This helps on seeing the world." "${astr[@]}"
 astr=(
-  bedrollBlue 33
-  "cobblestoneShapes:VariantHelper" 66
+  bedrollBlue 33 #cant be directly scrapped
+  "cobblestoneShapes:VariantHelper" 66 #for the tiny fortress trick
   drinkJarBoiledWater 33 #for the desert
+  drugGSKPsyonicsResist 13 #to be able to ignore mutants
   drugSteroids  13
   GSKsimpleBeer        33
   ladderWood            66
@@ -677,6 +701,7 @@ astr=(
   drugJailBreakers 3
   #meleeWpnSpearT0StoneSpear 1
   resourceDuctTape 1
+  resourceMechanicalParts 1
   resourceFeather        1
   resourceLockPick 1
   resourceWood         66
@@ -756,40 +781,83 @@ astr=(
   gunBotT2JunkTurretSchematic 1
 );FUNCprepareBundles "ElctrnEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting Elctrn mods, this will increase your combat survival chances." "${astr[@]}"
 
+#astr=(
+  #bucketRiverWater 1
+  #drinkJarGrandpasMoonshine 1
+  #drinkJarPureMineralWater 2
+  #drinkJarBoiledWater 13
+  #drugAntibiotics 4
+  #drugPainkillers 1
+  #drugVitamins 1
+  #foodHoney 1
+  #drugGSKAntiRadiation 13
+  #drugGSKAntiRadiationSlow 13
+  #drugGSKAntiRadiationStrong 13
+  #drugGSKPsyonicsResist 13
+  #drugGSKRadiationResist 13
+  #drugGSKsnakePoisonAntidote 3
+  #medicalBloodBag 13
+  #medicalBloodBagEmpty 9
+  #medicalFirstAidBandage 13
+  #medicalSplint 3
+  #potionRespec 1
+  #resourceSewingKit 1
+  #toolBeaker 1
+  #treePlantedMountainPine1m 13
+  #foodSpaghetti 1
+  #"$strSCHEMATICS_BEGIN_TOKEN" 0
+  #bookWasteTreasuresHoney 1 #because it is cool
+  ##bookWasteTreasuresWater 1
+  #drinkJarGoldenRodTeaSchematic 1 #for disyntery
+  #drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
+  #drugHerbalAntibioticsSchematic 1
+  #foodBoiledMeatBundleSchematic 1
+  #foodBoiledMeatSchematic 1
+  #modArmorWaterPurifierSchematic 1
+#);FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
 astr=(
-  bucketRiverWater 1
-  drinkJarGrandpasMoonshine 1
+  #HealingHarm
   drinkJarPureMineralWater 2
-  drinkJarBoiledWater 13
-  drugAntibiotics 4
   drugPainkillers 1
   drugVitamins 1
+  drugAntibiotics 4
+  #drugGSKPsyonicsResist 13
+  drugGSKsnakePoisonAntidote 3
   foodHoney 1
+  medicalSplint 3
+  resourceSewingKit 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "HealingHarm" "bundleFood" "Use this if you have any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
+astr=(
+  #HealingRads
   drugGSKAntiRadiation 13
   drugGSKAntiRadiationSlow 13
   drugGSKAntiRadiationStrong 13
-  drugGSKPsyonicsResist 13
   drugGSKRadiationResist 13
-  drugGSKsnakePoisonAntidote 3
-  medicalBloodBag 13
-  medicalBloodBagEmpty 9
-  medicalFirstAidBandage 13
-  medicalSplint 3
-  potionRespec 1
-  resourceSewingKit 1
-  toolBeaker 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "HealingRads" "bundleFood" "Use this if you are having trouble dealing with radiation." "${astr[@]}"
+astr=(
+  #HealingFeed
+  drinkJarBoiledWater 13
   treePlantedMountainPine1m 13
   foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-  bookWasteTreasuresHoney 1 #because it is cool
-  #bookWasteTreasuresWater 1
-  drinkJarGoldenRodTeaSchematic 1 #for disyntery
-  drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
-  drugHerbalAntibioticsSchematic 1
-  foodBoiledMeatBundleSchematic 1
-  foodBoiledMeatSchematic 1
-  modArmorWaterPurifierSchematic 1
-);FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
+);FUNCprepareBundles "HealingFeed" "bundleFood" "Use this if you need food and water." "${astr[@]}"
+astr=(
+  #HealingHP
+  medicalBloodBag 13
+  medicalBloodBagEmpty 9
+  drinkJarGrandpasMoonshine 1
+  medicalFirstAidBandage 13
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "HealingHP" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that, don't wait too much tho!" "${astr[@]}"
+astr=(
+  #HealingCraft
+  bucketRiverWater 1
+  toolBeaker 1
+  potionRespec 1
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "HealingCraft" "bundleFood" "Use this if you want to craft or redistribute skill points." "${astr[@]}"
 
 astr=(
   farmPlotBlockVariantHelper 13
@@ -857,6 +925,7 @@ astr=(
 astr=(
   # notes
   GSKTRNotesBundle 1 #from createNotesTips.sh
+  NOTE_GSKTheNoMadCreateRespawnBundleList 1
   GSKTRSpecialNotesBundle 1 #from createNotesTips.sh
   GSKNoteInfoDevice 1 
   GSKNoteStartNewGameSurvivingFirstDay 1
@@ -871,8 +940,8 @@ astr=(
   "${astrCBItemsLeastLastOne[@]}"
   
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --noExpLoss --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
-#);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --autoDK "${astr[@]}"
+);FUNCprepareBundles --noExpLoss --noCB --ExternalDK "$strModNameForIDs" "cntStorageGeneric" "DUMMY_DESC_IGNORED" "${astr[@]}"
+#);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --ExternalDK "${astr[@]}"
 
 #############################################
 echo "#PREPARE_RELEASE:REVIEWED:OK" >"$strFlItemEconomicValueCACHE"
