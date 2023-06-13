@@ -806,8 +806,8 @@ astr=(
   #treePlantedMountainPine1m 13
   #foodSpaghetti 1
   #"$strSCHEMATICS_BEGIN_TOKEN" 0
-  #bookWasteTreasuresHoney 1 #because it is cool
   ##bookWasteTreasuresWater 1
+  #bookWasteTreasuresHoney 1 #because it is cool
   #drinkJarGoldenRodTeaSchematic 1 #for disyntery
   #drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
   #drugHerbalAntibioticsSchematic 1
@@ -827,6 +827,11 @@ astr=(
   medicalSplint 3
   resourceSewingKit 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
+  #bookWasteTreasuresWater 1
+  bookWasteTreasuresHoney 1 #because it is cool
+  drinkJarGoldenRodTeaSchematic 1 #for disyntery
+  drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
+  drugHerbalAntibioticsSchematic 1
 );FUNCprepareBundles "HealingHarm" "bundleFood" "Use this if you have any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
 astr=(
   #HealingRads
@@ -842,6 +847,7 @@ astr=(
   treePlantedMountainPine1m 13
   foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
+  modArmorWaterPurifierSchematic 1
 );FUNCprepareBundles "HealingFeed" "bundleFood" "Use this if you need food and water." "${astr[@]}"
 astr=(
   #HealingHP
@@ -850,6 +856,8 @@ astr=(
   drinkJarGrandpasMoonshine 1
   medicalFirstAidBandage 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
+  foodBoiledMeatBundleSchematic 1
+  #foodBoiledMeatSchematic 1
 );FUNCprepareBundles "HealingHP" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that, don't wait too much tho!" "${astr[@]}"
 astr=(
   #HealingCraft
