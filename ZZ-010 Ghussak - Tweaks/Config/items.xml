@@ -1443,13 +1443,13 @@
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and      (       contains(@name,'Dog') or        contains(@name,'Wolf') or        contains(@name,'Coyote') or        contains(@name,'Bear')     )]" help="boars too, they use meleeHandAnimalWolf. lions too they use meleeHandAnimalDireWolf">
     <effect_group help="Fang hold up">
-      <requirement name="!HasBuff" target="self" buff="buffGSKSnakePoisonWork52"/>
+      <requirement name="!HasBuff" target="self" buff="buffGSKSnakePoisonWork55"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
       </triggered_effect>
     </effect_group>
     <effect_group help="strong push and ragdoll">
-      <requirement name="!HasBuff" target="self" buff="buffGSKSnakePoisonWork52" help="as it weakens"/>
+      <requirement name="!HasBuff" target="self" buff="buffGSKSnakePoisonWork55" help="as it weakens"/>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
         <requirement name="EntityTagCompare" tags="boar" has_all_tags="false" target="self"/>
       </triggered_effect>
@@ -1489,10 +1489,10 @@
       <property name="CustomIconTint" value="180,150,128"/>
       <property name="Stacknumber" value="10"/>
       <property class="Action0">
-        <requirement name="NotHasBuff" buff="buffGSKSpawnTreasure12"/>
+        <requirement name="NotHasBuff" buff="buffGSKSpawnTreasure15"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasure12"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasure15"/>
       </effect_group>
     </item>
   </append>
@@ -1677,7 +1677,7 @@
     </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'apparelHazmat')]/effect_group">
-    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork31"/>
+    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork34"/>
   </append>
   <append xpath="/items/item[@name='apparelBandana']">
     <effect_group tiered="false">
@@ -2520,7 +2520,7 @@
     <effect_group tiered="false">
       <requirement name="IsLocalPlayer"/>
       <triggered_effect trigger="onSelfItemActivate" action="ModifyCVar" target="self" cvar="bGSKEnergyNV" operation="set" value="1"/>
-      <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries118"/>
+      <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries121"/>
       <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyNV" operation="set" value="0"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyNV" operation="set" value="0"/>
     </effect_group>
@@ -2529,7 +2529,7 @@
     <effect_group tiered="false">
       <requirement name="IsLocalPlayer"/>
       <triggered_effect trigger="onSelfItemActivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="1"/>
-      <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries118"/>
+      <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries121"/>
       <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
     </effect_group>
@@ -2543,7 +2543,7 @@
     </triggered_effect>
   </append>
   <append xpath="/items/item[         starts-with(@name,'melee') or          starts-with(@name,'gun')       ]/effect_group">
-    <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffHiredNPCdamageArmor100">
+    <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffHiredNPCdamageArmor103">
       <requirement name="!EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
     <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBattLightsNVEtcDmgAdd">
@@ -2558,7 +2558,7 @@
     <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKEnergyShieldDefend">
       <requirement name="EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKHeatColdProtClothDmgAdd29">
+    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKHeatColdProtClothDmgAdd32">
       <!-- HELPGOOD: todo: not working with onSelfDamagedOther? -->
       <requirement name="EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
@@ -3009,12 +3009,22 @@
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKCFGNPCproperSneakingWorkaround"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="10" help="OFF">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="ON">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCproperSneakingWorkaroundAllowed"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCproperSneakingWorkaroundAllowed"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKNPCSneakBehaveLikePlayer"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKNPCSneakBehaveLikePlayer"/>
       </effect_group>
     </item>
     <item name="GSKCFGAllowExtraBloodMoonSpawns">
@@ -3482,7 +3492,7 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgHeatProt" operation="add" value="0.10"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgColdProt" operation="add" value="0.10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKHeatColdProtClothDmgAdd29"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKHeatColdProtClothDmgAdd32"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestRadiationAdd">
@@ -3554,15 +3564,15 @@
     <item name="GSKDbgTestProperSwim">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKProperSwimmingWork42"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKProperSwimmingWork42"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKProperSwimmingWork45"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestBloodLoss">
       <property name="Extends" value="GSKDbgBASE"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.05"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss50"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss53"/>
       </effect_group>
     </item>
     <item name="GSKDbgTeleportDir">
@@ -4522,16 +4532,16 @@
       <property name="Extends" value="GSKDbgBASE"/>
       <property name="CustomIconTint" value="1,1,100"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKBloodmoonZombiesPowerChk26"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKChemUseSideEffects28"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKBloodmoonZombiesPowerChk29"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKChemUseSideEffects31"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKDmgHazmatSuit1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHeatColdProtClothDmgAdd29"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHeatColdProtClothDmgKeep29"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWElementColdHook37"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWElementHotHook37"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKNearDeath37"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork31"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHeatColdProtClothDmgAdd32"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHeatColdProtClothDmgKeep32"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss53"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWElementColdHook40"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWElementHotHook40"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKNearDeath40"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork34"/>
       </effect_group>
     </item>
     <item name="GSKDBGfixDevThings" help="some values that should be fixed in a running gameplay while developing and changing things">
@@ -5614,7 +5624,7 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork25"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="1" help="TODO: let player have a psyonic credit to use for teleporting or other things"/>
       </effect_group>
@@ -5642,8 +5652,8 @@
         <property name="Sound_start" value="nightvision_toggle"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResist" help="ISSUE: this buff is not adding buffGSKRadResistWork31 from itself"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork31"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResist" help="ISSUE: this buff is not adding 'buffGSKRadResistWork34' from itself"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork34"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
       </effect_group>
     </item>
@@ -5671,7 +5681,7 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmVal" operation="add" value="randomFloat(2.5,5.0)"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover33"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="2"/>
       </effect_group>
     </item>
@@ -5699,7 +5709,7 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmVal" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover33"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="15"/>
       </effect_group>
     </item>
@@ -5728,7 +5738,7 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="5"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmDur" operation="add" value="300"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadLowerSlow20"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadLowerSlow23"/>
       </effect_group>
     </item>
     <item name="GSKsnakePoisonAntidote" help="TODO:RMMAJORVERSION">
@@ -5848,7 +5858,7 @@
       <property name="EconomicValue" value="1"/>
       <property class="Action0">
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
-        <requirement name="!HasBuff" buff="buffGSKCosmicBloodMoon4"/>
+        <requirement name="!HasBuff" buff="buffGSKCosmicBloodMoon7"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1.0"/>
         <property name="Use_time" value="..."/>
@@ -5859,7 +5869,7 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-14.0"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.01"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss50"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss53"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffInjuryStunned01"/>
       </effect_group>
     </item>
@@ -6314,8 +6324,8 @@
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
         <requirement name="EntityTagCompare" has_all_tags="true" tags="zombie,mutant" target="other"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
-        <requirement name="!HasBuff" target="other" buff="buffGSKSnakePoisonWork52"/>
-        <requirement name="!HasBuff" target="self" buff="buffGSKPsyResistWork25"/>
+        <requirement name="!HasBuff" target="other" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="!HasBuff" target="self" buff="buffGSKPsyResistWork28"/>
         <requirement name="!HasBuff" target="self" buff="buffGSKEquippedPoisonedAmmo"/>
         <requirement name="!HoldingItemHasTags" target="self" tags="poison" help="TODO:FAILED: when shooting a poisoned arrow or bolt wont trigger teleport"/>
       </triggered_effect>
@@ -6463,11 +6473,11 @@
         <property name="CollisionRadius" value=".5"/>
         <property name="DamageBonus.earth" value="0"/>
         <property name="Gravity" value="-1"/>
-        <property name="Buff" value="buffGSKSpiderNet8"/>
+        <property name="Buff" value="buffGSKSpiderNet11"/>
       </property>
       <effect_group name="ammoProjectileSpiderNet" tiered="false">
         <passive_effect name="ModSlots" operation="base_set" value="0"/>
-        <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet8"/>
+        <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet11"/>
       </effect_group>
     </item>
     <item name="ammoProjectileSpiderWebPlayer">
@@ -6492,7 +6502,7 @@
       <property name="ExplodeOnHit" value="true"/>
       <property name="StickPercent" value="1.0"/>
       <property class="Action0">
-        <property name="Buff" value="buffGSKSpiderNet8"/>
+        <property name="Buff" value="buffGSKSpiderNet11"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="LT" value=".98"/>
       </property>
       <property class="Action1">
@@ -6502,11 +6512,11 @@
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10" help="10 seems the minimum to trigger onSelfExplosionAttackedOther right?"/>
         <passive_effect name="ModSlots" operation="base_set" value="0"/>
-        <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet8"/>
-        <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet8"/>
-        <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet8"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet8"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet8"/>
+        <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet11"/>
+        <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet11"/>
+        <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet11"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet11"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet11"/>
       </effect_group>
     </item>
     <item name="NPCCfgAllInOne" help="just a mix from the many NPC configurators">
@@ -6537,7 +6547,7 @@
         <property name="DamageBlock" value="0"/>
         <property name="Sound_start" value=""/>
       </property>
-      <effect_group name="itemNPCModMode" tiered="false">
+      <effect_group name="itemNPCModMode hunt/fullcontrol" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffNPCModModeChange2">
           <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="0"/>
@@ -6557,25 +6567,58 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$varNPCModModeChange" operation="set" value="0"/>
       </effect_group>
-      <effect_group name="itemNPCModStop" tiered="false">
-        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+      <!-- HELPGOOD: logic copied from NPC mod, it uses buffs to set control cvars
+      <effect_group name="itemNPCModStop stop/resume" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
         <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" buff="buffNPCModStopAttackingChange1">
-          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0" />
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" buff="buffNPCModStopAttackingChange0">
-          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1"/>
-          <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1" />
+          <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0" />
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
-          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID" />
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1" />
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
-          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID" />
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$varNPCModStopAttackingChange" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$varNPCModStopAttackingChange" operation="set" value="0" />
+      </effect_group>
+-->
+      <!-- HELPGOOD: this sets one new control cvar here, and play sounds from buffs here too -->
+      <effect_group name="itemNPCModStop:resetloop (the order below must be from last to first)" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCAttak1Stop0Next" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCAttak1Stop0Next" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="itemNPCModStop:HUD" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCAttak1Stop0Next"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="itemNPCModStop:resume" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCAttak1Stop0Next" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCResume" play_in_head="true"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0" help="display resume icon"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCAttak1Stop0Next" operation="add" value="1"/>
+      </effect_group>
+      <effect_group name="itemNPCModStop:stop" tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCAttak1Stop0Next" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCHalt" play_in_head="true"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1" help="display halt icon"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCAttak1Stop0Next" operation="add" value="1"/>
       </effect_group>
       <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player?">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
@@ -6624,7 +6667,7 @@
     <property name="StickPercent" value="1.0"/>
     <property class="Action1">
       <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GTE" value="1.0"/>
-      <requirement name="HasBuff" target="self" buff="buffGSKHazardousWElementHotHook37"/>
+      <requirement name="HasBuff" target="self" buff="buffGSKHazardousWElementHotHook40"/>
       <property name="Class" value="Eat"/>
       <property name="Delay" value="0"/>
       <property name="Sound_start" value="player_drinking"/>

@@ -38,6 +38,7 @@ echo "HELP:
   Buffs with stack_type 'ignore' will directly benefit from this script, right? TODO chk
   Buffs with stack_type 'replace' will also benefit from this script because only the duration is reset but the running code wouldnt be replaced, right? TODO chk
   Buffs with values being set onSelfBuffStart and with other kinds of stack_type than 'ignore' also seem to require this script to be run or the changes on that trigger wont kick in, right? TODO chk
+  Buffs must be between '' when in comments or other strings, so they will be ignored when trying to detect special files to force show meld.
 "
 
 set -eu
@@ -95,6 +96,8 @@ astrBuffBNList=(
   #"buffGSKNPClimitLoot"
   "buffGSKNPClimitLootHired"
   "buffGSKNPCproperSneaking"
+  "buffGSKNPCsStartSneak"
+  "buffGSKNPCsStopSneak"
   "buffGSKNPCstumble"
   "buffGSKPermanentGenericCheck"
   "buffGSKProperSwimming"
@@ -115,6 +118,7 @@ astrBuffBNList=(
   "buffLeaderLimitsHiredNPCsAmount"
   "buffNightVisionUsesBatteries"
   "buffNPCAddExpDebitToLeader"
+  "buffPlayerEnhancesNearbyFriendlyNPCs"
 )
 astrBuffBNList=(`echo "${astrBuffBNList[@]}" |tr " " "\n" |sort -u`) # grant unique entries
 declare -p astrBuffBNList |tr '[' '\n'
@@ -164,8 +168,11 @@ iVal=1;if $bDecrement;then iVal=-1;fi
   #done
 #done
 strDtTm="`date +"${strCFGDtFmt}"`"
+strFlSpecialGreps="./_tmp/incBuffIDs.SpecialGreps.${strDtTm}.tmp"
+echo -n >"$strFlSpecialGreps" #trunc
 astrFlAllFilesPatchedList=()
 astrBuffNotFoundList=()
+astrSpecialFiles=()
 for strBuffBN in "${astrBuffBNList[@]}";do
   iId="$(FUNCgetCurrentIndex "${strBuffBN}")"
   if [[ -z "$iId" ]];then 
@@ -185,16 +192,24 @@ for strBuffBN in "${astrBuffBNList[@]}";do
   IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" --exclude-dir="_*" -rnIc |grep -v :0 |cut -d: -f1)&&:
   declare -p astrFlList |tr '[' '\n'
   for strFl in "${astrFlList[@]}";do
+    : ${strFlFilter:=""} #help
+    if [[ -n "$strFlFilter" ]] && [[ "$strFlFilter" != "$strFl" ]];then continue;fi
+    
     if [[ "${strFl}" =~ .*\ .* ]];then CFGFUNCerrorExit "dir or filename with spaces, not expected..";fi
     declare -p strFl
     strFlPatching="./_tmp/${strFl}.incBuffIDs.${strDtTm}.tmp"
+    if egrep -q "[^\"']${strBuffBN}${iId}[^\"']" "$strFl";then
+      astrSpecialFiles+=("${strFlPatching}:${strFl}:${strBuffBN}${iId}");
+      egrep "[^\"']${strBuffBN}[0-9]*[^\"']" "$strFl" --color=always -nH |tee -a "$strFlSpecialGreps"
+    fi
     mkdir -vp "`dirname "${strFlPatching}"`"
     if ! [[ -f "${strFlPatching}" ]];then cat "${strFl}" >"${strFlPatching}";fi
     iIdNew=$((iId+iVal))&&: #may be decrementing
     if((iVal== 1 && iIdNew<2));then CFGFUNCerrorExit "invalid increment where iIdNew=$iIdNew < 2, iId=$iId, iVal=$iVal";fi
     if((iVal==-1 && iIdNew==0));then iIdNew=1;fi
     if((iVal==-1 && iIdNew<0));then CFGFUNCerrorExit "invalid decrement where iIdNew=$iIdNew < 0, iId=$iId, iVal=$iVal";fi
-    strData="`sed -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "${strFlPatching}"`"
+    #strData="`sed -r "s@(${strBuffBN})${iId}@\1${iIdNew}@" "${strFlPatching}"`"
+    strData="`sed -r "s@${strBuffBN}${iId}@${strBuffBN}${iIdNew}@g" "${strFlPatching}"`"
     echo "$strData" >"${strFlPatching}"
     ls -l "$strFlPatching"
     if CFGFUNCexec --noErrorExit colordiff "${strFl}" "${strFlPatching}";then
@@ -206,12 +221,14 @@ for strBuffBN in "${astrBuffBNList[@]}";do
   done
   #if [[ "$strBuffBN" == "buffGSKNPClimitLoot" ]];then exit 1;fi
 done
+if [[ -z "${astrFlAllFilesPatchedList[@]}" ]];then CFGFUNCinfo "WARN: nothing changed";exit 0;fi
 IFS=$'\n' read -d '' -r -a astrFlAllFilesPatchedList < <(for strFlNew in "${astrFlAllFilesPatchedList[@]}";do echo "${strFlNew}";done |sort -u)&&:
 declare -p astrFlAllFilesPatchedList
-declare -p astrFlAllFilesPatchedList |tr '[' '\n'
 declare -p astrBuffNotFoundList |tr '[' '\n'
+declare -p astrSpecialFiles |tr '[' '\n'
 
 #clear;
+declare -p astrFlAllFilesPatchedList |tr '[' '\n'
 for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
   strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
   strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
@@ -220,9 +237,11 @@ for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
 done
 find -name "*.incBuffIDs.OLD.bkp"
 
-if true;then #slow but ok
+if true;then #slow but ok, and probably just plain useless if the sed command is 100% correct anyway...
   CFGFUNCinfo "Validating if only numbers were changed where expected, a very restrictive check"
   iValidationErrors=0
+  declare -p astrFlAllFilesPatchedList |tr '[' '\n'
+  declare -p astrSpecialFiles |tr '[' '\n'
   for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
     strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
     strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
@@ -240,10 +259,10 @@ if true;then #slow but ok
       if [[ "${strDataOld:iOld:1}" == "${strDataNew:iNew:1}" ]];then ((iOld++,iNew++))&&:;continue;fi #(*1)
       if [[ "${strDataOld:iOld:1}" =~ \< ]] && [[ "${strDataNew:iNew:1}" =~ \> ]];then ((iOld++,iNew++))&&:;continue;fi #accepts diff token char
       if [[ "${strDataOld:iOld:1}" =~ [0-9] ]] && [[ "${strDataNew:iNew:1}" =~ [0-9] ]];then ((iOld++,iNew++))&&:;continue;fi #accepts numeric differences w/o calculating them (blindly)
-      if ! [[ "${strDataOld:iOld:1}" =~ [0-9] ]];then #when inrementing the next char on New file may match the current in Old file (because the  old number could be 9 and the new 10)
+      if ! [[ "${strDataOld:iOld:1}" =~ [0-9] ]];then #when inrementing the ID, the next char on New file may match the current in Old file (because the  old number could be 9 and the new 10)
         if [[ "${strDataOld:iOld:1}" == "${strDataNew:iNew+1:1}" ]];then ((iNew++));continue;fi #will be success at (*1)
       fi
-      if ! [[ "${strDataNew:iNew:1}" =~ [0-9] ]];then #when decrementing (invert the above explanation pls ;))
+      if ! [[ "${strDataNew:iNew:1}" =~ [0-9] ]];then #when decrementing the ID (invert the above explanation pls ;))
         if [[ "${strDataOld:iOld+1:1}" == "${strDataNew:iNew:1}" ]];then ((iOld++));continue;fi #will be success at (*1)
       fi
       CFGFUNCinfo "WARN: Unexpected char difference Old[$iOld]='${strDataOld:iOld:1}' != New[$iNew]='${strDataNew:iNew:1}'"
@@ -257,14 +276,32 @@ if true;then #slow but ok
   fi
 fi
 
+declare -p astrFlAllFilesPatchedList |tr '[' '\n'
+declare -p astrSpecialFiles |tr '[' '\n'
 for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
   strFlNew="$(realpath $(echo "$strFlOldFlNew" |cut -d: -f1))"
   strFlOld="$(realpath $(echo "$strFlOldFlNew" |cut -d: -f2))"
-  echo "meld '${strFlOld}' '${strFlNew}'"
+  astrMeldCmd=(meld "${strFlOld}" "${strFlNew}")
+  
+  bSpecial=false
+  strFlOldOrig="$(echo "$strFlOldFlNew" |cut -d: -f2)"
+  for strChkSpecialFl in "${astrSpecialFiles[@]}";do
+    if [[ "${strChkSpecialFl}" =~ ^${strFlOldFlNew}:.* ]];then
+      #CFGFUNCexec --noErrorExit egrep "${strFlOldOrig}" "$strFlSpecialGreps"
+      (egrep "${strFlOldOrig}" "$strFlSpecialGreps" |sort)&&:
+      CFGFUNCexec "${astrMeldCmd[@]}"
+      bSpecial=true
+      break
+    fi
+  done
+  if ! $bSpecial;then
+    echo "`declare -p astrMeldCmd`;"'"${astrMeldCmd[@]}"'
+  fi
 done
 
 find -name "*.incBuffIDs.OLD.bkp"
 if CFGFUNCprompt -q "everything looks ok? the final files were not changed yet. Accepting will move the new file over the final file. There are backups suffixed with '.incBuffIDs.OLD.bkp'";then
+  declare -p astrFlAllFilesPatchedList |tr '[' '\n'
   for strFlOldFlNew in "${astrFlAllFilesPatchedList[@]}";do
     strFlNew="`echo "$strFlOldFlNew" |cut -d: -f1`"
     strFlOld="`echo "$strFlOldFlNew" |cut -d: -f2`"
