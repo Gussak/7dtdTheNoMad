@@ -531,7 +531,7 @@ function FUNCprepareBundlePart() {
   fi
   #else #dynamic description
   if ! $lbExternalDK;then
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience lost weight when opening this bundle${lstrOpenOnceOnly}(Remaining open count {cvar(${lstrCvar}:0)}): ${liExpDebt}*({cvar(${lstrBundleCountID}:0)}+1)/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrDkItems}\n ${lstrAddDesc}\"")
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Experience Penalty when opening this bundle${lstrOpenOnceOnly}(Remaining open count {cvar(${lstrCvar}:0)}): ${liExpDebt}*({cvar(${lstrBundleCountID}:0)}+1)/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrDkItems}\n ${lstrAddDesc}\"")
   fi
   #fi
   #if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then
