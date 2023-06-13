@@ -755,11 +755,12 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}"
 
-astr=(
-  GSKElctrnTeleportUndergroundFreeAndSafeCall 1 #this is meant only for the first time the player joins the game, to give time to read understand the new things of it. Allowing more will let the player tele underground just before bloodmoons making it too easy to survive.
-  GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
-  "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --openOnceOnly --color "220,148,128" "TeleHelp1stSpawn" "bundleBatteryBank" "Use this if it is the first time you join The NoMad world." "${astr[@]}"
+# these are already on the player inventory from entity_classes.xml
+#astr=(
+  #GSKElctrnTeleportUndergroundFreeAndSafeCall 1 #this is meant only for the first time the player joins the game, to give time to read understand the new things of it. Allowing more will let the player tele underground just before bloodmoons making it too easy to survive.
+  #GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
+  #"$strSCHEMATICS_BEGIN_TOKEN" 0
+#);FUNCprepareBundles --openOnceOnly --color "220,148,128" "TeleHelp1stSpawn" "bundleBatteryBank" "Use this if it is the first time you join The NoMad world." "${astr[@]}"
 
 astr=(
   ammoJunkTurretRegular 666
