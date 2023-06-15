@@ -3015,13 +3015,13 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="12" help="ON only at night, keep biggest value first">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="11"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="ON">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="12" help="ON only at night">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="11"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="10" help="OFF">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
@@ -5427,6 +5427,7 @@
     <item name="resourceAnimalFatBall">
       <property name="HoldType" value="31"/>
       <property name="DisplayType" value="foodRaw"/>
+      <property name="DescriptionKey" value="resourceAnimalFatDesc"/>
       <property name="CustomIcon" value="resourceAnimalFat"/>
       <property name="CustomIconTint" value="200,128,128"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab"/>
@@ -6359,7 +6360,7 @@
   <append xpath="/items">
     <item name="vehicleGSKNPChelperPlaceable">
       <property name="CustomIcon" value="vehicleBicyclePlaceable"/>
-      <property name="CustomIconTint" value="128,180,180"/>
+      <property name="CustomIconTint" value="64,64,250"/>
       <property name="CreativeMode" value="Player"/>
       <property name="Tags" value="vehicle,vengine,vfuel,vlight,vseat,canHaveCosmetic"/>
       <property name="DescriptionKey" value="dkvehicleNPCHelper"/>
@@ -6373,6 +6374,7 @@
       <property name="EconomicValue" value="1"/>
       <property name="SellableToTrader" value="false"/>
       <property name="Group" value="Science"/>
+      <property name="NavObject" value="" help="eraser ISSUE: erasure fails, icon is still shown"/>
       <property class="Action1">
         <property name="Class" value="SpawnVehicle"/>
         <property name="Vehicle" value="vehicleBicycle"/>

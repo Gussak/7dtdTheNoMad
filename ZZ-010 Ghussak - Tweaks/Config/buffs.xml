@@ -423,6 +423,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="add" value="-1" help="this is like the inverse action: you would take time to fill a bottle, but this way you fill a bottle instantly but needs to wait before filling another. the final result is equivalent TODO primary starts collecting water iGSKcollectingWaterML, secondary allows creating the water bottle after 350ml if it is still raining, only fills the bottle if it is raining on the player, inc more or less based on rain % ">
           <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="subtract" value="@_wetness">
+          <requirement name="CVarCompare" cvar="iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKmodArmorWaterPurifier" hidden="true" remove_on_death="false">
@@ -686,7 +690,7 @@
           <requirement name="CVarCompare" cvar="iGSKNPCfollowingDenySneakTimer" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="WORKAROUND: prevent NPCs luring mobs while sneaking (initial idea, but did not work)">
+      <effect_group help="WORKAROUND: initial idea was prevent NPCs luring mobs while sneaking but it did not work, so using this workaround">
         <requirement name="IsNight"/>
         <requirement name="!IsIndoors"/>
         <requirement name="!IsBloodMoon"/>
@@ -695,7 +699,6 @@
         <requirement name="CVarCompare" cvar="iGSKNPCLeaderSheltered" operation="Equals" value="0" help="use just IsIndoors instead?"/>
         <requirement name="CVarCompare" cvar="iGSKNPCfollowingDenySneakTimer" operation="LTE" value="0"/>
         <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="FAILS: still lures zombies TODO: how to make NPCs invisible to zombies instead?"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="60" force="1000" target="selfAOE" range="2" target_tags="zombie,animal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="60" force="1000" target="selfAOE" range="2" target_tags="zombie,animal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="60" force="1000" target="selfAOE" range="2" target_tags="zombie,animal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="2" target_tags="zombie,animal"/>
@@ -725,6 +728,16 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffLeaderLimitsHiredNPCsAmount106'"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffLeaderLimitsHiredNPCsAmount106'"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffLeaderLimitsHiredNPCsAmount_update_rate" operation="set" value="3"/>
+      </effect_group>
+      <effect_group help="hint to let player know if sneak can work">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKAllowNpcSneakingWorkaround" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKAllowNpcSneakingWorkaround" operation="set" value="1">
+          <requirement name="IsNight"/>
+          <requirement name="!IsIndoors"/>
+          <requirement name="!IsBloodMoon"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="pseudo distances, the farer should be on top to be overwritten by nearest ones">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="60" target="selfAOE" range="60">
@@ -759,16 +772,22 @@
       </effect_group>
       <effect_group help="NPCSNEAK: player attacking will disable NPC protection for a short time depending on how much you attack. this is meant to avoid overpowering NPC sneak workaround!">
         <requirement name="CVarCompare" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneak"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneak">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlAtkDsbNPCSnTMP" operation="set" value="@.iGSKPlayerAttackedDisableNPCSneak"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlAtkDsbNPCSnTMP" operation="multiply" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="set" value="0" help="consume"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlAtkDsbNPCSnTMP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlAtkDsbNPCSnTMP">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="add" value="@.iGSKPlAtkDsbNPCSnTMP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="120" help="sync with iGSKNPCfollowingDenySneakTimer at 'buffGSKNPCproperSneaking13' TODO: could use player sneak skill to lower this but not less than 60, to avoid overpowering NPC sneak workaround!">
           <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GT" value="120"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NPCSNEAK:using light source or stopped sneaking">
         <requirements compare_type="or">
@@ -794,8 +813,12 @@
 -->
       <effect_group help="NPCSNEAK:transfer value">
         <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="GTE" value="@.iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="15" target="selfAOE" range="60" help="used by 'buffGSKNPCproperSneaking13'. must be constant value: keep in sync with .iGSKPlayerAttackedDisableNPCSneakTimeTransfer">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
@@ -805,7 +828,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKPlayerAttackedDisableNPCSneakTime" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKPlayerAttackedDisableNPCSneakTime">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NPCSNEAK:">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneaking13" target="selfAOE" range="60">
@@ -850,6 +875,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH 'buffLeaderLimitsHiredNPCsAmount106' update_rate!!!!!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fNPCPreventDismissSecs">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GT" value="0"/>
         </triggered_effect>
@@ -863,6 +889,7 @@
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fRepairNPCArmor">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCRepairSelfArmorAddPerc5" target="selfAOE" range="60">
@@ -938,7 +965,9 @@
       <duration value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="100" help="sync at 'buffNPCAddExpDebitToLeader21'"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKExpDebt">
+          <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffHiredNPChudInfo">
@@ -2147,6 +2176,29 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="set" value="1" target="selfAOE" range="3.0">
           <requirement name="HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="INT: sneak mode (this one must be from as far as possible, all of them shall obey from far away and all of them shall have the same values)">
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="1" target="selfAOE" range="60" help="follow player sneak: hold fire">
+          <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
+          <requirement name="HasBuff" buff="buffNPCModStopAttacking"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="2" target="selfAOE" range="60" help="follow player standing: hunting">
+          <requirement name="!HasBuff" buff="buffNPCModFullControlMode"/>
+          <requirement name="!HasBuff" buff="buffNPCModStopAttacking"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="3" target="selfAOE" range="60" help="Only:FullControl">
+          <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
+          <requirement name="!HasBuff" buff="buffNPCModStopAttacking"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="4" target="selfAOE" range="60" help="Only:Stop">
+          <requirement name="!HasBuff" buff="buffNPCModFullControlMode"/>
+          <requirement name="HasBuff" buff="buffNPCModStopAttacking"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
       </effect_group>
@@ -5621,9 +5673,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="@.fGSKPResAdd"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="add" value="@.fGSKPResAdd"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="120">
-          <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="GT" value="120"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork28">
           <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
@@ -6060,14 +6109,17 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationAura">
           <requirement name="HasBuff" buff="buffGSKRadiationAura"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(100,250)" target="selfAOE" range="5" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(75,150)" target="selfAOE" range="15" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(50,100)" target="selfAOE" range="30" target_tags="player"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(100,250)" target="selfAOE" range="5" target_tags="player" help="it is the sum for all distances on nearest">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(35,100)" target="selfAOE" range="10" target_tags="player">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(15,35)" target="selfAOE" range="30" target_tags="player"/>
       </effect_group>
       <effect_group help="RandomChaos">
         <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.45" target="selfAOE" range="5" target_tags="player"/>
-        <!-- HELPGOOD: it is the sum for all distances on nearest -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.45" target="selfAOE" range="5" target_tags="player" help="it is the sum for all distances on nearest"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="15" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="30" target_tags="player"/>
       </effect_group>
@@ -10053,16 +10105,28 @@
       <update_rate value="1"/>
       <effect_group help="NPC sneaks carefully with player">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
-        <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="11"/>
-        <triggered_effect trigger="onSelfCrouch" action="AddBuff" buff="buffGSKNPCsStartSneak3"/>
-        <triggered_effect trigger="onSelfStand" action="AddBuff" buff="buffGSKNPCsStopSneak3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSneakWithPlayerAllowed" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSneakWithPlayerAllowed" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="11" help="24h"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSneakWithPlayerAllowed" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="12"/>
+          <requirement name="IsNight"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NPC sneaks carefully with player">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
-        <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="12"/>
-        <requirement name="IsNight"/>
-        <triggered_effect trigger="onSelfCrouch" action="AddBuff" buff="buffGSKNPCsStartSneak3"/>
-        <triggered_effect trigger="onSelfStand" action="AddBuff" buff="buffGSKNPCsStopSneak3"/>
+        <requirement name="CVarCompare" cvar=".iGSKSneakWithPlayerAllowed" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStartSneak3">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrders" operation="NotEquals" value="1" help="holding fire"/>
+          <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStopSneak3">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrders" operation="NotEquals" value="2" help="hunting"/>
+          <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="steroids long term effects">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKSteroidsLongTermEffect" operation="add" value="-0.00004" help="1/(7*3600)=0.0000396825 lasts 7 days">
@@ -11280,28 +11344,32 @@
           <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="GTE" value="1"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="log">
+        <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKNPCsStartSneak3'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCSneakModePhase"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_crouching"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModStopAttacking"/>
+      </effect_group>
       <effect_group help="finish">
         <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="GTE" value="4" help="because related buffs from NPC mod have a duration of 3s"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$varNPCModModeChange" operation="set" value="0" help="was set to 1 at buffNPCModModeChange..."/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$varNPCModStopAttackingChange" operation="set" value="0" help="was set to 1 at buffNPCModStopAttackingChange..."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStartSneak3"/>
       </effect_group>
       <effect_group help="apply">
         <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3"/>
-        <requirement name="CVarCompare" cvar="$varNPCModModeChange" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCModModeChange2" help="full control"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="1" help="request full control icon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCModStopAttackingChange1" help="halt/stop"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1" help="request halt/stop icon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="add" value="1"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCsStopSneak3" hidden="true">
@@ -11314,28 +11382,32 @@
           <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="GTE" value="1"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="log">
+        <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKNPCsStopSneak3'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCHuntModePhase"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_crouching"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModStopAttacking"/>
+      </effect_group>
       <effect_group help="finish">
         <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="GTE" value="4" help="because related buffs from NPC mod have a duration of 3s"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$varNPCModModeChange" operation="set" value="0" help="was set to 1 at buffNPCModModeChange..."/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$varNPCModStopAttackingChange" operation="set" value="0" help="was set to 1 at buffNPCModStopAttackingChange..."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStopSneak3"/>
       </effect_group>
       <effect_group help="apply">
         <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
-        <requirement name="CVarCompare" cvar="$varNPCModModeChange" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar="$varNPCModStopAttackingChange" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCModModeChange0" help="hunting"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="0" help="request hunting icon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCModStopAttackingChange0" help="resume"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0" help="request resume icon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1"/>
       </effect_group>
     </buff>
   </append>

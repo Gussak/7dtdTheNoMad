@@ -682,6 +682,7 @@ astr=(
 astr=(
   bedrollBlue 33 #cant be directly scrapped
   "cobblestoneShapes:VariantHelper" 66 #for the tiny fortress trick
+  drinkCanMegaCrush 2
   drinkJarBoiledWater 33 #for the desert
   drugGSKPsyonicsResist 13 #to be able to ignore mutants
   drugSteroids  13
