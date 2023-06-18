@@ -6,8 +6,9 @@ This mod is intended for players that are used with the vanilla gameplay already
 This overhaul and server config is intended to be played being a very careful survivor, but mini mods on it may be used alone when they are split from this main mod.  
 Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.  
 Please follow the server configs below and look for tactical hints (on in-game notes or the journal) on how to survive.  
+I have not visited the whole world yet, so if you find something too weird tell me.
 .  
-Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experiency penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the free activator.  
+Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experiency penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the biome teleporter or the underground teleporter.  
 .  
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.
@@ -19,7 +20,7 @@ There are several mini mods here that may work without this main mod (the Tweaks
 The main mod (Tweak folder) has a lot of configs that one day will become minimods to let you cherry pick only what you want like:  
   - night vision and flash light energy requirement and degradation/repair  
   - torch fuel  
-  - Elctrn Hero mods for armor and some weapons, to improve attack, defense and mobility.  
+  - Electronical Hero mods for armor and some weapons, to improve attack, defense and mobility.  
   - many compact info in a tiny HUD to help you on making decisions and understand why something is malfunctioning (degradating)  
   - much more dangerous rad zombies  
   - dangerous mutated bunny  
