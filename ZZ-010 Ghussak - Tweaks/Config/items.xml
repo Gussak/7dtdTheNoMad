@@ -1294,7 +1294,7 @@
     <item name="drugGSKvampireEssence">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="200,0,255"/>
+      <property name="CustomIconTint" value="255,0,0"/>
       <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
       <property name="Material" value="Mglass"/>
       <property name="DescriptionKey" value="dkbuffGSKVampireEssence"/>
@@ -3016,6 +3016,17 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleportDistIndex"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGDbgTmpQuickTestIndex" help="use this for temporary things only. use .iGSKDbgTmpIndex as requirement to test each part of the logic (or each/aWhole set of logic parts) w/o having to restart the game for every test">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKDbgTmpIndex" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKDbgTmpIndex" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKDbgTmpIndex"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKDbgTmpIndex"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </item>
     <item name="GSKCFGDbgListChooseIndex">
@@ -6697,10 +6708,19 @@
       </effect_group>
     </item>
   </append>
-  <append xpath="/items/item[       @name='resourceSnowBall' or        @name='resourceRockSmall' or       @name='GlowStickGreen' or       (         starts-with(@name,'thrown') and          not( contains(@name,'Schematic') )       )     ]">
+  <!-- HELPGOOD:TODO: why thrown things wont work with this?
+  <append xpath="/items/item[
+      @name='resourceSnowBall' or 
+      @name='resourceRockSmall' or
+      @name='GlowStickGreen' or
+      (
+        starts-with(@name,'thrown') and 
+        not( contains(@name,'Schematic') )
+      )
+    ]">
     <effect_group tiered="false" name="Stun">
       <triggered_effect trigger="onProjectileImpact" action="Ragdoll" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit" duration="1.0" force="200">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75" />
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
@@ -6709,6 +6729,7 @@
       </triggered_effect>
     </effect_group>
   </append>
+-->
   <append xpath="/items/item[@name='resourceSnowBall']">
     <property name="StickPercent" value="1.0"/>
     <property class="Action1">

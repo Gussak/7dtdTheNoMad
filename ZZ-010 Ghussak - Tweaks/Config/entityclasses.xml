@@ -6,6 +6,8 @@
     use (that seems to always work)
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffSomeBuff" />
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffSomeOtherBuff" />
+  ISSUE:target_tags: ex.: target_tags="zombie,animal,bandit" may not work well on triggers like onSelfAttackedOther all the time (it may cause errors on log), better just use ex.:
+    <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
 -->
   <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[(@trigger='onSelfEnteredGame' or @trigger='onSelfRespawn') and @action='AddBuff' and @target='self']/@buff">,buffPlayerEnhancesNearbyFriendlyNPCs2,buffLeaderLimitsHiredNPCsAmount106,buffDrinkRainWater78,buffGSKRespawnPreventWaterBkp12,buffGSKShowWaterBkp22,buffGSKBkpWaterVal73,buffGSKHazardWeatherMiasmaDirty59,buffGSKDenyGoreHarvest,buffGSKProperSwimming45,buffGSKAllHazardsCheck40,buffGSKRadResistWork34,buffGSKRadRemover33,buffGSKHeatColdProtClothDmgKeep32,buffGSKChemUseSideEffects31,buffGSKBloodmoonZombiesPowerChk29,buffGSKElctrnOverchargeDmg74,buffGSKPermanentGenericCheck21,buffGSKMutant_ChkAndApplyOnMobs21,buffGSKInPineForestBiomeMonstersThrive15,buffGSKCosmicRayStrikeChk14,buffGSKMeleeParry12,buffGSKFallOverLandingHit12</append>
   <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[@trigger='onSelfEnteredGame' and @action='AddBuff' and @target='self']/@buff">,buffGSKDetectEnterGame,buffGSKConfigGeneric,buffGSKGodModeFirstSpawn</append>
@@ -23,26 +25,43 @@
       <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
       <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
       <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other">
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick">
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other">
+        <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
         <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick">
-        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
+        <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living can provide healing for the player that is not a zombie"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
-        <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
+      </triggered_effect>
+      <!-- HELPGOOD:
+      <triggered_effect trigger="onSelfLandJump" action="AddBuff" buff="buffGSKPlayerFallLandingHit" help="this is never triggered here?"/>
+-->
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1" help="use the same possible requirements from buffGSKNPCproperSneaking10, just remember this runs on the player and not on the NPC">
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="like NotIsIndoors !IsIndoors ?"/>
+        <requirement name="!IsIndoors"/>
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
       <!-- HELPGOOD: this is an alternative to buffGSKCheckJumpKick
       <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="6" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: this trigger works here? see buffGSKCheckJumpKick too">
@@ -53,15 +72,6 @@
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider03" />
       </triggered_effect>
 -->
-      <!-- HELPGOOD: use the same possible requirements from buffGSKNPCproperSneaking10, just remember this runs on the player and not on the NPC-->
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneak" operation="add" value="1" target_tags="zombie,animal,bandit">
-        <requirement name="IsNight"/>
-        <requirement name="!IsIndoors"/>
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        <requirement name="IsAlive" target="other"/>
-        <requirement name="EntityTagCompare" tags="player"/>
-      </triggered_effect>
       <!-- HELPGOOD:
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="5" help="needs to tell NPC to completely stop attacking. TODO: this should be on the NPC, but... may be not using this is better to not depend so much on the AI. So only the player attacks/action counts">
         <requirement name="IsNight"/>
