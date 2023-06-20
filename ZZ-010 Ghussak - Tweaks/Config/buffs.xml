@@ -656,6 +656,7 @@
     <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
       <stack_type value="replace"/>
       <duration value="120" help="must be more than 'buffGSKNPCproperSneaking13' ragdoll duration"/>
+      <update_rate value="1"/>
       <effect_group>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="1.00,0.95,0.20" duration="0,70,120" help="0to60 is ragdolled"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="1.00,0.95,0.20" duration="0,70,120" help="0to60 is ragdolled"/>
@@ -664,6 +665,14 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1000"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneakingProtectFoes" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="IsIndoors"/>
+          <requirement name="IsBloodMoon"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCisThereNonSneakingNPCnearby">
@@ -10231,6 +10240,10 @@
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.35"/>
           <requirement name="HasBuff" buff="buffImpactBracing"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.10"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="is a more stable position"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.05"/>
