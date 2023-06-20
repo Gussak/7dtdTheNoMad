@@ -26,8 +26,23 @@
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" target_tags="zombie,animal,bandit">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
+        <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
+        <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living can provide healing for the player that is not a zombie"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
+        <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
       </triggered_effect>
       <!-- HELPGOOD: this is an alternative to buffGSKCheckJumpKick
       <triggered_effect trigger="onSelfJump" action="Ragdoll" duration="6" force="250" target="selfAOE" range="2.5" target_tags="zombie,animal,bandit" help="TODO: this trigger works here? see buffGSKCheckJumpKick too">
@@ -679,6 +694,26 @@
     <effect_group>
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKWightPower"/>
     </effect_group>
+    <property name="LootDropProb" value="1.0"/>
+    <property name="LootDropEntityClass" value="EntityLootContainerWight"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieScreamer')]" help="vampire">
+    <effect_group help="vampire permanent added powers">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="100">
+        <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="3000"/>
+      </triggered_effect>
+      <passive_effect name="HealthMax" operation="base_add" value="@iGSKVampireBuff"/>
+      <passive_effect name="StaminaMax" operation="base_add" value="@iGSKVampireBuff"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="1000"/>
+    </effect_group>
+    <effect_group help="vampire night powers">
+      <requirement name="IsNight"/>
+      <passive_effect name="RunSpeed" operation="perc_add" value="2.0"/>
+      <passive_effect name="AttacksPerMinute" operation="perc_add" value="1.0" help="FAILS?"/>
+      <passive_effect name="JumpStrength" operation="perc_add" value="3.0"/>
+    </effect_group>
+    <property name="LootDropProb" value="1.0"/>
+    <property name="LootDropEntityClass" value="EntityLootContainerVampire"/>
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name,'Wight')]/property[@name='Tags']/@value">,wight</append>
   <set xpath="/entity_classes/entity_class[@name='zombieArlene']/property[@name='DanceType']/@value">1</set>
@@ -734,5 +769,33 @@
   <append xpath="/entity_classes/entity_class[@name='animalRabbit']">
     <property name="SoundAlert" value="Animals/rabbitpain"/>
     <property name="SoundSense" value="Animals/rabbitpain"/>
+  </append>
+  <append xpath="/entity_classes">
+    <entity_class name="EntityLootContainerWight">
+      <property name="HideInSpawnMenu" value="true"/>
+      <property name="Mesh" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="a rollable entity will add some difficulty to acquire it"/>
+      <property name="SizeScale" value="5.0" help="TODO:FAILs while the server is running but works when the server is restarted"/>
+      <property name="ModelType" value="Custom"/>
+      <property name="Prefab" value="Backpack"/>
+      <property name="Class" value="EntityLootContainer"/>
+      <property name="Parent" value="Backpack"/>
+      <property name="IsEnemyEntity" value="false"/>
+      <property name="TimeStayAfterDeath" value="36000"/>
+      <property name="LootListOnDeath" value="zPackWight"/>
+      <property name="Faction" value="none"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerVampire">
+      <property name="HideInSpawnMenu" value="true"/>
+      <property name="Mesh" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="a rollable entity will add some difficulty to acquire it"/>
+      <property name="SizeScale" value="5.0" help="TODO:FAILs while the server is running but works when the server is restarted"/>
+      <property name="ModelType" value="Custom"/>
+      <property name="Prefab" value="Backpack"/>
+      <property name="Class" value="EntityLootContainer"/>
+      <property name="Parent" value="Backpack"/>
+      <property name="IsEnemyEntity" value="false"/>
+      <property name="TimeStayAfterDeath" value="36000"/>
+      <property name="LootListOnDeath" value="zPackVampire"/>
+      <property name="Faction" value="none"/>
+    </entity_class>
   </append>
 </GhussakTweaks>

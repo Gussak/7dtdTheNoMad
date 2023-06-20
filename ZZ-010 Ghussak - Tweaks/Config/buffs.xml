@@ -6327,6 +6327,12 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinHP" operation="set" value="5" help="todo: make a cfg item">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWightMinHP" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="default is ON">
           <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="0"/>
         </triggered_effect>
@@ -11424,6 +11430,45 @@
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,0,255" description_key="dkbuffGSKWightEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <display_value value="iGSKbuffGSKWightEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKWightEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKEssenceWightMinHP"/>
+        <requirement name="StatCompareCurrent" stat="Stamina" operation="LT" value="@iGSKEssenceWightMinStam" help="TODO: use overall stamina blockage to avoid unnecessary or wrong activation"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="10"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampireEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="128,0,255" description_key="dkbuffGSKVampireEssence">
+      <stack_type value="duration"/>
+      <duration value="0"/>
+      <display_value value="iGSKbuffGSKVampireEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKVampireEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerVampireStrikeCount" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="-1"/>
       </effect_group>
     </buff>
   </append>
