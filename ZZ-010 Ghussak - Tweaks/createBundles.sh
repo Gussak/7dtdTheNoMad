@@ -700,6 +700,7 @@ astr=(
 astr=(
   drinkCanEmptyCookingOneUse 33
   drugJailBreakers 3
+  thrownTimedCharge 9
   #meleeWpnSpearT0StoneSpear 1
   resourceDuctTape 1
   resourceMechanicalParts 1
