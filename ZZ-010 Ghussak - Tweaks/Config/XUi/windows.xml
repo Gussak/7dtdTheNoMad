@@ -37,7 +37,7 @@
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/filledsprite[@name='background' and @color='110,110,110,128']/@color" help="must be opaque to not let yellow pass thru">0,0,0,255</set>
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="must contrast with all backgrounds">[green]</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
-  <!-- HELPGOOD: in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla r15 c1 -->
+  <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@depth" help="in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla">50</set>
   <!-- HELPGOOD: more space for items descriptions -->
   <set xpath="//rect[@name='description']/@width">908</set>
   <set xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']//rect[@name='description' and not(@visible='{showstatanddescription}')]/sprite[@name='backgroundMain' and @fillcenter='false']/@width">913</set>
@@ -52,4 +52,12 @@
   <set xpath="//window[@name='windowJournalEntryDescription']/rect[@name='content']/@height">814</set>
   <set xpath="//window[@name='windowJournalEntryDescription']/rect[@name='content']/sprite[@name='backgroundMain']/@height">800</set>
   <set xpath="//window[@name='windowJournalEntryDescription']/rect/label[@name='descriptionText']/@height">800</set>
+  <append xpath="//window[@name='windowToolbelt']" help="DUP HP Stamina bars">
+    <rect pos="3,-3" width="1120" anchor="CenterBottom" height="3" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}">
+      <filledsprite depth="20" name="BarContent" color="0,0,255,255" width="1120" type="filled" fill="0"/>
+    </rect>
+    <rect pos="3,-75" width="1120" anchor="CenterBottom" height="3" controller="HUDStatBar" stat_type="Health" visible="{statvisible}">
+      <filledsprite depth="20" name="BarContent" color="255,0,0,255" width="1120" type="filled" fill="0"/>
+    </rect>
+  </append>
 </GhussakTweaks>

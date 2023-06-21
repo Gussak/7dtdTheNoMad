@@ -714,7 +714,7 @@ astr=(
 astr=( #TEMPLATE
   ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
   ammoArrowStone 33
-  gunHandgunT1PistolParts 33
+  gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
   modGunScopeSmall 1
   thrownAmmoMolotovCocktail6s 13

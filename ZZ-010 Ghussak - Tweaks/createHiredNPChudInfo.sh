@@ -37,7 +37,7 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 iMaxEntries=120
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
-: ${fRange:=2.0} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good.
+: ${fRange:=2.5} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good, but range 3 ends being like +-3.75, and 2.0 is like +-2.5, so 2.5 is about 3m.
 
 # PERCENTS
 astrCVarForPercentsList=(
@@ -75,10 +75,11 @@ done
 # SECONDS or values w/o limit
 nCols=5
 astrCVarNoLimitList=(
+  #obs.: iMaxValue is actually just the max shown value not the max real value that can be there
   #0:strCVarNPC                              1:strCVarPlayer                               2:iBeginValue 3:iStep 4:iMaxValue
   "fGSKNPCSelfPreventDismissSecs"            ".iGSKPlayerNPCInfoSelfPreventDismissSecs"               13      15         666
   "iGSKNPCHealingMedicine"                   ".iGSKPlayerNPCInfoHealingMedicine"                       5      11        1235 #todo: xmlstarlet to at items.xml look for iGSKNPCHealingMedicine.*NPCMedkitMaxHealValue
-  "iGSKNPCfollowingDenySneakTimer"           ".iGSKPlayerNPCInfoDenySneak"                             5       5         120
+  "iGSKNPCfollowingDenySneakTimer"           ".iGSKPlayerNPCInfoDenySneak"                             3       3          60
 )
 #for strCVar in "${astrCVarNoLimitList[@]}";do
 for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
