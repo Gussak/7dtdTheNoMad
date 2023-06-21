@@ -105,15 +105,57 @@
   <append xpath="/items/item[       starts-with(@name, 'meleeWpnSpearT3SteelSpear') or       starts-with(@name, 'meleeWpnClubT3SteelClub') or       starts-with(@name, 'meleeWpnSledgeT3SteelSledgehammer') or       starts-with(@name, 'meleeWpnBladeT3Machete') or       starts-with(@name, 'meleeWpnKnucklesT3SteelKnuckles') or       starts-with(@name, 'armorSteel')     ]">
     <property name="RepairTools" value="resourceForgedSteel"/>
   </append>
-  <set xpath="/items/item[       starts-with(@name, 'gunBowT1') or        starts-with(@name, 'gunBowT3')     ]/property[@name='RepairTools']/@value">gunBowT1WoodenBowParts</set>
-  <set xpath="/items/item[starts-with(@name, 'gunHandgun')]/property[@name='RepairTools']/@value">gunHandgunT1PistolParts</set>
-  <set xpath="/items/item[starts-with(@name, 'gunShotgun')]/property[@name='RepairTools']/@value">gunShotgunT1DoubleBarrelParts</set>
-  <set xpath="/items/item[starts-with(@name, 'gunMG')]/property[@name='RepairTools']/@value">gunMGT1AK47Parts</set>
-  <set xpath="/items/item[starts-with(@name, 'gunRifle')]/property[@name='RepairTools']/@value">gunRifleT1HuntingRifleParts</set>
-  <set xpath="/items/item[@name='gunExplosivesT3RocketLauncher']/property[@name='RepairTools']/@value">gunExplosivesT3RocketLauncherParts</set>
+  <append xpath="/items">
+    <!-- HELPGOOD:CODEGEN: egrep 'name="gun.*Parts"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml |sed -r 's@<item name="(.*)">@    <item name="\1Repair">\n      <property name="Extends" value="\1" />\n      <property name="CustomIcon" value="\1"/>\n      <property name="CustomIconTint" value="128,220,128" />\n    </item>@' -->
+    <item name="gunMGT1AK47PartsRepair">
+      <property name="Extends" value="gunMGT1AK47Parts"/>
+      <property name="CustomIcon" value="gunMGT1AK47Parts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunHandgunT1PistolPartsRepair">
+      <property name="Extends" value="gunHandgunT1PistolParts"/>
+      <property name="CustomIcon" value="gunHandgunT1PistolParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunRifleT1HuntingRiflePartsRepair">
+      <property name="Extends" value="gunRifleT1HuntingRifleParts"/>
+      <property name="CustomIcon" value="gunRifleT1HuntingRifleParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunShotgunT1DoubleBarrelPartsRepair">
+      <property name="Extends" value="gunShotgunT1DoubleBarrelParts"/>
+      <property name="CustomIcon" value="gunShotgunT1DoubleBarrelParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunBowT1WoodenBowPartsRepair">
+      <property name="Extends" value="gunBowT1WoodenBowParts"/>
+      <property name="CustomIcon" value="gunBowT1WoodenBowParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunExplosivesT3RocketLauncherPartsRepair">
+      <property name="Extends" value="gunExplosivesT3RocketLauncherParts"/>
+      <property name="CustomIcon" value="gunExplosivesT3RocketLauncherParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunBotRoboticsPartsRepair">
+      <property name="Extends" value="gunBotRoboticsParts"/>
+      <property name="CustomIcon" value="gunBotRoboticsParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'gun') and contains(@name,'PartsRepair')]">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="50"/>
+  </append>
+  <set xpath="/items/item[       starts-with(@name, 'gunBowT1') or        starts-with(@name, 'gunBowT3')     ]/property[@name='RepairTools']/@value">gunBowT1WoodenBowPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunHandgun')]/property[@name='RepairTools']/@value">gunHandgunT1PistolPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunShotgun')]/property[@name='RepairTools']/@value">gunShotgunT1DoubleBarrelPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunMG')]/property[@name='RepairTools']/@value">gunMGT1AK47PartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunRifle')]/property[@name='RepairTools']/@value">gunRifleT1HuntingRiflePartsRepair</set>
+  <set xpath="/items/item[@name='gunExplosivesT3RocketLauncher']/property[@name='RepairTools']/@value">gunExplosivesT3RocketLauncherPartsRepair</set>
   <set xpath="/items/item[       starts-with(@name, 'gunHandgunT0PipePistol')  or        starts-with(@name, 'gunRifleT0PipeRifle')     or        starts-with(@name, 'gunShotgunT0PipeShotgun') or        starts-with(@name, 'gunMGT0PipeMachineGun')   or        starts-with(@name, 'meleeWpnBatonT0PipeBaton')      ]/property[@name='RepairTools']/@value">resourceMetalPipe</set>
-  <set xpath="/items/item[       starts-with(@name, 'gunBotT1JunkSledge')  or        starts-with(@name, 'gunBotT2JunkTurret')  or        starts-with(@name, 'gunBotT3JunkDrone')     ]/property[@name='RepairTools']/@value">gunBotRoboticsParts</set>
-  <append xpath="/items/item[       @name='gunBowT1WoodenBowParts'             or       @name='gunHandgunT1PistolParts'            or       @name='gunShotgunT1DoubleBarrelParts'      or       @name='gunMGT1AK47Parts'                   or       @name='gunRifleT1HuntingRifleParts'        or       @name='gunExplosivesT3RocketLauncherParts' or       @name='resourceMetalPipe'     ]">
+  <set xpath="/items/item[       starts-with(@name, 'gunBotT1JunkSledge')  or        starts-with(@name, 'gunBotT2JunkTurret')  or        starts-with(@name, 'gunBotT3JunkDrone')     ]/property[@name='RepairTools']/@value">gunBotRoboticsPartsRepair</set>
+  <append xpath="/items/item[@name='resourceMetalPipe']">
     <property name="RepairTime" value="1"/>
     <property name="RepairAmount" value="50"/>
   </append>
