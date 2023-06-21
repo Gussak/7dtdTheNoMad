@@ -2343,7 +2343,9 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimming45'"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimming45'"/>
-        <triggered_effect trigger="onSelfSwimStart" action="AddBuff" buff="buffGSKProperSwimmingWork45"/>
+        <triggered_effect trigger="onSelfSwimStart" action="AddBuff" buff="buffGSKProperSwimmingWork45" help="denied during bloodmoon as player would just avoid all zombies on water">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKProperSwimmingWork45" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
@@ -2353,8 +2355,12 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimmingWork45'"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimmingWork45'"/>
-        <passive_effect name="WalkSpeed" operation="perc_add" value="2.0"/>
-        <passive_effect name="RunSpeed" operation="perc_add" value="2.5" help="run seems to not work in water? speed doesnt seem to change"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="2.0">
+          <requirement name="!IsBloodMoon"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="2.5" help="run seems to not work in water? speed doesnt seem to change">
+          <requirement name="!IsBloodMoon"/>
+        </passive_effect>
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
       </effect_group>
     </buff>
@@ -2498,6 +2504,7 @@
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[       @trigger='onSelfFallImpact' and        @action='AddBuff'           and        @buff='buffPlayerFallingDamage'     ]">
     <requirement name="!EntityTagCompare" tags="npc"/>
     <requirement name="!HasBuff" buff="god" help="only players anyway"/>
+    <requirement name="!HasBuff" buff="buffGSKGodMode"/>
   </append>
   <append xpath="/buffs">
     <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
@@ -4736,9 +4743,9 @@
       <stack_type value="ignore"/>
       <duration value="0.05" help="min real delay to block buff seems 0.5s?"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="solarpanel_off"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="FadeOutSound" sound="solarpanel_off"/>
-        <triggered_effect trigger="onSelfLeaveGame" action="StopSound" sound="solarpanel_off"/>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="solarpanel_off" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="FadeOutSound" sound="solarpanel_off" play_in_head="true"/>
+        <triggered_effect trigger="onSelfLeaveGame" action="StopSound" sound="solarpanel_off" play_in_head="true"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="10"/>
@@ -4763,8 +4770,9 @@
       </triggered_effect>
     </effect_group>
     <effect_group>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0" compare_type="or">
         <requirement name="HasBuff" buff="god"/>
+        <requirement name="HasBuff" buff="buffGSKGodMode"/>
       </triggered_effect>
     </effect_group>
   </append>
@@ -5289,12 +5297,14 @@
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
         <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
       </requirements>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
       </effect_group>
       <effect_group>
         <requirement name="!HasBuff" buff="god"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
         </triggered_effect>
@@ -5455,14 +5465,14 @@
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="multiply" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.33"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.85" fade="5.0" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.92" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
           <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.97" fade="5.0" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.98" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
@@ -5470,11 +5480,13 @@
       </effect_group>
       <effect_group>
         <requirement name="!HasBuff" buff="god"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fHWBlockageStam"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40" compare_type="or">
           <requirement name="HasBuff" buff="god"/>
+          <requirement name="HasBuff" buff="buffGSKGodMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="10"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="10"/>
@@ -6277,6 +6289,7 @@
       <!-- HELPGOOD: these buffs change the near death levels -->
       <effect_group help="hazard blood loss">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss53">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.14"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="0.0000002" help="it is like about 1.73 percent per day (0.0000002*3600*24), natural regeneration"/>
@@ -6288,10 +6301,13 @@
       </effect_group>
       <!-- HELPGOOD: miasma&dirty 'iGSKNearDeathMiasmaLvl' tho is controlled by 'buffGSKHazardWeatherMiasmaDirty59' as it permanently happens everywhere -->
       <effect_group help="dry air">
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness40" compare_type="or">
           <requirement name="InBiome" biome="5" help="desert"/>
           <requirement name="InBiome" biome="8" help="wasteland"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="dry air">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness40">
           <requirement name="!InBiome" biome="5" help="desert"/>
           <requirement name="!InBiome" biome="8" help="wasteland"/>
@@ -6299,9 +6315,11 @@
       </effect_group>
       <effect_group help="freezing: in snow. in wasteland at night only">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
           <requirement name="InBiome" biome="1" help="snow"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
           <requirement name="InBiome" biome="8" help="wasteland"/>
           <requirement name="IsNight"/>
         </triggered_effect>
@@ -6349,6 +6367,7 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWRadiation40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
           <requirement name="NotHasBuff" buff="buffGSKHazardousWRadiation40"/>
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="20"/>
         </triggered_effect>
@@ -6368,7 +6387,9 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
         </requirements>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations">
@@ -9942,6 +9963,7 @@
       </effect_group>
       <effect_group help="chk allowed">
         <requirement name="!HasBuff" buff="god"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike13"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
         <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="0"/>
@@ -9978,9 +10000,9 @@
       <duration value="0"/>
       <update_rate value="5" help="sync with iGSKCosmicBloodMoonCoolDown subtraction below"/>
       <effect_group help="init and effects">
-        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="player#player1drownsurface"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150" help="maxTime"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKCosmicBloodMoonRageTmTot" operation="set" value="60" help="sync with more than ragdoll duration"/>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="player#drownsurface" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonCoolDown" operation="set" value="150" help="maxTime. sync: must be a multiple of the update_rate value"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKCosmicBloodMoonRageTmTot" operation="set" value="60" help="sync with more than ragdoll duration. sync: must be a multiple of the update_rate value"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTm" operation="set" value="@iGSKCosmicBloodMoonCoolDown"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTm" operation="subtract" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCosmicBloodMoonRageTmEndingHint" operation="set" value="@iGSKCosmicBloodMoonRageTm"/>
@@ -10002,11 +10024,17 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Cold2" intensity="0" fade="3">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="@iGSKCosmicBloodMoonRageTmEndingHint"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0.33" fade="3">
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="Equals" value="@iGSKCosmicBloodMoonRageTmEndingHint"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="VibrantDeSat" intensity="0" fade="1">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="@iGSKCosmicBloodMoonRageTm"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#player1drownpain">
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#drownpain" play_in_head="true">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="Equals" value="@iGSKCosmicBloodMoonRageTmEndingHint"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#drowndeath" play_in_head="true">
+          <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="Equals" value="@iGSKCosmicBloodMoonRageTm"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="main effects good and bad">
@@ -10029,12 +10057,13 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="over time buffs to let the player clear mobs in melee or ranged, the ending at 60s (sync with .iGSKCosmicBloodMoonRageTmTot) is meant to let the player run back to a safe location">
-        <passive_effect name="StaminaChangeOT" operation="base_add" duration="0,5,55,60" value="0,33,50,0"/>
-        <passive_effect name="HealthChangeOT" operation="base_add" duration="0,5,55,60" value="0,10,25,0"/>
-        <passive_effect name="AttacksPerMinute" operation="perc_add" duration="0,5,55,60" value="0,2,3,0"/>
-        <passive_effect name="JumpStrength" operation="perc_add" duration="0,5,55,60" value="0,1.5,3.5,0"/>
-        <passive_effect name="RunSpeed" operation="perc_add" duration="0,5,55,60" value="0,1.5,2.5,0"/>
-        <passive_effect name="WalkSpeed" operation="perc_add" duration="0,5,55,60" value="0,0.5,1.0,0"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <passive_effect name="StaminaChangeOT" operation="base_add" duration="0,5,10,55,60" value="0,33,50,50,0"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" duration="0,5,10,55,60" value="0,10,25,25,0"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" duration="0,5,10,55,60" value="0,2,3,3,0"/>
+        <passive_effect name="JumpStrength" operation="perc_add" duration="0,5,10,55,60" value="0,1.5,3.5,3.5,0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" duration="0,5,10,55,60" value="0,1.5,2.5,2.5,0"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" duration="0,5,10,55,60" value="0,0.5,1.0,1.0,0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKCosmicRayStrike13" icon="7dtdCosmicRayShield" hidden="false" name_key="CosmicRayStrike" description_key="dkbuffGSKCosmicRayStrike" remove_on_death="false" help="this also works like a cooldown, a shield against another strike">
@@ -10120,25 +10149,41 @@
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(0,3)" help="this is just a random begin for it"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="set" value="randomInt(2,4)">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(0,3)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(2,4)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombNormal" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,7)" help="this is just a random begin for it"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(6,8)">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(0,7)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(6,8)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(10,14)">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
+        <!-- HELPGOOD: the non rad nor special zombies are meant just to spawn nearer to the player while avoiding increasing the spawned count too much -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="add" value="-1"/>
       </effect_group>
       <effect_group help="lure foes">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s">
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s" play_in_head="true">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -10148,11 +10193,20 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombNormal">
-          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombNormal" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadCommon">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadStrong">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombWeak">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombFeral">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
@@ -10584,7 +10638,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="multiply" value="100"/>
       </effect_group>
       <effect_group help="fix the imperfect god ;). put here only what is causing trouble in god mode...">
-        <requirement name="HasBuff" buff="god"/>
+        <requirements compare_type="or">
+          <requirement name="HasBuff" buff="god"/>
+          <requirement name="HasBuff" buff="buffGSKGodMode"/>
+        </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0"/>
       </effect_group>
@@ -10985,6 +11042,7 @@
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group">
     <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiation01">
       <requirement name="!HasBuff" buff="god"/>
+      <requirement name="!HasBuff" buff="buffGSKGodMode"/>
       <requirement name="NotHasBuff" buff="buffRadSuit"/>
       <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
     </triggered_effect>
@@ -11280,6 +11338,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="god">
           <requirement name="!HasBuff" buff="god"/>
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
@@ -11481,7 +11540,7 @@
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider03"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfJump" action="PlaySound" sound="player#powerattack"/>
+        <triggered_effect trigger="onSelfJump" action="PlaySound" sound="player#powerattack" play_in_head="true"/>
         <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKCheckJumpKick"/>
       </effect_group>
     </buff>

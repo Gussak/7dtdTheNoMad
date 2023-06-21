@@ -134,6 +134,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - scrap armor makes much more noise, so iron armor becomes valuable
 - melee build: parry chance
 - melee build: if you have high charisma and is using only melee weapons, you can have at most 3 NPCs following you
+- melee build: blunt strong attack will knockdown surrounding foes, but sledgehammer will have a bit more reach and also apply the effective weapons extra damage to them all
 - free dog companion per respawn within the configured limit
 - removed newbie coat protection
 - free bundles now have experience penalty for some time
