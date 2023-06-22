@@ -341,10 +341,9 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="0.12345678912"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKIsRainingOnPlayer" operation="set" value="0"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKItSeemsToBeRaining" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="0"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
@@ -352,21 +351,20 @@
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="@fPreviousWetness"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iPreventDrinkRainDelay" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKItSeemsToBeRaining" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKIsRainingOnPlayer" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="1"/>
       </effect_group>
       <effect_group help="muffled noises by rain, unfortunately this only works if the player is in rain thru the _wetness value">
-        <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRainMuffleNoises" operation="set" value="@_wetness"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRainMuffleNoises" operation="multiply" value="0.5"/>
         <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="@.iGSKRainMuffleNoises"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -377,7 +375,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKItSeemsToBeRaining" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="0.083"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="8"/>
@@ -424,7 +422,7 @@
           <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="subtract" value="@_wetness">
-          <requirement name="CVarCompare" cvar="iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -2597,34 +2595,66 @@
     <buff name="buffTorchConsumeFuel" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="3"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="subtract" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
     </buff>
     <buff name="buffBurningShaftConsumeFuel" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffToolFireConsumeFuelWork" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="subtract" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="0" help="swap back to torch to lit it up"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@$WetTempModifierDisplay" help="0-100 shown wetness"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain doused the torch's fire..."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffTorchConsumeFuel"/>
+        <requirement name="!HasBuff" buff="buffBurningShaftConsumeFuel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side" compare_type="or">
           <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames" compare_type="or">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
           <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="subtract" value="3">
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
