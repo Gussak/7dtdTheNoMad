@@ -25,9 +25,10 @@
       </rect>
     </window>
   </append>
+  <!-- HELPGOOD: unfortunately the default "value" field seems to be ignored, therefore is not loaded when starting the game that also wont save any adjustments we make while in-game playing it. value_min="60" also makes no difference and color is also ignored. value_min also limits the minimum value_increment right? -->
   <append xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']">
-    <filledsprite depth="9" name="AlertStashNeedsCfg" color="255,255,220,255" pos="-120,-9" width="300" height="34" type="filled" fill="0.625" help="20(one line)=0.125*160 so 20=0.125, 40=0.250, 60=0.375, 80=0.500, 100=0.625, 120=0.750, 140=0.875, 160=1.000,"/>
-    <combobox depth="10" name="cbxLockedSlots" pos="-150,-7" width="240" height="30" tooltip_key="xuiStashLockedSlots" type="ComboBoxInt" value_min="0" value_max="160" value="80" value_wrap="false" value_increment="20" color="[green]"/>
+    <filledsprite depth="9" name="HintInvNotSet" color="255,255,180,255" pos="-120,-6" width="240" height="32" type="filled" fill="0.625" help="20(one line)=0.125*160 so 20=0.125, 40=0.250, 60=0.375, 80=0.500, 100=0.625, 120=0.750, 140=0.875, 160=1.000,"/>
+    <combobox depth="10" name="cbxLockedSlots" pos="-150,-7" width="300" height="30" tooltip_key="xuiStashLockedSlots" type="ComboBoxInt" value_min="0" value_max="160" value="80" value_wrap="false" value_increment="20" color="[green]"/>
   </append>
   <remove xpath="/windows/window[@name='windowBackpack']/sprite[@name='spriteDesign1001']" help="cleans the view"/>
   <!-- HELPGOOD: better places some buttons to avoid missclicking -->
@@ -36,7 +37,7 @@
   <!-- HELPGOOD: show blockages clearly. patch for HUD Improved - 100 - AGF-A20HUDPlus1.4.1 -->
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/sprite[@name='background' and @type='sliced']/@color" help="must be the filled background that shows the blockage">200,250,0,255</set>
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/filledsprite[@name='background' and @color='110,110,110,128']/@color" help="must be opaque to not let yellow pass thru">0,0,0,255</set>
-  <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="must contrast with all backgrounds">[green]</set>
+  <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="the text must contrast with all backgrounds to be clearly readable">[green]</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@depth" help="in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla">50</set>
   <!-- HELPGOOD: more space for items descriptions -->
@@ -62,13 +63,15 @@
     </rect>
   </append>
   <append xpath="//window[@name='onScreenIcons']" help="Extra HP Stamina bars, +-aligned with crosshairs">
-    <filledsprite depth="19" pos="36,7" width="30" anchor="CenterCenter" height="3" name="background" color="0,255,255,255" type="filled" fill="1"/>
+    <filledsprite depth="18" pos="36,7" width="30" anchor="CenterCenter" height="3" name="background" color="255,255,0,255" type="filled" fill="1" help="background yellow to show blockage"/>
     <rect pos="36,7" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}" help="good pos=21,7. new pos is to let the damaged icon not be over it.">
-      <filledsprite depth="20" name="BarContent" color="0,0,255,255" width="30" type="filled" fill="0"/>
+      <filledsprite depth="19" name="statModMax" color="0,255,255,255" width="30" type="filled" fill="{statmodifiedmax}" help="cyan to show current max"/>
+      <filledsprite depth="20" name="BarContent" color="0,0,255,255" width="30" type="filled" fill="0" help="name=BarContent is hardcoded identifier?"/>
     </rect>
-    <filledsprite depth="19" pos="-66,7" width="30" anchor="CenterCenter" height="3" name="background" color="0,255,255,255" type="filled" fill="1"/>
+    <filledsprite depth="18" pos="-66,7" width="30" anchor="CenterCenter" height="3" name="background" color="255,255,0,255" type="filled" fill="1" help="background yellow to show blockage"/>
     <rect pos="-66,7" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Health" visible="{statvisible}" help="TODO: make it draw inverted (from right to left) how? good pos=-51,7">
-      <filledsprite depth="20" name="BarContent" color="255,0,0,255" width="30" type="filled" fill="0"/>
+      <filledsprite depth="19" name="statModMax" color="0,255,255,255" width="30" type="filled" fill="{statmodifiedmax}" help="cyan to show current max"/>
+      <filledsprite depth="20" name="BarContent" color="255,0,0,255" width="30" type="filled" fill="0" help="name=BarContent is hardcoded identifier?"/>
     </rect>
   </append>
   <!-- HELPGOOD: did not show up?
