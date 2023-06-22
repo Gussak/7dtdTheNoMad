@@ -15,3 +15,5 @@ astrOptList=(
 )
 set -x;egrep --color "${astrOptList[@]}";set +x
 egrep -c      "${astrOptList[@]}" |grep -v :0
+
+# hint easy search a lot of files ex.: ./egrepXmlHelper.sh Candrop ../../*
