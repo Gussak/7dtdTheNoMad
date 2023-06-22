@@ -94,18 +94,21 @@
     <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
     <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
   </append>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']" help="sync with meleeToolTorch">
     <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
     <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
     <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
     <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
   </append>
-  <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc']/requirement[@name='RandomRoll']">
+  <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']/requirement[@name='RandomRoll']" help="sync with meleeToolTorch. TODO: both effect_group are identical, what about just remove one?">
+    <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
     <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GTE" value="60"/>
   </insertBefore>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc']">
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']" help="sync with meleeToolTorch">
     <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar="fGSKFireFuel" operation="subtract" value="60"/>
   </append>
+  <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with meleeToolTorch">60</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with meleeToolTorch">120</set>
   <remove xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/item_property_overrides[     @name='meleeToolRepairT1ClawHammer' or     @name='meleeWpnSledgeT1IronSledgehammer'   ]"/>
   <!-- HELPGOOD:TODO: these are not illuminating around the player, if it is fixed just remove this patch instruction -->
   <set xpath="/item_modifiers/item_modifier[@name='modClothingStoragePocket']/effect_group/passive_effect[@name='CarryCapacity']/@value">3</set>

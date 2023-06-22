@@ -109,7 +109,7 @@ astrBuffBNList=(
   "buffGSKRespawnPreventWaterBkp"
   "buffGSKShowWaterBkp"
   "buffGSKSnakePoisonWork"
-  "buffGSKSpawnTreasure"
+  "buffGSKSpawnTreasureAmbush"
   "buffGSKSpiderNet"
   "buffGSKWornArmor"
   "buffHiredNPCdamageArmor"

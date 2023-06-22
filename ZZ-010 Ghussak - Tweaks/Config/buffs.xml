@@ -132,14 +132,20 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKSpawnTreasure15" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
+    <buff name="buffGSKSpawnTreasure15" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKSpawnTreasure"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKSpawnTreasureAmbush15" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3"/>
       <display_value value="iGSKSpawnRaidersChancePerc"/>
       <display_value_key value="{0:0}%"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKSpawnTreasure"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersWave" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersChancePerc" operation="set" value="95"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="set" value="randomInt(3,15)" help="IMPORTANT: use the update_rate on the minimum"/>
@@ -204,7 +210,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKSpawnRaidersWave" operation="GT" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] It feels safer, raiders are probably gone now..."/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpawnTreasure15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpawnTreasureAmbush15"/>
       </effect_group>
     </buff>
   </append>
@@ -6443,7 +6449,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="102312" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="102972" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="25200" help="7days*3600s(1h), this means to deplet exp debit it needs 7 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">

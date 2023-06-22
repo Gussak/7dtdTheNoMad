@@ -720,6 +720,7 @@ astr=( #TEMPLATE
   thrownAmmoMolotovCocktail6s 13
   thrownAmmoStunGrenade 13
   trapSpikesIronDmg0    33
+  resourceNail 66
   #trapSpikesWoodDmg0    99
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookRangersExplodingBolts 1
@@ -919,6 +920,8 @@ astr=(
   qt_claude 1
   qt_sarah 1
   qt_raphael 1
+  startNewGameOasisHint 1
+  thrownDynamite 8
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles --openOnceOnly --color "166,148,128" "Maps" "bundleBooks" "My tribe is gone, what will I do now.." "${astr[@]}"
 
@@ -941,7 +944,6 @@ astr=(
   GSKNoteInfoDevice 1 
   GSKNoteStartNewGameSurvivingFirstDay 1
   GSKTheNoMadOverhaulBundleNoteBkp 1 # this last bundle description bkp
-  startNewGameOasisHint 1
   
   #vanilla
   #keystoneBlock 1 

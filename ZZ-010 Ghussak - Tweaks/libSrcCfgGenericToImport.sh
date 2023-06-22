@@ -485,7 +485,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
   
-  if [[ -z "${WINEPREFIX-}" ]];then echo "WARNING: WINEPREFIX is not set (this is ok if on cygwin)" >&2;fi
+  if [[ -z "${WINEPREFIX-}" ]];then echo "WARNING: WINEPREFIX is not set (this is ok if on cygwin)" >&2;export WINEPREFIX="";fi #setting empty prevents errors if used w/o '-}'
   
   : ${bCFGInteractive:=true} #help running like this will accept all prompts: bInteractive=false ./installSpecificFilesIntoGameFolder.sh
   export bCFGInteractive
