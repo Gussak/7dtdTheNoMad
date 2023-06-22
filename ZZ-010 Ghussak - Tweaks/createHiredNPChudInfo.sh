@@ -102,7 +102,7 @@ for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
     strHelp=""
     if((iStepNext>iMaxValue));then
       i=$iMaxValue
-      iStepNext=$((iMaxValue+99999));strHelp='help="any absurd value bigger than the max limit will work here"'
+      iStepNext=$((iMaxValue+32000));strHelp='help="any absurd value bigger than the max limit will work here"'
       bBreak=true
     fi
     

@@ -13,5 +13,5 @@ astrOptList=(
   "$@" 
   *
 )
-egrep --color "${astrOptList[@]}" 
+set -x;egrep --color "${astrOptList[@]}";set +x
 egrep -c      "${astrOptList[@]}" |grep -v :0
