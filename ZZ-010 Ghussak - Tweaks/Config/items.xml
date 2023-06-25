@@ -5631,6 +5631,17 @@
         <property name="Random_count" value="1"/>
       </property>
     </item>
+    <item name="GSKbucketWaterBundle">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="CustomIconTint" value="128,128,180"/>
+      <property name="CustomIcon" value="bucketRiverWater"/>
+      <property name="ItemTypeIcon" value="bundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="drinkJarEmpty,bucketRiverWater"/>
+        <property name="Create_item_count" value="30,1"/>
+      </property>
+    </item>
     <item name="foodBoiledMeatBundle">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CreativeMode" value="Player"/>
@@ -6134,8 +6145,6 @@
   </append>
   <append xpath="/items/item[starts-with(@name,'gunBow') and not(contains(@name,'Crossbow'))]/property[@class='Action0']/property[@name='Magazine_items']/@value">,ammoArrowPoison</append>
   <append xpath="/items/item[starts-with(@name,'gunBow') and contains(@name,'Crossbow')]/property[@class='Action0']/property[@name='Magazine_items']/@value">,ammoCrossbowBoltPoison</append>
-  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so place water carefully -->
-  <set xpath="/items/item[@name='bucketRiverWater']/property[@class='Action1']/property[@name='Change_item_to']/@value">resourceForgedIron</set>
   <set xpath="/items/item[       @name='ammoArrowExploding' or       @name='ammoCrossbowBoltExploding'     ]/property[@class='Action1']/property[@name='Explosion.RadiusEntities']/@value">1.5</set>
   <set xpath="/items/item[@name='ammoArrowExploding']/effect_group[@name='ammoArrowExploding']/passive_effect[@name='EntityDamage']/@value">72</set>
   <set xpath="/items/item[@name='ammoCrossbowBoltExploding']/effect_group[@name='ammoCrossbowBoltExploding']/passive_effect[@name='EntityDamage']/@value">100</set>
@@ -6756,15 +6765,21 @@
       <effect_group name="itemNPCStayFollow:Stay" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="1" help="follow"/>
-        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="2" target="selfAOE" range="6" help="Stay"/>
-        <triggered_effect trigger="onSelfSecondaryActionStart" action="GuardThere, SCore" target="selfAOE" range="6"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="2" target="selfAOE" range="6" help="Stay">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="GuardThere, SCore" target="selfAOE" range="6">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1002"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Stay"/>
       </effect_group>
       <effect_group name="itemNPCStayFollow:Follow" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="2" help="stay"/>
-        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="1" target="selfAOE" range="6" help="Follow"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="CurrentOrder" operation="set" value="1" target="selfAOE" range="6" help="Follow">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1001"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Follow"/>
       </effect_group>
@@ -6858,6 +6873,7 @@
   <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
+  <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players. TODOA: confirm if that leveled infinite(?) water 4x4 placed from buckets will be pickupable, if it is, disable this and retore the bucketRiverWater destruction line above"/>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
   <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->

@@ -36,7 +36,11 @@ source ./libSrcCfgGenericToImport.sh
 export strFlLog="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pimps/7 Days To Die/Player.log"
 declare -p strFlLog
 
-export strExecRegex="C:/.*/7DaysToDie.exe"
+: ${strExecFlNm:="7DaysToDie.exe"} #help
+strExecFlNm="`echo "$strExecFlNm" |sed 's@.@[&]@g'`" # this prevent other pgrep elseware matching like the pgrep here was the running game..
+: ${strExecRegex:="C:/.*/${strExecFlNm}"} #help
+declare -p strExecRegex
+export strExecRegex
 
 function FUNCpromptGfx() {
   if which yad;then
@@ -52,18 +56,24 @@ export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 tail -n +1 -F "$strFlLog" |while read strLine;do
   bExecCmd=false
   
+  #if ! pgrep -fa "${strExecRegex}";then
+    #echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
   if [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
-    CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
-    CFGFUNCexec pkill -SIGSTOP -fe "C:/.*/7DaysToDie.exe"
-    strInfo="the game finished loading and is ready to play"
-    #if which yad;then
-      #while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
-    #else
-      #CFGFUNCprompt "$strInfo"
-    #fi
-    FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
-    CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
-    bExecCmd=true
+    if ! pgrep -fa "${strExecRegex}";then
+      echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
+    else
+      CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
+      CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
+      strInfo="the game finished loading and is ready to play"
+      #if which yad;then
+        #while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
+      #else
+        #CFGFUNCprompt "$strInfo"
+      #fi
+      FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
+      CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
+      bExecCmd=true
+    fi
   elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then
     CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
     #@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad

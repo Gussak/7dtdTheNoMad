@@ -174,6 +174,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - no more somehow easy loot drop from friendly NPCs
 - added workaround to place a follower NPC near the player: vehicleGSKNPChelperPlaceable
+- water bucket can only pickup world generated water now, not water placed by the player. this keeps the bucket after being used and prevents water creation overpower. To pickup water placed by the player, use the new empty drink jar.
 .  
 --------- v0.9a -----------  
 - initial release.  
