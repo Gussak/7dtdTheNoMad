@@ -33,7 +33,7 @@
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceBleedLethal" operation="set" value="1" help="per pellet"/>
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="75" help="per 5 pellets"/>
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWPelletHitCount" operation="add" value="1" help="it has actually 20 pellets!!!"/>
-    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffEffectiveWeapons"/>
+    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffEffectiveWeaponsCheckB4Add"/>
     <passive_effect name="DismemberChance" operation="base_set" value="50">
       <requirement name="CVarCompare" target="other" target_tags="zombie,animal,bandit" cvar="iEWPelletHitCount" operation="GTE" value="10" help="one check per pellet after 10th on"/>
     </passive_effect>
@@ -96,24 +96,22 @@
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="25"/>
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffEffectiveWeaponsCheckB4Add"/>
   </append>
+  <!-- HELPGOOD: the buff is added above on the genery patchers. Keep magnum below to override iEWChanceKnockdown with a bigger value -->
   <append xpath="/items/item[@name='ammo44MagnumBulletBall']/effect_group[@name='ammo44MagnumBulletBall']">
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="75"/>
-    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" target_tags="zombie,animal,bandit" duration="1.0" force="350">
-      <requirement name="CVarCompare" target="other" target_tags="zombie,animal,bandit" cvar="ragdoll" operation="Equals" value="0"/>
+    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" target_tags="zombie,animal,bandit" duration="2.0" force="350">
       <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
     </triggered_effect>
   </append>
   <append xpath="/items/item[@name='ammo44MagnumBulletHP']/effect_group[@name='ammo44MagnumBulletHP']">
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="95"/>
-    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" target_tags="zombie,animal,bandit" duration="1.0" force="550">
-      <requirement name="CVarCompare" target="other" target_tags="zombie,animal,bandit" cvar="ragdoll" operation="Equals" value="0"/>
+    <triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" target_tags="zombie,animal,bandit" duration="3.0" force="550">
       <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="95"/>
     </triggered_effect>
   </append>
   <append xpath="/items/item[@name='ammo44MagnumBulletAP']/effect_group[@name='ammo44MagnumBulletAP']">
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="55"/>
     <triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" target_tags="zombie,animal,bandit" duration="1.0" force="250">
-      <requirement name="CVarCompare" target="other" target_tags="zombie,animal,bandit" cvar="ragdoll" operation="Equals" value="0"/>
       <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="55"/>
     </triggered_effect>
   </append>

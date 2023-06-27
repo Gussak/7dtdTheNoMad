@@ -30,7 +30,7 @@
     </buff>
   </append>
   <append xpath="/buffs">
-    <buff name="buffEffectiveWeaponsCheckB4Add" hidden="true">
+    <buff name="buffEffectiveWeaponsCheckB4Add" hidden="true" help="this is intended for guns that hit several times in a very short time">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
@@ -48,6 +48,7 @@
         <requirement name="CVarCompare" cvar="iEWCfgInitialized" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="bEWCfgUseBulletsEffects" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iEWAddCount" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="Leader" operation="Equals" value="0" help="protects hired NPCs"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEffectiveWeapons"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWAddCount" operation="subtract" value="1"/>
       </effect_group>
@@ -120,6 +121,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
+        <requirement name="CVarCompare" cvar="Leader" operation="Equals" value="0" help="protects hired NPCs"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="EW:buffEffectiveWeapons">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
         </triggered_effect>
@@ -195,6 +197,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEffectiveWeapons">
           <requirement name="CVarCompare" cvar="iEWIndex" operation="GTE" value="@iEWEndEffectsValue"/>
           <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEffectiveWeapons">
+          <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0" help="protects hired NPCs"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEffectiveWeapons"/>
       </effect_group>

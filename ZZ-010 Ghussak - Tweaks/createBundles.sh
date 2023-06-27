@@ -657,8 +657,8 @@ astr=(
 strExploringBase="Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho).\n"
 astr=(
   casinoCoin 666
-  foodRawMeat 1 #for dog companion
-  GSKspawnDogCompanion 1
+  foodRawMeat 3 #for dog companion
+  GSKspawnDogCompanion 3
   GSKCFGNPCproperSneakingWorkaround 1
   vehicleGSKNPChelperPlaceable 1
   GSKNPCHiredHeals30perc 13

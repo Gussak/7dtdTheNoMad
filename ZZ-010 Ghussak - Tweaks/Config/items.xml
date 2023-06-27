@@ -617,15 +617,15 @@
       <property name="DescriptionKey" value="dkGSKExploringNPCBundle"/>
       <property class="Action0">
         <property name="Create_item" help="it has 10 diff items" value="casinoCoin,foodRawMeat,GSKspawnDogCompanion,GSKCFGNPCproperSneakingWorkaround,vehicleGSKNPChelperPlaceable,GSKNPCHiredHeals30perc,GSKNPCHiredHeals180perc,GSKNPCHiredGetsPowerArmor,RepairNPCArmor,NPCPreventDismiss60s"/>
-        <property name="Create_item_count" value="666,1,1,1,1,13,1,1,6,3"/>
+        <property name="Create_item_count" value="666,3,3,1,1,13,1,1,6,3"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-5796" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-6836" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKExploringNPCBundleCount" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="5796"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="6836"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@iGSKExploringNPCBundleCount"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="5796"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="6836"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>
@@ -1350,6 +1350,23 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKVampireEssence"/>
+      </effect_group>
+    </item>
+    <item name="drugGSKmutantEssence">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="resourceTestosteroneExtract"/>
+      <property name="CustomIconTint" value="255,255,0"/>
+      <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
+      <property name="Material" value="Mglass"/>
+      <property name="DescriptionKey" value="dkbuffGSKMutantEssence"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="player_drinking"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKMutantEssence"/>
       </effect_group>
     </item>
     <item name="repairTreasureChest" help="this is just a workaround to help treasure chest raider ambush be started as soon the player wants the treasure">
@@ -6870,7 +6887,7 @@
   <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
-  <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players. TODOA: confirm if that leveled infinite(?) water 4x4 placed from buckets will be pickupable, if it is, disable this and retore the bucketRiverWater destruction line above"/>
+  <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players."/>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
   <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->

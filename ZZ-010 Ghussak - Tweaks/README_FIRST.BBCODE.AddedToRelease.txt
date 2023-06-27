@@ -128,9 +128,12 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 ################## CHANGES ##############  
 --------- v1.0aRC1 -----------  
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge and overall gameplay, it is worth the try! (but in case you are just trying to update, !NotRecommended!, you will see several missing buff classes, it just means that they were updated and I forced a name change on them to keep your game in sync)
-- fixed repair flow of guns (parts shall now be found, dismantled or bought again like in vanilla)
+- fix: repair flow of guns (parts shall now be found, dismantled or bought again like in vanilla)
+- fix: effective weapons mod: protected NPCs from all debuffs like lethal bleeding that could kill them
+- fix: hazmat armor glove mod
+- fix: prevented most POIs from being above the ground that (despite fun) makes things easier
+- fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
-- fixed hazmat armor glove mod
 - scrap armor makes much more noise, so iron armor becomes valuable
 - melee build: parry chance
 - melee build: if you have high charisma and is using only melee weapons, you can have at most 3 NPCs following you
@@ -169,9 +172,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - extra bloodmoon spawns (optional)
 - wetness helps against desert heat now
 - poison can paralyze (the player too) now for a short time
-- fix: prevented most POIs from being above the ground that (despite fun) makes things easier
 - animal spiders will jump now
-- fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
 - no more somehow easy loot drop from friendly NPCs
 - added workaround to place a follower NPC near the player: vehicleGSKNPChelperPlaceable
 - water bucket can only pickup world generated water now, not water placed by the player. this keeps the bucket after being used and prevents water creation overpower. To pickup water placed by the player, use the new empty drink jar.

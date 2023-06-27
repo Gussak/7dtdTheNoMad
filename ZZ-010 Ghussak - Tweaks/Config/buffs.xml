@@ -6455,7 +6455,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="102972" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="104012" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
@@ -10132,6 +10132,9 @@
           <requirement name="HasBuff" buff="buffGSKCosmicRayShield"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKCosmicStrikeDoIt" operation="set" value="0">
+          <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="telep in place, down a bit">
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
@@ -10285,8 +10288,9 @@
       <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="1"/>
-        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKRadiationMessDNA"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKRadiationMessDNA">
+          <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="1"/>
+        </passive_effect>
       </effect_group>
       <effect_group help="NPC sneaks carefully with player">
         <requirement name="IsNight"/>
@@ -11706,6 +11710,24 @@
         <requirement name="CVarCompare" cvar=".iGSKPlayerVampireStrikeCount" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="-1"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="220,180,64" description_key="dkbuffGSKMutantEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="5"/>
+      <display_value value="iGSKbuffGSKMutantEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKMutatingDNA" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="-5" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>
