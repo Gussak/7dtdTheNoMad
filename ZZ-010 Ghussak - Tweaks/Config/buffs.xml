@@ -4879,6 +4879,12 @@
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="20"/>
         </triggered_effect>
       </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathRadiationLvl" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadiationMessDNAtmp" operation="set" value="0.01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadiationMessDNAtmp" operation="multiply" value="@iGSKNearDeathRadiationLvl"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="add" value="@.fGSKRadiationMessDNAtmp"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKHazardousWBloodLoss53" icon_blink="true" icon="7dtdGskBloodLoss" description_key="buffGSKHazardousWBloodLossDesc">
       <damage_type value="BloodLoss"/>
@@ -6056,12 +6062,12 @@
       <update_rate value="2.5"/>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(1.50,2.50)" target="selfAOE" range="3.5" target_tags="player" compare_type="or" help="melee distance, player should avoid it">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(1.50,2.50)" target="selfAOE" range="7.5" target_tags="player" compare_type="or" help="nearby, player must hurry">
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="8.5" target_tags="player" compare_type="or" help="nearby distance, to call more the player attention">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious">
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
@@ -6451,7 +6457,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="102972" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="25200" help="7days*3600s(1h), this means to deplet exp debit it needs 7 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
           <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
         </triggered_effect>
@@ -10077,7 +10083,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="-0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffDrugOhShitzDrops">
           <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
@@ -10277,6 +10284,10 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="1"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKRadiationMessDNA"/>
+      </effect_group>
       <effect_group help="NPC sneaks carefully with player">
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
@@ -10735,6 +10746,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKElctrnHero"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="set" value="0" help="resurrection completely removes DNA damage"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="set" value="0" help="resurrection completely removes DNA damage"/>
       </effect_group>
     </buff>
     <buff name="buffGSKNPCstumble12">

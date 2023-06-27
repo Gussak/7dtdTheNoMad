@@ -62,9 +62,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
         24 hour cycle: 60mins (some realtime calculations are based on this)  
         Daylight length: 12 (to have enough time to explore w/o being easily detected)  
       Basic:  
-        Blood moon freq: 5 days (to be predictable, you will need it)  
-        Blood moon range: 0 (to be predictable, you will need it)  
-        Blood moon warning: Morning (unnecessary now)  
+        Blood moon freq: 7 days (default thematic delay)  
+        Blood moon range: 7 (unpredictable average 10 days to explore the world and prepare to survive the blood moon with extra spawns buff)  
+        Blood moon warning: Morning (so you have time to run to a safe site to defend)  
         Zombie * Speeds: Nightmare (all speeds are nightmare, like in black summer)  
         Zombie feral sense: Day (so you have the night to explore)  
         Persistent Profiles: w/e  
@@ -81,7 +81,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
         Enemy Spawning: On (duh)  
         Air Drops: every 7 days (is cool to have that but must be little to avoid too much easy free give aways)  
         Cheat mode: if developing only, or to workaround bugs but only if you can hold yourself to not make the game easier.  
-        Mark air drops: off (air drops now make a sound and light easy to see at night), but keep ON if you dont want to promptly hunt or guess mark them on map.  
+        Mark air drops: off (air drops now make permanent 30m dist sound and light easy to see at night), but keep ON if you dont want to promptly hunt or guess mark (from/to) them on map (marking like that is a fun challenge tho).  
 .  
     Dependencies:  
       See the Dependencies.txt file. The game may still run w/o many of them tho, but I suggest using them all.  
