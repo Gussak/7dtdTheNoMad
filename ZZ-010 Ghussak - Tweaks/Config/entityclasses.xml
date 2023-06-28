@@ -689,8 +689,9 @@
     </effect_group>
     <property name="ParticleOnSpawn" value="ParticleEffects/RadiatedParticlesOnMesh" param1="SetShapeToMesh0" help="ISSUE: this particle here will error on log, but only once! so not a problem... But if from a buff it will flood the log with repeated errors."/>
     <drop event="Harvest" name="drugGSKAntiRadiation" count="7,28" tag="butcherHarvest"/>
-    <drop event="Harvest" name="GSKsnakePoison" count="0,2" tag="butcherHarvest"/>
+    <drop event="Harvest" name="GSKsnakePoison" count="0,1" tag="butcherHarvest"/>
     <drop event="Harvest" name="drugGSKPsyonicsResist" count="0,3" tag="butcherHarvest"/>
+    <drop event="Harvest" name="drugGSKmutantEssence" count="0,2" tag="butcherHarvest"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieMutated')]">
     <effect_group>
@@ -720,6 +721,19 @@
       <passive_effect name="HealthMax" operation="base_add" value="@iGSKVampireBuff"/>
       <passive_effect name="StaminaMax" operation="base_add" value="@iGSKVampireBuff"/>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="1000"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,3000" operation="LT" value="@iGSKVampireBuff"/>
+      </triggered_effect>
+      <!-- HELPGOOD: max is 3 = 75% chance -->
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
+        <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="GT" value="500"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
+        <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="GT" value="1500"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
+        <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="GT" value="2500"/>
+      </triggered_effect>
     </effect_group>
     <effect_group help="vampire night powers">
       <requirement name="IsNight"/>

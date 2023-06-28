@@ -1338,7 +1338,7 @@
     <item name="drugGSKvampireEssence">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="255,0,0"/>
+      <property name="CustomIconTint" value="128,0,255"/>
       <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
       <property name="Material" value="Mglass"/>
       <property name="DescriptionKey" value="dkbuffGSKVampireEssence"/>
@@ -6375,7 +6375,7 @@
  ++++++++++++++++++++++++++++++++++++++++++++ KEEP LAST ++++++++++++++++++++++++++++++++++++++++++++++++++ 
 -->
   <!-- HELPGOOD: CODEGEN:HELPER: clear;egrep '<item name="(drug|med|food)[^" ]*"' ../* -iRIwho -\-include="items.xml" 2>/dev/null |sort -u |egrep -v "Schem|Desc|Admin" |sed -r 's#<item name=(.*)#@name=\1 or#' |tr '"' "'"    -->
-  <append xpath="/items/item[       @name='GSKsimpleBeer'         or       @name='drinkJarBeer'          or       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKwightEssence'         or       @name='drugGSKvampireEssence'         or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSugarButts'        or       @name='resourceAnimalFat'          ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+  <append xpath="/items/item[       @name='GSKsimpleBeer'         or       @name='drinkJarBeer'          or       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKmutantEssence'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKvampireEssence'       or       @name='drugGSKwightEssence'         or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSugarButts'        or       @name='resourceAnimalFat'          ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
     <effect_group name="ADD chem use hp block" tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.01,0.02)"/>
     </effect_group>
@@ -6470,7 +6470,8 @@
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
         <requirement name="NotHasBuff" target="other" buff="buffGSKSnakePoisonWork55"/>
         <requirement name="NotHasBuff" target="self" buff="buffGSKPsyResistWork28"/>
-        <requirement name="NotHasBuff" target="self" buff="buffGSKEquippedPoisonedAmmo"/>
+        <requirement name="NotHasBuff" target="self" buff="buffGSKEquippedPoisonedAmmo" help="so shooting poisoned ammo will instantly protect the player before hitting the target"/>
+        <requirement name="NotHasBuff" target="self" buff="buffGSKMutantEssence"/>
         <requirement name="!HoldingItemHasTags" target="self" tags="poison" help="TODO:FAILED: when shooting a poisoned arrow or bolt wont trigger teleport"/>
       </triggered_effect>
     </effect_group>
