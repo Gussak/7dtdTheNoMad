@@ -400,7 +400,7 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
-        <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBleedAmount"/>
+        <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBleedAmount" help="per second"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1">
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
           <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="GT" value="1"/>
@@ -445,18 +445,12 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffEWExtraBurningAdd">
-          <requirement name="EntityTagCompare" tags="player,trader"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
+        <requirement name="!EntityTagCompare" tags="player,trader"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
           <requirement name="NotHasBuff" buff="buffEWConfig"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtraBurningCount" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtraBurning">
-          <requirement name="!EntityTagCompare" tags="player,trader"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtraBurning"/>
       </effect_group>
     </buff>
     <buff name="buffEWExtraBurning" hidden="true">

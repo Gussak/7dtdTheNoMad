@@ -72,7 +72,7 @@
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider03" />
       </triggered_effect>
 -->
-      <!-- HELPGOOD:
+      <!-- HELPGOOD: review?
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="iGSKNPCfollowingDenySneakTimer" operation="add" value="5" help="needs to tell NPC to completely stop attacking. TODO: this should be on the NPC, but... may be not using this is better to not depend so much on the AI. So only the player attacks/action counts">
         <requirement name="IsNight"/>
         <requirement name="!IsIndoors"/>
@@ -139,13 +139,22 @@
     <property name="AITarget-4" value="SetNearestEntityAsTarget" data="class=EntityPlayer,22,20,EntityAnimalStag,0,0,EntityNPC,18,13"/>
     <property name="AITarget-5" value=""/>
   </append>
-  <!-- HELPGOOD: mute companion wolf when not in combat, so it's sounds become actually useful! -->
+  <!-- HELPGOOD: mute companion wolf when not in combat, so it's combat sounds become the alert to the player.
+  this emptier set gives error: <set xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundRandom']/@value"></set>
+-->
+  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundRandom']"/>
+  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundAlert']"/>
+  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundSense']"/>
   <append xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']">
-    <property name="SoundRandom" value=""/>
+    <property name="SoundRandom" value="" help="todo: this empty override seems to not work?"/>
   </append>
   <!-- HELPGOOD: this delay is nice! :) -->
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]/property[contains(@name, 'SoundRandomTime')]/@value">600</set>
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'animal')]/property[contains(@name, 'SoundRandomTime')]/@value">60</set>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]">
+    <property name="SoundRandomTime" value="600"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'animal')]">
+    <property name="SoundRandomTime" value="60"/>
+  </append>
   <append xpath="/entity_classes/entity_class[       (starts-with(@name, 'npc') and not(starts-with(@name,'npcHarley'))) or       starts-with(@name, 'survivor')     ]/effect_group[@name='Base Effects']">
     <passive_effect name="HealthMax" operation="base_set" value="75"/>
   </append>
@@ -739,7 +748,7 @@
       <requirement name="IsNight"/>
       <passive_effect name="RunSpeed" operation="perc_add" value="2.0"/>
       <passive_effect name="AttacksPerMinute" operation="perc_add" value="1.0" help="FAILS?"/>
-      <passive_effect name="JumpStrength" operation="perc_add" value="3.0"/>
+      <passive_effect name="JumpStrength" operation="perc_add" value="3.0" help="works?"/>
     </effect_group>
     <property name="LootDropProb" value="1.0"/>
     <property name="LootDropEntityClass" value="EntityLootContainerVampire"/>
@@ -839,5 +848,40 @@
       <property name="LootListOnDeath" value="zPackMutant"/>
       <property name="Faction" value="none"/>
     </entity_class>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='zombieBurnt']">
+    <property name="Class" value="EntityZombieCop"/>
+    <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+    <property name="Explosion.ParticleIndex" value="10"/>
+    <property name="Explosion.Duration" value="8"/>
+    <property name="Explosion.BlastPower" value="35"/>
+    <property name="Explosion.DamageBonus.stone" value=".1"/>
+    <property name="Explosion.DamageBonus.metal" value="0"/>
+    <property name="Explosion.DamageBonus.earth" value="0"/>
+    <property name="Explosion.DamageBonus.water" value="0"/>
+    <property name="Explosion.DamageBonus.wood" value="6"/>
+    <property name="Explosion.RadiusBlocks" value="5"/>
+    <property name="Explosion.RadiusEntities" value="6"/>
+    <property name="Explosion.BlockDamage" value="10"/>
+    <property name="Explosion.EntityDamage" value="10"/>
+    <property name="Explosion.Buff" value="buffBurningMolotov"/>
+    <effect_group name="fire stuff">
+      <passive_effect name="BuffResistance" operation="base_set" value="200" tags="buffBurningZombie,buffBurningElement,buffBurningEnvironment,buffBurningEnvironmentHack,buffBurningFlamingArrow,buffBurningMolotov,buffIsOnFire,buffBurningWeapon"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningElement">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKBurntZombFireParticle"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='zombieFemaleFat' or @name='zombieFatHawaiian']">
+    <property name="Class" value="EntityZombieCop"/>
+    <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+    <property name="Explosion.ParticleIndex" value="8"/>
+    <property name="Explosion.RadiusBlocks" value="3"/>
+    <property name="Explosion.RadiusEntities" value="4"/>
+    <property name="Explosion.BlockDamage" value="250"/>
+    <property name="Explosion.EntityDamage" value="25"/>
+    <property name="Explosion.DamageBonus.earth" value="0"/>
+    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
   </append>
 </GhussakTweaks>

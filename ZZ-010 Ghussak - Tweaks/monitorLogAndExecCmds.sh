@@ -53,7 +53,10 @@ function FUNCrawMatchRegex() { echo "$1" |sed -r 's@.@[&]@g'; };export -f FUNCra
 
 export strChkAutoStopOnLoad="`FUNCrawMatchRegex " INF Created player with id="`"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
-tail -n +1 -F "$strFlLog" |while read strLine;do
+#echo "PID=$$"
+#tail -n +1 -F "$strFlLog" |while read strLine;do
+tail -F "$strFlLog" |while read strLine;do
+  #echo "while.PID=$$"
   bExecCmd=false
   
   #if ! pgrep -fa "${strExecRegex}";then
@@ -77,20 +80,28 @@ tail -n +1 -F "$strFlLog" |while read strLine;do
   elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then
     CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
     #@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad
-    function FUNCchkShapesIni() {
+    #function FUNCchkShapesIni() {
       : ${nIniShapesDelay:=25} #help shapes shall take only a few seconds to complete (here)
-      local lstrKeyShapesIni="`ls -l "$strFlLog"`"
-      local li=0
+      lstrKeyShapesIni="`ls -l "$strFlLog"`"
+      li=0
+      #bBreakChkShapesLoop=false
+      #trap 'bBreakChkShapesLoop=true' INT
       while true;do
+        #echo "while2.PID=$$"
         ((li++))&&:
         if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Shapes success!";break;fi
-        echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init.\r"
-        if((li>nIniShapesDelay));then CFGFUNCinfo "[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so SIGKILL the game.";fi
+        echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
+        #if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
+        if((li>nIniShapesDelay));then CFGFUNCinfo "[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should SIGKILL the game.";fi
         if ! pgrep -f "$strExecRegex" >/dev/null;then CFGFUNCinfo "[WARN] game stopped running";break;fi
         sleep 1
+        #if $bBreakChkShapesLoop;then echo BREAK;break;fi
+        #read -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
+        #read -u 0 -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
+        #read -e -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
       done
-    }
-    FUNCchkShapesIni
+    #}
+    #FUNCchkShapesIni
     
     #nIniShapesSecs=$SECONDS
   #elif [[ "$strLine" == " INF Block IDs with mapping" ]]
