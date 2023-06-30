@@ -313,6 +313,10 @@
   <append xpath="/entity_classes/entity_class[       @name='npcTattooGurlTRifle' or        @name='npcAirForceTRifle'     ]" help="this fix copes with ranged NPC follower limiter. had to be a full property append because had to remove melee from it TODO: find other rangeds that require fixing thru bash script xmlstarlet, or use contains npc TRifle and any other ranged suffixes and append to them even if it ends up dupped">
     <property name="Tags" value="entity,female,npc,UMA2,ranged"/>
   </append>
+  <append xpath="/entity_classes/entity_class[       @name='npcReconFemaleClub'     ]" help="this fix copes with ranged NPC follower limiter. had to be a full property append because had to remove ranged from it">
+    <property name="Tags" value="UMA2,entity,female,npc,melee"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'npc') and       (         contains(@name,'Club') or         contains(@name,'Knife') or         contains(@name,'Axe') or         contains(@name,'Spear') or         contains(@name,'Bat') or         contains(@name,'Machete')       )     ]/property[@name='Tags' and contains(@value,'ranged')]/@value" help="this patch failing to apply is a good thing. TODO?: melee wont override ranged, but is simple to prioritize melee over ranged when limiting NPCs. This is just a quick workaround, all melee NPCs should be properly fixed to remove ranged tag tho.">,melee,FIXME_HasBothRangedAndMelee</append>
   <!-- HELPGOOD: A patch to friendly raiders to show up in the hired followers list 
     ex.: the idea is to upgrade from npcClubTemplate to npcAdvancedClubTemplate
       originally:
@@ -634,6 +638,7 @@
     <drop event="Harvest" name="GSKsnakePoison" count="1,5" tag="butcherHarvest"/>
     <drop event="Harvest" name="ammoProjectileSpiderWebPlayer" count="1,5" tag="butcherHarvest"/>
     <drop event="Harvest" name="cobweb" count="1,5" tag="butcherHarvest"/>
+    <property name="DeadBodyHitPoints" value="66" help="next grown spider is 100. 30 is too little to work with buff gore harvest that only works from the 2nd hit on."/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') and not(contains(@name,'Mini') or contains(@name,'Feral') or contains(@name,'Queen'))]">
     <drop event="Harvest" name="GSKsnakePoison" count="3,6" tag="butcherHarvest"/>
