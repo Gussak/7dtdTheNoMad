@@ -16,25 +16,31 @@
   <!-- HELPGOOD: only after death/resurrect. buffGSKDetectRespawn must be b4 buffGSKRespawnNoMadBundlesAllowCrafting -->
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
     <effect_group>
-      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onOtherAttackedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1">
+      <triggered_effect trigger="onOtherAttackedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
-      <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
-      <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other">
+      <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other"/>
         <requirement name="IsAlive" target="other"/>
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" help="MeleeBuild:">
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick" help="MeleeBuild:">
         <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other">
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" help="MeleeBuild:">
         <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
@@ -43,10 +49,17 @@
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
+        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player that is not a zombie"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
-        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living can provide healing for the player that is not a zombie"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
+        <requirement name="EntityTagCompare" target="other" tags="zombie" help="heals only a bit from zombies"/>
+        <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
       </triggered_effect>
@@ -727,6 +740,13 @@
     <property name="LootDropProb" value="1.0"/>
     <property name="LootDropEntityClass" value="EntityLootContainerWight"/>
   </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombiePartyGirl')]">
+    <effect_group help="throws a halloween party">
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKPartyGirlPower">
+        <requirement name="EntityTagCompare" target="other" tags="player"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieScreamer')]" help="vampire">
     <effect_group help="vampire permanent added powers">
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="100">
@@ -888,5 +908,9 @@
     <property name="Explosion.EntityDamage" value="25"/>
     <property name="Explosion.DamageBonus.earth" value="0"/>
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'npcArmyPowerArmor')]/property[@name='Tags']/@value">,powerarmor</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'npcArmyPowerArmor')]">
+    <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="actually just a dummy"/>
   </append>
 </GhussakTweaks>

@@ -2722,7 +2722,8 @@
       <property name="CustomIconTint" value="00a0ff"/>
       <property name="EconomicValue" value="600"/>
       <property class="Action0">
-        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this. It is one power armor per follower. No need to use with the NPC that already comes with power armor. TODO?: The other NPC items are more for the action/fight; we would need to be able to target one NPC to use them w/o losing the item, can it be done?; or we could put the items on their inventory and they would use them on demand, this would be the perfect solution!;"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this. It is one power armor per follower. No need to use with the NPC that already comes with power armor. TODO?: The other NPC items are more for the action/fight; we would need to be able to target one NPC to use them w/o losing the item, can it be done?; or we could put the items on their inventory and they would use them on demand, this would be the perfect solution! to ex. heal everyone with a single use is too powerful...; May be divide the healing by the amount of followers? but then it becomes overly complex and inneffective..; It could target the most damaged one but how? feedback with the randomID? overly complex too.."/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="0"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" target="selfAOE" range="10">
@@ -6906,7 +6907,7 @@
   <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
   <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
-  <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players."/>
+  <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players. TODO: prevent from sea salty water tho as even boiled would still be salty, but how?"/>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
   <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
   <!-- HELPGOOD: other things that call or should be only 1 -->

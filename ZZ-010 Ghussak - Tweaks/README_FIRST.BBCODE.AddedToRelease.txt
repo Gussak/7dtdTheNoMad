@@ -120,6 +120,9 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
     There are many .sh files (bash scripts) that generate code and patch xml files etc.  
     I used them to make it easier to prepare and update the logic in the xml files.  
     You may only want to try them if you would like to further easily patch the config files using them, but you need linux or at least cygwin to run them.  
+.
+############ TODO: ########
+- dosimeter helmet mod that uses battery energy and can be damaged (damaged blinks detection). detects radiation sources (rad zombs and mutants including bunny). have many quality levels based on some skill that determines the detection distance. will substitute the related effect from animal tracker skill.
 .  
 .  
 .  
