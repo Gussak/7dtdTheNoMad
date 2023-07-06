@@ -749,14 +749,17 @@
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieScreamer')]" help="vampire">
     <effect_group help="vampire permanent added powers">
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="100">
-        <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="3000"/>
-      </triggered_effect>
       <passive_effect name="HealthMax" operation="base_add" value="@iGSKVampireBuff"/>
       <passive_effect name="StaminaMax" operation="base_add" value="@iGSKVampireBuff"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="1500" help="half of max">
+        <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="Equals" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="100">
+        <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="3000" help="max"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="1000"/>
       <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,3000" operation="LT" value="@iGSKVampireBuff"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,3000" operation="LT" value="@iGSKVampireBuff" help="sync with max"/>
       </triggered_effect>
       <!-- HELPGOOD: max is 3 = 75% chance -->
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">

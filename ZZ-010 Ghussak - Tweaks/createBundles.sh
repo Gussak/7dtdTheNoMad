@@ -861,6 +861,7 @@ astr=(
   medicalFirstAidBandage 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   foodBoiledMeatBundleSchematic 1
+  medicalFirstAidBandageSchematic 1
   #foodBoiledMeatSchematic 1
 );FUNCprepareBundles "HealingHP" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that, don't wait too much tho!" "${astr[@]}"
 astr=(
