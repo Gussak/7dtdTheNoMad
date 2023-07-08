@@ -2301,23 +2301,44 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay)"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol"/>
       </effect_group>
-      <effect_group help="self put on patrol mode if hired ranged self count reached limit">
+      <effect_group help="SELF:RANGED: self put on patrol mode if hired ranged self count reached limit. This is only affected by other ranged NPCs">
         <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:RANGED:Force:Patrol"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
       </effect_group>
-      <effect_group help="add 1 to other ranged npcs hired limit count if self count below limit">
+      <effect_group help="SELF:RANGED: add 1 to other npcs hired limit count if self count below limit. This affects other melee NPCs too.">
         <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="LT" value="@iGSKNPCFollowAboveLimit"/>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="SELF:MELEE: self put on patrol mode if hired self count reached limit">
+        <requirement name="EntityTagCompare" tags="melee"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="GT" value="@iGSKNPCFollowAboveLimit"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:MELEE:Force:Patrol"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
+      </effect_group>
+      <effect_group help="SELF:MELEE: the limit for melee NPCs is always the max limit on any charisma perk lvl">
+        <requirement name="EntityTagCompare" tags="melee"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="LT" value="@iGSKNPCFollowAboveLimit"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="melee"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
         </triggered_effect>
       </effect_group>
@@ -10461,6 +10482,9 @@
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_encumberedslots" help="_encumbrance may be high with just a few _encumberedslots if you have a lot of carry capacity right? so using _encumberedslots instead."/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@fGSKFatStaminaBlockage" help="more difficult to keep the balance"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="set" value="@_fallSpeed"/>
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="multiply" value="100"/>
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0"/>
@@ -10534,7 +10558,7 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="LT" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NearDeathBloated:Debuff:fat stamina blockage">
+      <effect_group help="NearDeathBloated:Debuff:fat stamina blockage, less stamina, slows you down">
         <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFatStaminaBlockageLimited" operation="set" value="@fGSKFatStaminaBlockage">
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="LT" value="25"/>
@@ -10543,6 +10567,10 @@
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="25"/>
         </triggered_effect>
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@.fGSKFatStaminaBlockageLimited"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFatSlowsYouDownTmp" operation="set" value="@.fGSKFatStaminaBlockageLimited"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFatSlowsYouDownTmp" operation="divide" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFatSlowsYouDown" operation="set" value="@.fGSKFatSlowsYouDownTmp" help="the tmp will vary from high values to perc, this one is only perc always"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="@.fGSKFatSlowsYouDown" help="only run because walking is slow already."/>
         <!-- HELPGOOD: some of these do not work? hitting with melee also helps. -->
         <triggered_effect trigger="onSelfRun" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
@@ -11552,7 +11580,7 @@
       <display_value value=".iGSKGodModeFirstSpawnTm"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="120"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeNewbie">
           <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
