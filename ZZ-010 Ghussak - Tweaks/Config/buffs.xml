@@ -262,6 +262,9 @@
           <requirement name="CVarCompare" cvar="bGSKDebug" operation="GTE" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="bGSKDebug"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloodLossLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotLvl"/>
@@ -3343,6 +3346,7 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="Leader"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="EntityID"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="fGSKBattMaxChargeCurrent"/>
@@ -10219,6 +10223,15 @@
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6" force="250" target="selfAOE" range="15" target_tags="zombie,animal,bandit" help="this actually expectedly helps the player a bit"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKCountNearbyFoes">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="add" value="1" target="selfAOE" range="15" help="sync with this buff call range">
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
       <stack_type value="replace"/>
       <duration value="0.05"/>
@@ -10328,7 +10341,7 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="count foes">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCBloodMoonAskFoeIsAlive" target="selfAOE" range="60" compare_type="or">
           <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
@@ -10336,7 +10349,7 @@
           <requirement name="EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
+      <effect_group help="rm buff">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff13">
           <requirement name="!IsBloodMoon"/>
         </triggered_effect>
@@ -10349,6 +10362,13 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="count nearby foes">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes" target="selfAOE" range="15" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="NV and lights: prevents clicking trick that could keep lights on while having no energy. If you find another trick or glitch please tell me!">
         <requirement name="!HasBuff" buff="buffNightVisionUsesBatteries121"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNightVisionUsesBatteries121" compare_type="or">
@@ -10362,7 +10382,7 @@
           <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="1"/>
         </passive_effect>
       </effect_group>
-      <effect_group help="NPCSneak: rm foe prot">
+      <effect_group help="NPCSneak: rm foe prot if player stops sneaking after some time">
         <requirement name="IsNight"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSneakRmFoeProtCount" operation="set" value="0">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
@@ -10376,14 +10396,14 @@
           <requirement name="CVarCompare" cvar="iGSKNPCSneakRmFoeProtCount" operation="GTE" value="15"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NPCSneak: NPC sneaks carefully with player">
+      <effect_group help="NPCSneak: rm foe prot if player is sheltered">
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="30" target_tags="zombie,animal">
           <requirement name="CVarCompare" cvar="Ragdoll" target="other" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NPCSneak: NPC sneaks carefully with player">
+      <effect_group help="NPCSneak: NPC sneaks carefully with player if enabled">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSneakWithPlayerAllowed" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSneakWithPlayerAllowed" operation="set" value="1">
@@ -10394,7 +10414,7 @@
           <requirement name="IsNight"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="NPCSneak: NPC sneaks carefully with player">
+      <effect_group help="NPCSneak: NPC start/stop carefully sneaking together with player">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
         <requirement name="CVarCompare" cvar=".iGSKSneakWithPlayerAllowed" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStartSneak3">
@@ -10406,6 +10426,19 @@
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrders" operation="NotEquals" value="2" help="hunting"/>
           <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="NPCSneak: this is a workaround for a more dynamic combat order that will limit the range the NPCs will hunt somehow">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode" help="enables hunting mode">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="GT" value="0" help="this will allow them hunting if there are foes nearby only"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode" help="enables fullconotrol mode">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="Equals" value="0" help="this will prevent them from hunting too far away from the player"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="steroids long term effects">
@@ -11757,6 +11790,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_crouching"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModMode"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModStopAttacking"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNearbyFoeAliveCount"/>
       </effect_group>
       <effect_group help="finish">
         <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="GTE" value="4" help="because related buffs from NPC mod have a duration of 3s"/>
@@ -11917,6 +11951,17 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKSpwZombPartyGirl">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampPower" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="50" help="is 5/s, sync with update_rate">
+          <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="@iGSKVampireBuffMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="50" help="sync with above"/>
       </effect_group>
     </buff>
   </append>

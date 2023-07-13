@@ -18,9 +18,12 @@
     <effect_group>
       <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" target="other" tags="melee" help="can only normally parry melee attacks"/>
       </triggered_effect>
-      <triggered_effect trigger="onOtherAttackedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild: just a overall small chance against ranged attacks, but not too little so it can be fun and somewhat useful">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" target="other" tags="ranged"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="33"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
       <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
@@ -214,7 +217,7 @@
     <property name="LootDropProb" value="0.05"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcAnimal')]" help="animals carry nothing beyond what we place in their backpack">
-    <property name="LootDropProb" value="0.00"/>
+    <property name="LootDropProb" value="0.00" help="I tested with 200 npc fox hirable and had no problem (nothing dropped)."/>
     <property name="LootListAlive" value="traderNPCanimal"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
@@ -751,17 +754,23 @@
     <effect_group help="vampire permanent added powers">
       <passive_effect name="HealthMax" operation="base_add" value="@iGSKVampireBuff"/>
       <passive_effect name="StaminaMax" operation="base_add" value="@iGSKVampireBuff"/>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="1500" help="half of max">
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKVampPower"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKVampireBuffMax" operation="set" value="3000"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKVampireBuffHalfMax" operation="set" value="@iGSKVampireBuffMax"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKVampireBuffHalfMax" operation="divide" value="2"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKVampireBuff10perc" operation="set" value="@iGSKVampireBuffMax"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKVampireBuff10perc" operation="divide" value="10"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="@iGSKVampireBuffHalfMax">
         <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="Equals" value="0"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="100">
-        <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="3000" help="max"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="@iGSKVampireBuff10perc">
+        <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="@iGSKVampireBuffMax"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="1000"/>
       <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,3000" operation="LT" value="@iGSKVampireBuff" help="sync with max"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,3000" operation="LT" value="@iGSKVampireBuff" help="sync with iGSKVampireBuffMax"/>
       </triggered_effect>
-      <!-- HELPGOOD: max is 3 = 75% chance -->
+      <!-- HELPGOOD: max is 3 = 75% chance, the stronger the vamp is greater the chance -->
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
         <requirement name="CVarCompare" cvar="iGSKVampireBuff" operation="GT" value="500"/>
       </triggered_effect>
