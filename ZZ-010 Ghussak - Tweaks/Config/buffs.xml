@@ -10362,14 +10362,6 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group help="count nearby foes">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes" target="selfAOE" range="15" compare_type="or">
-          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
-          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
-          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group help="NV and lights: prevents clicking trick that could keep lights on while having no energy. If you find another trick or glitch please tell me!">
         <requirement name="!HasBuff" buff="buffNightVisionUsesBatteries121"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNightVisionUsesBatteries121" compare_type="or">
@@ -10440,6 +10432,14 @@
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
           <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="Equals" value="0" help="this will prevent them from hunting too far away from the player"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="NPCSneak: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes" target="selfAOE" range="10" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="steroids long term effects">
