@@ -464,7 +464,219 @@ function CFGFUNCgetNewestSavegamePath() {
   lstrPath="${lstrPath#${strCFGSavesPathIgnorable}/}"
   lstrPath="`echo "$lstrPath" |cut -d/ -f1`"
   echo "${strCFGSavesPathIgnorable}/$lstrPath"
-}
+};export -f CFGFUNCgetNewestSavegamePath
+
+function CFGFUNCxmlstarletSel() {
+  local lbChkExistsOnly=false;if [[ "$1" == --chk ]];then shift;lbChkExistsOnly=true;fi
+  local lstrPath="$1";shift
+  local lstrFlXml="$1";shift
+  
+  local lastrCmd=(xmlstarlet)
+  if $lbChkExistsOnly;then lastrCmd+=(-q);fi
+  lastrCmd+=(sel -t)
+  if $lbChkExistsOnly;then
+    lastrCmd+=(-c)
+  else
+    lastrCmd+=(-v)
+  fi
+  lastrCmd+=("${lstrPath}" "${lstrFlXml}")
+  
+  if $lbChkExistsOnly;then
+    if CFGFUNCexec --noErrorExit "${lastrCmd[@]}";then return 0;fi
+  else
+    #CFGFUNCinfo "EXEC: ${lastrCmd[@]}"
+    local lstrResult="`CFGFUNCexec --noErrorExit "${lastrCmd[@]}"`"&&:
+    if((`echo "${lstrResult}" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrResult='${lstrResult}', ${lstrPath} ${lstrFlXml}";fi
+    
+    if [[ -n "$lstrResult" ]];then
+      echo "$lstrResult"
+      return 0
+    fi
+  fi
+  
+  return 1
+};export -f CFGFUNCxmlstarletSel
+
+function CFGFUNCidWithoutVariant() {
+  echo "${1}" |cut -d: -f1 #TODO check for the "VariantHelper" string if it is valid like in "cobblestoneShapes:VariantHelper"
+};export -f CFGFUNCidWithoutVariant
+
+function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue"
+  local lstrBoolAllowProp="";if [[ "$1" == "--boolAllowProp" ]];then shift;lstrBoolAllowProp="$1";shift;fi
+  local lstrProp="$1";shift #what property value to output
+  local lstrXmlToken="$1";shift #this matches the filename (least many suffix 's') and the main sections inside it, both are the same id
+  local lstrItemID="$1";shift
+  local lstrFlCfgChkFullPath="$1";shift
+  
+  #OUTPUTS:
+  declare -g bFRSPV_CanSell_OUT
+  declare -g iFRSPV_PropVal_OUT
+  declare -g strFRSPV_XmlTokenFound_OUT #to help determine what kind of id is this, in what xml file it is
+  
+  declare -g strFRSPV_PreviousItemID
+  
+  local lstrChkItem="`CFGFUNCidWithoutVariant "$lstrItemID"`"
+  local lastrItemInheritPath=("$lstrChkItem")
+  local lstrParent=""
+  while [[ -n "$lstrChkItem" ]];do # recursively look for lstrProp at extended parents
+    #if xmlstarlet -q sel -t -c "//${lstrXmlToken}[@name='${lstrChkItem}']" "${lstrFlCfgChkFullPath}";then
+    if CFGFUNCxmlstarletSel --chk "//${lstrXmlToken}[@name='${lstrChkItem}']" "${lstrFlCfgChkFullPath}";then
+      strFRSPV_XmlTokenFound_OUT="${lstrXmlToken}"
+    else
+      return 1
+    fi
+    
+    if [[ "${strFRSPV_PreviousItemID-}" != "$lstrItemID" ]];then
+      CFGFUNCinfo "initialize new item: $lstrItemID"
+      #strFRSPV_XmlTokenFound_OUT=""
+      strFRSPV_PreviousItemID="$lstrItemID"
+      bFRSPV_CanSell_OUT=true
+      iFRSPV_PropVal_OUT=""
+    fi
+    
+    echo "CHK: ${lstrChkItem} ${lstrFlCfgChkFullPath}"
+    
+    # check allowed
+    #echo CFGFUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"
+    local lstrAllowVal="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"`" #like SellableToTrader
+    #if((`echo "$lstrAllowVal" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrAllowVal='${lstrAllowVal}'";fi
+    if [[ -n "$lstrBoolAllowProp" ]] && [[ "`echo ${lstrAllowVal} |tr '[:upper:]' '[:lower:]'`" == "false" ]];then
+      bFRSPV_CanSell_OUT=false #even if it cant be sold, it may still have a EconomicValue set, that is good for the calc here
+      declare -p bFRSPV_CanSell_OUT
+      #break
+    fi
+    
+    # get value
+    if iFRSPV_PropVal_OUT="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`";then
+      break
+    fi
+    
+    # get parent to check
+    #echo CFGFUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"
+    if lstrParent="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
+      lstrChkItem="$lstrParent"
+      lastrItemInheritPath+=("$lstrChkItem")
+    else
+      break
+    fi
+  done
+  
+  if $bFRSPV_CanSell_OUT;then
+    #if((iFRSPV_PropVal_OUT>0));then 
+    #if [[ "$iFRSPV_PropVal_OUT" != "0" ]];then  #can be a string like true/false
+    if [[ -n "$iFRSPV_PropVal_OUT" ]];then
+      CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` ${iFRSPV_PropVal_OUT} ${lstrFlCfgChkFullPath}";
+      return 0
+    fi
+  else
+    CFGFUNCinfo "CannotBeSold: ${lstrItemID}";
+    return 0
+  fi
+  
+  return 1
+};export -f CFGFUNCrecursiveSearchPropertyValue
+function CFGFUNCrecursiveSearchPropertyValueAllFiles() {
+  local lstrBoolAllowProp="";if [[ "$1" == "--boolAllowProp" ]];then shift;lstrBoolAllowProp="$1";shift;fi
+  local lstrProp="$1";shift #what property value to output
+  local lstrItemID="$1";shift
+  
+  local bFoundSomething=false
+  for((j=0;j<${#CFGastrXmlToken1VsFile2List[@]};j+=2));do 
+    local lstrXmlToken="${CFGastrXmlToken1VsFile2List[j]}"
+    local lstrFlCfgChkFullPath="${CFGastrXmlToken1VsFile2List[j+1]}"
+    if CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "$lstrBoolAllowProp" "$lstrProp" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then # FRSPV
+    #if CFGFUNCrecursiveSearchPropertyValue "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
+      bFoundSomething=true
+      break
+    fi
+  done
+  if ! $bFoundSomething;then 
+    CFGFUNCinfo "WARN: nothing found for lstrItemID='$lstrItemID' lstrProp='$lstrProp' lstrBoolAllowProp='$lstrBoolAllowProp'";
+    #bFRSPV_CanSell_OUT=true
+    return 1
+  fi
+  return 0
+};export -f CFGFUNCrecursiveSearchPropertyValueAllFiles
+
+function CFGFUNCchkNumGT0() {
+#  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
+  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
+  echo "WARN: invalid number: $1" >&2
+  return 1
+};export -f CFGFUNCchkNumGT0
+function CFGFUNCchkNum() {
+#  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
+  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]];then return 0;fi
+  echo "WARN: invalid number: $1" >&2
+  return 1
+};export -f CFGFUNCchkNum
+
+function CFGFUNChashArray() {
+  declare -p "$1" |sed -e 's@[^=]*=@@' |tr '[' '\n' |sort |sha1sum
+};export -f CFGFUNChashArray
+function CFGFUNCloadCaches() {
+  # ItemEconomicValue
+  declare -A CFGastrItem1Value2List
+  declare -gx CFGstrFlItemEconomicValueCACHE="Cache.DeleteToRecreate/cache.ItemEconomicValue.sh" #help if you delete the cache file it will be recreated
+  if [[ -f "${CFGstrFlItemEconomicValueCACHE}" ]];then source "${CFGstrFlItemEconomicValueCACHE}";fi
+  # checks
+  #strIVChk="`declare -p CFGastrItem1Value2List |tr '[' '\n' |egrep -v "^ *$" |egrep -v "${strCraftBundlePrefixID}" |sort -u`"
+  #echo "$strIVChk" |egrep '="1"' >&2 &&: # just to check if they should really be value 1
+  #if((`echo "$strIVChk" |egrep '="0*"' |wc -l`>0));then # matches "" or "0"
+    #echo "$strIVChk" >&2
+    #CFGFUNCprompt "there are the above entries that could be improved (at least EconomicValue 1)" #let/wait user know about it
+  #fi
+  declare -gx CFGstrItemEcoValHASH="`CFGFUNChashArray CFGastrItem1Value2List`"
+  echo "`declare -p CFGstrItemEcoValHASH CFGastrItem1Value2List CFGstrFlItemEconomicValueCACHE`" #OUTPUT
+  
+  # ItemHasTiers
+  declare -A CFGastrItem1HasTiers2List
+  declare -gx CFGstrFlItemHasTiersCACHE="Cache.DeleteToRecreate/cache.ItemHasTiers.sh"
+  if [[ -f "${CFGstrFlItemHasTiersCACHE}" ]];then source "${CFGstrFlItemHasTiersCACHE}";fi
+  declare -gx CFGstrItemHasTiersHASH="`CFGFUNChashArray CFGastrItem1HasTiers2List`"
+  echo "`declare -p CFGstrItemHasTiersHASH CFGastrItem1HasTiers2List CFGstrFlItemHasTiersCACHE`" #OUTPUT
+};export -f CFGFUNCloadCaches
+function CFGFUNCwriteCaches() {
+  local lstrHeader='#PREPARE_RELEASE:REVIEWED:OK
+# this file is auto generated. delete it to be recreated. do not edit!'
+  local lastrCacheList=(
+    CFGstrItemEcoValHASH   CFGastrItem1Value2List    CFGstrFlItemEconomicValueCACHE 
+    CFGstrItemHasTiersHASH CFGastrItem1HasTiers2List CFGstrFlItemHasTiersCACHE
+  )
+  local liLoopCachesDataLnIniIndex
+  for((liLoopCachesDataLnIniIndex=0;liLoopCachesDataLnIniIndex<${#lastrCacheList[@]};liLoopCachesDataLnIniIndex+=3));do
+    local lstrHash="${!lastrCacheList[liLoopCachesDataLnIniIndex]}"
+    local lastrArray="${lastrCacheList[liLoopCachesDataLnIniIndex+1]}"
+    local lstrFlCache="${!lastrCacheList[liLoopCachesDataLnIniIndex+2]}"
+    
+    #echo "declare -p ${lastrArray}" # |sha1sum
+    #declare -p ${lastrArray}
+    #local lstrNewHash="`declare -p ${lastrArray} |sed 's@[^=]*=@@' |sha1sum`"
+    local lstrNewHash="`CFGFUNChashArray ${lastrArray}`"
+    if [[ "$lstrHash" != "$lstrNewHash" ]];then
+      declare -p lstrHash lastrArray lstrFlCache lstrNewHash
+      ls -l "$lstrFlCache" >&2 &&:
+      CFGFUNCtrash "$lstrFlCache"
+      echo "${lstrHeader}" >"$lstrFlCache"
+      declare -p "${lastrArray}" >>"$lstrFlCache"
+      ls -l "$lstrFlCache" >&2
+    fi
+  done
+  #if [[ "$CFGstrItemEcoValHASH" != "`declare -p CFGastrItem1Value2List |sha1sum`" ]];then
+    #ls -l "$CFGstrFlItemEconomicValueCACHE" >&2
+    #CFGFUNCtrash "$CFGstrFlItemEconomicValueCACHE"
+    #echo "${lstrHeader}" >"$CFGstrFlItemEconomicValueCACHE"
+    #declare -p CFGastrItem1Value2List >>"$CFGstrFlItemEconomicValueCACHE"
+    #ls -l "$CFGstrFlItemEconomicValueCACHE" >&2
+  #fi
+  #if [[ "$CFGstrItemHasTiersHASH" != "`declare -p CFGastrItem1HasTiers2List |sha1sum`" ]];then
+    #ls -l "$CFGstrFlItemHasTiersCACHE" >&2
+    #CFGFUNCtrash "$CFGstrFlItemHasTiersCACHE"
+    #echo "${lstrHeader}" >"$CFGstrFlItemHasTiersCACHE"
+    #declare -p CFGastrItem1HasTiers2List >>"$CFGstrFlItemHasTiersCACHE"
+    #ls -l "$CFGstrFlItemHasTiersCACHE" >&2
+  #fi
+};export -f CFGFUNCwriteCaches
 
 #: ${strScriptNameList:=""};if [[ -n "${strScriptName-}" ]];then strScriptNameList+="$strScriptName";fi
 export strScriptParentList;if [[ -n "${strScriptName-}" ]];then strScriptParentList+=", ($$)$strScriptName";fi
@@ -498,7 +710,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${bCFGDryRun:=false} #help just show what would be done
   export bCFGDryRun
   
-  mkdir -vp _log _tmp
+  mkdir -vp _log _tmp _cache
   
   export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
   export strCFGScriptLogLastLink="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.Last.log"
@@ -596,6 +808,23 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   fi
   
   CFGFUNCtrash "${strCFGErrorLog}"
+  
+  # these files at astrFlCfgChkFullPathList are to be queried for useful data
+  export CFGastrFlCfgChkList=(block item item_modifier)
+  export CFGstrFlCfgChkRegex="`echo "${CFGastrFlCfgChkList[@]}" |tr ' ' '|'`"
+  export CFGastrFlCfgChkFullPathList=()
+  export CFGastrXmlToken1VsFile2List=() # key value
+  for _strFlCfgChk in "${CFGastrFlCfgChkList[@]}";do
+    _strFlRelatModCfgXml="Config/${_strFlCfgChk}s.xml"
+    CFGastrFlCfgChkFullPathList+=("${_strFlRelatModCfgXml}") # this is the xml modlet file on this mod's folder
+    CFGastrXmlToken1VsFile2List+=("$_strFlCfgChk" "${_strFlRelatModCfgXml}")
+    if [[ -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
+      _strFlXmlFinalChk="${strCFGNewestSavePathConfigsDumpIgnorable}/${_strFlCfgChk}s.xml"
+      CFGastrFlCfgChkFullPathList+=("$_strFlXmlFinalChk") # this is the xml final dump of the last save
+      CFGastrXmlToken1VsFile2List+=("$_strFlCfgChk" "$_strFlXmlFinalChk")
+    fi
+  done #for strFlCfgChkFullPath in "${astrFlCfgChkFullPathList[@]}";do
+  
   
   #export bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes=true
 #fi
