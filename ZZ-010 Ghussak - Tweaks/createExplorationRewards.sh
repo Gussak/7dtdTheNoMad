@@ -324,7 +324,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     </item>' >>"${strFlGenIte}${strGenTmpSuffix}"
   echo '<recipe name="'"${strItemName}"'" count="1"/>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
-  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward]\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring rewards you must be careful, read exploring tip about such rewards if you need.\"")
+  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward]\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
   CFGFUNCwriteCaches
 done
 
