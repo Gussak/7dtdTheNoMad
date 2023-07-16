@@ -299,9 +299,10 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     fi
   fi
   
+  strItemName='GSKTNMER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
   strDk='dkGSKTNMExplrRwd'"${strShortNameId}"''
   echo '
-    <item name="GSKTNMExplrRwd'"${strShortNameId}"'">
+    <item name="'"${strItemName}"'">
       <property name="Extends" value="GSKTRBaseBundle" />
       <property name="CustomIcon" value="'"${strItem}"'" />
       <property name="CustomIconTint" value="180,180,128" />
@@ -321,8 +322,9 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings you the package."/>
       </effect_group>
     </item>' >>"${strFlGenIte}${strGenTmpSuffix}"
+  echo '<recipe name="'"${strItemName}"'" count="1"/>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
-  astrLocList+=("${strDk},\"This exploring reward requires ${iRewardValue} credits\n.You still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring rewards you must be careful, read exploring tip about such rewards if you need.\"")
+  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward]\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring rewards you must be careful, read exploring tip about such rewards if you need.\"")
   CFGFUNCwriteCaches
 done
 
@@ -343,6 +345,8 @@ CFGFUNCwriteCaches
 #fi
 
 CFGFUNCgencodeApply "${strFlGenIte}${strGenTmpSuffix}" "${strFlGenIte}"
+
+CFGFUNCgencodeApply "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 
 for strLoc in "${astrLocList[@]}";do
   echo "$strLoc" |tee -a "${strFlGenLoc}${strGenTmpSuffix}"
