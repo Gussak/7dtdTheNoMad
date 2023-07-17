@@ -38,6 +38,8 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 eval "`CFGFUNCloadCaches`"
 
 : ${iRewardValueMult:=15} #help x15 is like the trader price for a tier 6 item just after entering the game the first time (so no trading bonuses)
+: ${iModGenericPrice:=100} #help iModGenericPrice*fMultPriceTier4to6*iRewardValueMult, ex.: 100*1.6*15=2400
+: ${iEndGameValue:=1500} #help end game items are tier6, but this is the sell price of tier4 weapons that will still be converted into tier6 (*fMultPriceTier4to6) and further increased (*iRewardValueMult). In other words, just keep in sync with the sell price of tier4 weapons.
 
 astrItemList=( 
   #place here mainly the best items of the game that may not be found otherwise as trader's inv is empty for TNM
@@ -107,6 +109,16 @@ astrItemList=(
   #"item" armorScrapHelmet "HelmetScrap" 0
   #"item" armorSteelHelmet "HelmetSteel" 0
   "item" armorSwatHelmet "HelmetSwat" 0
+  
+  "item" apparelGhillieSuitJacket "GhillieJacket" ${iEndGameValue} #todoa create as armor mods too like hazmat mods
+  "item" apparelGhillieSuitPants "GhilliePants" ${iEndGameValue}
+  "item" apparelGhillieSuitHood "GhillieHood" ${iEndGameValue}
+  
+  "item" apparelHazmatMask "HazmatMask" ${iEndGameValue}
+  "item" apparelHazmatGloves "HazmatGloves" ${iEndGameValue}
+  "item" apparelHazmatJacket "HazmatJacket" ${iEndGameValue}
+  "item" apparelHazmatPants "HazmatPants" ${iEndGameValue}
+  "item" apparelHazmatBoots "HazmatBoots" ${iEndGameValue}
 
   #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed 's@Mod"@"@'
   "item_modifier" modArmorAdvancedMuffledConnectors "ModArmorAdvancedMuffledConnectors" 0
@@ -114,24 +126,24 @@ astrItemList=(
   "item_modifier" modArmorBandolier "ModArmorBandolier" 0
   "item_modifier" modArmorCoolingMesh "ModArmorCoolingMesh" 0
   "item_modifier" modArmorCowboyHat "ModArmorCowboyHat" 0
-  "item_modifier" modArmorCustomizedFittings "ModArmorCustomizedFittings" 0
-  "item_modifier" modArmorDoubleStoragePocket "ModArmorDoubleStoragePocket" 0
+  "item_modifier" modArmorCustomizedFittings "ModArmorCustomizedFittings" $((iModGenericPrice*1/2)) #1/2 of improved
+  "item_modifier" modArmorDoubleStoragePocket "ModArmorDoubleStoragePocket" $((iModGenericPrice*2/3)) #2/3 of default ${iModGenericPrice} that is tripple storagepocket
   "item_modifier" modArmorHelmetLight "ModArmorHelmetLight" 0
   "item_modifier" modArmorImpactBracing "ModArmorImpactBracing" 0
   "item_modifier" modArmorImprovedFittings "ModArmorImprovedFittings" 0
   "item_modifier" modArmorInsulatedLiner "ModArmorInsulatedLiner" 0
   "item_modifier" modArmorJumpJets "ModArmorJumpJets" 0
-  "item_modifier" modArmorMuffledConnectors "ModArmorMuffledConnectors" 0
-  "item_modifier" modArmorPlatingBasic "ModArmorPlatingBasic" 0
+  "item_modifier" modArmorMuffledConnectors "ModArmorMuffledConnectors" $((iModGenericPrice*1/2)) #1/2 of advanced
+  "item_modifier" modArmorPlatingBasic "ModArmorPlatingBasic" $((iModGenericPrice*1/2)) #1/2 of reinforced
   "item_modifier" modArmorPlatingReinforced "ModArmorPlatingReinforced" 0
   "item_modifier" modArmorPressboyCap "ModArmorPressboyCap" 0
   "item_modifier" modArmorSkullCap "ModArmorSkullCap" 0
-  "item_modifier" modArmorStoragePocket "ModArmorStoragePocket" 0
+  "item_modifier" modArmorStoragePocket "ModArmorStoragePocket" $((iModGenericPrice*1/3)) #1/3 of default 100 that is tripple storagepocket
   "item_modifier" modArmorTripleStoragePocket "ModArmorTripleStoragePocket" 0
   "item_modifier" modArmorWaterPurifier "ModArmorWaterPurifier" 0
   "item_modifier" modClothingCargoStoragePocket "ModClothingCargoStoragePocket" 0
-  "item_modifier" modClothingStoragePocket "ModClothingStoragePocket" 0
-  "item_modifier" modCosmicRayShield "ModCosmicRayShield" 410
+  "item_modifier" modClothingStoragePocket "ModClothingStoragePocket" $((iModGenericPrice*1/2)) #1/2 of cargo
+  "item_modifier" modCosmicRayShield "ModCosmicRayShield" 410 #collected sell price in-game
   "item_modifier" modCowboyHat "ModCowboyHat" 0
   "item_modifier" modDyeBlack "ModDyeBlack" 0
   "item_modifier" modDyeBlue "ModDyeBlue" 0
@@ -143,7 +155,7 @@ astrItemList=(
   "item_modifier" modDyeWhite "ModDyeWhite" 0
   "item_modifier" modDyeYellow "ModDyeYellow" 0
   "item_modifier" modFuelTankLarge "ModFuelTankLarge" 0
-  "item_modifier" modFuelTankSmall "ModFuelTankSmall" 0
+  "item_modifier" modFuelTankSmall "ModFuelTankSmall" $((iModGenericPrice*1/2)) #1/2 of large
   "item_modifier" modGunBarrelExtender "ModGunBarrelExtender" 0
   "item_modifier" modGunBipod "ModGunBipod" 0
   "item_modifier" modGunBowArrowRest "ModGunBowArrowRest" 0
@@ -157,7 +169,7 @@ astrItemList=(
   "item_modifier" modGunFlashlight "ModGunFlashlight" 0
   "item_modifier" modGunForegrip "ModGunForegrip" 0
   "item_modifier" modGunLaserSight "ModGunLaserSight" 0
-  "item_modifier" modGunMagazineExtender "ModGunMagazineExtender" 0
+  "item_modifier" modGunMagazineExtender "ModGunMagazineExtender" $((iModGenericPrice*1/2)) #1/2 of drum
   "item_modifier" modGunMeleeBlessedMetal "ModGunMeleeBlessedMetal" 0
   "item_modifier" modGunMeleeFlammableOil "ModGunMeleeFlammableOil" 0
   "item_modifier" modGunMeleeLiquidNitrogen "ModGunMeleeLiquidNitrogen" 0
@@ -168,22 +180,22 @@ astrItemList=(
   "item_modifier" modGunReflexSight "ModGunReflexSight" 0
   "item_modifier" modGunRetractingStock "ModGunRetractingStock" 0
   "item_modifier" modGunScopeLarge "ModGunScopeLarge" 0
-  "item_modifier" modGunScopeMedium "ModGunScopeMedium" 0
-  "item_modifier" modGunScopeSmall "ModGunScopeSmall" 0
+  "item_modifier" modGunScopeMedium "ModGunScopeMedium" $((iModGenericPrice*3/4))
+  "item_modifier" modGunScopeSmall "ModGunScopeSmall" $((iModGenericPrice*1/2))
   "item_modifier" modGunShotgunTubeExtenderMagazine "ModGunShotgunTubeExtenderMagazine" 0
   "item_modifier" modGunSoundSuppressorSilencer "ModGunSoundSuppressorSilencer" 0
   "item_modifier" modGunTriggerGroupAutomatic "ModGunTriggerGroupAutomatic" 0
   "item_modifier" modGunTriggerGroupBurst3 "ModGunTriggerGroupBurst3" 0
   "item_modifier" modGunTriggerGroupSemi "ModGunTriggerGroupSemi" 0
-  "item_modifier" modHazmatBoots "ModHazmatBoots" 0
-  "item_modifier" modHazmatGloves "ModHazmatGloves" 0
-  "item_modifier" modHazmatMask "ModHazmatMask" 0
+  "item_modifier" modHazmatBoots "ModHazmatBoots" ${iEndGameValue}
+  "item_modifier" modHazmatGloves "ModHazmatGloves" ${iEndGameValue}
+  "item_modifier" modHazmatMask "ModHazmatMask" ${iEndGameValue}
   "item_modifier" modMeleeBunkerBuster "ModMeleeBunkerBuster" 0
   "item_modifier" modMeleeClubBarbedWire "ModMeleeClubBarbedWire" 0
   "item_modifier" modMeleeClubBurningShaft "ModMeleeClubBurningShaft" 0
   "item_modifier" modMeleeClubMetalChain "ModMeleeClubMetalChain" 0
   "item_modifier" modMeleeClubMetalSpikes "ModMeleeClubMetalSpikes" 0
-  "item_modifier" modMeleeDiamondTip "ModMeleeDiamondTip" 400
+  "item_modifier" modMeleeDiamondTip "ModMeleeDiamondTip" 400 #collected sell price in-game
   "item_modifier" modMeleeErgonomicGrip "ModMeleeErgonomicGrip" 0
   "item_modifier" modMeleeFiremansAxeMod "ModMeleeFiremansAxe" 0
   "item_modifier" modMeleeFortifyingGrip "ModMeleeFortifyingGrip" 0
@@ -270,7 +282,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
         ((iUpdateEcoItemValCache++))&&:
         declare -p iUpdateEcoItemValCache
       else
-        CFGFUNCerrorExit "auto price failed";
+        CFGFUNCerrorExit "strItem='$strItem' auto price 'EconomicValue' failed, assign a custom price, collet it from ingame sell price at inventory";
       fi
     fi
       
@@ -291,12 +303,13 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if((iCountOrTier==0));then
     bItemHasTiers="${CFGastrItem1HasTiers2List[${strItem}]-}" #tries the cache
     if [[ -z "$bItemHasTiers" ]];then
+      #CFGFUNCrecursiveSearchPropertyValue "ShowQuality" "item" "$strItem" "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml"&&:;declare -p iFRSPV_PropVal_OUT
       if CFGFUNCrecursiveSearchPropertyValueAllFiles "ShowQuality" "$strItem";then
         strChkIHV="`echo "$iFRSPV_PropVal_OUT" |tr "[:upper:]" "[:lower:]"`"
         if [[ "$strChkIHV" == "true" ]] || [[ "$strChkIHV" == "false" ]];then
           bItemHasTiers="${strChkIHV}"
         else
-          CFGFUNCerrorExit "chk bItemHasTiers invalid value iFRSPV_PropVal_OUT='$iFRSPV_PropVal_OUT'"
+          CFGFUNCerrorExit "strItem='$strItem' chk bItemHasTiers(ShowQuality) invalid value should not be diff than 'true|false' iFRSPV_PropVal_OUT='$iFRSPV_PropVal_OUT'='$strChkIHV'"
         fi
       else
         bItemHasTiers=false #not found is default false

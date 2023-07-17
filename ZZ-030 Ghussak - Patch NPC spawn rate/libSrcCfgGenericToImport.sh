@@ -535,16 +535,18 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
       iFRSPV_PropVal_OUT=""
     fi
     
-    echo "CHK: ${lstrChkItem} ${lstrFlCfgChkFullPath}"
+    CFGFUNCinfo "CHECKING: ${lstrChkItem} ${lstrFlCfgChkFullPath}"
     
     # check allowed
     #echo CFGFUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"
-    local lstrAllowVal="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"`" #like SellableToTrader
-    #if((`echo "$lstrAllowVal" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrAllowVal='${lstrAllowVal}'";fi
-    if [[ -n "$lstrBoolAllowProp" ]] && [[ "`echo ${lstrAllowVal} |tr '[:upper:]' '[:lower:]'`" == "false" ]];then
-      bFRSPV_CanSell_OUT=false #even if it cant be sold, it may still have a EconomicValue set, that is good for the calc here
-      declare -p bFRSPV_CanSell_OUT
-      #break
+    if [[ -n "$lstrBoolAllowProp" ]];then
+      local lstrAllowVal="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrBoolAllowProp}']/@value" "${lstrFlCfgChkFullPath}"`" #like SellableToTrader
+      #if((`echo "$lstrAllowVal" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrAllowVal='${lstrAllowVal}'";fi
+      if [[ "`echo ${lstrAllowVal} |tr '[:upper:]' '[:lower:]'`" == "false" ]];then
+        bFRSPV_CanSell_OUT=false #even if it cant be sold, it may still have a EconomicValue set, that is good for the calc here
+        declare -p bFRSPV_CanSell_OUT
+        #break
+      fi
     fi
     
     # get value
@@ -555,6 +557,8 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
     # get parent to check
     #echo CFGFUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"
     if $lbRecursive && lstrParent="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
+      if [[ -z "$lstrParent" ]];then CFGFUNCinfo "WARN: should not be empty lstrParent='$lstrParent'";break;fi
+      CFGFUNCinfo "lstrChkItem='$lstrChkItem' extends lstrParent='$lstrParent'"
       lstrChkItem="$lstrParent"
       lastrItemInheritPath+=("$lstrChkItem")
     else
@@ -562,16 +566,18 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
     fi
   done
   
-  if $bFRSPV_CanSell_OUT;then
-    #if((iFRSPV_PropVal_OUT>0));then 
-    #if [[ "$iFRSPV_PropVal_OUT" != "0" ]];then  #can be a string like true/false
-    if [[ -n "$iFRSPV_PropVal_OUT" ]];then
-      CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` ${iFRSPV_PropVal_OUT} ${lstrFlCfgChkFullPath}";
+  if [[ -n "$lstrBoolAllowProp" ]];then
+    if $bFRSPV_CanSell_OUT;then
+      #if((iFRSPV_PropVal_OUT>0));then 
+      #if [[ "$iFRSPV_PropVal_OUT" != "0" ]];then  #can be a string like true/false
+      if [[ -n "$iFRSPV_PropVal_OUT" ]];then
+        CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` iFRSPV_PropVal_OUT='${iFRSPV_PropVal_OUT}' ${lstrFlCfgChkFullPath}";
+        return 0
+      fi
+    else
+      CFGFUNCinfo "DeniedByProp:'${lstrBoolAllowProp}'=false: ${lstrItemID}";
       return 0
     fi
-  else
-    CFGFUNCinfo "CannotBeSold: ${lstrItemID}";
-    return 0
   fi
   
   return 1
