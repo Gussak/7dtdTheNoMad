@@ -49,7 +49,10 @@ astrItemList=(
   #"item_modifier" modGunScopeMedium       "Scope4x"                  61
   #"item_modifier" modGunScopeLarge        "Scope8x"                  68
   
-  #CODEGEN: grep '<item .*name="gun[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(gun.*T3)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
+  # specific items that have no other way to be created/harvested/found etc
+  "item" potionRespec "RebirthElixir" 15 # it has many debuffs and the player may need it
+  
+  #CODEGEN: xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="gun[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(gun.*T3)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
   "item" gunBotT3JunkDrone "JunkDrone" 0
   "item" gunBowT3CompoundBow "CompoundBow" 0
   "item" gunBowT3CompoundCrossbow "CompoundCrossbow" 0
@@ -60,7 +63,7 @@ astrItemList=(
   "item" gunRifleT3SniperRifle "SniperRifle" 0
   "item" gunShotgunT3AutoShotgun "AutoShotgun" 0
 
-  #grep '<item .*name="melee[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T3)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="melee[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T3)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
   "item" meleeToolAxeT3Chainsaw "Chainsaw" 0
   "item" meleeToolPickT3Auger "Auger" 0
   "item" meleeToolRepairT3Nailgun "Nailgun" 0
@@ -72,21 +75,21 @@ astrItemList=(
   "item" meleeWpnSledgeT3SteelSledgehammer "SteelSledgehammer" 0
   "item" meleeWpnSpearT3SteelSpear "SteelSpear" 0
 
-  #grep '<item .*name="melee[^"]*t2[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T2)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="melee[^"]*t2[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T2)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
   "item" meleeToolAxeT2SteelAxe "SteelAxe" 0
   "item" meleeToolPickT2SteelPickaxe "SteelPickaxe" 0
   "item" meleeToolSalvageT2Ratchet "Ratchet" 0
   "item" meleeToolShovelT2SteelShovel "SteelShovel" 0
   "item" meleeWpnBatonT2StunBaton "StunBaton" 0
 
-  #grep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
   "item" armorSteelBoots "Boots" 0
   "item" armorSteelChest "Chest" 0
   "item" armorSteelGloves "Gloves" 0
   "item" armorSteelHelmet "Helmet" 0
   "item" armorSteelLegs "Legs" 0
 
-  #grep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "\3" 0@' |tr -d '\r\0' |sort -u
   "item" armorMilitaryBoots "Boots" 0
   "item" armorMilitaryGloves "Gloves" 0
   "item" armorMilitaryHelmet "Helmet" 0
@@ -94,7 +97,7 @@ astrItemList=(
   "item" armorMilitaryStealthBoots "StealthBoots" 0
   "item" armorMilitaryVest "Vest" 0
 
-  #grep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "Helmet\3" 0@' |tr -d '\r\0' |sort -u
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "Helmet\3" 0@' |tr -d '\r\0' |sort -u
   "item" armorFirefightersHelmet "HelmetFirefighters" 0
   "item" armorFootballHelmet "HelmetFootball" 0
   #"item" armorFootballHelmetZU "HelmetFootball" 0
@@ -105,7 +108,7 @@ astrItemList=(
   #"item" armorSteelHelmet "HelmetSteel" 0
   "item" armorSwatHelmet "HelmetSwat" 0
 
-  #grep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed 's@Mod"@"@'
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";grep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed 's@Mod"@"@'
   "item_modifier" modArmorAdvancedMuffledConnectors "ModArmorAdvancedMuffledConnectors" 0
   "item_modifier" modArmorBallCap "ModArmorBallCap" 0
   "item_modifier" modArmorBandolier "ModArmorBandolier" 0
@@ -128,13 +131,12 @@ astrItemList=(
   "item_modifier" modArmorWaterPurifier "ModArmorWaterPurifier" 0
   "item_modifier" modClothingCargoStoragePocket "ModClothingCargoStoragePocket" 0
   "item_modifier" modClothingStoragePocket "ModClothingStoragePocket" 0
-  "item_modifier" modCosmicRayShield "ModCosmicRayShield" 410  #collected in-game
+  "item_modifier" modCosmicRayShield "ModCosmicRayShield" 410
   "item_modifier" modCowboyHat "ModCowboyHat" 0
   "item_modifier" modDyeBlack "ModDyeBlack" 0
   "item_modifier" modDyeBlue "ModDyeBlue" 0
   "item_modifier" modDyeBrown "ModDyeBrown" 0
   "item_modifier" modDyeGreen "ModDyeGreen" 0
-  "item_modifier" modDyeOrange "ModDyeOrange" 0
   "item_modifier" modDyePink "ModDyePink" 0
   "item_modifier" modDyePurple "ModDyePurple" 0
   "item_modifier" modDyeRed "ModDyeRed" 0
@@ -144,7 +146,6 @@ astrItemList=(
   "item_modifier" modFuelTankSmall "ModFuelTankSmall" 0
   "item_modifier" modGunBarrelExtender "ModGunBarrelExtender" 0
   "item_modifier" modGunBipod "ModGunBipod" 0
-  "item_modifier" modGunBoreYouToDeath "ModGunBoreYouToDeath" 0
   "item_modifier" modGunBowArrowRest "ModGunBowArrowRest" 0
   "item_modifier" modGunBowPolymerString "ModGunBowPolymerString" 0
   "item_modifier" modGunButtkick3000 "ModGunButtkick3000" 0
@@ -154,16 +155,12 @@ astrItemList=(
   "item_modifier" modGunDrumMagazineExtender "ModGunDrumMagazineExtender" 0
   "item_modifier" modGunDuckbill "ModGunDuckbill" 0
   "item_modifier" modGunFlashlight "ModGunFlashlight" 0
-  "item_modifier" modGunFlashSuppressor "ModGunFlashSuppressor" 0
-  "item_modifier" modGunFoldingStock "ModGunFoldingStock" 0
   "item_modifier" modGunForegrip "ModGunForegrip" 0
   "item_modifier" modGunLaserSight "ModGunLaserSight" 0
   "item_modifier" modGunMagazineExtender "ModGunMagazineExtender" 0
   "item_modifier" modGunMeleeBlessedMetal "ModGunMeleeBlessedMetal" 0
-  "item_modifier" modGunMeleeFeelTheHeat "ModGunMeleeFeelTheHeat" 0
   "item_modifier" modGunMeleeFlammableOil "ModGunMeleeFlammableOil" 0
   "item_modifier" modGunMeleeLiquidNitrogen "ModGunMeleeLiquidNitrogen" 0
-  "item_modifier" modGunMeleeNamePlate "ModGunMeleeNamePlate" 0
   "item_modifier" modGunMeleeNiCdBattery "ModGunMeleeNiCdBattery" 0
   "item_modifier" modGunMeleeRadRemover "ModGunMeleeRadRemover" 0
   "item_modifier" modGunMeleeTheHunter "ModGunMeleeTheHunter" 0
@@ -186,7 +183,7 @@ astrItemList=(
   "item_modifier" modMeleeClubBurningShaft "ModMeleeClubBurningShaft" 0
   "item_modifier" modMeleeClubMetalChain "ModMeleeClubMetalChain" 0
   "item_modifier" modMeleeClubMetalSpikes "ModMeleeClubMetalSpikes" 0
-  "item_modifier" modMeleeDiamondTip "ModMeleeDiamondTip" 400 #collected in-game
+  "item_modifier" modMeleeDiamondTip "ModMeleeDiamondTip" 400
   "item_modifier" modMeleeErgonomicGrip "ModMeleeErgonomicGrip" 0
   "item_modifier" modMeleeFiremansAxeMod "ModMeleeFiremansAxe" 0
   "item_modifier" modMeleeFortifyingGrip "ModMeleeFortifyingGrip" 0
@@ -214,7 +211,6 @@ astrItemList=(
   "item_modifier" modVehicleOffRoadHeadlights "ModVehicleOffRoadHeadlights" 0
   "item_modifier" modVehicleReserveFuelTank "ModVehicleReserveFuelTank" 0
   "item_modifier" modVehicleSuperCharger "ModVehicleSuperCharger" 0
-  "item_modifier" modYoureFired "ModYoureFired" 0
 )
 
 ######## calc example:
@@ -232,6 +228,7 @@ iDataColumns=4
 astrLocList=()
 iUpdateEcoItemValCache=0
 iUpdateItemHasTiersCache=0
+declare -A astrPrevItemNameList
 #for strItem in "${astrItemList[@]}";do
 #set -x
 for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDataColumns));do
@@ -240,6 +237,22 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   strItem="${astrItemList[iDataLnIniIndex+1]}"
   strShortNameId="${astrItemList[iDataLnIniIndex+2]}"
   iSellPriceTier4="${astrItemList[iDataLnIniIndex+3]}";CFGFUNCchkNum "$iSellPriceTier4"
+  
+  strCreativeMode="${CFGastrCacheItem1CreativeMode2List[${strItem}]-}" #tries the cache
+  if [[ -z "$strCreativeMode" ]];then
+    if CFGFUNCrecursiveSearchPropertyValueAllFiles --no-recursive "CreativeMode" "$strItem";then
+      strCreativeMode="$iFRSPV_PropVal_OUT"
+      strCreativeMode="`echo "$strCreativeMode" |tr "[:upper:]" "[:lower:]"`"
+    fi
+    if [[ -z "$strCreativeMode" ]];then
+      strCreativeMode="player"
+    fi
+    CFGastrCacheItem1CreativeMode2List["${strItem}"]="$strCreativeMode"
+  fi
+  if [[ "$strCreativeMode" =~ .*(none|dev|test).* ]];then
+    CFGFUNCinfo "skip $strItem strCreativeMode='$strCreativeMode'"
+    continue
+  fi
   
   iCountOrTier=0
   
@@ -250,7 +263,6 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   if((iSellPriceTier4==0));then
     iEconomicValue="${CFGastrItem1Value2List[${strItem}]-0}" #tries the cache
-    
     if((iEconomicValue==0));then
       if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$strItem";then
         iEconomicValue="$iFRSPV_PropVal_OUT"
@@ -272,6 +284,9 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   iSellPriceTier6=$(printf "%.0f" "`bc <<< "scale=0;${iEconomicValue}*${fMultPriceTier4to6}"`") #no problem for items that have no tier
   #iEconomicValue=$((iTraderPrice/3)) #I think price is like playerSellVal*15=traderSellVal=EcoVal*3
   iRewardValue=$((iSellPriceTier6*iRewardValueMult)) #even if the item has no tiers, that price increase is good
+  if [[ "$strItem" =~ .*Dye.* ]];then
+    ((iRewardValue/=10))&&:
+  fi
   
   if((iCountOrTier==0));then
     bItemHasTiers="${CFGastrItem1HasTiers2List[${strItem}]-}" #tries the cache
@@ -299,13 +314,33 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     fi
   fi
   
+  strCustomIcon="${CFGastrCacheItem1CustomIcon2List[${strItem}]-}" #tries the cache
+  if [[ -z "$strCustomIcon" ]];then
+    if CFGFUNCrecursiveSearchPropertyValueAllFiles --no-recursive "CustomIcon" "$strItem";then
+      strCustomIcon="$iFRSPV_PropVal_OUT"
+    fi
+    if [[ -z "$strCustomIcon" ]];then
+      strCustomIcon="${strItem}" #default
+    fi
+    CFGastrCacheItem1CustomIcon2List["${strItem}"]="$strCustomIcon"
+    #declare -p strCustomIcon iFRSPV_PropVal_OUT strItem;exit #TODORM
+  fi
+  
   strItemName='GSKTNMER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
-  strDk='dkGSKTNMExplrRwd'"${strShortNameId}"''
+  #for((iChkItemNm=0;iChkItemNm<${#astrPrevItemNameList[@]};iChkItemNm++));do if [[ "${astrPrevItemNameList[iChkItemNm]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: $strItemName, $strItem";fi;done
+  for strItemChk in ${!astrPrevItemNameList[@]};do if [[ "${astrPrevItemNameList[$strItemChk]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: '$strItemName' $strItemChk vs $strItem";fi;done
+  astrPrevItemNameList[${strItem}]="$strItemName"
+  
+  strDk='dkGSKTNMExplrRwd'"${strItem}"''
+  
+  
+  ##################### COMPLETE IT ############################
+  
   echo '
     <item name="'"${strItemName}"'">
       <property name="Extends" value="GSKTRBaseBundle" />
-      <property name="CustomIcon" value="'"${strItem}"'" />
-      <property name="CustomIconTint" value="180,180,128" />
+      <property name="CustomIcon" value="'"${strCustomIcon}"'" />
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
       <property name="ItemTypeIcon" value="treasure" />
       <property name="DescriptionKey" value="'"${strDk}"'" />
       <property class="Action0">
@@ -319,13 +354,13 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-'"${iRewardValue}"'"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings you the package."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>' >>"${strFlGenIte}${strGenTmpSuffix}"
   echo '<recipe name="'"${strItemName}"'" count="1"/>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
   astrLocList+=("${strDk},\"[TheNoMad:ExploringReward]\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
-  CFGFUNCwriteCaches
+  #CFGFUNCwriteCaches
 done
 
 CFGFUNCwriteCaches

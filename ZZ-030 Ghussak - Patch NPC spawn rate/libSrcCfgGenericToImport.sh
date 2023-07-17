@@ -502,6 +502,7 @@ function CFGFUNCidWithoutVariant() {
 };export -f CFGFUNCidWithoutVariant
 
 function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue"
+  local lbRecursive=true;if [[ "$1" == "--no-recursive" ]];then shift;lbRecursive=false;fi
   local lstrBoolAllowProp="";if [[ "$1" == "--boolAllowProp" ]];then shift;lstrBoolAllowProp="$1";shift;fi
   local lstrProp="$1";shift #what property value to output
   local lstrXmlToken="$1";shift #this matches the filename (least many suffix 's') and the main sections inside it, both are the same id
@@ -553,7 +554,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
     
     # get parent to check
     #echo CFGFUNCxmlstarletSel "${lstrXmlToken}s/${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"
-    if lstrParent="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
+    if $lbRecursive && lstrParent="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='Extends']/@value" "${lstrFlCfgChkFullPath}"`";then
       lstrChkItem="$lstrParent"
       lastrItemInheritPath+=("$lstrChkItem")
     else
@@ -576,6 +577,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
   return 1
 };export -f CFGFUNCrecursiveSearchPropertyValue
 function CFGFUNCrecursiveSearchPropertyValueAllFiles() {
+  local strOptRecursive="";if [[ "$1" == "--no-recursive" ]];then strOptRecursive="$1";shift;fi
   local lstrBoolAllowProp="";if [[ "$1" == "--boolAllowProp" ]];then shift;lstrBoolAllowProp="$1";shift;fi
   local lstrProp="$1";shift #what property value to output
   local lstrItemID="$1";shift
@@ -584,7 +586,7 @@ function CFGFUNCrecursiveSearchPropertyValueAllFiles() {
   for((j=0;j<${#CFGastrXmlToken1VsFile2List[@]};j+=2));do 
     local lstrXmlToken="${CFGastrXmlToken1VsFile2List[j]}"
     local lstrFlCfgChkFullPath="${CFGastrXmlToken1VsFile2List[j+1]}"
-    if CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "$lstrBoolAllowProp" "$lstrProp" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then # FRSPV
+    if CFGFUNCrecursiveSearchPropertyValue ${strOptRecursive} --boolAllowProp "$lstrBoolAllowProp" "$lstrProp" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then # FRSPV
     #if CFGFUNCrecursiveSearchPropertyValue "EconomicValue" "$lstrXmlToken" "$lstrItemID" "$lstrFlCfgChkFullPath";then
       bFoundSomething=true
       break
@@ -615,9 +617,12 @@ function CFGFUNChashArray() {
   declare -p "$1" |sed -e 's@[^=]*=@@' |tr '[' '\n' |sort |sha1sum
 };export -f CFGFUNChashArray
 function CFGFUNCloadCaches() {
+  local lstrFlID
+  
   # ItemEconomicValue
+  lstrFlID="ItemEconomicValue"
   declare -A CFGastrItem1Value2List
-  declare -gx CFGstrFlItemEconomicValueCACHE="Cache.DeleteToRecreate/cache.ItemEconomicValue.sh" #help if you delete the cache file it will be recreated
+  declare -gx CFGstrFlItemEconomicValueCACHE="Cache.DeleteToRecreate/cache.${lstrFlID}.sh" #help if you delete the cache file it will be recreated
   if [[ -f "${CFGstrFlItemEconomicValueCACHE}" ]];then source "${CFGstrFlItemEconomicValueCACHE}";fi
   # checks
   #strIVChk="`declare -p CFGastrItem1Value2List |tr '[' '\n' |egrep -v "^ *$" |egrep -v "${strCraftBundlePrefixID}" |sort -u`"
@@ -630,18 +635,37 @@ function CFGFUNCloadCaches() {
   echo "`declare -p CFGstrItemEcoValHASH CFGastrItem1Value2List CFGstrFlItemEconomicValueCACHE`" #OUTPUT
   
   # ItemHasTiers
+  lstrFlID="ItemHasTiers"
   declare -A CFGastrItem1HasTiers2List
-  declare -gx CFGstrFlItemHasTiersCACHE="Cache.DeleteToRecreate/cache.ItemHasTiers.sh"
-  if [[ -f "${CFGstrFlItemHasTiersCACHE}" ]];then source "${CFGstrFlItemHasTiersCACHE}";fi
-  declare -gx CFGstrItemHasTiersHASH="`CFGFUNChashArray CFGastrItem1HasTiers2List`"
-  echo "`declare -p CFGstrItemHasTiersHASH CFGastrItem1HasTiers2List CFGstrFlItemHasTiersCACHE`" #OUTPUT
+  declare -gx CFGstrFlItemHasTierCACHE="Cache.DeleteToRecreate/cache.${lstrFlID}.sh"
+  if [[ -f "${CFGstrFlItemHasTierCACHE}" ]];then source "${CFGstrFlItemHasTierCACHE}";fi
+  declare -gx CFGstrItemHasTierHASH="`CFGFUNChashArray CFGastrItem1HasTiers2List`"
+  echo "`declare -p CFGstrItemHasTierHASH CFGastrItem1HasTiers2List CFGstrFlItemHasTierCACHE`" #OUTPUT
+  
+  # CustomIcons
+  lstrFlID="CustomIcons"
+  declare -A CFGastrCacheItem1CustomIcon2List
+  declare -gx CFGstrFlCustomIconCACHE="Cache.DeleteToRecreate/cache.${lstrFlID}.sh"
+  if [[ -f "${CFGstrFlCustomIconCACHE}" ]];then source "${CFGstrFlCustomIconCACHE}";fi
+  declare -gx CFGastrCustomIconHASH="`CFGFUNChashArray CFGastrCacheItem1CustomIcon2List`"
+  echo "`declare -p CFGastrCustomIconHASH CFGastrCacheItem1CustomIcon2List CFGstrFlCustomIconCACHE`" #OUTPUT
+  
+  # CreativeModes
+  lstrFlID="CreativeMode"
+  declare -A CFGastrCacheItem1CreativeMode2List
+  declare -gx CFGstrFlCreativeModeCACHE="Cache.DeleteToRecreate/cache.${lstrFlID}.sh"
+  if [[ -f "${CFGstrFlCreativeModeCACHE}" ]];then source "${CFGstrFlCreativeModeCACHE}";fi
+  declare -gx CFGastrCreativeModeHASH="`CFGFUNChashArray CFGastrCacheItem1CreativeMode2List`"
+  echo "`declare -p CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE`" #OUTPUT
 };export -f CFGFUNCloadCaches
 function CFGFUNCwriteCaches() {
   local lstrHeader='#PREPARE_RELEASE:REVIEWED:OK
 # this file is auto generated. delete it to be recreated. do not edit!'
   local lastrCacheList=(
-    CFGstrItemEcoValHASH   CFGastrItem1Value2List    CFGstrFlItemEconomicValueCACHE 
-    CFGstrItemHasTiersHASH CFGastrItem1HasTiers2List CFGstrFlItemHasTiersCACHE
+    CFGstrItemEcoValHASH   CFGastrItem1Value2List           CFGstrFlItemEconomicValueCACHE 
+    CFGstrItemHasTierHASH CFGastrItem1HasTiers2List        CFGstrFlItemHasTierCACHE
+    CFGastrCustomIconHASH CFGastrCacheItem1CustomIcon2List CFGstrFlCustomIconCACHE
+    CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE
   )
   local liLoopCachesDataLnIniIndex
   for((liLoopCachesDataLnIniIndex=0;liLoopCachesDataLnIniIndex<${#lastrCacheList[@]};liLoopCachesDataLnIniIndex+=3));do
@@ -669,12 +693,12 @@ function CFGFUNCwriteCaches() {
     #declare -p CFGastrItem1Value2List >>"$CFGstrFlItemEconomicValueCACHE"
     #ls -l "$CFGstrFlItemEconomicValueCACHE" >&2
   #fi
-  #if [[ "$CFGstrItemHasTiersHASH" != "`declare -p CFGastrItem1HasTiers2List |sha1sum`" ]];then
-    #ls -l "$CFGstrFlItemHasTiersCACHE" >&2
-    #CFGFUNCtrash "$CFGstrFlItemHasTiersCACHE"
-    #echo "${lstrHeader}" >"$CFGstrFlItemHasTiersCACHE"
-    #declare -p CFGastrItem1HasTiers2List >>"$CFGstrFlItemHasTiersCACHE"
-    #ls -l "$CFGstrFlItemHasTiersCACHE" >&2
+  #if [[ "$CFGstrItemHasTierHASH" != "`declare -p CFGastrItem1HasTiers2List |sha1sum`" ]];then
+    #ls -l "$CFGstrFlItemHasTierCACHE" >&2
+    #CFGFUNCtrash "$CFGstrFlItemHasTierCACHE"
+    #echo "${lstrHeader}" >"$CFGstrFlItemHasTierCACHE"
+    #declare -p CFGastrItem1HasTiers2List >>"$CFGstrFlItemHasTierCACHE"
+    #ls -l "$CFGstrFlItemHasTierCACHE" >&2
   #fi
 };export -f CFGFUNCwriteCaches
 
