@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <append xpath="/blocks/block[starts-with(@name,'signShop') and contains(@name,'Lit')]">
+  <append xpath="/blocks/block[starts-with(@name,'signShop') and (contains(@name,'Lit') or contains(@name,'Open'))]">
     <drop event="Harvest" name="neonGas" count="3,9" tag="allHarvest"/>
   </append>
+  <!-- HELPGOOD:
+    driftwood todoa add buff that has 50% chance to ragdoll player if step over it
+-->
   <!-- HELPGOOD: These items that call NPCs shall NOT be craftable/spawned/createdByThePlayer in any way. They are like a exploration bonus. CODE: egrep "FlagPole|PoolTable|Candelabra|DogHouse" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml  -->
   <append xpath="/blocks/block[starts-with(@name,'flagPoleAmerican')]" help="to summon soldiers: auto gun and good armor, very strong">
     <drop event="Harvest" name="GSKCallSoldier" count="2,3" tag="allHarvest" help="there are a few"/>
@@ -269,11 +272,14 @@
       <drop event="Harvest" name="GSKPOIProgressInc" count="1" tag="allHarvest"/>
     </block>
   </append>
-  <append xpath="/blocks/block[@name='cobweb']">
-    <drop event="Destroy" name="cobweb" count="1" prob="0.25"/>
-  </append>
   <append xpath="/blocks/block[starts-with(@name,'chimney')]">
     <property name="CreativeMode" value="Player"/>
+    <property name="Collide" value="melee,bullet,arrow,rocket" help="doesnt work?"/>
+    <drop event="Harvest" name="GSKPOIProgressUndergroundPOIsInc" count="1" tag="allHarvest" help="w/o collision this wont work.."/>
+    <drop event="Fall" name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="1.00" stick_chance="0" help="worked"/>
+  </append>
+  <append xpath="/blocks/block[@name='cobweb']">
+    <drop event="Destroy" name="cobweb" count="1" prob="0.25"/>
   </append>
   <append xpath="/blocks/block[@name='cntATMSecure' or @name='cntATMInsecure']" help="TODO:FAILED">
     <property name="Buff" value="buffShocked"/>

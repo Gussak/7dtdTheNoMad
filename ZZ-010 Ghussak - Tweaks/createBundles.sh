@@ -969,6 +969,7 @@ astr=(
   NOTE_GSKTheNoMadCreateRespawnBundleList 1
   GSKTRSpecialNotesBundle 1 #from createNotesTips.sh
   GSKNoteInfoDevice 1 
+  GSKNoteInfoDeviceExtra 1
   GSKNoteStartNewGameSurvivingFirstDay 1
   GSKTheNoMadOverhaulBundleNoteBkp 1 # this last bundle description bkp
   

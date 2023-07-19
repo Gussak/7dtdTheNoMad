@@ -580,6 +580,7 @@
       </effect_group>
     </buff>
   </append>
+  <!--   HELPGOOD: charismatic nature enhances nearby friendly npcs-->
   <append xpath="/buffs">
     <buff name="buffPlayerEnhancesNearbyFriendlyNPCs2" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -618,7 +619,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffEnhancedNPC1">
+    <buff name="buffEnhancedNPC1" help="the other bonuses are merely based on the charismatic perk improving nearby players, so should be in sync">
       <stack_type value="replace"/>
       <duration value="300"/>
       <effect_group>
@@ -662,7 +663,7 @@
         <passive_effect name="LootQuantity" operation="perc_add" value="-0.90" help="base_add, or perc_add, set errors"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them">
+    <buff name="buffGSKNPCproperSneakingProtectFoes" help="foes will be protected from damage to prevent player using this workaround to farm them TODOA: remove this buff if the zomb attacks or is attacked by a non hired NPC">
       <stack_type value="replace"/>
       <duration value="120" help="must be more than 'buffGSKNPCproperSneaking13' ragdoll duration"/>
       <update_rate value="1"/>
@@ -2459,12 +2460,16 @@
   </append>
   <append xpath="/buffs/buff[@name='buffOrderDismiss']/effect_group">
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iNPCAmmoSpent" operation="subtract" value="@iNPCAmmoLimit"/>
-    <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="if the npc has this buff, the player will have to give another power armor to the npc. This is to compensate for the diff of hire prices between this and the npc that comes with power armor already.">
+    <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="if the npc had this buff, the player will have to give another power armor to the npc. This is to compensate for the diff of hire prices between this and the npc that comes with power armor already.">
       <requirement name="!EntityTagCompare" tags="powerarmor"/>
     </triggered_effect>
   </append>
   <append xpath="/buffs/buff[@name='buffOrderFollow']/effect_group">
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item"/>
+    <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="this is just a dummy to prevent miss giving powerarmor to the npc that already come with it and is already high cost">
+      <requirement name="EntityTagCompare" tags="powerarmor"/>
+      <requirement name="!HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+    </triggered_effect>
   </append>
   <append xpath="/buffs">
     <buff name="buffGSKRespawnPreventWaterBkp12" hidden="true" remove_on_death="true">
@@ -10370,6 +10375,28 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Essences bonus">
+        <passive_effect name="HealthMax" operation="base_add" value="@fGSKEssenceVampirePermBonus"/>
+        <passive_effect name="StaminaMax" operation="base_add" value="@fGSKEssenceWightPermBonus"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMutantPermBonusTmp" operation="set" value="@fGSKEssenceMutantPermBonus"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMutantPermBonusTmp" operation="divide" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantPermBonus" operation="set" value="@.fGSKMutantPermBonusTmp"/>
+        <passive_effect name="HealthMax" operation="base_add" value="@fGSKMutantPermBonus" help="just a bit"/>
+        <passive_effect name="StaminaMax" operation="base_add" value="@fGSKMutantPermBonus" help="just a bit"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="@fGSKMutantPermBonus"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="@fGSKMutantPermBonus"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" value="@fGSKMutantPermBonus"/>
+      </effect_group>
+      <effect_group help="Death penalty. can be compensated by exploration HP bonus">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeathPenaltyHPmax" operation="set" value="25"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeathPenaltyHPmax" operation="add" value="@$PlayerLevelBonus"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeathPenaltyHPtmp" operation="set" value="@iGSKOnRespawnCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeathPenaltyHPtmp" operation="set" value="@iGSKDeathPenaltyHPmax">
+          <requirement name="CVarCompare" cvar=".iGSKDeathPenaltyHPtmp" operation="GT" value="@.iGSKDeathPenaltyHPmax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeathPenaltyHP" operation="set" value="@.iGSKDeathPenaltyHPtmp"/>
+        <passive_effect name="HealthMax" operation="base_subtract" value="@iGSKDeathPenaltyHP" help="default initial HP is 100. Max penalty here will still always leave 75HP at least. So even if player dies 1000 times, will still have at least 75HP from this penalty alone."/>
+      </effect_group>
       <effect_group help="ExplorationBonuses">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSnakePoisonWork55">
           <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
@@ -10645,6 +10672,13 @@
           <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="LT" value="0"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="FAT: starving debuffs">
+        <requirement name="CVarCompare" cvar="fGSKStarvingDebuffTime" operation="GT" value="0"/>
+        <passive_effect name="CraftingTime" operation="perc_add" value="0.5" help="slower crafting if starving"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.15"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="add" value="-1" help="sync with update_rate"/>
+      </effect_group>
       <effect_group help="FAT: rm screff. place b4 adding on next group">
         <requirement name="CVarCompare" cvar=".iGSKFatClearScrEff" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="2.5"/>
@@ -10655,6 +10689,10 @@
       <effect_group help="FAT: extra fat helps on avoiding death too">
         <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LTE" value="0.04" help="the inverse check at buffStatusHungry03(starvation) to add buffStatusHungry02 that will end removing buffStatusHungry03"/>
         <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKStarvingDebuffTime">
+          <requirement name="CVarCompare" cvar="fGSKStarvingDebuffTime" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="food" operation="add" value="1"/>
         <!-- HELPGOOD: it is not free food, there is side effects. the ND values, if you are taking care it wont cause trouble, but if you are on the limit it will be a problem, these are only meant to worsen an existing problem, not to create it out of thin air. The screen effects will all be fixed by the ND main buff if they every happen. -->
@@ -11842,6 +11880,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
           <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
@@ -11872,6 +11912,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
           <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
@@ -11901,6 +11943,8 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="1.0"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
           <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
@@ -11926,8 +11970,12 @@
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
           <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </passive_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)">
+          <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)">
+          <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@iGSKEssenceMutant"/>

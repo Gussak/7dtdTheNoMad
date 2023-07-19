@@ -99,10 +99,28 @@
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab" help="quick animation"/>
     </item>
   </append>
-  <append xpath="/items/item[       starts-with(@name, 'meleeWpnBladeT1HuntingKnife') or       starts-with(@name, 'meleeWpnKnucklesT1IronKnuckles') or       starts-with(@name, 'meleeWpnSledgeT1IronSledgehammer') or       starts-with(@name, 'meleeWpnSpearT1IronSpear') or       starts-with(@name, 'meleeToolAxeT1IronFireaxe') or       starts-with(@name, 'meleeToolFarmT1IronHoe') or       starts-with(@name, 'meleeToolPickT1IronPickaxe') or       starts-with(@name, 'meleeToolShovelT1IronShovel') or       starts-with(@name, 'meleeToolRepairT1ClawHammer') or       starts-with(@name, 'armorIron')     ]">
+  <!--  HELPGOOD: resourceRepairKit is only for complex tools like motorized etc
+LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml |egrep RepairTools -B 1 |egrep resourceRepairKit -C 100
+-->
+  <append xpath="/items/item[       starts-with(@name, 'meleeToolSalvageT2Ratchet')     ]">
+    <property name="RepairTools" value="resourceMechanicalParts"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnClubT1BaseballBat')     ]">
+    <property name="RepairTools" value="resourceWood"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnBatonT2StunBaton')     ]">
+    <property name="RepairTools" value="resourceElectricParts"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'armorFootballHelmet')     ]">
+    <property name="RepairTools" value="resourceScrapPolymers"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'armorFirefightersHelmet')     ]">
+    <property name="RepairTools" value="resourceLeather"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnBladeT1CandyKnife') or       starts-with(@name, 'meleeWpnBladeT1HuntingKnife') or       starts-with(@name, 'meleeWpnClubT1CandyClub') or       starts-with(@name, 'meleeWpnKnucklesT1IronKnuckles') or       starts-with(@name, 'meleeWpnSledgeT1IronSledgehammer') or       starts-with(@name, 'meleeWpnSpearT1IronSpear') or       starts-with(@name, 'meleeToolAxeT1IronFireaxe') or       starts-with(@name, 'meleeToolFarmT1IronHoe') or       starts-with(@name, 'meleeToolPickT1IronPickaxe') or       starts-with(@name, 'meleeToolShovelT1IronShovel') or       starts-with(@name, 'meleeToolRepairT1ClawHammer') or       starts-with(@name, 'armorMiningHelmet') or       starts-with(@name, 'armorIron')     ]">
     <property name="RepairTools" value="resourceForgedIron"/>
   </append>
-  <append xpath="/items/item[       starts-with(@name, 'meleeWpnSpearT3SteelSpear') or       starts-with(@name, 'meleeWpnClubT3SteelClub') or       starts-with(@name, 'meleeWpnSledgeT3SteelSledgehammer') or       starts-with(@name, 'meleeWpnBladeT3Machete') or       starts-with(@name, 'meleeWpnKnucklesT3SteelKnuckles') or       starts-with(@name, 'armorSteel')     ]">
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnSpearT3SteelSpear') or       starts-with(@name, 'meleeWpnClubT3SteelClub') or       starts-with(@name, 'meleeWpnSledgeT3SteelSledgehammer') or       starts-with(@name, 'meleeWpnBladeT3Machete') or       starts-with(@name, 'meleeWpnKnucklesT3SteelKnuckles') or       starts-with(@name, 'meleeToolShovelT2SteelShovel') or       starts-with(@name, 'meleeToolPickT2SteelPickaxe') or       starts-with(@name, 'armorSwatHelmet') or       starts-with(@name, 'armorSteel')     ]">
     <property name="RepairTools" value="resourceForgedSteel"/>
   </append>
   <append xpath="/items">
@@ -303,10 +321,80 @@
     <item name="GSKPOIProgressInc">
       <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
       <property name="SellableToTrader" value="false"/>
+      <property name="DropMeshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="this calls more attention than sack"/>
       <property name="DescriptionKey" value="dkGSKPOIProgressInc"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKexplorationProgressPOIcount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKexplorationCredits" operation="add" value="randomInt(750,1250)"/>
+      </effect_group>
+    </item>
+    <item name="GSKPOIProgressUndergroundPOIsInc">
+      <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="DropMeshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="this calls more attention than sack"/>
+      <property name="DescriptionKey" value="dkGSKPOIProgressInc"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKExplrUndPOIcredit" operation="add" value="1"/>
+      </effect_group>
+    </item>
+    <item name="GSKPOIRwdUndTeleToSky">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="200,200,100"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKPOIRwdUndTeleToSky"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKExplrUndPOIcredit" operation="GTE" value="10"/>
+        <property name="Create_item" value="GSKteleToSkyFreeAndSafeCall"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKExplrUndPOIcredit" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GSKPOIRwdUndTeleUnderground">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="200,200,100"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKPOIRwdUndTeleUnderground"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKExplrUndPOIcredit" operation="GTE" value="15" help="high cost as it may be used just before the bloodmoon begins, so it is very powerful if the terrain is rocky as zombs will take a long time to dig"/>
+        <property name="Create_item" value="GSKElctrnTeleportUndergroundFreeAndSafeCall"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKExplrUndPOIcredit" operation="add" value="-15"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GSKPOIRwdUndTeleBiome">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="200,200,100"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKPOIRwdUndTeleBiome"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKExplrUndPOIcredit" operation="GTE" value="5"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBiomeFreeAndSafeCall"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKExplrUndPOIcredit" operation="add" value="-5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
     <item name="GSKPOIProgressCfgStat">
@@ -1696,6 +1784,17 @@
       <property name="EconomicValue" value="500"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDogCompanion"/>
+      </effect_group>
+    </item>
+    <item name="GSKteleToSkyFreeAndSafeCall" help="no crafting">
+      <property name="DescriptionKey" value="dkGSKteleToSkyFreeAndSafeCall"/>
+      <property name="EconomicValue" value="2500"/>
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="180,150,128"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKTeleportToSkyVeryHighAbove"/>
       </effect_group>
     </item>
     <item name="GSKteleToBackpackFreeAndSafeCall" help="no crafting, only on free bundles. prepare yourself before using this">
@@ -5639,7 +5738,7 @@
       <property name="EconomicValue" value="600"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this. It is one power armor per follower. No need to use with the NPC that already comes with power armor. TODO?: The other NPC items are more for the action/fight; we would need to be able to target one NPC to use them w/o losing the item, can it be done?; or we could put the items on their inventory and they would use them on demand, this would be the perfect solution! to ex. heal everyone with a single use is too powerful...; May be divide the healing by the amount of followers? but then it becomes overly complex and inneffective..; It could target the most damaged one but how? feedback with the randomID? overly complex too.."/>
-        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="0" help="this is the detection of not having buffGSKNPCHiredFollowingPowerArmorUse"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" target="selfAOE" range="10">
@@ -5841,7 +5940,7 @@
       <property name="DescriptionKey" value="dkGSKElctrnTeleportUndergroundFreeAndSafeCall"/>
       <property name="CustomIconTint" value="80,80,128"/>
       <property class="Action1">
-        <requirement name="!IsBloodMoon" help="this is not enough, player may use it just before bloodmoon kicks in.."/>
+        <requirement name="!IsBloodMoon" help="this is not enough, player may use it just before bloodmoon kicks in.. TODO:ISSUE?: the engine may even not spawn zombs properly if player is that far away underground?"/>
         <property name="Class" value="Eat" help="because 2nd actiom must also consume!"/>
       </property>
       <effect_group tiered="false">
@@ -5850,7 +5949,7 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
       </effect_group>
     </item>
-    <item name="GSKElctrnTeleportToBiomeFreeAndSafeCall" help="do not allow crafting as this do not use energy nor dmgs the mod">
+    <item name="GSKElctrnTeleportToBiomeFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod.">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="EconomicValue" value="999"/>
       <property name="CustomIcon" value="7dtdTeleport"/>
@@ -8583,6 +8682,17 @@
         <property name="Create_item_count" value="30,1"/>
       </property>
     </item>
+    <item name="GSKriverWaterFromBucketBundle">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="CustomIconTint" value="128,128,180"/>
+      <property name="CustomIcon" value="drinkJarRiverWater"/>
+      <property name="ItemTypeIcon" value="bundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="drinkJarRiverWater,bucketEmpty"/>
+        <property name="Create_item_count" value="30,1"/>
+      </property>
+    </item>
     <item name="foodBoiledMeatBundle">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CreativeMode" value="Player"/>
@@ -8642,7 +8752,7 @@
     <passive_effect name="SpreadDegreesHorizontal" operation="perc_add" value="2"/>
   </append>
   <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drinkJarYuccaJuice' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarRedTea' or       @name='drinkYuccaJuiceSmoothie' or       @name='drinkCanMegaCrush' or       @name='drinkJarCoffee' or       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBeer' or       @name='drinkJarGrandpasMoonshine' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarGrandpasLearningElixir' or       @name='drinkJarGrandpasForgettingElixir'     ]">
-    <effect_group name="CleanMiasma" tiered="false" help="will clean no matter drinking or bathing on it">
+    <effect_group name="CleanMiasma" tiered="false" help="will clean a bit when drinking">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(350,550)"/>
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
@@ -9116,7 +9226,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[@name='drinkJarBoiledWater']">
+  <append xpath="/items/item[         @name='drinkJarBoiledWater'  or         @name='drinkJarGoldenRodTea' or         @name='drinkJarRedTea'       or         @name='drinkJarYuccaJuice'          ]" help="clean water and refreshing teas">
     <property class="Action1">
       <property name="Class" value="Eat"/>
       <property name="Delay" value="0.1"/>
@@ -9130,6 +9240,25 @@
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(1.0,2.0)"/>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='drinkJarPureMineralWater']">
+    <property class="Action1">
+      <property name="Class" value="Eat"/>
+      <property name="Delay" value="0.1"/>
+      <property name="Use_time" value="3"/>
+      <property name="Sound_start" value="player_drinking"/>
+      <property name="Create_item" value="drinkJarEmpty"/>
+    </property>
+    <effect_group name="CleanMiasma" tiered="false" help="bathing">
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(4750,6350)"/>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(3.0,6.0)"/>
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
       </triggered_effect>
@@ -9316,7 +9445,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarCoffee' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarPureMineralWater' or       @name='drinkJarRedTea'         or       @name='drinkJarYuccaCocktail'       or       @name='drinkJarYuccaJuice'          or       @name='drinkJarPureMineralWater' or       @name='drugAntibiotics'         or       @name='drugHealthBar'           or       @name='drugPainkillers'         or       @name='drugVitamins'            or       @name='medicalFirstAidBandage'  or       starts-with(@name,'food')     ]" help="rationale: anything ingestible that is used to actively heal or feed">
+  <append xpath="/items/item[       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarCoffee' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarPureMineralWater' or       @name='drinkJarRedTea'         or       @name='drinkJarYuccaCocktail'       or       @name='drinkJarYuccaJuice'          or       @name='drugAntibiotics'         or       @name='drugHealthBar'           or       @name='drugPainkillers'         or       @name='drugVitamins'            or       @name='medicalFirstAidBandage'  or       starts-with(@name,'food')     ]" help="rationale: anything ingestible that is used to actively heal or feed">
     <effect_group name="SUB chem use hp block" tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.025,0.050)">
         <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
