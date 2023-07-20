@@ -31,6 +31,9 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+#TODOA: seed HolyAir203jq at 1st spawn point -2433 20 4393: there is a underground POI that has a normal polePOIprogressTrapWithoutSmoke(shouldBeTheOneWithSmoke), and the traps around the POI are not at the POI offset level(houseGroundLevel), they are basement level...
+#TODOA: POIs that are not replaced (that are kept vanilla unchanged) by missing POIs will also not receive the POI progress block and will not have the traps placed around them! see at: seed HolyAir203jq pos -2330 41 4309
+
 #egrep "[#]help" $0
 
 #set -x
@@ -1039,7 +1042,7 @@ function FUNCpatchFileCurrentIndex_ExplosionAdd() { #requires: bSuccessfullyPlac
     nYExplPOI=$nY
     
     if((nYExplPOI>-1));then
-      iDisplacementXZ=-1 #outside POI
+      iDisplacementXZ=-5 #outside POI to not destroy POI blocks. TODO: Must be more than this trap X or Z (the smaller one), it is currently 3
       #nYAboveBuildingMax=((nYAboveBuildingMin+(RANDOM%todo)))
       strPOIExplPos="$((nX+iDisplacementXZ)),${nYExplPOI},$((nZ+iDisplacementXZ))" # for X and Z, the hook is always bottom left corner right? so try to place it by luck above the building to let terrain auto collapse when player is near
       CFGFUNCpredictiveRandom ExplosivePOIRotation
