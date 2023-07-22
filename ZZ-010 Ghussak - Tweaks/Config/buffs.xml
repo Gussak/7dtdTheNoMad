@@ -2413,6 +2413,17 @@
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKJumpPad" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="3"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Jump pad activated, hold jump now!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffBurningElement"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="10"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHealthTreatment" hidden="false" description_key="dkdrugGSKHealthTreatment">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -5774,7 +5785,7 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="subtract" value="1" help="was 10, but you can be damaged by staying on the block area even if not exactly above the block"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryBleedingTwo">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="33"/>
         </triggered_effect>
@@ -6523,7 +6534,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="103187" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="103938" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">

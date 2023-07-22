@@ -686,12 +686,13 @@ astr=(
   foodRawMeat 3 #for dog companion
   GSKspawnDogCompanion 3
   GSKCFGNPCproperSneakingWorkaround 1
-  vehicleGSKNPChelperPlaceable 1
   GSKNPCHiredHeals30perc 13
   GSKNPCHiredHeals180perc 1
   GSKNPCHiredGetsPowerArmor 1
-  RepairNPCArmor 6
+  NPCCfgAllInOne 1
   NPCPreventDismiss60s 3
+  RepairNPCArmor 6
+  vehicleGSKNPChelperPlaceable 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}"
 astr=(
@@ -725,6 +726,7 @@ astr=(
 );FUNCprepareBundles "ExploringMobility" "bundleVehicle4x4" "${strExploringBase}This helps on moving thru the world." "${astr[@]}"
 astr=(
   drinkCanEmptyCookingOneUse 33
+  drugFortBites 3 # to help on getting a few good POI rewards
   drugJailBreakers 3
   thrownTimedCharge 9
   #meleeWpnSpearT0StoneSpear 1
