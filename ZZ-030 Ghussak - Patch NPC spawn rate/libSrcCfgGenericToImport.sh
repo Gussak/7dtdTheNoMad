@@ -791,9 +791,9 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGSavesPathIgnorable
   export strCFGNewestSavePathIgnorable
   export strCFGNewestSavePathConfigsDumpIgnorable
-  if [[ ! -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
-    if ! CFGFUNCprompt -q "last savegame path not found, this may create undesired (limited, invalid, incomplete, non updated) results, continue anyway?";then exit 1;fi
-  fi
+  while [[ ! -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];do
+    if CFGFUNCprompt -q "last savegame path '${strCFGNewestSavePathConfigsDumpIgnorable-}' not found, this may create undesired (limited, invalid, incomplete, non updated) results, continue anyway? (if not, will retry check for that path)";then break;fi
+  done
   
   : ${strModName:="[NoMad]"} #as short as possible
   export strModName

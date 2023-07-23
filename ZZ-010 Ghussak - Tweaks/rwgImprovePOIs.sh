@@ -80,7 +80,7 @@ mkdir -vp "$strTmpPath"
 
 #strRegexProtectedPOIs="(part_|rwg_|spider_|installation_red_mesa)"
 : ${strRegexProtectedAddOnlyPOImarker:="(docks_|spider_)"} #help these shall receive only the POI progress marker/trap. the docks are near water and traps in water is just messed up. spider_ is the spider's nests and they aren't clever.
-: ${strRegexNotExactlyaPOI:="(bridge_|part_|rwg_)"}
+: ${strRegexNotExactlyaPOI:="(bridge_|part_|rwg_|street_)"} #street_ are just a small road sign
 : ${strRegexProtectedPOIs:="(${strRegexProtectedAddOnlyPOImarker}|bombshelter_|${strRegexNotExactlyaPOI})"} #help bombshelter_ with traps is good to pretent to not be a bombshelter ;).  these POIs shall be completely ignored anywhere #TODO ignore them if in removed towns too. rwg_ are for tiles rwg_tile_, including rwg_bridge_. part_ are things that are not buildings but complement the urbanicity. spider_ are potentially very hard special places, dont touch them ever! docks_ and bridge_ are very well placed by RWG near water, but missing ones will be placed weirdly elsewhere by this script TODO place them properly using the AddExtraSpecialPOIs file.
 
 astrIgnoreTmp=( #these wont be used to create variety, they will be ignored when looking for missing POIs on the original file created by the game engine RWG
@@ -569,12 +569,17 @@ done
 
 CFGFUNCinfo "MAIN:replacing POIs inside wasteland with a dup so the remaining ones will be replaced again later with special buildings or missing POIs"
 iTotalWastelandPOIsLeastInTowns=0
+declare -A astrPOIindexWithPosInTownXZ=()
 for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   echo -en "$i/${#astrPatchedPOIdataLineList[@]}.\r"
   strPatchedPOIdataLine="${astrPatchedPOIdataLineList[i]}"
   
   FUNCgetXYZfromXmlLine_outXYZaXLDglobals "${strPatchedPOIdataLine}"
-  if FUNCchkPosIsInTownPIT $nX $nZ;then echo -n "Wt,";continue;fi #skip the wasteland town!
+  if FUNCchkPosIsInTownPIT $nX $nZ;then  #skip the wasteland town!
+    astrPOIindexWithPosInTownXZ[$iXLDFilterIndex]="$nX,$nZ"
+    echo -n "Wt,";
+    continue;
+  fi 
   
   #strPrefabCurrentName="`FUNCxmlGetName "${strPatchedPOIdataLine}"`"
   if [[ "${strXLDPrefabCurrentName}" =~ ^${strRegexProtectedPOIs}.*$ ]];then echo -n "Pt,";continue;fi #skip things from the Prefabs/Parts folder
@@ -676,8 +681,14 @@ for strPOI in "${astrAllPOIsList[@]}";do
       break
     fi
   done
-  if ! $bFound;then 
-    astrMissingPOIsList+=("$strPOI");
+  if ! $bFound;then
+    FUNCgetWHL "${astrAllPrefabSize[$strPOI]}"
+    : ${nTinySzToSkip:=3} #help skip tiny POIs where W H L are LTE than this
+    if((nWidth<=nTinySzToSkip && nHeight<=nTinySzToSkip && nLength<=nTinySzToSkip));then
+      CFGFUNCinfo "Skip too tiny POI: $strPOI WHL=$nWidth,$nHeight,$nLength"
+    else
+      astrMissingPOIsList+=("$strPOI");
+    fi
   fi
 done
 if((${#astrMissingPOIsList[@]}==0));then
@@ -851,6 +862,14 @@ function FUNCpatchFileCurrentIndex_HelpAppend() {
 iTotalTrapsInWorld=0
 iMaxTrapsInASinglePOI=0
 function FUNCpatchFileCurrentIndex_TrapAdd() { #required input vars: astrAllPrefabSize strFlPatched nNewPOIWidth nNewPOILength strBiome strColorAtBiomeFile nX nY nZ strRWGoriginalPOI iXLDFilterIndex #TODOA pass reqs as params...
+  : ${bBUGFIXpreventTrapsInTowns:=true} #help prevents surrounding POI traps in towns because it is crashing the thread GenerateChunks even after restarting the server. index out of bounds about 'WorldDecoratorPOIFromImage.DecorateChunkOverlapping/Chunk.GetBlock': GetBlock failed: _y = 256, len = 64 (chunk 44/-34)'
+  if $bBUGFIXpreventTrapsInTowns;then
+    if [[ -n "${astrPOIindexWithPosInTownXZ[$iXLDFilterIndex]-}" ]];then
+      CFGFUNCinfo "Skip placing POI surrounding traps in towns for: iXLDFilterIndex='$iXLDFilterIndex' XZ='${astrPOIindexWithPosInTownXZ[$iXLDFilterIndex]}' strRWGoriginalPOI='$strRWGoriginalPOI' strBiome='$strBiome'"
+      return;
+    fi
+  fi
+  
   : ${iTryTrapEveryPOIcount:=1} #help was 3, now every POI will have a trap around it with this set to 1
   : ${iTryAddWildTrap:=0}
   ((iTryAddWildTrap++))&&:
@@ -1027,6 +1046,14 @@ function _FUNCpatchFileCurrentIndex_TrapAdd_BugouOuNao() { #required input vars:
   fi
 }      
 function FUNCpatchFileCurrentIndex_ExplosionAdd() { #This is now a POI progress trap and all POIs shall have it! requires: bSuccessfullyPlacedUnderground iXLDFilterIndex nX nY nZ strMissingPOI #TODOA pass reqs as params...
+  : ${bBUGFIXpreventPOIMarkerInTowns:=true} #help prevents POIMarker in towns because it is crashing the thread GenerateChunks even after restarting the server. index out of bounds about 'WorldDecoratorPOIFromImage.DecorateChunkOverlapping/Chunk.GetBlock: GetBlock failed: _y = 256, len = 64 (chunk 44/-34)'
+  if $bBUGFIXpreventPOIMarkerInTowns;then
+    if [[ -n "${astrPOIindexWithPosInTownXZ[$iXLDFilterIndex]-}" ]];then
+      CFGFUNCinfo "Skip placing POIMarker in towns for: iXLDFilterIndex='$iXLDFilterIndex' XZ='${astrPOIindexWithPosInTownXZ[$iXLDFilterIndex]}' POI='${strMissingPOI}' strBiome='${strBiome-}'"
+      return;
+    fi
+  fi
+  
   #todoa try to create a prefab with a barrel or a car with earth below it. When placing it above a POI, it may fill up with more earth below that may auto collapse
   bPlaceExplodeAbove=false
   if ! $bSuccessfullyPlacedUnderground;then
