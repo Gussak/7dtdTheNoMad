@@ -673,6 +673,8 @@ if((${#astrGenPOIsList[@]}==0));then CFGFUNCerrorExit "astrGenPOIsList empty";fi
 
 CFGFUNCinfo "MAIN:searching for missing POIs (that RWG ignored or were removed from non wasteland town areas)"
 astrMissingPOIsList=()
+iSkipTinyPOIs=0
+iSkipNRAPOI=0
 for strPOI in "${astrAllPOIsList[@]}";do
   bFound=false
   for strGenPOI in "${astrGenPOIsList[@]}";do
@@ -683,9 +685,17 @@ for strPOI in "${astrAllPOIsList[@]}";do
   done
   if ! $bFound;then
     FUNCgetWHL "${astrAllPrefabSize[$strPOI]}"
-    : ${nTinySzToSkip:=3} #help skip tiny POIs where W H L are LTE than this
-    if((nWidth<=nTinySzToSkip && nHeight<=nTinySzToSkip && nLength<=nTinySzToSkip));then
+    : ${nTinySzToSkip:=3} #help skip tiny or thin POIs where 2 of W H L are LTE than this value
+    if((
+      (nWidth<=nTinySzToSkip  && nHeight<=nTinySzToSkip) ||
+      (nWidth<=nTinySzToSkip  && nLength<=nTinySzToSkip) ||
+      (nHeight<=nTinySzToSkip && nLength<=nTinySzToSkip)
+    ));then
       CFGFUNCinfo "Skip too tiny POI: $strPOI WHL=$nWidth,$nHeight,$nLength"
+      ((iSkipTinyPOIs++))&&:
+    elif [[ "${strGenPOI}" =~ ^${strRegexNotExactlyaPOI}.*$ ]];then #ignore things that are not a P.O.I. (not a real point of interest)
+      CFGFUNCinfo "Skip not really a P.O.I. prefabs: $strPOI =~ ${strRegexNotExactlyaPOI}, WHL=$nWidth,$nHeight,$nLength"
+      ((iSkipNRAPOI++))&&:
     else
       astrMissingPOIsList+=("$strPOI");
     fi
@@ -1747,8 +1757,10 @@ echo "iNotUsedReservedWastelandPOICountForMissingPOIs=$iNotUsedReservedWasteland
 echo "iUndergroundPOIs=$iUndergroundPOIs (UndergroundPOIprogressTrapMarker, expectedly fully underground)" >>"$strFlResultsFinal"
 echo "iTotalTrapsInWorld=$iTotalTrapsInWorld" >>"$strFlResultsFinal"
 echo "iMaxTrapsInASinglePOI=$iMaxTrapsInASinglePOI" >>"$strFlResultsFinal"
+echo "iSkipTinyPOIs=$iSkipTinyPOIs" >>"$strFlResultsFinal"
+echo "iSkipNRAPOI=$iSkipNRAPOI" >>"$strFlResultsFinal"
 if(( (nExplodeAboveCount + iUndergroundPOIs) != (${#astrGenPOIsUniquesList[@]} + ${#astrNewUniquefiedPOIs[@]} + $iRestoredMissingPOIs + ${#astrSkippedNonDummyPOIatWasteland[@]} + ${#astrSkippedProtPOIduringDUPreplace[@]}) ));then
-  echo "WARN: \
+  echo "WARN:(not a problem tho, just trying to sum up things...) \
 $((nExplodeAboveCount+iUndergroundPOIs)):(\
  POIprogressTrapMarker:nExplodeAboveCount:$nExplodeAboveCount + \
  UndergroundPOIprogressTrapMarker:iUndergroundPOIs:$iUndergroundPOIs\
