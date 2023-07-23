@@ -418,7 +418,7 @@ function CFGFUNCpredictiveRandomUpdateArray_PRIVATE() { #requires: liCurrentSize
   #eval 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}=(${lstrRndMany})"
   eval 'CFGFUNCsetGlobals -a aiPredictiveRandom'"${lstrID}"
   eval 'aiPredictiveRandom'"${lstrID}=(${lstrRndMany})"
-  eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2
+  #eval 'declare -p aiPredictiveRandom'"${lstrID}" |tee -a "${strCFGScriptLog}" >&2 #too much annoying useless log
 }
 CFGFUNCsetGlobals -A astrCFGIdForRandomVsCurrentIndex
 function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to provide the same random result for the same request time. Be sure to use the same ID in the same context.
