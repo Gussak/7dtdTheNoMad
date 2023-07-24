@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <!--
+  HELPGOOD:DevTip: dm f3 hold SHIFT to see non terrain block name and target entity data
+-->
   <append xpath="/blocks/block[starts-with(@name,'signShop') and (contains(@name,'Lit') or contains(@name,'Open'))]">
     <drop event="Harvest" name="neonGas" count="3,9" tag="allHarvest"/>
   </append>
@@ -217,8 +220,7 @@
       </property>
       <drop event="Fall" name="blkGSKburiedTreasure" count="1" prob="1.00" stick_chance="1" help="this prevents being destroyed if floor colapses, it may vanish tho if falling over a bush or other things that are not the terrain (I guess anything that is not stability support)"/>
     </block>
-    <block name="trapMinePseudoLooseBoardGSK" help="this is meant to instantly trigger faster than loose boards and cause almost no damage to entities, but cause enough damage to trigger nearby loose boards and others of this same mine">
-      <property name="Extends" value="rScrapIronPlateMine"/>
+    <block name="trapMinePseudoLooseBoardGSK" help="copied from rScrapIronPlateMine. Must not extend to prevent dropping things on fall event. This is meant to instantly trigger faster than loose boards and cause almost no damage to entities, but cause enough damage to trigger nearby loose boards and others of this same mine">
       <property name="CustomIcon" value="looseBoardsTrapPlate1x1"/>
       <property name="CustomIconTint" value="0,180,180"/>
       <property name="TriggerDelay" value="0.05"/>
@@ -229,6 +231,27 @@
       <property name="EconomicValue" value="1"/>
       <property name="StabilitySupport" value="true" help="meant to be like loose boards"/>
       <property name="CanPickup" value="false"/>
+      <property name="Class" value="Mine"/>
+      <property name="Tags" value="Mine"/>
+      <property name="ItemTypeIcon" value="explosion"/>
+      <property name="UnlockedBy" value="perkDemolitionsExpert"/>
+      <property name="Material" value="MLandMine"/>
+      <property name="Shape" value="New"/>
+      <property name="Model" value="Plate"/>
+      <property name="Stacknumber" value="65535"/>
+      <property name="MaxDamage" value="4"/>
+      <property name="TriggerSound" value="landmine_trigger"/>
+      <property name="Explosion.RadiusBlocks" value="2"/>
+      <property name="Explosion.RadiusEntities" value="3"/>
+      <property name="Explosion.DamageBonus.stone" value="0.1"/>
+      <property name="Explosion.DamageBonus.metal" value="0.1"/>
+      <property name="Explosion.DamageBonus.earth" value="0"/>
+      <property name="Explosion.DamageBonus.wood" value="0"/>
+      <property name="Explosion.DamageBonus.water" value="0"/>
+      <drop event="Destroy" count="0"/>
+      <property name="Group" value="Tools/Traps"/>
+      <property name="FilterTags" value="MC_building,SC_traps"/>
+      <property name="SortOrder1" value="70g0"/>
     </block>
     <block name="trapSpikesPoisonGSK">
       <property name="Extends" value="trapSpikesWoodMaster"/>
@@ -346,7 +369,9 @@
     <property name="CreativeMode" value="Player"/>
     <property name="Collide" value="melee,bullet,arrow,rocket" help="doesnt work?"/>
     <drop event="Harvest" name="GSKPOIProgressUndergroundPOIsInc" count="1" tag="allHarvest" help="w/o collision this wont work.."/>
-    <drop event="Fall" name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="1.00" stick_chance="0" help="worked"/>
+    <drop event="Fall" name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="1.00" stick_chance="0" help="worked!"/>
+    <drop event="Destroy" name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="1.00" stick_chance="0" help="doesnt work?"/>
+    <property name="MaxDamage" value="10000" help="to prevent destroy by explosion, just make it fall"/>
   </append>
   <append xpath="/blocks/block[@name='cobweb']">
     <drop event="Destroy" name="cobweb" count="1" prob="0.25"/>
