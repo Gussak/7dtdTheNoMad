@@ -57,4 +57,6 @@ done
 
 CFGFUNCinfo "to undo just this patch run: ./uninstallByRestoringOriginalFilesBackups.sh trader_"
 
+#last
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
 CFGFUNCwriteTotalScriptTimeOnSuccess

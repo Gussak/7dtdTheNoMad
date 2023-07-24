@@ -377,6 +377,6 @@ if $bGenRec;then
   CFGFUNCgencodeApply "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
 fi 
 
+#last
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
-
 CFGFUNCwriteTotalScriptTimeOnSuccess

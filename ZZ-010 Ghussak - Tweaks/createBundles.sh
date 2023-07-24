@@ -678,7 +678,7 @@ astr=(
   toolAnvilSchematic 1 
   toolBellowsSchematic 1 
   toolForgeCrucibleSchematic 1 
-);FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
+);FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}";CFGFUNCwriteCaches
 
 strExploringBase="Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho).\n"
 astr=(
@@ -694,7 +694,7 @@ astr=(
   RepairNPCArmor 6
   vehicleGSKNPChelperPlaceable 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}"
+);FUNCprepareBundles "ExploringNPC" "bundleVehicle4x4" "${strExploringBase}Use this if you want a friendly hand (or paw)." "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   apparelNightvisionGoggles 1
   GlowStickGreen       33
@@ -705,7 +705,7 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorHelmetLightSchematic 1
   modGunFlashlightSchematic 1
-);FUNCprepareBundles "ExploringVisibility" "bundleVehicle4x4" "${strExploringBase}This helps on seeing the world." "${astr[@]}"
+);FUNCprepareBundles "ExploringVisibility" "bundleVehicle4x4" "${strExploringBase}This helps on seeing the world." "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   bedrollBlue 33 #cant be directly scrapped
   "cobblestoneShapes:VariantHelper" 66 #for the tiny fortress trick
@@ -723,7 +723,7 @@ astr=(
   vehicleBicycleChassisSchematic 1
   vehicleBicycleHandlebarsSchematic 1
   vehicleGSKNPChelperPlaceable 1
-);FUNCprepareBundles "ExploringMobility" "bundleVehicle4x4" "${strExploringBase}This helps on moving thru the world." "${astr[@]}"
+);FUNCprepareBundles "ExploringMobility" "bundleVehicle4x4" "${strExploringBase}This helps on moving thru the world." "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   drinkCanEmptyCookingOneUse 33
   drugFortBites 3 # to help on getting a few good POI rewards
@@ -737,7 +737,7 @@ astr=(
   resourceWood         66
   resourceYuccaFibers  33
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "ExploringETC" "bundleVehicle4x4" "${strExploringBase}This have a few other things to help open locked containers, cooking, etc" "${astr[@]}"
+);FUNCprepareBundles "ExploringETC" "bundleVehicle4x4" "${strExploringBase}This have a few other things to help open locked containers, cooking, etc" "${astr[@]}";CFGFUNCwriteCaches
 
 astr=( #TEMPLATE
   ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
@@ -753,7 +753,7 @@ astr=( #TEMPLATE
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookRangersExplodingBolts 1
   thrownDynamiteSchematic 1
-);FUNCprepareBundles "CombatWeapons" "bundleMachineGun" "use this if you are not having a reasonable chance against mobs" "${astr[@]}"
+);FUNCprepareBundles "CombatWeapons" "bundleMachineGun" "use this if you are not having a reasonable chance against mobs" "${astr[@]}";CFGFUNCwriteCaches
 
 strCombatArmorHelp="Use this if you are taking too much damage."
 astrCombatArmorCreateBundleList=()
@@ -764,7 +764,7 @@ astr=( #TEMPLATE
   armorMilitaryHelmet 1
   armorSwatHelmet 1 # a good helmet is essential against ranged raiders
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --ignoreTopList --choseRandom "CombatArmorHelmet" "bundleArmorLight" "${strCombatArmorHelp} You should use this anyway otherwise ranged raiders become unreasonably difficult." "${astr[@]}";astrCombatArmorCreateBundleList+=("$strFUNCprepareCraftBundle_CraftBundleID_OUT" 1)
+);FUNCprepareBundles --ignoreTopList --choseRandom "CombatArmorHelmet" "bundleArmorLight" "${strCombatArmorHelp} You should use this anyway otherwise ranged raiders become unreasonably difficult." "${astr[@]}";astrCombatArmorCreateBundleList+=("$strFUNCprepareCraftBundle_CraftBundleID_OUT" 1);CFGFUNCwriteCaches
 astr=( #TEMPLATE
   "${astrCombatArmorCreateBundleList[@]}"
   ##armorSteelHelmet 1
@@ -778,20 +778,20 @@ astr=( #TEMPLATE
   armorClothPants 1
   armorClothBoots 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
+);FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   GSKElctrnTeleportToBiomeFreeAndSafeCall 1
   GSKteleToBackpackFreeAndSafeCall 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}"
+);FUNCprepareBundles "TeleportHelpers" "bundleBatteryBank" "Use this if you want to relocate thru the world." "${astr[@]}";CFGFUNCwriteCaches
 
 # these are already on the player inventory from entity_classes.xml
 #astr=(
   #GSKElctrnTeleportUndergroundFreeAndSafeCall 1 #this is meant only for the first time the player joins the game, to give time to read understand the new things of it. Allowing more will let the player tele underground just before bloodmoons making it too easy to survive.
   #GSKCFGTeleUndergroundFreeDelay 1 #for GSKElctrnTeleportUndergroundFreeAndSafeCall
   #"$strSCHEMATICS_BEGIN_TOKEN" 0
-#);FUNCprepareBundles --openOnceOnly --color "220,148,128" "TeleHelp1stSpawn" "bundleBatteryBank" "Use this if it is the first time you join The NoMad world." "${astr[@]}"
+#);FUNCprepareBundles --openOnceOnly --color "220,148,128" "TeleHelp1stSpawn" "bundleBatteryBank" "Use this if it is the first time you join The NoMad world." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   ammoJunkTurretRegular 666
@@ -811,7 +811,7 @@ astr=(
   bookTechJunkie5Repulsor 1
   generatorbankSchematic 1
   gunBotT2JunkTurretSchematic 1
-);FUNCprepareBundles "ElctrnEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting Elctrn mods, this will increase your combat survival chances." "${astr[@]}"
+);FUNCprepareBundles "ElctrnEnergy" "bundleBatteryBank" "Use this if you want to start using and crafting Elctrn mods, this will increase your combat survival chances." "${astr[@]}";CFGFUNCwriteCaches
 
 #astr=(
   #bucketRiverWater 1
@@ -846,7 +846,7 @@ astr=(
   #foodBoiledMeatBundleSchematic 1
   #foodBoiledMeatSchematic 1
   #modArmorWaterPurifierSchematic 1
-#);FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
+#);FUNCprepareBundles "Healing" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that or has any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   #HealingHarm
   drinkJarPureMineralWater 2
@@ -864,7 +864,7 @@ astr=(
   drinkJarGoldenRodTeaSchematic 1 #for disyntery
   drugAntibioticsSchematic 1 #because it is part of the health treatment and foodShamSandwich is very rare so when found will be cool
   drugHerbalAntibioticsSchematic 1
-);FUNCprepareBundles "HealingHarm" "bundleFood" "Use this if you have any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}"
+);FUNCprepareBundles "HealingHarm" "bundleFood" "Use this if you have any disease or infection and is almost dieing, don't wait too much tho!" "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   #HealingRads
   drugGSKAntiRadiation 13
@@ -872,7 +872,7 @@ astr=(
   drugGSKAntiRadiationStrong 13
   drugGSKRadiationResist 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "HealingRads" "bundleFood" "Use this if you are having trouble dealing with radiation." "${astr[@]}"
+);FUNCprepareBundles "HealingRads" "bundleFood" "Use this if you are having trouble dealing with radiation." "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   #HealingFeed
   drinkJarBoiledWater 13
@@ -880,7 +880,7 @@ astr=(
   foodSpaghetti 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorWaterPurifierSchematic 1
-);FUNCprepareBundles "HealingFeed" "bundleFood" "Use this if you need food and water." "${astr[@]}"
+);FUNCprepareBundles "HealingFeed" "bundleFood" "Use this if you need food and water." "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   #HealingHP
   medicalBloodBag 13
@@ -891,14 +891,14 @@ astr=(
   foodBoiledMeatBundleSchematic 1
   medicalFirstAidBandageSchematic 1
   #foodBoiledMeatSchematic 1
-);FUNCprepareBundles "HealingHP" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that, don't wait too much tho!" "${astr[@]}"
+);FUNCprepareBundles "HealingHP" "bundleFood" "Use this if you have not managed to heal yourself yet or is having trouble doing that, don't wait too much tho!" "${astr[@]}";CFGFUNCwriteCaches
 astr=(
   #HealingCraft
   bucketRiverWater 1
   toolBeaker 1
   potionRespec 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "HealingCraft" "bundleFood" "Use this if you want to craft or redistribute skill points." "${astr[@]}"
+);FUNCprepareBundles "HealingCraft" "bundleFood" "Use this if you want to craft or redistribute skill points." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   farmPlotBlockVariantHelper 13
@@ -907,7 +907,7 @@ astr=(
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   plantedBlueberry1Schematic 1
   plantedMushroom1Schematic 1
-);FUNCprepareBundles "Farming" "bundleFarm" "Use this if you need to be able to harvest and craft antibiotics." "${astr[@]}"
+);FUNCprepareBundles "Farming" "bundleFarm" "Use this if you need to be able to harvest and craft antibiotics." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   bedrollBlue 1
@@ -920,7 +920,7 @@ astr=(
   resourceWood 33
   drinkCanEmpty 3
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles "BasicCampingKit" "bundleTraps" "Some basic things to quickly set a tiny camp with shelter and cook a bit." "${astr[@]}"
+);FUNCprepareBundles "BasicCampingKit" "bundleTraps" "Some basic things to quickly set a tiny camp with shelter and cook a bit." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   bedrollBlue 1
@@ -938,7 +938,7 @@ astr=(
   meleeToolTorch 1
   resourceRockSmall    15
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}"
+);FUNCprepareBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   NOTE_LostTribe 1
@@ -952,7 +952,7 @@ astr=(
   startNewGameOasisHint 1
   thrownDynamite 8
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --openOnceOnly --color "166,148,128" "Maps" "bundleBooks" "My tribe is gone, what will I do now.." "${astr[@]}"
+);FUNCprepareBundles --openOnceOnly --color "166,148,128" "Maps" "bundleBooks" "My tribe is gone, what will I do now.." "${astr[@]}";CFGFUNCwriteCaches
 
 #########################################################################################
 #########################################################################################
@@ -962,8 +962,8 @@ astr=(
 astr=(
   "${astrBundlesSchematics[@]}" # these are the bundles of schematics, not schematics themselves so they must be in the astrBundlesItemsLeastLastOne list
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --noExpLoss "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
-#);FUNCprepareBundles --noCheckMissingItemIds "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}"
+);FUNCprepareBundles --noExpLoss "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}";CFGFUNCwriteCaches
+#);FUNCprepareBundles --noCheckMissingItemIds "SomeSchematicBundles" "bundleBooks" "Open this to get some schematics bundles related to the item's bundles." "${astr[@]}";CFGFUNCwriteCaches
 
 astr=(
   # notes
@@ -983,11 +983,11 @@ astr=(
   "${astrCBItemsLeastLastOne[@]}"
   
   "$strSCHEMATICS_BEGIN_TOKEN" 0
-);FUNCprepareBundles --noExpLoss --noCB --ExternalDK "$strModNameForIDs" "cntStorageGeneric" "DUMMY_DESC_IGNORED" "${astr[@]}"
-#);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --ExternalDK "${astr[@]}"
+);FUNCprepareBundles --noExpLoss --noCB --ExternalDK "$strModNameForIDs" "cntStorageGeneric" "DUMMY_DESC_IGNORED" "${astr[@]}";CFGFUNCwriteCaches
+#);FUNCprepareBundles --noCheckMissingItemIds --noCB "$strModNameForIDs" "cntStorageGeneric" --ExternalDK "${astr[@]}";CFGFUNCwriteCaches
 
 #############################################
-CFGFUNCwriteCaches
+#CFGFUNCwriteCaches
 #echo "#PREPARE_RELEASE:REVIEWED:OK" >"$CFGstrFlItemEconomicValueCACHE"
 #echo "# this file is auto generated. delete it to be recreated. do not edit!" >>"$CFGstrFlItemEconomicValueCACHE"
 #declare -p CFGastrItem1Value2List >>"$CFGstrFlItemEconomicValueCACHE"
@@ -1027,5 +1027,4 @@ CFGFUNCgencodeApply --xmlcfg \
 
 #last
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
-
 CFGFUNCwriteTotalScriptTimeOnSuccess

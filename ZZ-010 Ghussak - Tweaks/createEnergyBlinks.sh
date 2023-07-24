@@ -142,6 +142,6 @@ CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 
 #trash "$strFlOut"
 
+#last
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
-
 CFGFUNCwriteTotalScriptTimeOnSuccess

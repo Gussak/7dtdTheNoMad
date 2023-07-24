@@ -6,9 +6,9 @@ This mod is intended for players that are used with the vanilla gameplay already
 This overhaul and server config is intended to be played being a very careful survivor, but mini mods on it may be used alone when they are split from this main mod.  
 Play the game with less progress in mind, less like a RPG and more like a FPS, but still a mix of both.  
 Please follow the server configs below and look for tactical hints (on in-game notes or the journal) on how to survive.  
-I have not visited the whole world yet, so if you find something too weird tell me.
+I have not visited the whole world yet. Some POIs placed somewhat above or below the ground level, or flooded, or something else..., or some POIs overlapping others are still ok as they create something that is unexpected but still playable. But if you find something too weird (in a game breaking sense) tell me.
 .  
-Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experiency penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the biome teleporter or the underground teleporter.  
+Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experience penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the biome teleporter or the underground teleporter.  
 .  
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.
@@ -31,7 +31,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
   - patches to many other mods like RealRad, NPCs, Telrics'HealthBars etc. Many of these patches will let them work on 7dtd A20.  
   - NPC hiring reworked: there is a limit to how many NPCs can follow you now. you can "equip" power armor on them. And they have a ammo limit. Friendly raiders are fixed now so after hired they will show on the hud properly.  
   - NPC spawning reworked: now NPCs are rare, so keep a look for nice ones to be hired!  
-  - (probably some other minor things)  
+  - (probably some other major or minor things I forgot to add here..)  
 .  
 ########### INSTRUCTIONS FOR THE END USER (YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD): ###########   
 .  
@@ -43,7 +43,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
     ChooseMods:  
       Place all the ones you want at your game Mods' folder, I suggest using them all tho.  
 .  
-    ManualInstallRequired:  
+    ManualInstallRequired (or run ./installSpecificFilesIntoGameFolder.sh on cygwin):  
       There are files that need to be copied manually to the game folder or they wont work.  
       They replace existing files there, so backup them first!  
       They provide extra functionality that a modlet can't do itself.  

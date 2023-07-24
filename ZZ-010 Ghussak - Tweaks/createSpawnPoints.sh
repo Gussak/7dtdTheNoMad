@@ -360,6 +360,6 @@ CFGFUNCgencodeApply --xmlcfg                                                    
   ".iGSKElctrnTeleSpawnLAST" "${iTeleportMaxIndex}"                                                              \
   ".iGSKTTUnderSpawnSimpleIndex" "randomInt(1,${iUnderSimpleIndex})"
 
+#last
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
-
 CFGFUNCwriteTotalScriptTimeOnSuccess

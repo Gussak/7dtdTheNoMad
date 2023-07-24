@@ -1863,5 +1863,7 @@ CFGFUNCprompt "MAIN: you should update the spawn points file now! and install th
 
 #CFGFUNCprompt "MAIN: then run ./installSpecificFilesIntoGameFolder.sh to install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder)"
 
+#last
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
 CFGFUNCwriteTotalScriptTimeOnSuccess
 #declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScriptLog}"

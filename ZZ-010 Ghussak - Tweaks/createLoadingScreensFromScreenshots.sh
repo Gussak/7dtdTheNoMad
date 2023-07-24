@@ -58,6 +58,6 @@ done
 
 CFGFUNCgencodeApply "${strFlGenLoa}${strGenTmpSuffix}" "${strFlGenLoa}"
 
+#last
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
-
 CFGFUNCwriteTotalScriptTimeOnSuccess
