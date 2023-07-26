@@ -54,6 +54,7 @@ source "createExplorationRewards.InputData.sh"
 ### right???
 : ${fMultPriceTier4to6:=1.6} #help
 
+astrCustomIconIsSelfId=()
 astrLocList=()
 iUpdateEcoItemValCache=0
 iUpdateItemHasTiersCache=0
@@ -128,6 +129,15 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     fi
   fi
   
+  strItemType=""
+  if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
+  if [[ "${strShortNameId:0:3}" == "SCH" ]];then strItemType="Schematic";fi
+  if [[ "${strShortNameId:0:3}" == "OTF" ]];then strItemType="Outfit and Armor";fi
+  if [[ "${strShortNameId:0:3}" == "Mod" ]];then strItemType="Item Modification";fi
+  if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
+  if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi
+  if [[ -z "$strItemType" ]];then CFGFUNCerrorExit "invalid undefined strItemType='$strItemType'";fi
+  
   if((iCountOrTier==0));then
     bItemHasTiers="${CFGastrItem1HasTiers2List[${strItem}]-}" #tries the cache
     if [[ -z "$bItemHasTiers" ]];then
@@ -159,13 +169,16 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ -z "$strCustomIcon" ]];then
     if CFGFUNCrecursiveSearchPropertyValueAllFiles --no-recursive "CustomIcon" "$strItem";then
       strCustomIcon="$iFRSPV_PropVal_OUT"
+      CFGFUNCinfo "strItem='$strItem' strCustomIcon='$strCustomIcon'"
     fi
     if [[ -z "$strCustomIcon" ]];then
       strCustomIcon="${strItem}" #default
+      CFGFUNCinfo "strItem='$strItem' using default self id CustomIcon='$strItem'"
     fi
     CFGastrCacheItem1CustomIcon2List["${strItem}"]="$strCustomIcon"
     #declare -p strCustomIcon iFRSPV_PropVal_OUT strItem;exit #TODORM
   fi
+  if [[ "$strCustomIcon" == "$strItem" ]];then astrCustomIconIsSelfId+=("$strItem");fi
   
   strItemName='GSKTNMER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
   #for((iChkItemNm=0;iChkItemNm<${#astrPrevItemNameList[@]};iChkItemNm++));do if [[ "${astrPrevItemNameList[iChkItemNm]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: $strItemName, $strItem";fi;done
@@ -178,9 +191,17 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   ##################### COMPLETE IT ############################
   
   # egrep 'GSKTNMER' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml |sort
-  strCourier="eventGSKSpwCourier" # most good mods
-  if((iRewardValue>3000));then strCourier="eventGSKSpwCourierStrong";fi # top tier
-  if((iRewardValue<1000));then strCourier="eventGSKSpwCourierWeak";fi # cheap stuff
+#function CFGFUNCcourier() { #helpf <liDeliveryPrice> chooses an adequate courier depending on the delivery value
+  #local liDeliveryPrice="$1"
+  #local lstrCourier="eventGSKSpwCourier" # most good mods
+  #if((liDeliveryPrice>3000));then lstrCourier="eventGSKSpwCourierStrong";fi # top tier
+  #if((liDeliveryPrice<1000));then lstrCourier="eventGSKSpwCourierWeak";fi # cheap stuff
+  #echo "$lstrCourier"
+#}
+  strCourier="`CFGFUNCcourier ${iRewardValue} 1000 3000`"
+  #strCourier="eventGSKSpwCourier" # most good mods
+  #if((iRewardValue>3000));then strCourier="eventGSKSpwCourierStrong";fi # top tier
+  #if((iRewardValue<1000));then strCourier="eventGSKSpwCourierWeak";fi # cheap stuff
   echo '
     <item name="'"${strItemName}"'">
       <property name="Extends" value="GSKTRBaseBundle" />
@@ -204,9 +225,14 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     </item>' >>"${strFlGenIte}${strGenTmpSuffix}"
   echo '<recipe name="'"${strItemName}"'" count="1"/>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
-  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward]\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
-  if((iUpdateEcoItemValCache%10==0)) || ((iUpdateItemHasTiersCache%10==0));then CFGFUNCwriteCaches;fi
+  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward] ${strItemType}: ${strItemName}\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you.\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
+  
+  if((iUpdateEcoItemValCache==10));then CFGFUNCwriteCaches;iUpdateEcoItemValCache=0;fi
+  if((iUpdateItemHasTiersCache==10));then CFGFUNCwriteCaches;iUpdateItemHasTiersCache=0;fi
 done
+if(("${#astrCustomIconIsSelfId[@]}">0));then
+  declare -p astrCustomIconIsSelfId |tr '[' '\n'
+fi
 
 CFGFUNCwriteCaches
 #if((iUpdateEcoItemValCache>0));then

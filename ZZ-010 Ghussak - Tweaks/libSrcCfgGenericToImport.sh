@@ -450,6 +450,16 @@ function CFGFUNCpredictiveRandom() { #helpf <lstrID> this ID will be used to pro
   astrCFGIdForRandomVsCurrentIndex[${lstrID}]=$((liCurrentIndex+1))
 }
 
+function CFGFUNCcourier() { #helpf <liDeliveryPrice> <liMinVal> <liMaxVal> chooses an adequate courier depending on the delivery value
+  local liDeliveryPrice="$1";shift&&:
+  local liMinVal="$1";shift&&:
+  local liMaxVal="$1";shift&&:
+  local lstrCourier="eventGSKSpwCourier" # most good mods
+  if((liDeliveryPrice<=liMinVal));then lstrCourier="eventGSKSpwCourierWeak";fi # cheap stuff
+  if((liDeliveryPrice>=liMaxVal));then lstrCourier="eventGSKSpwCourierStrong";fi # top tier
+  echo "$lstrCourier"
+};export -f CFGFUNCcourier
+
 function CFGFUNCarrayContains() { # <lstrValueToChk> <array values...>
   local lstrValueToChk="$1";shift
   local lstr
@@ -510,7 +520,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
   local lstrFlCfgChkFullPath="$1";shift
   
   #OUTPUTS:
-  declare -g bFRSPV_CanSell_OUT
+  declare -g bFRSPV_CanSell_OUT #TODOA rename everywhere to bFRSPV_PropAllow_OUT
   declare -g iFRSPV_PropVal_OUT
   declare -g strFRSPV_XmlTokenFound_OUT #to help determine what kind of id is this, in what xml file it is
   
@@ -531,7 +541,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
       CFGFUNCinfo "initialize new item: $lstrItemID"
       #strFRSPV_XmlTokenFound_OUT=""
       strFRSPV_PreviousItemID="$lstrItemID"
-      bFRSPV_CanSell_OUT=true
+      bFRSPV_CanSell_OUT=true #engine default hardcoded is this
       iFRSPV_PropVal_OUT=""
     fi
     
@@ -550,7 +560,11 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
     fi
     
     # get value
-    if iFRSPV_PropVal_OUT="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`";then
+    #if iFRSPV_PropVal_OUT="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`";then
+    iFRSPV_PropVal_OUT="`CFGFUNCxmlstarletSel "//${lstrXmlToken}[@name='${lstrChkItem}']/property[@name='${lstrProp}']/@value" "${lstrFlCfgChkFullPath}"`"&&:
+    CFGFUNCinfo "iFRSPV_PropVal_OUT='$iFRSPV_PropVal_OUT'"
+    if [[ -n "$iFRSPV_PropVal_OUT" ]];then
+      #CFGFUNCinfo "iFRSPV_PropVal_OUT='iFRSPV_PropVal_OUT'"
       break
     fi
     
@@ -567,15 +581,18 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
   done
   
   if [[ -n "$lstrBoolAllowProp" ]];then
-    if $bFRSPV_CanSell_OUT;then
-      #if((iFRSPV_PropVal_OUT>0));then 
-      #if [[ "$iFRSPV_PropVal_OUT" != "0" ]];then  #can be a string like true/false
-      if [[ -n "$iFRSPV_PropVal_OUT" ]];then
-        CFGFUNCinfo "${lstrProp}: `echo "${lastrItemInheritPath[@]}"|tr ' ' '>'` iFRSPV_PropVal_OUT='${iFRSPV_PropVal_OUT}' ${lstrFlCfgChkFullPath}";
-        return 0
-      fi
-    else
+    if ! $bFRSPV_CanSell_OUT;then
       CFGFUNCinfo "DeniedByProp:'${lstrBoolAllowProp}'=false: ${lstrItemID}";
+      return 0
+    fi
+  fi
+  
+  if $bFRSPV_CanSell_OUT;then
+    #if((iFRSPV_PropVal_OUT>0));then 
+    #if [[ "$iFRSPV_PropVal_OUT" != "0" ]];then  #can be a string like true/false
+    if [[ -n "$iFRSPV_PropVal_OUT" ]];then
+      strItemInheritPathDBG="`echo "${lastrItemInheritPath[@]}"|tr ' ' '>'`"
+      CFGFUNCinfo "${lstrProp}: ${strItemInheritPathDBG} iFRSPV_PropVal_OUT='${iFRSPV_PropVal_OUT}' ${lstrFlCfgChkFullPath}";
       return 0
     fi
   fi
@@ -740,7 +757,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${bCFGDryRun:=false} #help just show what would be done
   export bCFGDryRun
   
-  mkdir -vp _log _tmp _cache
+  mkdir -vp _log _tmp
   
   export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
   export strCFGScriptLogLastLink="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.Last.log"

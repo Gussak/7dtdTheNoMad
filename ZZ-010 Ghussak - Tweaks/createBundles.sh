@@ -126,6 +126,7 @@ function FUNCprepareCraftBundle() {
   #local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
   local lstrCB="'CB:' items are craftable freely (can be dropped). Don't rush to your backpack. Each bundle has (exp penalty). Resurrecting adds 1 to remaining bundles (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now). "
   strFUNCprepareCraftBundle_CraftBundleID_OUT="${strCraftBundlePrefixID}${lstrBundleShortName}"
+  strCourier="`CFGFUNCcourier ${liExpDebt} 1000 3000`"
   strXmlCraftBundleCreateItemsXml+='
     <!-- HELPGOOD:Respawn:CreateBundle:'"${lstrBundleID}"' -->
     <item name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" help="on death free items helper">
