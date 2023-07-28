@@ -821,8 +821,8 @@
     <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
-  <append xpath="/entity_classes/entity_class[         @name='zombieDemolition' or         starts-with(@name,'zombieUtilityWorker') or         starts-with(@name,'zombieSoldier') or         starts-with(@name,'zombieBiker')       ]">
-    <effect_group help="patch for TSBX_Headshot_100: all that have helmet">
+  <append xpath="/entity_classes/entity_class[         starts-with(@name,'zombieUtilityWorker') or         starts-with(@name,'zombieBiker')       ]">
+    <effect_group help="patch for TSBX_Headshot_100: all that have weak helmet:todoa not working, still high dmg?">
       <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
       </passive_effect>
@@ -833,6 +833,38 @@
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
       </passive_effect>
       <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
+      </passive_effect>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[         starts-with(@name,'zombieDemolition') or         starts-with(@name,'zombieSoldier')       ]">
+    <effect_group help="patch for TSBX_Headshot_100: all that have superior helmet:todoa not working, still high dmg?">
+      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
+      </passive_effect>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[         starts-with(@name,'mech')       ]">
+    <effect_group help="patch for TSBX_Headshot_100: mechs have same armor whole body:todoa not working, still high dmg?">
+      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
+        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
+      </passive_effect>
+      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
       </passive_effect>
     </effect_group>
@@ -926,8 +958,12 @@
     <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="actually just a dummy"/>
   </append>
   <append xpath="/entity_classes">
-    <entity_class name="npcMechMeleeDeusEx" extends="npcMechMeleeTemplate">
+    <entity_class name="npcMechMeleeDeusEx" extends="mechRobot">
+      <property name="SizeScale" value="5"/>
       <property name="HideInSpawnMenu" value="false"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion"/>
+      </effect_group>
     </entity_class>
   </append>
 </GhussakTweaks>

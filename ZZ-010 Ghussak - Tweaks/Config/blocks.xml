@@ -10,13 +10,13 @@
     driftwood todoa add buff that has 50% chance to ragdoll player if step over it
 -->
   <!-- HELPGOOD: These items that call NPCs shall NOT be craftable/spawned/createdByThePlayer in any way. They are like a exploration bonus. CODE: egrep "FlagPole|PoolTable|Candelabra|DogHouse" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml  -->
-  <append xpath="/blocks/block[starts-with(@name,'flagPoleAmerican')]" help="to summon soldiers: auto gun and good armor, very strong">
+  <append xpath="/blocks/block[starts-with(@name,'flagPole')]" help="to summon soldiers: auto gun and good armor, very strong">
     <drop event="Harvest" name="GSKCallSoldier" count="2,3" tag="allHarvest" help="there are a few"/>
   </append>
-  <append xpath="/blocks/block[starts-with(@name,'decoPoolTable')]" help="to summon friends: melee, weak">
+  <append xpath="/blocks/block[@name='decoPoolTable']" help="to summon friends: melee, weak">
     <drop event="Harvest" name="GSKCallFriends" count="2,3" tag="allHarvest" help="there may have some"/>
   </append>
-  <append xpath="/blocks/block[starts-with(@name,'candelabraLight')]" help="to summon friends: auto shotgun, strong">
+  <append xpath="/blocks/block[@name='candelabraLight' or @name='chandelierLight']" help="to summon friends: auto shotgun, strong">
     <property name="CanPickup" value="true"/>
     <drop event="Harvest" name="GSKCallHalowenParty" count="1,2" tag="allHarvest" help="there may have some"/>
   </append>
@@ -287,6 +287,12 @@
       </property>
       <drop event="Destroy" name="cobweb" count="1,2"/>
     </block>
+    <block name="looseBoardsTrapShapesGSK" shapes="All">
+      <property name="Extends" value="looseBoardsTrapPoleCentered"/>
+      <property name="Group" value="Building,advBuilding"/>
+      <property name="Texture" value="552" help="painting:txName_GraniteBlack/TextureId"/>
+      <property name="Material" value="Mconcrete"/>
+    </block>
     <block name="looseBoardsTrapPoleCenteredPOIprogress">
       <property name="Extends" value="looseBoardsTrapPoleCentered" param1="Path"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
@@ -308,14 +314,14 @@
       <property name="MaxDamage" value="1" help="this is important to destroy the block with one hit of any tool!"/>
       <drop event="Harvest" name="GSKPOIProgressInc" count="3" tag="allHarvest"/>
     </block>
-    <block name="cntBarrelGasSinglePOITrap" shapes="All">
+    <block name="cntBarrelGasSinglePOITrap" shapes="All" help="unavoidable explosion todoa: rename everywhere (binary files too) to trapExplosionPOIexploreGSK">
       <property name="Tags" value="wood"/>
       <property name="Texture" value="65"/>
       <property name="UiBackgroundTexture" value="65"/>
+      <property name="Class" value="CarExplodeLoot"/>
       <property name="LootList" value="" help="it is meant to be just a trap. CarExplodeLoot must have a lootlist property, but it can be empty"/>
       <property name="CreativeMode" value="None"/>
       <property name="Place" value="TowardsPlacerInverted"/>
-      <property name="Class" value="CarExplodeLoot"/>
       <property name="ItemTypeIcon" value="explosion"/>
       <property name="Collide" value="sight,movement,bullet,arrow,rocket" help="NoCollideMeleeCheckGrepHint. Obs.: must have ,melee to be able to paint on prefab editor, but must remove melee after that because this block shall NOT be harvestable because hitting with a melee tool that can harvest would prevent the explosion."/>
       <property name="Material" value="MFuelBarrelMetal"/>
@@ -332,7 +338,7 @@
       <drop event="Destroy" count="0"/>
       <property name="FilterTags" value="MC_building"/>
     </block>
-    <block name="dummyBlockerPOITrap" shapes="All">
+    <block name="dummyBlockerPOITrap" shapes="All" help="this invulnerable is deprecated, just using strong blocks instead">
       <property name="Texture" value="65"/>
       <property name="UiBackgroundTexture" value="65"/>
       <property name="CreativeMode" value="None"/>

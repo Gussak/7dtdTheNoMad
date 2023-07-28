@@ -10,6 +10,7 @@
   - NPCS: the player cannot set a @variable value cvar on NPCs too right? must be a constant value or use a buff to transfer values bit by bit.
   - NPCS: aiming an NPC and holding shift with the F3 debug info enabled, will show that NPC buffs and cvars
   - DEBUG:DM: holding shift and pressing numpad_dot to crouch (that's my cfg), will crouch instead of ragdoll!
+  
 -->
   <append xpath="/buffs">
     <buff name="buffHiredNPCnoFallDamage16" hidden="true" remove_on_death="false">
@@ -4582,7 +4583,9 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@iGSKDmgPercHLShow"/>
         <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(0.25,2.00)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@.fGSKBlinkAfterSetTmp" help="this too low min float always results in 2.0? randomFloat(0.25,2.00)">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(3.00,6.00)">
@@ -4641,7 +4644,9 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@iGSKDmgPercWLShow"/>
         <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(0.25,2.00)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@.fGSKBlinkAfterSetTmp" help="this too low min float always results in 2.0? randomFloat(0.25,2.00)">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(3.00,6.00)">
@@ -4700,7 +4705,9 @@
         <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@iGSKDmgPercNVShow"/>
         <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(0.25,2.00)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@.fGSKBlinkAfterSetTmp" help="this too low min float always results in 2.0? randomFloat(0.25,2.00)">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(3.00,6.00)">
@@ -10186,11 +10193,14 @@
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD: all these were randomFloat(0.10,0.50)-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHealDNAandMutationsTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHealDNAandMutationsTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffDrugOhShitzDrops">
           <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
@@ -11905,8 +11915,10 @@
       <display_value value="iGSKbuffGSKWightEssenceTm"/>
       <display_value_format value="time"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="@.fGSKEssenceTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -11937,8 +11949,10 @@
       <display_value value="iGSKbuffGSKVampireEssenceTm"/>
       <display_value_format value="time"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssVampTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssVampTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="@.fGSKEssVampTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -11969,7 +11983,9 @@
       <display_value_format value="time"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="randomFloat(0.5,1.5)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="@.fGSKEssenceTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -11997,10 +12013,12 @@
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
           <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </passive_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)">
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKMessDNATmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKMessDNATmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKMessDNATmp" help="FIXFLOAT: was randomFloat(0.05,0.10)">
           <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)">
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKMessDNATmp" help="FIXFLOAT: was randomFloat(0.05,0.10)">
           <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>

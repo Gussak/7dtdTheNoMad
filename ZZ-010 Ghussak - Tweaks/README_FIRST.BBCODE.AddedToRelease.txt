@@ -15,6 +15,8 @@ This mod contains many tools that can be run on Cygwin (in Windows) or Linux and
 This mod is also a (not ready yet for release) overhaul that I am still changing, balancing more, improving usability, documentation and adding new features.  
 But it is already playable, and if you would like to help (new things or patches for: documentation, scripts, xmlLogic, icons (like more realistic or better drawn), sounds, anything that could be improved), you can create a pull request on github for review, thx!  
 .  
+If I patched any of your mods, feel free to copy and adapt the patched code into your original mod (like if I was creating a pull request for your github project). I would like to know tho so I can keep and maintain just minor changes here.  
+.  
 ############################## MOD FEATURES OVERVIEW: ##############################   
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
 The main mod (Tweak folder) has a lot of configs that one day will become minimods to let you cherry pick only what you want like:  

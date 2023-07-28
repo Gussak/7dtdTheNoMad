@@ -302,6 +302,16 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="CustomIconTint" value="128,220,128"/>
       <property name="DescriptionKey" value="buffGSKMutantRandomChaosDesc"/>
     </item>
+    <item name="NOTE_GSKStatBlockagesHPStamina">
+      <property name="Extends" value="GSKNoteBase"/>
+      <property name="CustomIcon" value="decoLaptop"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+      <!-- HELPGOOD:CODEGEN:
+  clear;strNL='\\n';egrep '<buff|passive_effect *name="HealthMaxBlockage|StaminaMaxBlockage"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/buffs.xml -in |egrep "HealthMaxBlockage|StaminaMaxBlockage" -B 1;astr=(HealthMaxBlockage StaminaMaxBlockage);for str in "${astr[@]}";do egrep "passive_effect *name=\"${str}\"" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/buffs.xml -i |egrep -i 'value="@[^"]*"' -o |sort -u |sed -r 's@value="(.*)"@\1@' |tr -d @ |sed 's@.*@&:{cvar(&:0.00)}, @' |tr -d '\n' |sed -r "s@.*@[${str}]${strNL}&${strNL}${strNL}@";done
+-->
+      <property name="DescriptionKey" value="dkGSKStatBlockages"/>
+    </item>
     <item name="GSKchimneyPOIbundle" help="to use only at prefab editor">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIconTint" value="180,140,120"/>
@@ -9667,7 +9677,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9687,7 +9697,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploringNPC" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9707,7 +9717,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploringVisibility" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9748,7 +9758,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploringMobility" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9789,7 +9799,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperExploringETC" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9809,7 +9819,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9850,7 +9860,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9870,7 +9880,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9890,7 +9900,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperTeleportHelpers" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9910,7 +9920,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperElctrnEnergy" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -9992,7 +10002,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingRads" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10012,7 +10022,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingFeed" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10033,7 +10043,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingFeedSchematics" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10053,7 +10063,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingHP" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10074,7 +10084,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperHealingHPSchematics" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10114,7 +10124,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperFarming" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10195,7 +10205,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperMaps" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10215,7 +10225,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKRespawnItemsBundleHelperSomeSchematicBundles" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
@@ -10326,7 +10336,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </effect_group>
   </append>
   <append xpath="/items/item[         @name='gunNPCRocketLauncher' or         @name='gunExplosivesT3RocketLauncher' or         @name='thrownAmmoPipeBomb' or         @name='thrownGrenadeContact' or         @name='thrownGrenade'       ]/effect_group">
-    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffNPCdmgArmorExplosion">
+    <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffNPCdmgArmorExplosion" help="was onSelfDamagedOther">
       <requirement name="!EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
     <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKEnergyShieldDefend">
@@ -10355,7 +10365,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </triggered_effect>
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeHand') and (contains(@name,'Zombie') or contains(@name,'AnimalZombie'))]/effect_group">
-    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.25,1.0)" target_tags="player">
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKRadsAddTmp" operation="set" value="randomInt(250,1000)"/>
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKRadsAddTmp" operation="divide" value="1000"/>
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKRadsAddTmp" help="FIXFLOAT: was randomfloat(0.25,1.0)" target="other" target_tags="player">
       <requirement name="!HoldingItemHasTags" target="self" tags="radiated"/>
       <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
     </triggered_effect>
@@ -13417,7 +13429,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.5,1.5)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="set" value="randomInt(500,1500)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKRadsSubTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
       </triggered_effect>
@@ -13429,7 +13443,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.1,0.5)">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="set" value="randomInt(100,500)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKRadsSubTmp" help="FIXFLOAT: was randomFloat(0.1,0.5)">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
@@ -13848,7 +13864,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="Sound_start" value="player_ointment"/>
     </property>
     <effect_group tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="randomFloat(0.12,0.16)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKBloodLossSubTmp" operation="set" value="randomInt(120,160)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKBloodLossSubTmp" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="@.fGSKBloodLossSubTmp" help="FIXFLOAT: was randomFloat(0.12,0.16)"/>
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LT" value="0"/>
       </triggered_effect>
@@ -13880,7 +13898,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.5,1.5)"/>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="set" value="randomInt(500,1500)"/>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKRadsSubTmp" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKRadsSubTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
       </triggered_effect>
@@ -14092,31 +14112,32 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <!-- HELPGOOD: CODEGEN:HELPER: clear;egrep '<item name="(drug|med|food)[^" ]*"' ../* -iRIwho -\-include="items.xml" 2>/dev/null |sort -u |egrep -v "Schem|Desc|Admin" |sed -r 's#<item name=(.*)#@name=\1 or#' |tr '"' "'"    -->
   <append xpath="/items/item[       @name='GSKsimpleBeer'         or       @name='drinkJarBeer'          or       @name='drugAtomJunkies'       or       @name='drugCovertCats'        or       @name='drugEyeKandy'          or       @name='drugFortBites'         or       @name='drugGSKAntiRadiation'        or       @name='drugGSKmutantEssence'        or       @name='drugGSKPsyonicsResist'       or       @name='drugGSKRadiationResist'      or       @name='drugGSKvampireEssence'       or       @name='drugGSKwightEssence'         or       @name='drugHackers'           or       @name='drugJailBreakers'      or       @name='drugNerdTats'          or       @name='drugOhShitzDrops'      or       @name='drugRecog'             or       @name='drugRockBusters'       or       @name='drugSkullCrushers'     or       @name='drugSugarButts'        or       @name='resourceAnimalFat'          ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
     <effect_group name="ADD chem use hp block" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.01,0.02)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="set" value="randomInt(10,20)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKHPblkChemUseTmpSub" help="FIXFLOAT: was randomFloat(0.01,0.02)"/>
     </effect_group>
   </append>
   <append xpath="/items/item[       @name='drugGSKAntiRadiationSlow'    or       @name='drugGSKAntiRadiationStrong'  or       @name='drugSteroids'                or       @name='resourceAnimalFatBall'            ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
     <effect_group name="ADD chem use hp block" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.025,0.050)" help="despite many times stronger, these are cooked therefore improved so wont be too high chem block here."/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="set" value="randomInt(25,50)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKHPblkChemUseTmpSub" help="FIXFLOAT: was randomFloat(0.025,0.050). despite many times stronger, these are cooked therefore improved so wont be too high chem block here."/>
     </effect_group>
   </append>
-  <append xpath="/items/item[       @name='drinkJarBoiledWater'     or       @name='drugHerbalAntibiotics'   or       @name='medicalAloeCream'        or       @name='medicalBandage'          or       @name='medicalBloodBag'         or       starts-with(@name,'food')     ]" help="rationale: anything ingestible that is used to actively heal or feed">
-    <effect_group name="SUB chem use hp block" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.025,0.050)">
-        <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarCoffee' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarPureMineralWater' or       @name='drinkJarRedTea'         or       @name='drinkJarYuccaCocktail'       or       @name='drinkJarYuccaJuice'          or       @name='drugAntibiotics'         or       @name='drugHealthBar'           or       @name='drugPainkillers'         or       @name='drugVitamins'            or       @name='medicalFirstAidBandage'  or       starts-with(@name,'food')     ]" help="rationale: anything ingestible that is used to actively heal or feed">
-    <effect_group name="SUB chem use hp block" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.025,0.050)">
+  <append xpath="/items/item[       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBoiledWater'     or       @name='drinkJarCoffee' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarPureMineralWater' or       @name='drinkJarRedTea'         or       @name='drinkJarYuccaCocktail'       or       @name='drinkJarYuccaJuice'          or       @name='drugAntibiotics'         or       @name='drugHealthBar'           or       @name='drugHerbalAntibiotics'   or       @name='drugPainkillers'         or       @name='drugVitamins'            or       @name='medicalAloeCream'        or       @name='medicalBandage'          or       @name='medicalBloodBag'         or       @name='medicalFirstAidBandage'  or       starts-with(@name,'food')     ]" help="rationale: anything ingestible that is used to actively heal or feed">
+    <effect_group name="SUB chem use hp block: weak" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="set" value="randomInt(25,50)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="@.fGSKHPblkChemUseTmpSub" help="this too low float always results in 0.05: randomFloat(0.025,0.050)">
         <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
       </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/items/item[       @name='medicalFirstAidKit'          ]" help="rationale: professional direct healing intent">
-    <effect_group name="SUB chem use hp block" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.15,0.33)">
+    <effect_group name="SUB chem use hp block: good" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="subtract" value="randomInt(150,330)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKHPblkChemUseTmpSub" operation="divide" value="1000"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="@.fGSKHPblkChemUseTmpSub" help="FIXFLOAT: was randomFloat(0.15,0.33). this too low randomFloat always results in 0.33">
         <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
       </triggered_effect>
     </effect_group>
@@ -14583,7 +14604,33 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
-  <append xpath="/items/item[(starts-with(@name,'melee') and contains(@name,'T0')) or @name='meleeToolFlashlight02' or @name='meleeToolTorch']">
+  <append xpath="/items/item[@name='meleeToolFlashlight02']">
+    <effect_group name="parry chance" tiered="false" help="todoa create a buff to monitor when light fails and apply increasesd parry thru blinding effect">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55" compare_type="or">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="85" help="blinding light">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeToolTorch']">
+    <effect_group name="parry chance" tiered="false" help="todoa create a buff to monitor when light fails and apply increasesd parry thru blinding effect">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55" compare_type="or">
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1" help="fire off"/>
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70" help="blinding light">
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T0')]">
     <effect_group name="parry chance" tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>

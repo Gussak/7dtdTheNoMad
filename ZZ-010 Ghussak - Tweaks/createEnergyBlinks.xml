@@ -56,7 +56,9 @@ cat >>"${strFlOut}" <<EOF
 -->
         <!--        SET the DELAY based on low or <=0 energy left-->
         <requirement name="CVarCompare" cvar="fGSKBlinkAfter${strVar}" operation="LTE" value="0" />
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfter${strVar}" operation="set" value="randomFloat(0.25,2.00)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKBlinkAfterSetTmp" operation="divide" value="1000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfter${strVar}" operation="set" value="@.fGSKBlinkAfterSetTmp" help="FIXFLOAT: was randomFloat(0.25,2.00). this too low min float always results in 2.0?">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" />
         </triggered_effect> <!-- the delay is longer if there is no energy -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfter${strVar}" operation="set" value="randomFloat(3.00,6.00)">
