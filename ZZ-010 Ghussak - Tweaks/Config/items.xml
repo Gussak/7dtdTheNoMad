@@ -1723,7 +1723,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     <property name="CustomIcon" value="7dtdShockTip"/>
     <property name="CustomIconTint" value="128,255,128"/>
   </append>
-  <append xpath="/items/item[     starts-with(@name,'melee') and       not(         @name='meleeToolPickT3Auger' or          @name='meleeToolAxeT3Chainsaw' or          @name='meleeToolRepairT3Nailgun' or          starts-with(@name,'meleeHandZombie')       )     ]">
+  <append xpath="/items/item[       starts-with(@name,'melee')       and not(           @name='meleeToolPickT3Auger' or            @name='meleeToolAxeT3Chainsaw' or            @name='meleeToolRepairT3Nailgun' or            starts-with(@name,'meleeHandZombie')       )       and not(contains(@name,'Schematic') or contains(@name,'Parts'))     ]">
     <effect_group help="stay fit">
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
       <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="self" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.01"/>
@@ -2058,6 +2058,26 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with modMeleeClubBurningShaft">60</set>
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with modMeleeClubBurningShaft">120</set>
   <append xpath="/items">
+    <item name="handRobotArmyDeusEx" help="ISSUE: the sword's laser wont scale up with the NPC model">
+      <property name="Extends" value="meleeHandMechTemplate"/>
+      <property name="CreativeMode" value="None"/>
+      <property class="Action0">
+        <property name="Delay" value=".6"/>
+        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5"/>
+        <property name="DamageEntity" value="32000"/>
+        <property name="DamageBlock" value="32000"/>
+      </property>
+    </item>
+    <item name="meleeWpnBatonT2StunBatonDeusEx" help="ISSUE: not working">
+      <property name="Extends" value="meleeWpnBatonT2StunBaton"/>
+      <property name="CreativeMode" value="None"/>
+      <property class="Action0">
+        <property name="Delay" value=".6"/>
+        <property name="Range" value="12" help="sync with DeusEx scale * 2.4"/>
+        <property name="DamageEntity" value="32000"/>
+        <property name="DamageBlock" value="32000"/>
+      </property>
+    </item>
     <item name="GSKfireFuel">
       <property name="Tags" value="gasoline"/>
       <property name="HoldType" value="45"/>
@@ -10343,7 +10363,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <requirement name="EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
   </append>
-  <append xpath="/items/item[         starts-with(@name,'melee') or          starts-with(@name,'gun')       ]/effect_group">
+  <append xpath="/items/item[         (          starts-with(@name,'melee') or           starts-with(@name,'gun')         )         and not(contains(@name,'Schematic') or contains(@name,'Parts'))       ]/effect_group">
     <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffHiredNPCdamageArmor103">
       <requirement name="!EntityTagCompare" tags="player" target="other"/>
     </triggered_effect>
@@ -11167,9 +11187,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele00">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
@@ -12885,8 +12902,8 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[         @name='ammoArrowIron'         or          @name='ammoArrowSteelAP'      or          @name='ammoCrossbowBoltIron'  or          @name='ammoCrossbowBoltSteelAP' or         @name='toggleElctrnHeroGrenGSK' or         (           contains(@name,'melee') and (             contains(@name,'Steel')         or              contains(@name,'Iron' )         or             contains(@name,'HuntingKnife' ) or             contains(@name,'Machete' )      or             contains(@name,'Baton' )        or             contains(@name,'ImpactDriver' ) or             contains(@name,'Ratchet' )      or             contains(@name,'Wrench' )       or             contains(@name,'Nailgun' )      or             contains(@name,'ClawHammer' )   or             contains(@name,'Auger' )        or             contains(@name,'Flashlight' )   or             contains(@name,'Chainsaw' )           )         )       ]">
-    <effect_group name="shock arrows" tiered="false">
+  <append xpath="/items/item[         @name='ammoArrowIron'         or          @name='ammoArrowSteelAP'      or          @name='ammoCrossbowBoltIron'  or          @name='ammoCrossbowBoltSteelAP' or         @name='toggleElctrnHeroGrenGSK' or         (           not(contains(@name,'Schematic') or contains(@name,'Parts'))            and           (             contains(@name,'melee') and (               contains(@name,'Auger' )        or               (contains(@name,'Baton') and not(contains(@name,'Stun'))) or               contains(@name,'Chainsaw' )     or               contains(@name,'ClawHammer' )   or               contains(@name,'Flashlight' )   or               contains(@name,'HuntingKnife' ) or               contains(@name,'ImpactDriver' ) or               contains(@name,'Iron' )         or               contains(@name,'Machete' )      or               contains(@name,'Nailgun' )      or               contains(@name,'Ratchet' )      or               contains(@name,'Steel')         or                contains(@name,'Wrench' )                    )           )         )       ]" help="meleeWpnBatonT2StunBaton already has related vanilla functionality">
+    <effect_group name="add electric shock to melee weapons and ranged (conductive arrow tips)" tiered="false">
       <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
       <requirement name="HasBuff" buff="buffGSKElctrnShockArrowEnabled"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffShockedPerkLvl0">
@@ -14199,8 +14216,8 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="Group" value="Resources"/>
     </item>
   </append>
-  <append xpath="/items/item[starts-with(@name,'gun') or starts-with(@name,'melee')]" help="mutant zombies may teleport who hits them">
-    <effect_group tiered="false">
+  <append xpath="/items/item[(starts-with(@name,'gun') or starts-with(@name,'melee')) and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
+    <effect_group tiered="false" help="mutant zombies may teleport who hits them">
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar=".iGSKExternalForceTeleport" operation="add" value="1">
         <requirement name="EntityTagCompare" has_all_tags="true" tags="zombie,mutant" target="other"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
@@ -14218,7 +14235,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <passive_effect name="ProjectileStickChance" operation="perc_set" value="0.75" help="to keep perkRangersArrowRecovery useful"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'gun')]" help="this is meant for a melee build with many hired NPCs using ranged weapons">
+  <append xpath="/items/item[starts-with(@name,'gun') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]" help="this is meant for a melee build with many hired NPCs using ranged weapons">
     <effect_group tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="0"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="1"/>
@@ -14630,25 +14647,25 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T0')]">
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T0') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
     <effect_group name="parry chance" tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1')]">
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
     <effect_group name="parry chance" tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="65"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2')]" help="if someone creates it">
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]" help="if someone creates it">
     <effect_group name="parry chance" tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="75"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3')]">
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
     <effect_group name="parry chance" tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="85"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>

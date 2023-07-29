@@ -2408,7 +2408,7 @@
         <passive_effect name="WalkSpeed" operation="perc_add" value="2.0">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
-        <passive_effect name="RunSpeed" operation="perc_add" value="2.5" help="run seems to not work in water? speed doesnt seem to change">
+        <passive_effect name="RunSpeed" operation="perc_add" value="7.5" help="must be much more to work well. in god mode where it is 15, is too fast tho for normal gameplay">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
@@ -4788,6 +4788,11 @@
   <append xpath="/buffs/buff[@name='buffShocked']">
     <effect_group help="spasms knocks down">
       <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+        <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="Equals" value="0"/>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKShockSpasmKnockDownCoolDown" operation="set" value="randomInt(6,12)">
+        <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="Equals" value="0"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffRemove" action="Ragdoll" duration="3" force="0">
@@ -10412,6 +10417,11 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Shock knockdown cooldown clearing, prevents unable to turn off devices in case of battery overcharge">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShockSpasmKnockDownCoolDown" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="Essences bonus">
         <passive_effect name="HealthMax" operation="base_add" value="@fGSKEssenceVampirePermBonus"/>
         <passive_effect name="StaminaMax" operation="base_add" value="@fGSKEssenceWightPermBonus"/>
@@ -11909,6 +11919,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1"/>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs" help="Monster Essences">
     <buff name="buffGSKWightEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,0,255" description_key="dkbuffGSKWightEssence">
       <stack_type value="effect"/>
       <duration value="0"/>
@@ -12045,6 +12057,11 @@
         </triggered_effect>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[@action='AddBuff' and @buff='buffDrowning01']" help="Monster Essences: mutant essence lets you breath underwater">
+    <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+  </append>
+  <append xpath="/buffs">
     <buff name="buffGSKBurntZombFireParticle" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>

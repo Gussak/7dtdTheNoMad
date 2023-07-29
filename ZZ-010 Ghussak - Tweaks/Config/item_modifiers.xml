@@ -164,26 +164,6 @@
         <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKEnergyShieldEnabled"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modGSKElctrnShockArrow" installable_tags="bow,crossbow,melee" modifier_tags="electric" blocked_tags="noMods" type="attachment">
-      <property name="EconomicValue" value="666"/>
-      <property name="Extends" value="modGeneralMaster"/>
-      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
-      <property name="CustomIconTint" value="0,200,200"/>
-      <property name="DescriptionKey" value="dkGSKShockArrow"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKElctrnShockArrowEnabled"/>
-        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKElctrnShockArrowEnabled"/>
-        <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
-          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
-        </triggered_effect>
-      </effect_group>
-    </item_modifier>
     <item_modifier name="modGSKElctrnHero" installable_tags="armorFeet" modifier_tags="hero" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="EconomicValue" value="999"/>
@@ -204,6 +184,29 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKElctrnBatteryEnabled"/>
         <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKElctrnBatteryEnabled"/>
+      </effect_group>
+    </item_modifier>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeStunBatonRepulsor']/@modifier_tags" help="this prevents installing on meleeWpnBatonT2StunBaton that already has vanilla related functionality">,electricShock</append>
+  <append xpath="/item_modifiers">
+    <item_modifier name="modGSKElctrnShockArrow" installable_tags="bow,crossbow,melee" modifier_tags="electricShock" blocked_tags="noMods" type="attachment">
+      <property name="EconomicValue" value="666"/>
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="dkGSKShockArrow"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKElctrnShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKElctrnShockArrowEnabled"/>
+        <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddPart" part="Sparks" prefab="ParticleEffects/p_electric_shock_small" parentTransform="Handle" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </item_modifier>
   </append>

@@ -139,7 +139,7 @@
         <property name="value" value="20" help="the phase"/>
       </action>
 -->
-      <action class="AddEntitiesToGroup">
+      <action class="AddEntitiesToGroup" help="no filter means hostiles">
         <property name="phase" value="30"/>
         <property name="group_name" value="gnHostiles"/>
         <property name="max_distance" value="2" param1="iXplodRangeEnt"/>
@@ -153,14 +153,14 @@
         <property name="entity_damage" value="32000" param1="iXplodDmgEnt"/>
         <property name="entity_radius" value="2" param1="iXplodRangeEnt" help="will only affect selected gnHostiles tho"/>
       </action>
-      <action class="Explode" help="this is like a sonic damage">
+      <action class="Explode" help="this is like a sonic damage TODO: make them ragdoll with a good force too">
         <property name="phase" value="40"/>
         <property name="target_group" value="gnHostiles"/>
         <property name="blast_power" value="500" param1="iBlastPower"/>
         <property name="block_damage" value="0"/>
         <property name="block_radius" value="0"/>
         <property name="entity_damage" value="30"/>
-        <property name="entity_radius" value="5"/>
+        <property name="entity_radius" value="5" param1="iXplodRangeSonicBlastEnt"/>
       </action>
       <action class="SetCVar">
         <property name="phase" value="40"/>
@@ -867,8 +867,11 @@
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
     <action_sequence name="eventGSKElctrnTeleInFront" template="eventGSKElctrnTeleNo" help="North is always in front of the player, this is special because is the most used"/>
-    <action_sequence name="eventGSKElctrnTele00" template="eventGSKElctrnTele">
+    <action_sequence name="eventGSKElctrnTele00" template="eventGSKElctrnTele" help="teleport but not">
       <variable name="v3Dir" value="0,1,0"/>
+      <variable name="iXplodRangeBlock" value="4"/>
+      <variable name="iXplodRangeEnt" value="4"/>
+      <variable name="iXplodRangeSonicBlastEnt" value="10"/>
     </action_sequence>
     <action_sequence name="eventGSKElctrnTeleZero" template="eventGSKElctrnTele">
       <variable name="v3Dir" value="0,0,0"/>

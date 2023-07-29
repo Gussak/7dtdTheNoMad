@@ -821,52 +821,40 @@
     <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
-  <append xpath="/entity_classes/entity_class[         starts-with(@name,'zombieUtilityWorker') or         starts-with(@name,'zombieBiker')       ]">
-    <effect_group help="patch for TSBX_Headshot_100: all that have weak helmet:todoa not working, still high dmg?">
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
+  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[     @name='DamageModifier' and contains(@tags, 'head')   ]" help="this resets all TSBX_Headshot_100 DamageModifier changes to redo it here in a not too complex way"/>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]/property[@name='Tags']">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition') or       starts-with(@name,'zombieSoldier')     ]/property[@name='Tags']">,helmetStrong</append>
+  <append xpath="/entity_classes/entity_class[@name='playerMale']">
+    <effect_group help="HeadShot: more damage">
+      <requirement name="!EntityTagCompare" tags="helmetWeak"/>
+      <requirement name="!EntityTagCompare" tags="helmetStrong"/>
+      <requirement name="!EntityTagCompare" tags="mech"/>
+      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head" help="generic base"/>
+      <!--    HELPGOOD: extra dmg below by difficulty opt -->
+      <passive_effect name="DamageModifier" operation="perc_add" value="1" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
       </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
+      <passive_effect name="DamageModifier" operation="perc_add" value="2" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
       </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
+      <passive_effect name="DamageModifier" operation="perc_add" value="3" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
       </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.5" tags="head">
+      <passive_effect name="DamageModifier" operation="perc_add" value="4" tags="head">
         <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
       </passive_effect>
     </effect_group>
-  </append>
-  <append xpath="/entity_classes/entity_class[         starts-with(@name,'zombieDemolition') or         starts-with(@name,'zombieSoldier')       ]">
-    <effect_group help="patch for TSBX_Headshot_100: all that have superior helmet:todoa not working, still high dmg?">
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.15" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
-      </passive_effect>
+    <effect_group help="HeadShot: less damage for helmetWeak">
+      <requirement name="EntityTagCompare" tags="helmetWeak"/>
+      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.25" tags="head"/>
     </effect_group>
-  </append>
-  <append xpath="/entity_classes/entity_class[         starts-with(@name,'mech')       ]">
-    <effect_group help="patch for TSBX_Headshot_100: mechs have same armor whole body:todoa not working, still high dmg?">
-      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head">
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
-      </passive_effect>
+    <effect_group help="HeadShot: much less damage for helmetStrong">
+      <requirement name="EntityTagCompare" tags="helmetStrong"/>
+      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.75" tags="head"/>
+    </effect_group>
+    <effect_group help="HeadShot: much less damage for mechs reiforced cpu shield">
+      <requirement name="EntityTagCompare" tags="mech"/>
+      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.85" tags="head"/>
     </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalChicken']">
@@ -959,10 +947,27 @@
   </append>
   <append xpath="/entity_classes">
     <entity_class name="npcMechMeleeDeusEx" extends="mechRobot">
-      <property name="SizeScale" value="5"/>
+      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
       <property name="HideInSpawnMenu" value="false"/>
+      <property name="HandItem" value="handRobotArmyDeusEx"/>
+      <property name="MaxTurnSpeed" value="280"/>
+      <property name="MoveSpeed" value=".9"/>
+      <property name="MoveSpeedAggro" value="3.6, 4.2"/>
+      <property name="MoveSpeedPanic" value="4.2"/>
+      <property name="AITask-1" value="BreakBlock"/>
+      <property name="AITask-2" value="Territorial"/>
+      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=30"/>
+      <property name="AITask-4" value="Leap"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityAlive,0,EntityZombie,0,EntityNPC,0,EntityPlayer,100,EntitySurvivor,0,EntityBandit,0,EntityAnimalRabbit,0"/>
+      <property name="AITask-6" value="ApproachSpot"/>
+      <property name="AITask-7" value="Look"/>
+      <property name="AITask-8" value="Wander"/>
+      <property name="AITask-9" value=""/>
+      <property name="CanClimbVertical" value="true"/>
+      <property name="JumpMaxDistance" value="25, 30"/>
       <effect_group name="Base Effects">
-        <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion"/>
+        <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
       </effect_group>
     </entity_class>
   </append>

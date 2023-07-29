@@ -138,6 +138,7 @@ The main mod (Tweak folder) has a lot of configs that one day will become minimo
 - fix: hazmat armor glove mod
 - fix: prevented most POIs from being above the ground that (despite fun) makes things easier
 - fix: effective weapons mod: spiders wont be put in ragdoll mode now. also general protection against spiders in ragdoll mode that would just make it stop attacking and cause many errors on log. And strong stun alternative to spider ragdoll.
+- fix: unnecessarily patching 'melee...' and 'gun...' items that also had 'Schematic' or 'Parts'
 - improved first player spawn to be more friendly if you are new to this overhaul. If you are receiving too much radiation, there are probably rad zombies nearby, quickly open the bundles and use the strong anti radiation chem! If your first spawn is in the wasteland, you may want to use the free item GSKCFGElctrnTeleportToBiome and teleport to Desert biome (that is the default selection) with secondary action.
 - scrap armor makes much more noise, so iron armor becomes valuable
 - melee build: parry chance

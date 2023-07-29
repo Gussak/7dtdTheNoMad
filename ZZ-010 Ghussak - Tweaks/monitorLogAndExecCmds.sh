@@ -53,6 +53,8 @@ function FUNCrawMatchRegex() { echo "$1" |sed -r 's@.@[&]@g'; };export -f FUNCra
 
 export strChkAutoStopOnLoad="`FUNCrawMatchRegex " INF Created player with id="`"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
+export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
+export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do
 tail -F "$strFlLog" |while read strLine;do
