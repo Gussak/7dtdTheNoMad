@@ -7528,9 +7528,7 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKElctrnExplodeExtraWeakenNPCs" help="sync range with eventGSKElctrnTele00">
-          <!-- HELPGOOD: for party only?
           <requirement name="!EntityTagCompare" target="other" tags="player"/>
--->
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEventFeedbackTeleportPhase"/>
@@ -7538,20 +7536,130 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra23"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKElctrnExplodeExtraWeakenNPCs">
+    <buff name="buffGSKElctrnExplodeExtraWeakenNPCs" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="5" help="should be enough time for the teleport00 event complete the explosion"/>
       <update_rate value="1"/>
       <effect_group>
         <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="10" help="like -1000%, but not being on the exact center of the explosion (the player location) it wont damage all it should right?"/>
         <passive_effect name="HealthChangeOT" operation="base_add" value="-10000" help="this will grant this teleport attack will kill anything"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
+          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0"/>
+          <!-- HELPGOOD:
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKEntIDTeleportAttacker" help="this doesnt work, only constant values right? :("/>
+-->
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKProtectHead85perc">
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
-        <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head"/>
+        <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head" help="ISSUE: DamageModifier is about Damage given and not received, this buff wont work..."/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHeadShot">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group help="HeadShot: no helmet is insta kill">
+        <requirement name="!EntityTagCompare" tags="helmetWeak"/>
+        <requirement name="!EntityTagCompare" tags="helmetNormal"/>
+        <requirement name="!EntityTagCompare" tags="helmetStrong"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHeadShot"/>
+      </effect_group>
+      <effect_group help="HeadShot: init and stack">
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="1"/>
+      </effect_group>
+      <effect_group help="HeadShot: determine current perc HP range">
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercCurrent" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="1.00">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.95"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.90">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.95"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.85"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.80">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.85"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.70">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.75"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.65"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.60">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.65"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.55"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.50">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.55"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.45"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.40">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.45"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.35"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.30">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.35"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.25"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.20">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.25"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.10">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.15"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.05"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetWeak">
+        <requirement name="EntityTagCompare" tags="helmetWeak"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.50" help="1.0/0.50=2 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetNormal">
+        <requirement name="EntityTagCompare" tags="helmetNormal"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.33" help="1.0/0.33=3 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetStrong">
+        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.25" help="1.0/0.25=4 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: apply damage til goal">
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.1" help="TODOABC: use -10 as this low value is just for tests">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GT" value="@.iGSKHeadShotDmgPercGoal"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: if reached goal, prepare for next goal">
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LTE" value="@.iGSKHeadShotDmgPercGoal"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
+      </effect_group>
+      <effect_group help="HeadShot: finish">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHeadShot" compare_type="or">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotStack" operation="LTE" value="0"/>
+          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffNVBatteryCreateConsumeEnergy">
