@@ -124,7 +124,7 @@ function FUNCprepareCraftBundle() {
   if $lbSchematic;then ((liB+=130));fi
   local lstrColor="$liR,$liG,$liB"
   #local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
-  local lstrCB="'CB:' items are craftable freely (can be dropped). Don't rush to your backpack. Each bundle has (exp penalty). Resurrecting adds 1 to remaining bundles (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now). "
+  local lstrCB="'CB:' items are craftable freely (can be dropped). Don't rush to your backpack. Each bundle has (exp penalty). Resurrecting adds 1 to remaining bundles (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now. (See *Delivery notes). "
   strFUNCprepareCraftBundle_CraftBundleID_OUT="${strCraftBundlePrefixID}${lstrBundleShortName}"
   strCourier="`CFGFUNCcourier ${liExpDebt} 1000 3000`"
   strXmlCraftBundleCreateItemsXml+='
@@ -135,6 +135,8 @@ function FUNCprepareCraftBundle() {
       <property name="CustomIconTint" value="'"${lstrColor}"'" />
       <property name="DescriptionKey" value="'"${lstrBundleDK}"'" />
       <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
         <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="GT" value="0" />
         <property name="Create_item" value="'"${lstrBundleID}"'" />
         <property name="Create_item_count" value="1" />
@@ -144,7 +146,10 @@ function FUNCprepareCraftBundle() {
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="'"${lstrCvar}"'" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="'"${strCourier}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="'"${strCourier}"'" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0" />
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>'

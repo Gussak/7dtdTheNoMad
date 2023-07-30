@@ -3,14 +3,13 @@
   <!-- HELPGOOD: tech tips (all all correct?)
   - BUFFS: calling many buffs like: onSelfBuffStart addBuff may not work? needs to be onSelfBuffUpdate right?
   - PASSIVEEFFECTS: passive effects must use a unique cvar (not a temp shared one) as it will use the value after the var is changed elsewhere at any time
-  - NPCS: NPCs can't change cvar on player but can apply buffs to transfer cvar values bit by bit!
+  - (Issue*1)NPCS: NPCs can't change cvar on player but can apply buffs to transfer cvar values bit by bit!
   - NPCS: the NPC can set constant values on player cvars but is unable to read a self cvar to copy it's value to the player right?
       THISWORKS: <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="testA" operation="set" value="123" target="selfAOE" range="60"><requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" /></triggered_effect>
       ThisFails: <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="testA" operation="set" value="@iVarTst" target="selfAOE" range="60"><requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" /></triggered_effect>
-  - NPCS: the player cannot set a @variable value cvar on NPCs too right? must be a constant value or use a buff to transfer values bit by bit.
+  - (Issue*2)NPCS: the player cannot set a @variable value cvar on NPCs too right? must be a constant value or use a buff to transfer values bit by bit.
   - NPCS: aiming an NPC and holding shift with the F3 debug info enabled, will show that NPC buffs and cvars
-  - DEBUG:DM: holding shift and pressing numpad_dot to crouch (that's my cfg), will crouch instead of ragdoll!
-  
+  - DEBUG:DM: holding shift and pressing numpad_dot(del) to toggle crouch (that's my cfg for mouse on left hand), will crouch instead of ragdoll!
 -->
   <append xpath="/buffs">
     <buff name="buffHiredNPCnoFallDamage16" hidden="true" remove_on_death="false">
@@ -933,6 +932,14 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fRepairNPCArmor" operation="subtract" value="0.05" target="self">
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Count Non Hirable NPCs nearby">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCNonHireableNearby" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCincPlayerNonHireableNPCsNearby" target="selfAOE" range="45" help="sync range with buffNPCincPlayerNonHireableNPCsNearby answer. even if not hired, they are helpful. This count prevents the player from creating a concentrated army.">
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+          <requirement name="!EntityTagCompare" target="other" tags="hireable"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="RangedNPClimit: NPC control buff">
@@ -2231,6 +2238,23 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fTransferNPCRepairArmor" operation="set" value="0.05" target="self"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCRepairSelfArmor" operation="add" value="@fTransferNPCRepairArmor"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNPCincPlayerNonHireableNPCsNearby">
+      <duration value="0.05"/>
+      <effect_group help="">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCNonHireableNearby" operation="add" value="1" target="selfAOE" range="45" help="sync range with this buff caller">
+          <!-- HELPGOOD:TODO?: 
+  Something like this would be required for multiplayer as 3 players can create a +3 inc from a single courier w/o this check. 
+  But... it may become overly complex to synchronize all players in a way that the answer happens in non conflicting times (should happen in a different game processing frame, unless luck is ok..).
+  So for now this will only work well on single player. 
+  Also, if 3 players call 3 couriers each, it will be an army and make things much more easier (as they are already helping each other), so there is no point on limiting the count per player, it would need to be the count per party (but more than one party would also overpower it) or just inc the count to all players synchronously, but looks overly complex anyway?
+  On the other hand, if there is 3 players, a single NPC will be very useful as it can become a tank/lurer, so even if a single NPC inc 3 on each player, it will be ok in the end ;).
+  See (Issue*2). 
+        <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@iGSKNPCCourierForPlayerEntId" />
+-->
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffNPCincHiredCountEachOtherAndTryDismiss">
@@ -4788,11 +4812,11 @@
   <append xpath="/buffs/buff[@name='buffShocked']">
     <effect_group help="spasms knocks down">
       <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKPlayerRagdoll">
-        <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="LTE" value="0"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKShockSpasmKnockDownCoolDown" operation="set" value="randomInt(6,12)">
-        <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="Equals" value="0"/>
+      <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKKnockDownCoolDown" operation="set" value="randomInt(6,9)">
+        <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="LTE" value="0"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffRemove" action="Ragdoll" duration="3" force="0">
@@ -6555,6 +6579,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
         </triggered_effect>
@@ -9876,12 +9901,14 @@
       </effect_group>
       -->
       <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+        <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="LTE" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKSPRRagdollChanceFromCount"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKFatStaminaBlockage" help="heavy weight helps on preventing knockdowns"/>
-        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKKnockDownCoolDown" operation="set" value="randomInt(6,9)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKStrongPushAndRagdoll:eventGSKPlayerRagdoll"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You got knocked down by a strong beast..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You got knocked down by a strong enemy..."/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
@@ -10417,9 +10444,9 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group help="Shock knockdown cooldown clearing, prevents unable to turn off devices in case of battery overcharge">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShockSpasmKnockDownCoolDown" operation="add" value="-1">
-          <requirement name="CVarCompare" cvar="iGSKShockSpasmKnockDownCoolDown" operation="GT" value="0"/>
+      <effect_group help="player knockdown cooldown clearing, prevents unable to turn off devices in case of battery overcharge or messes overall gameplay if too many">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKKnockDownCoolDown" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="Essences bonus">
@@ -11602,7 +11629,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPCLeapHit" help="are these events ever triggered for NPCs?">
+    <buff name="buffGSKNPCLeapHit" help="TODO:ISSUE: are these events ever triggered for NPCs?">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.2"/>
@@ -11610,7 +11637,9 @@
         <triggered_effect trigger="onSelfLandJump" action="Ragdoll" duration="60" force="10" target="selfAOE" range="1" target_tags="zombie,animal,npc,bandit">
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfLandJump" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s" target_tags="player"/>
+        <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="2" target="selfAOE" range="1" target_tags="player">
+          <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" target="other" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfLandJump" action="AddBuff" buff="buffGSKSpiderNet11" target="selfAOE" range="1">
           <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
@@ -11618,7 +11647,9 @@
         <triggered_effect trigger="onSelfFallImpact" action="Ragdoll" duration="60" force="10" target="selfAOE" range="1" target_tags="zombie,animal,npc,bandit">
           <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s" target_tags="player"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="2" target="selfAOE" range="1" target_tags="player">
+          <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" target="other" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfFallImpact" action="AddBuff" buff="buffGSKSpiderNet11" target="selfAOE" range="1">
           <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
         </triggered_effect>
