@@ -262,7 +262,7 @@
 -->
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.99"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.99"/>
-        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99" help="this affects leap?"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99" help="this affects leap? no"/>
       </effect_group>
     </buff>
     <buff name="buffGSKToggleDebug" hidden="true" remove_on_death="true">
@@ -7527,10 +7527,31 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKElctrnExplodeExtra23"/>
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKElctrnExplodeExtraWeakenNPCs" help="sync range with eventGSKElctrnTele00">
+          <!-- HELPGOOD: for party only?
+          <requirement name="!EntityTagCompare" target="other" tags="player"/>
+-->
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEventFeedbackTeleportPhase"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnExplodeExtra23"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra23"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKElctrnExplodeExtraWeakenNPCs">
+      <stack_type value="replace"/>
+      <duration value="5" help="should be enough time for the teleport00 event complete the explosion"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="10" help="like -1000%, but not being on the exact center of the explosion (the player location) it wont damage all it should right?"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="-10000" help="this will grant this teleport attack will kill anything"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKProtectHead85perc">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head"/>
       </effect_group>
     </buff>
     <buff name="buffNVBatteryCreateConsumeEnergy">
@@ -10456,6 +10477,23 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Inform game difficulty to foes and NPCs">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="1" target="selfAOE" range="60" target_tags="zombie,animal,npc">
+          <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="2" target="selfAOE" range="60" target_tags="zombie,animal,npc">
+          <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="3" target="selfAOE" range="60" target_tags="zombie,animal,npc">
+          <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="4" target="selfAOE" range="60" target_tags="zombie,animal,npc">
+          <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="5" target="selfAOE" range="60" target_tags="zombie,animal,npc">
+          <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="player knockdown cooldown clearing, prevents unable to turn off devices in case of battery overcharge or messes overall gameplay if too many">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKKnockDownCoolDown" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="GT" value="0"/>

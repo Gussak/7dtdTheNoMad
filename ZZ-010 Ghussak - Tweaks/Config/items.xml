@@ -2060,9 +2060,18 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <append xpath="/items">
     <item name="gunNPCRocketLauncherDeusEx">
       <property name="Extends" value="gunNPCRocketLauncher"/>
+      <property name="HoldType" value="32" help="Fail: 0,12,32,69 may be none will work.."/>
+      <!--
+      HELPGOOD: trying to guess a good holdtype: 
+      clear; egrep "holdtype|<item " _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -ih |egrep '<item' -A 1 |egrep 'HoldType' -B 1 |egrep -v '^-\-' |tr -d '\n\r' |sed -r 's@<item@\n<item@g' |sort
+      clear; egrep "holdtype" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -ih |sed -r 's@.*value="([^"]*)".*@\1@' |sort -nu |tr '\n' ','
+      # 0,1,2,3,4,5,6,7,9,10,12,13,14,16,17,18,19,20,23,24,25,26,27,29,30,31,32,33,34,35,36,37,39,40,44,45,46,47,48,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,
+      
+      <property name="SideOffset" value="0,10,0" help="does nothing"/>
+-->
       <property class="Action0" help="TODO:ISSUE: melee hit messes player look at direction (could be because too high damage? anyway it is 1 hit kill against anyone else so this only happens in god mode..)">
         <property name="Delay" value=".6"/>
-        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5"/>
+        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5, ISSUE: this trick seems to work only with mech melee hand.."/>
         <property name="DamageEntity" value="31000"/>
         <property name="DamageBlock" value="31000"/>
       </property>
