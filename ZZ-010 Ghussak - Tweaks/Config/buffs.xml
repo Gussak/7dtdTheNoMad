@@ -10477,6 +10477,44 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Spawn DeusEx:Init, countdown, rm deusex debuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days">
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExDebuff" target="selfAOE" range="60" target_tags="DeusEx" help="The more they die, the more they become aware of the player">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKDeusExKillCount"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate. this is just a simple basic countdown"/>
+      </effect_group>
+      <effect_group help="Spawn DeusEx:Faster CountDown">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="1800"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="set" value="@iGSKDeusExKillCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="divide" value="5" help="a hero grade player can kill 100 deus ex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="add" value="1" help="sync with update_time"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="set" value="3">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExTimeoutSub" operation="GT" value="3" help="sync with max timeout in days"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="@.iGSKSpawnDeusExTimeoutSub"/>
+      </effect_group>
+      <effect_group help="Spawn DeusEx:DoIt">
+        <requirement name="!IsBloodMoon" help="prevents it tanking for the player, but... if they player stays near one the whole day TODO: de-spawn DeusEx when bloodmoon begins (kill w/o dropping loot) and re-spawn when it ends (short countdown)"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LT" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusEx">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] There is a Deus Ex Machina nearby, be careful!">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] a Deus Ex Machina is hunting you, beware!!!">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0"/>
+      </effect_group>
       <effect_group help="Inform game difficulty to foes and NPCs">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="1" target="selfAOE" range="60" target_tags="zombie,animal,npc">
           <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="1"/>

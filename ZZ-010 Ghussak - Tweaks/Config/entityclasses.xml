@@ -830,49 +830,12 @@
     <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
-  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='DamageModifier' and contains(@tags, 'head')]" help="this resets all TSBX_Headshot_100 DamageModifier changes to redo it here in a not too complex way. playerMale affects zombieTemplateMale?"/>
+  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='DamageModifier' and contains(@tags, 'head')]" help="this resets all TSBX_Headshot_100 DamageModifier changes (that are applied on the player) to redo it here (applying it on foes to detect helmet usage based on 3d model)"/>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]/property[@name='Tags']/@value">,helmetWeak</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition')     ]/property[@name='Tags']/@value">,helmetNormal</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       starts-with(@name,'mech')     ]/property[@name='Tags']/@value">,helmetStrong</append>
-  <append xpath="/entity_classes/entity_class[@name='zombieTemplateMale']">
-    <!-- HELPGOOD: using DismemberMultiplierHead=1 instead as no setting for DamageModifier seems to LOWER head damage, seems only used to increase?
-    <effect_group help="HeadShot: more damage">
-      <requirement name="!EntityTagCompare" tags="helmetWeak,helmetNormal,helmetStrong" has_all_tags="true" help="negating all tags will work as 'and' like in: has_not_all_tags (I think)"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="4" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="6" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="8" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
-      </passive_effect>
-    </effect_group>
--->
-    <!-- HELPGOOD: DamageModifier to LOWER head damage seems to not work, only to increase it works?
-    <effect_group help="HeadShot: less damage for helmetWeak">
-      <requirement name="EntityTagCompare" tags="helmetWeak"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.70" tags="head"/>
-    </effect_group>
-    <effect_group help="HeadShot: less damage for helmetNormal">
-      <requirement name="EntityTagCompare" tags="helmetNormal"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.40" tags="head"/>
-    </effect_group>
-    <effect_group help="HeadShot: less damage for helmetStrong">
-      <requirement name="EntityTagCompare" tags="helmetStrong"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="0.10" tags="head"/>      
-    </effect_group>
--->
-  </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name,'zombie') and not(contains(@name,'Template'))) or @name='playerMale']">
-    <effect_group help="Inform game Difficulty to foe">
-      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="@_difficulty"/>
-    </effect_group>
+  <append xpath="/entity_classes/entity_class[@name='zombieTemplateMale']"/>
+  <append xpath="/entity_classes/entity_class[       (starts-with(@name,'zombie') or starts-with(@name,'animal') or starts-with(@name,'npc'))       and contains(@name,'Template')     ]">
     <effect_group help="HeadShot: insta kill (or almost) damage for non helmeted">
       <requirement name="!EntityTagCompare" tags="helmetWeak"/>
       <requirement name="!EntityTagCompare" tags="helmetNormal"/>
@@ -971,7 +934,6 @@
     <property name="DismemberMultiplierHead" value="0" />
   </append>  
 -->
-  <!--  HELPGOOD: nothing seems to work to lower headshot damage of helmeted entities... Apparently DamageModifier is only about increasing damage and not decreasing? Does demolition and spiderqueen have something different that let it work with perc_set 1.0 (I have tried the boss flag and tag, but it did not help)??? like a different 3d model head that is covered by the torso collision mesh? -->
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'DISABLED_zombieUtilityWorker') or       starts-with(@name,'DISABLED_zombieBiker')     ]">
     <property name="DismemberMultiplierHead" value="0"/>
     <effect_group name="HeadShot:helmetWeak">
@@ -1147,7 +1109,7 @@
       <property name="AITask-2" value="Territorial"/>
       <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=45"/>
       <property name="AITask-4" value="Leap"/>
-      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,40,EntityNPC,60,EntityPlayer,10,EntitySurvivor,60,EntityBandit,80" help="TODOA: spawn DeusEx every 5days. If player kills the 1st one, spawn extended DeusEx with: EntityPlayer,100 and all others ,0"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,40,EntityNPC,60,EntityPlayer,100,EntitySurvivor,60,EntityBandit,80" help="sync this task with mechDeusEx2CalmRocketL"/>
       <property name="AITask-6" value="ApproachSpot"/>
       <property name="AITask-7" value="Look"/>
       <property name="AITask-8" value="Wander"/>
@@ -1162,8 +1124,10 @@
         <triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" target="self" buff="buffGSKDeusExDebuff" help="rage if attacked by player">
           <requirement name="EntityTagCompare" tags="player" target="other"/>
         </triggered_effect>
-        <!--        HELPGOOD: todoa a buff that checks if player has iGSKDeusExKillCount > 0, will rm buffGSKDeusExDebuff-->
       </effect_group>
+    </entity_class>
+    <entity_class name="mechDeusEx2CalmRocketL" extends="mechDeusEx2RocketL">
+      <property name="AITask-5" value="Look" help="this is just to prevent hunting"/>
     </entity_class>
     <entity_class name="_mechDeusEx3RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL: npcRocketLTemplate TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
       <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2"/>
