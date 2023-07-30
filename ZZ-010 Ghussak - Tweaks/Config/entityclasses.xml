@@ -823,14 +823,18 @@
     <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
-  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[     @name='DamageModifier' and contains(@tags, 'head')   ]" help="this resets all TSBX_Headshot_100 DamageModifier changes to redo it here in a not too complex way"/>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]/property[@name='Tags']">,helmetWeak</append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition') or       starts-with(@name,'zombieSoldier')     ]/property[@name='Tags']">,helmetStrong</append>
-  <append xpath="/entity_classes/entity_class[@name='playerMale']">
+  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[     @name='DamageModifier' and contains(@tags, 'head')   ]" help="this resets all TSBX_Headshot_100 DamageModifier changes to redo it here in a not too complex way. playerMale affects zombieTemplateMale?"/>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]/property[@name='Tags']/@value">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition')     ]/property[@name='Tags']/@value">,helmetNormal</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       starts-with(@name,'mech')     ]/property[@name='Tags']/@value">,helmetStrong</append>
+  <append xpath="/entity_classes/entity_class[@name='zombieTemplateMale']">
     <effect_group help="HeadShot: more damage">
       <requirement name="!EntityTagCompare" tags="helmetWeak"/>
+      <requirement name="!EntityTagCompare" tags="helmetNormal"/>
       <requirement name="!EntityTagCompare" tags="helmetStrong"/>
-      <requirement name="!EntityTagCompare" tags="mech"/>
+      <!-- HELPGOOD: equivalent to above?
+      <requirement name="!EntityTagCompare" tags="helmetWeak,helmetNormal,helmetStrong" has_all_tags="true" help="negating all tags will work like 'and' like has_not_all_tags (I think)"/>
+-->
       <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head" help="generic base"/>
       <!--    HELPGOOD: extra dmg below by difficulty opt -->
       <passive_effect name="DamageModifier" operation="perc_add" value="1" tags="head">
@@ -848,15 +852,18 @@
     </effect_group>
     <effect_group help="HeadShot: less damage for helmetWeak">
       <requirement name="EntityTagCompare" tags="helmetWeak"/>
-      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.25" tags="head"/>
+      <passive_effect name="DamageModifier" operation="base_add" value="-35" tags="head"/>
+      <passive_effect name="PhysicalDamageResist" operation="base_set" value="35" tags="head"/>
     </effect_group>
-    <effect_group help="HeadShot: much less damage for helmetStrong">
+    <effect_group help="HeadShot: less damage for helmetNormal">
+      <requirement name="EntityTagCompare" tags="helmetNormal"/>
+      <passive_effect name="DamageModifier" operation="base_add" value="-60" tags="head"/>
+      <passive_effect name="PhysicalDamageResist" operation="base_set" value="60" tags="head"/>
+    </effect_group>
+    <effect_group help="HeadShot: less damage for helmetStrong">
       <requirement name="EntityTagCompare" tags="helmetStrong"/>
-      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.75" tags="head"/>
-    </effect_group>
-    <effect_group help="HeadShot: much less damage for mechs reiforced cpu shield">
-      <requirement name="EntityTagCompare" tags="mech"/>
-      <passive_effect name="DamageModifier" operation="perc_subtract" value="0.85" tags="head"/>
+      <passive_effect name="DamageModifier" operation="base_add" value="-85" tags="head"/>
+      <passive_effect name="PhysicalDamageResist" operation="base_set" value="85" tags="head"/>
     </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalChicken']">
@@ -948,13 +955,32 @@
     <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="actually just a dummy"/>
   </append>
   <append xpath="/entity_classes">
-    <entity_class name="npcMechMeleeDeusEx" extends="mechRobot" help="TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
-      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
+    <entity_class name="_mechDeusEx1RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
+      <property name="Mesh" value="#@modfolder(0-CreaturePackMechs):Resources/XythMechs.unity3d?Robot_X"/>
+      <property name="PhysicsBody" value="RobotRig"/>
+      <property name="HasRagdoll" value="true"/>
+      <property name="HasDeathAnim" value="true"/>
+      <property name="RootMotion" value="false"/>
+      <property name="SurfaceCategory" value="metal"/>
+      <property name="SoundRandomTime" value="20.0"/>
+      <property name="SoundRandom" value="RobotRandom"/>
+      <property name="SoundAlert" value="RobotAlert"/>
+      <property name="SoundAttack" value="RobotAttack"/>
+      <property name="SoundDeath" value="RobotDie"/>
+      <property name="SoundHurt" value="RobotRandom"/>
+      <property name="SoundSense" value="RobotSense"/>
+      <property name="Tags" value="entity,cp,mech,mechRobot,npc,bandit,ranged"/>
+      <property name="Faction" value="whiteriver"/>
+      <property name="LookAtAngle" value="0"/>
+      <property name="ExperienceGain" value="2500"/>
+      <property name="LootDropProb" value="1.00"/>
+      <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRocket"/>
       <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="HideInSpawnMenu" value="false"/>
-      <property name="HandItem" value="handRobotArmyDeusEx"/>
+      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
+      <property name="HideInSpawnMenu" value="false"/>
       <property name="MaxTurnSpeed" value="280"/>
       <property name="MoveSpeed" value=".9"/>
       <property name="MoveSpeedAggro" value="3.6, 4.2"/>
@@ -975,6 +1001,82 @@
         <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
         <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
       </effect_group>
+    </entity_class>
+    <entity_class name="mechDeusEx2RocketL" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
+      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
+      <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
+      <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag" help="ISSUE: the rocket is fired from the feet..."/>
+      <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
+      <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
+      <property name="ExperienceGain" value="2500"/>
+      <property name="HideInSpawnMenu" value="false"/>
+      <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
+      <property name="MaxTurnSpeed" value="280"/>
+      <property name="MoveSpeed" value=".9"/>
+      <property name="MoveSpeedAggro" value="3.6, 4.2"/>
+      <property name="MoveSpeedPanic" value="4.2"/>
+      <property name="AITask-1" value="BreakBlock"/>
+      <property name="AITask-2" value="Territorial"/>
+      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=13;maxRange=45"/>
+      <property name="AITask-4" value="Leap"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityAlive,0,EntityZombie,0,EntityNPC,0,EntityPlayer,100,EntitySurvivor,0,EntityBandit,0,EntityAnimalRabbit,0"/>
+      <property name="AITask-6" value="ApproachSpot"/>
+      <property name="AITask-7" value="Look"/>
+      <property name="AITask-8" value="Wander"/>
+      <property name="AITask-9" value=""/>
+      <property name="AITarget-1" value="SetAsTargetIfHurt"/>
+      <property name="CanClimbVertical" value="true"/>
+      <property name="JumpMaxDistance" value="25, 30"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExDebuff"/>
+        <triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" target="self" buff="buffGSKDeusExDebuff" help="rage if attacked by player">
+          <requirement name="EntityTagCompare" tags="player" target="other"/>
+        </triggered_effect>
+      </effect_group>
+    </entity_class>
+    <entity_class name="_mechDeusEx3RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL: npcRocketLTemplate TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
+      <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2"/>
+      <property name="LookAtAngle" value="0"/>
+      <property name="PhysicsBody" value="ASCharacterStandard"/>
+      <property name="Names" value="DeusExMachina"/>
+      <property name="Mesh" value="#@modfolder(1-VaultDwellerzPack):Resources/VaultDwellerz.unity3d?ReconMaleDark"/>
+      <property name="LootDropProb" value="1.0"/>
+      <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRocket"/>
+      <property name="IsEnemyEntity" value="true"/>
+      <property name="Faction" value="animals" help="it shall attack everyone, but is cool to not attack animals"/>
+      <property name="SizeScale" value="5"/>
+      <property name="ExperienceGain" value="2500"/>
+      <property name="HideInSpawnMenu" value="false"/>
+      <property name="MoveSpeed" value=".9"/>
+      <property name="MoveSpeedAggro" value="3.6, 4.2"/>
+      <property name="MoveSpeedPanic" value="4.2"/>
+      <property name="AITask-1" value="BreakBlock"/>
+      <property name="AITask-2" value="Territorial"/>
+      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=30"/>
+      <property name="AITask-4" value="Leap"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityAlive,0,EntityZombie,0,EntityNPC,0,EntityPlayer,100,EntitySurvivor,0,EntityBandit,0,EntityAnimalRabbit,0"/>
+      <property name="AITask-6" value="ApproachSpot"/>
+      <property name="AITask-7" value="Look"/>
+      <property name="AITask-8" value="Wander"/>
+      <property name="AITask-9" value=""/>
+      <property name="AITarget-1" value="SetAsTargetIfHurt"/>
+      <property name="CanClimbVertical" value="true"/>
+      <property name="JumpMaxDistance" value="25, 30"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="PhysicalDamageResist" operation="base_set" value="0" help="it's power is on healing self"/>
+        <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="2000" help="TODO: say: self repair 3d printing system activated beep"/>
+      </effect_group>
+    </entity_class>
+    <entity_class name="_mechDeusEx4RocketL" extends="mechDeusEx2RocketL" help="FAIL: walks on air... shoot rocket from feet..">
+      <property name="Mesh" value="#@modfolder(1-VaultDwellerzPack):Resources/VaultDwellerz.unity3d?ReconMaleDark"/>
+      <property name="ReplaceMaterial2" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
+      <property name="MoveSpeed" value=".2"/>
+      <property name="MoveSpeedAggro" value="0.7, 0.8"/>
+      <property name="MoveSpeedPanic" value="0.8"/>
+      <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2"/>
     </entity_class>
   </append>
 </GhussakTweaks>

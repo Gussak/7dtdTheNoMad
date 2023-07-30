@@ -2058,16 +2058,45 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with modMeleeClubBurningShaft">60</set>
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with modMeleeClubBurningShaft">120</set>
   <append xpath="/items">
-    <item name="gunNPCRocketLauncherDeusEx" help="ISSUE: the rockets wont fly...">
+    <item name="gunNPCRocketLauncherDeusEx">
       <property name="Extends" value="gunNPCRocketLauncher"/>
-      <property class="Action0">
+      <property class="Action0" help="TODO:ISSUE: melee hit messes player look at direction (could be because too high damage? anyway it is 1 hit kill against anyone else so this only happens in god mode..)">
+        <property name="Delay" value=".6"/>
+        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5"/>
         <property name="DamageEntity" value="31000"/>
         <property name="DamageBlock" value="31000"/>
       </property>
       <property class="Action1">
+        <property name="Class" value="LauncherSDX, SCore"/>
         <property name="Magazine_items" value="ammoNPCRocketFrag"/>
+        <!-- HELPGOOD:ISSUE: doesnt fix rockets flying from feet..
+        <property name="SideOffset" value="0,10,0" />
+-->
       </property>
       <effect_group name="gunExplosivesT3RocketLauncherDeusEx">
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
+        <passive_effect name="MaxRange" operation="base_set" value="40" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="40" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="base_set" value=".4" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="160,350" tier="1,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="0" tags="perkDemolitionsExpert"/>
         <passive_effect name="MagazineSize" operation="base_set" value="9"/>
         <passive_effect name="RoundsPerMinute" operation="base_set" value="180" help="3/s"/>
         <passive_effect name="BurstRoundCount" operation="base_set" value="9"/>
@@ -2075,7 +2104,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </item>
     <item name="handRobotArmyDeusEx" help="ISSUE: the sword's laser wont scale up with the NPC model">
       <property name="Extends" value="meleeHandMechTemplate"/>
-      <property name="Meshfile" value="#Other/Items?Weapons/Melee/Spear/spear_steel_Prefab.prefab" help="til laser sword looks good scaled up"/>
+      <property name="Meshfile" value="#Other/Items?Weapons/Melee/Spear/spear_steel_Prefab.prefab" help="FAIL: this wont show up. til laser sword looks good scaled up"/>
       <property name="CreativeMode" value="None"/>
       <property class="Action0">
         <property name="Delay" value=".6"/>
