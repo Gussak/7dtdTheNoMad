@@ -37,9 +37,64 @@
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
+    </effect_group>
+    <effect_group help="Headshot and limb shot cripple">
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
+        <requirement name="!HoldingItemHasTags" tags="shotgun"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="5" help="This is from the EffectiveAndImmersiveWeaponsOverhaul. max is 20 pellets"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="10"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="10"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="15"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="15"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="20"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKLegArmShot">
+        <requirement name="HitLocation" body_parts="LeftUpperLeg,RightUpperLeg,LeftLowerLeg,RightLowerLeg,LeftUpperArm,RightUpperArm,LeftLowerArm,RightLowerArm"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="LeftUpperLeg"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="RightUpperLeg"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="LeftLowerLeg"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="RightLowerLeg"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="LeftUpperArm"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="RightUpperArm"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="LeftLowerArm"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+        <requirement name="HitLocation" body_parts="RightLowerArm"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" help="MeleeBuild:">
         <requirement name="IsAlive" target="other"/>
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
@@ -834,8 +889,8 @@
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
   <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='DamageModifier' and contains(@tags, 'head')]" help="this resets all TSBX_Headshot_100 DamageModifier changes (that are applied on the player) to redo it here (applying it on foes to detect helmet usage based on 3d model) using buffGSKHeadShot instead"/>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]/property[@name='Tags']/@value">,helmetWeak</append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition')     ]/property[@name='Tags']/@value">,helmetNormal</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker') or       @name='animalBear'     ]/property[@name='Tags']/@value">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition') or       @name='animalZombieBear'     ]/property[@name='Tags']/@value">,helmetNormal</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       starts-with(@name,'mech')     ]/property[@name='Tags']/@value">,helmetStrong</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]">
     <property name="DismemberMultiplierHead" value="0.33"/>
@@ -1163,7 +1218,7 @@
       <effect_group name="Base Effects">
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="0" help="it's power is on healing self"/>
         <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
-        <passive_effect name="HealthChangeOT" operation="base_add" value="2000" help="TODO: say: self repair 3d printing system activated beep"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="5000" help="TODO: say: self repair 3d printing system activated beep"/>
       </effect_group>
     </entity_class>
     <entity_class name="_mechDeusEx4RocketL" extends="mechDeusEx2RocketL" help="FAIL: walks on air... shoot rocket from feet..">

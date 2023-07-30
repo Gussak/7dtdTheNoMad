@@ -7541,12 +7541,14 @@
       <duration value="5" help="should be enough time for the teleport00 event complete the explosion"/>
       <update_rate value="1"/>
       <effect_group>
-        <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="10" help="like -1000%, but not being on the exact center of the explosion (the player location) it wont damage all it should right?"/>
-        <passive_effect name="HealthChangeOT" operation="base_add" value="-10000" help="this will grant this teleport attack will kill anything"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
-          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0"/>
+        <!-- HELPGOOD:
+        <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="10" help="like -1000%, but not being on the exact center of the explosion (the player location) it wont damage all it should right? this doesnt help anyway..."/>
+-->
+        <passive_effect name="HealthChangeOT" operation="base_add" value="-32000" help="this will grant this teleport attack will kill anything"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
           <!-- HELPGOOD:
-          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKEntIDTeleportAttacker" help="this doesnt work, only constant values right? :("/>
+          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0" help="this wont work cuz dead entity means stopped buff right?"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKEntIDTeleportAttacker" help="ISSUE: this doesnt work, only constant values right?"/>
 -->
         </triggered_effect>
       </effect_group>
@@ -7556,6 +7558,54 @@
       <duration value="0"/>
       <effect_group>
         <passive_effect name="DamageModifier" operation="perc_set" value="1.0" tags="head" help="ISSUE: DamageModifier is about Damage given and not received, this buff wont work..."/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKLegArmShot">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotLeftUpperArm" operation="GTE" value="1"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="DamageModifier" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotRightUpperArm" operation="GTE" value="1"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="DamageModifier" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotLeftLowerArm" operation="GTE" value="1"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="DamageModifier" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotRightLowerArm" operation="GTE" value="1"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="DamageModifier" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotLeftUpperLeg" operation="GTE" value="1"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotRightUpperLeg" operation="GTE" value="1"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotLeftLowerLeg" operation="GTE" value="1"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKShotRightLowerLeg" operation="GTE" value="1"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.20"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHeadShot">
@@ -7623,7 +7673,6 @@
         <requirement name="EntityTagCompare" tags="helmetWeak"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
-        <requirement name="EntityTagCompare" tags="helmetStrong"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.50" help="1.0/0.50=2 headshots required to kill"/>
       </effect_group>
@@ -7631,7 +7680,6 @@
         <requirement name="EntityTagCompare" tags="helmetNormal"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
-        <requirement name="EntityTagCompare" tags="helmetStrong"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.33" help="1.0/0.33=3 headshots required to kill"/>
       </effect_group>
@@ -7644,7 +7692,7 @@
       </effect_group>
       <effect_group help="HeadShot: apply damage til goal">
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.1" help="TODOABC: use -10 as this low value is just for tests">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="10" help="try 0.1 to slowly see the effect in development :)">
           <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GT" value="@.iGSKHeadShotDmgPercGoal"/>
         </triggered_effect>
       </effect_group>
