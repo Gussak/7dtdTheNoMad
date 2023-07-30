@@ -90,7 +90,7 @@ for((j=0;j<"${#astrArmorTypes[@]}";j+=2));do
   <append xpath="/items/item['"$strNameMatch"']">
     <effect_group tiered="false">
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="fGSKarmorAddToMultTS'"${strBP}"'" operation="set" value="'"$fATMult"'"/>
-      <triggered_effect trigger="onSelfEquipStop"  action="ModifyCVar" cvar="fGSKarmorAddToMultTS'"${strBP}"'" operation="set" value="'"$fATMult"'"/>
+      <triggered_effect trigger="onSelfEquipStop"  action="ModifyCVar" cvar="fGSKarmorAddToMultTS'"${strBP}"'" operation="set" value="0"/>
     </effect_group>
   </append>' |tee -a "${strFlGenXml}${strGenTmpSuffix}"
   done
