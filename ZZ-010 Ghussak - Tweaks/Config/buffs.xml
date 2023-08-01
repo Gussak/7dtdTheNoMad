@@ -270,6 +270,7 @@
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExFriendlyIsNearby" target="selfAOE" range="60" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="9" action="ModifyStats" stat="Health" operation="add" value="9">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal all natural living beings (including hostile animals and bandits)"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie" help="wont heal unnatural beings"/>
@@ -8024,6 +8025,19 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKOnRespawnDeusExFriendlyIfPossible" help="if the player die, and DeusExMachina are still friendly, and there was one nearby, respawn another as soon as possible">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="60"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDeusExFriendlyIsNearby" remove_on_death="false">
+      <stack_type value="duration"/>
+      <duration value="60"/>
+    </buff>
     <buff name="buffGSKElctrnTeleportToSky">
       <stack_type value="ignore"/>
       <duration value="10.0"/>
@@ -10899,7 +10913,7 @@
         <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="0"/>
       </effect_group>
-      <effect_group help="Spawn DeusEx:Init, countdown, rm deusex debuff">
+      <effect_group help="DeusExMachina:Init, countdown, rm deusex debuff">
         <!--        HELPGOOD: friend-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="1200" help="every 20mins realtime (8h game time) while the player is friendly to them. They are careless yet.">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
@@ -10939,7 +10953,7 @@
         <!--        HELPGOOD: basic granted countdown -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate. this is just a simple basic countdown"/>
       </effect_group>
-      <effect_group help="Spawn DeusEx:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit)">
+      <effect_group help="DeusExMachina:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit)">
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="10" help="the initial 10 enemies will show up much faster"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="1800"/>
@@ -10951,7 +10965,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="@.iGSKSpawnDeusExTimeoutSub"/>
       </effect_group>
-      <effect_group help="Spawn DeusEx:DoIt">
+      <effect_group help="DeusExMachina:DoIt">
         <requirement name="!IsBloodMoon" help="prevents it tanking for the player, but... if they player stays near one the whole day TODO: de-spawn DeusEx when bloodmoon begins (kill w/o dropping loot) and re-spawn when it ends (short countdown)"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
@@ -10968,7 +10982,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0"/>
       </effect_group>
-      <effect_group help="DeusExMachinaAnnihilationBonuses">
+      <effect_group help="DeusExMachina:AnnihilationBonuses">
         <passive_effect name="HealthMax" operation="base_add" value="@iGSKDeusExBonusHP"/>
         <passive_effect name="StaminaMax" operation="base_add" value="@iGSKDeusExBonusStamina"/>
         <passive_effect name="JumpStrength" operation="perc_add" value="@iGSKDeusExBonusJumpStr"/>
