@@ -132,7 +132,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   strItemType=""
   if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
   if [[ "${strShortNameId:0:3}" == "SCH" ]];then strItemType="Schematic";fi
-  if [[ "${strShortNameId:0:3}" == "OTF" ]];then strItemType="Outfit and Armor";fi
+  if [[ "${strShortNameId:0:3}" == "ARO" ]];then strItemType="Armor and Outfit";fi
   if [[ "${strShortNameId:0:3}" == "Mod" ]];then strItemType="Item Modification";fi
   if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
   if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi

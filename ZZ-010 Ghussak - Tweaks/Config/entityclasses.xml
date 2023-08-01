@@ -41,6 +41,7 @@
     <effect_group help="Headshot and limb shot cripple">
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
         <requirement name="HoldingItemHasTags" tags="armorPiercing"/>
+        <requirement name="HitLocation" body_parts="Head"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
@@ -72,28 +73,28 @@
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKLegArmShot">
         <requirement name="HitLocation" body_parts="LeftUpperLeg,RightUpperLeg,LeftLowerLeg,RightLowerLeg,LeftUpperArm,RightUpperArm,LeftLowerArm,RightLowerArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="LeftUpperLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="RightUpperLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="LeftLowerLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerLeg" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="RightLowerLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="LeftUpperArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="RightUpperArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="LeftLowerArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerArm" operation="add" value="1" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
         <requirement name="HitLocation" body_parts="RightLowerArm"/>
       </triggered_effect>
     </effect_group>
@@ -1041,7 +1042,7 @@
       <property name="SoundDeath" value="RobotDie"/>
       <property name="SoundHurt" value="RobotRandom"/>
       <property name="SoundSense" value="RobotSense"/>
-      <property name="Tags" value="entity,cp,mech,mechRobot,npc,bandit,ranged,helmetButNot"/>
+      <property name="Tags" value="entity,cp,mech,mechRobot,npc,bandit,ranged,helmetVanillaDamage"/>
       <property name="Faction" value="whiteriver"/>
       <property name="LookAtAngle" value="0"/>
       <property name="ExperienceGain" value="2500"/>
@@ -1074,33 +1075,19 @@
         <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
       </effect_group>
     </entity_class>
-    <entity_class name="mechDeusEx2RocketL" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
+    <entity_class name="mechDeusEx2" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
       <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
-      <property name="Tags" value="entity,cp,mech,DeusEx,helmetButNot"/>
+      <property name="Tags" value="entity,cp,mech,DeusEx,hostile,helmetVanillaDamage"/>
       <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
       <property name="LootDropProb" value="1.0"/>
       <property name="LootDropEntityClass" value="EntityLootContainerDeusEx"/>
-      <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag" help="ISSUE: the rocket is fired from the feet..."/>
-      <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
-      <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
-      <property name="ExperienceGain" value="2500"/>
-      <property name="HideInSpawnMenu" value="false"/>
+      <property name="ExperienceGain" value="1750"/>
+      <property name="HideInSpawnMenu" value="true"/>
       <property name="DismemberMultiplierHead" value="0"/>
-      <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
       <property name="MaxTurnSpeed" value="280"/>
       <property name="MoveSpeed" value=".9"/>
       <property name="MoveSpeedAggro" value="3.6, 4.2"/>
       <property name="MoveSpeedPanic" value="4.2"/>
-      <property name="AITask-1" value="BreakBlock"/>
-      <property name="AITask-2" value="Territorial"/>
-      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=45"/>
-      <property name="AITask-4" value="Leap"/>
-      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,40,EntityNPC,60,EntityPlayer,100,EntitySurvivor,60,EntityBandit,80" help="sync this task with mechDeusEx2CalmRocketL"/>
-      <property name="AITask-6" value="ApproachSpot"/>
-      <property name="AITask-7" value="Look"/>
-      <property name="AITask-8" value="Wander"/>
-      <property name="AITask-9" value=""/>
-      <property name="AITarget-1" value="SetAsTargetIfHurt"/>
       <property name="CanClimbVertical" value="true"/>
       <property name="JumpMaxDistance" value="25, 30"/>
       <effect_group name="Base Effects">
@@ -1112,13 +1099,51 @@
         </triggered_effect>
       </effect_group>
     </entity_class>
-    <entity_class name="mechDeusEx2CalmRocketL" extends="mechDeusEx2RocketL" help="actually just less harmful">
-      <property name="AITask-3" value="Leap"/>
-      <property name="AITask-5" value="Leap"/>
-      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>
+    <entity_class name="mechDeusEx2RocketL" extends="mechDeusEx2">
+      <property name="HideInSpawnMenu" value="false"/>
+      <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag" help="ISSUE: the rocket is fired from the feet..."/>
+      <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
+      <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
+      <property name="AITask-1" value="BreakBlock"/>
+      <property name="AITask-2" value="Territorial"/>
+      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=45" help="sync this task index with mechDeusEx2Calm"/>
+      <property name="AITask-4" value="Leap"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,40,EntityNPC,60,EntityPlayer,100,EntitySurvivor,60,EntityBandit,80" help="sync this task index with mechDeusEx2Calm"/>
+      <property name="AITask-6" value="ApproachSpot"/>
+      <property name="AITask-7" value="Look"/>
+      <property name="AITask-8" value="Wander"/>
+      <property name="AITask-9" value=""/>
+      <property name="AITarget-1" value="SetAsTargetIfHurt"/>
+      <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
+    </entity_class>
+    <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2">
+      <property name="HideInSpawnMenu" value="false"/>
+      <property name="Tags" value="entity,cp,mech,DeusEx,friendly,helmetVanillaDamage"/>
+      <!--      HELPGOOD: these removed sounds are good to keep them mostly quiet while following you -->
+      <property name="SoundRandomTime" value="300.0"/>
+      <property name="SoundRandom" value="RobotRandom"/>
+      <property name="SoundAlert" value=""/>
+      <property name="SoundAttack" value=""/>
+      <property name="SoundDeath" value="RobotDie"/>
+      <property name="SoundHurt" value="RobotRandom"/>
+      <property name="SoundSense" value=""/>
+      <!--      HELPGOOD: these tasks are important to prevent this friendly DeusEx causing trouble by not leaping and not attacking with rockets. You can shoot them to make them follow you, but then you can use the special item to make them stop following again.-->
+      <property name="AITask-1" value="BreakBlock"/>
+      <property name="AITask-2" value="Territorial"/>
+      <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityZombie,40" help="only attack the unnatural"/>
+      <property name="AITask-4" value="ApproachSpot"/>
+      <property name="AITask-5" value="Look"/>
+      <property name="AITask-6" value="Wander"/>
+      <property name="AITask-7" value=""/>
+      <property name="AITarget-1" value="SetAsTargetIfHurt" help="w/o damage this works like making it follow the player"/>
+      <property name="AITarget-2" value="SetNearestEntityAsTarget" data="class=EntityZombie,95"/>
+      <property name="HandItem" value="handRobotArmyDeusExCalm2" help="this wont damage the player"/>
+      <effect_group help="friendly DeusEx buffs">
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>
+      </effect_group>
     </entity_class>
     <entity_class name="_mechDeusEx3RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL: npcRocketLTemplate TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
-      <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2,helmetButNot"/>
+      <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2,helmetVanillaDamage"/>
       <property name="LookAtAngle" value="0"/>
       <property name="PhysicsBody" value="ASCharacterStandard"/>
       <property name="Names" value="DeusExMachina"/>
@@ -1157,7 +1182,7 @@
       <property name="MoveSpeed" value=".2"/>
       <property name="MoveSpeedAggro" value="0.7, 0.8"/>
       <property name="MoveSpeedPanic" value="0.8"/>
-      <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2,helmetButNot"/>
+      <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2,helmetVanillaDamage"/>
     </entity_class>
   </append>
 </GhussakTweaks>

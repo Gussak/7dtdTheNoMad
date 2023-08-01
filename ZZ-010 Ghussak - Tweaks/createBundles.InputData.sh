@@ -14,6 +14,7 @@ astr=(
   foodRawMeat 3 #for dog companion
   GSKspawnDogCompanion 3
   GSKCFGNPCproperSneakingWorkaround 1
+  GSKDeusExMachinaFriendlySlowDown 1
   GSKNPCHiredHeals30perc 13
   GSKNPCHiredHeals180perc 1
   GSKNPCHiredGetsPowerArmor 1
@@ -303,12 +304,13 @@ astr=(
 astr=(
   # notes
   GSKTRNotesBundle 1 #from createNotesTips.sh
-  NOTE_GSKTheNoMadCreateRespawnBundleList 1
   GSKTRSpecialNotesBundle 1 #from createNotesTips.sh
   GSKNoteInfoDevice 1 
   GSKNoteInfoDeviceExtra 1
   GSKNoteStartNewGameSurvivingFirstDay 1
   GSKTheNoMadOverhaulBundleNoteBkp 1 # this last bundle description bkp
+  NOTE_GSKStatBlockagesHPStamina 1
+  NOTE_GSKTheNoMadCreateRespawnBundleList 1
   
   #vanilla
   #keystoneBlock 1 

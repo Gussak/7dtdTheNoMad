@@ -40,41 +40,41 @@ astrItemList=(
   "item" meleeToolShovelT2SteelShovel "WT2SteelShovel" 0 ""
   "item" meleeWpnBatonT2StunBaton "WT2StunBaton" 0 ""
 
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "OTF\3" 0@' |tr -d '\r\0' |sort -u
-  "item" armorSteelBoots "OTFBoots" 0 ""
-  "item" armorSteelChest "OTFChest" 0 ""
-  "item" armorSteelGloves "OTFGloves" 0 ""
-  "item" armorSteelHelmet "OTFHelmet" 0 ""
-  "item" armorSteelLegs "OTFLegs" 0 ""
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "ARO\3" 0@' |tr -d '\r\0' |sort -u
+  "item" armorSteelBoots "AROBoots" 0 ""
+  "item" armorSteelChest "AROChest" 0 ""
+  "item" armorSteelGloves "AROGloves" 0 ""
+  "item" armorSteelHelmet "AROHelmet" 0 ""
+  "item" armorSteelLegs "AROLegs" 0 ""
 
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "OTF\3" 0@' |tr -d '\r\0' |sort -u
-  "item" armorMilitaryBoots "OTFBoots" 0 ""
-  "item" armorMilitaryGloves "OTFGloves" 0 ""
-  "item" armorMilitaryHelmet "OTFHelmet" 0 ""
-  "item" armorMilitaryLegs "OTFLegs" 0 ""
-  "item" armorMilitaryStealthBoots "OTFStealthBoots" 0 ""
-  "item" armorMilitaryVest "OTFVest" 0 ""
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "ARO\3" 0@' |tr -d '\r\0' |sort -u
+  "item" armorMilitaryBoots "AROBoots" 0 ""
+  "item" armorMilitaryGloves "AROGloves" 0 ""
+  "item" armorMilitaryHelmet "AROHelmet" 0 ""
+  "item" armorMilitaryLegs "AROLegs" 0 ""
+  "item" armorMilitaryStealthBoots "AROStealthBoots" 0 ""
+  "item" armorMilitaryVest "AROVest" 0 ""
 
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "OTFHelmet\3" 0@' |tr -d '\r\0' |sort -u
-  "item" armorFirefightersHelmet "OTFHelmetFirefighters" 0 ""
-  "item" armorFootballHelmet "OTFHelmetFootball" 0 ""
-  #"item" armorFootballHelmetZU "OTFHelmetFootball" 0 ""
-  #"item" armorIronHelmet "OTFHelmetIron" 0 ""
-  #"item" armorMilitaryHelmet "OTFHelmetMilitary" 0 ""
-  "item" armorMiningHelmet "OTFHelmetMining" 0 ""
-  #"item" armorScrapHelmet "OTFHelmetScrap" 0 ""
-  #"item" armorSteelHelmet "OTFHelmetSteel" 0 ""
-  "item" armorSwatHelmet "OTFHelmetSwat" 0 ""
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "AROHelmet\3" 0@' |tr -d '\r\0' |sort -u
+  "item" armorFirefightersHelmet "AROHelmetFirefighters" 0 ""
+  "item" armorFootballHelmet "AROHelmetFootball" 0 ""
+  #"item" armorFootballHelmetZU "AROHelmetFootball" 0 ""
+  #"item" armorIronHelmet "AROHelmetIron" 0 ""
+  #"item" armorMilitaryHelmet "AROHelmetMilitary" 0 ""
+  "item" armorMiningHelmet "AROHelmetMining" 0 ""
+  #"item" armorScrapHelmet "AROHelmetScrap" 0 ""
+  #"item" armorSteelHelmet "AROHelmetSteel" 0 ""
+  "item" armorSwatHelmet "AROHelmetSwat" 0 ""
   
-  "item" apparelGhillieSuitJacket "OTFGhillieJacket" ${iEndGameValue} "todo: create as armor mods too like hazmat mods"
-  "item" apparelGhillieSuitPants "OTFGhilliePants" ${iEndGameValue} ""
-  "item" apparelGhillieSuitHood "OTFGhillieHood" ${iEndGameValue} ""
+  "item" apparelGhillieSuitJacket "AROGhillieJacket" ${iEndGameValue} "todo: create as armor mods too like hazmat mods"
+  "item" apparelGhillieSuitPants "AROGhilliePants" ${iEndGameValue} ""
+  "item" apparelGhillieSuitHood "AROGhillieHood" ${iEndGameValue} ""
   
-  "item" apparelHazmatMask "OTFHazmatMask" ${iEndGameValue} ""
-  "item" apparelHazmatGloves "OTFHazmatGloves" ${iEndGameValue} ""
-  "item" apparelHazmatJacket "OTFHazmatJacket" ${iEndGameValue} ""
-  "item" apparelHazmatPants "OTFHazmatPants" ${iEndGameValue} ""
-  "item" apparelHazmatBoots "OTFHazmatBoots" ${iEndGameValue} ""
+  "item" apparelHazmatMask "AROHazmatMask" ${iEndGameValue} ""
+  "item" apparelHazmatGloves "AROHazmatGloves" ${iEndGameValue} ""
+  "item" apparelHazmatJacket "AROHazmatJacket" ${iEndGameValue} ""
+  "item" apparelHazmatPants "AROHazmatPants" ${iEndGameValue} ""
+  "item" apparelHazmatBoots "AROHazmatBoots" ${iEndGameValue} ""
 
   #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed 's@Mod"@"@'
   "item_modifier" modArmorAdvancedMuffledConnectors "ModArmorAdvancedMuffledConnectors" 0 ""
