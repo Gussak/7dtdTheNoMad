@@ -265,6 +265,22 @@
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99" help="this affects leap? no"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKDeusExFriendly" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="9" action="ModifyStats" stat="Health" operation="add" value="9">
+          <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal bandits too, but not zombies"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="18" action="ModifyStats" stat="Health" operation="add" value="9">
+          <requirement name="EntityTagCompare" target="other" tags="player,npc,animal"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="27" action="ModifyStats" stat="Health" operation="add" value="9">
+          <requirement name="EntityTagCompare" target="other" tags="player,npc,animal"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKToggleDebug" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
@@ -2628,8 +2644,8 @@
   <set xpath="/buffs/buff[@name='buffNearDeathRegen']/stack_type/@value">replace</set>
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[       @trigger='onSelfFallImpact' and        @action='AddBuff'           and        @buff='buffPlayerFallingDamage'     ]">
     <requirement name="!EntityTagCompare" tags="npc"/>
-    <requirement name="!HasBuff" buff="god" help="only players anyway"/>
     <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+    <requirement name="!HasBuff" buff="god" help="only players anyway"/>
   </append>
   <append xpath="/buffs">
     <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
@@ -3201,7 +3217,7 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)" help="todoa is the max value always (or like 95% of the times) returned in case of a random that is less than 1.0? gotta review all logic everywhere if that is the case :(. ex.: here use like randomInt(5,50) then div by 1000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.05,0.20)">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
@@ -4948,8 +4964,8 @@
     </effect_group>
     <effect_group>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0" compare_type="or">
-        <requirement name="HasBuff" buff="god"/>
         <requirement name="HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="HasBuff" buff="god"/>
       </triggered_effect>
     </effect_group>
   </append>
@@ -5487,15 +5503,15 @@
       <display_value_key value="{0:0.0}/5"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
-        <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
       </requirements>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
       </effect_group>
       <effect_group>
-        <requirement name="!HasBuff" buff="god"/>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
         </triggered_effect>
@@ -5670,14 +5686,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="5.0"/>
       </effect_group>
       <effect_group>
-        <requirement name="!HasBuff" buff="god"/>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
         <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fHWBlockageStam"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40" compare_type="or">
-          <requirement name="HasBuff" buff="god"/>
           <requirement name="HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="HasBuff" buff="god"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="10"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="10"/>
@@ -5750,7 +5766,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKDenyGoreHarvest"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKDenyGoreHarvest"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(25,55)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.1,0.3)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.1,0.3)" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied."/>
       </effect_group>
     </buff>
     <buff name="buffGSKRadExplosionA" hidden="true" remove_on_death="true">
@@ -6481,6 +6497,7 @@
       <effect_group help="hazard blood loss">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss53">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
           <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.14"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="0.0000002" help="it is like about 1.73 percent per day (0.0000002*3600*24), natural regeneration"/>
@@ -6493,6 +6510,7 @@
       <!-- HELPGOOD: miasma&dirty 'iGSKNearDeathMiasmaLvl' tho is controlled by 'buffGSKHazardWeatherMiasmaDirty59' as it permanently happens everywhere -->
       <effect_group help="dry air">
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness40" compare_type="or">
           <requirement name="InBiome" biome="5" help="desert"/>
           <requirement name="InBiome" biome="8" help="wasteland"/>
@@ -6507,10 +6525,12 @@
       <effect_group help="freezing: in snow. in wasteland at night only">
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
           <requirement name="InBiome" biome="1" help="snow"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
           <requirement name="InBiome" biome="8" help="wasteland"/>
           <requirement name="IsNight"/>
         </triggered_effect>
@@ -6559,6 +6579,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWRadiation40">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
           <requirement name="NotHasBuff" buff="buffGSKHazardousWRadiation40"/>
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="20"/>
         </triggered_effect>
@@ -6580,6 +6601,7 @@
         </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -7491,7 +7513,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10000"/>
         <!-- HELPGOOD: this always gives max float 0.10, why?
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.05,0.10)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="random Float(0.05,0.10)"/>
 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="0"/>
@@ -7608,18 +7630,34 @@
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.20"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKHeadShot">
+    <buff name="buffGSKHeadShot" help="helmetWeak requires 2 shots to kill. helmetNormal 3 shots. helmetStrong 4 shots. No helmet is 1 shot. Armor piercing ammo is 1 shot on any helmet. helmetButNot will consider the head as having vanilla armor therefore vanilla headshot/headhit damage.">
       <stack_type value="effect"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
-      <effect_group help="HeadShot: no helmet is insta kill">
+      <effect_group help="HeadShot: special creatures and conditions">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
+          <requirement name="EntityTagCompare" tags="wight"/>
+          <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
+          <requirement name="EntityTagCompare" tags="helmetButNot"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: no helmet is insta kill (obs.: some creatures like bears have natural helmet cranium/skin)">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="!EntityTagCompare" tags="helmetWeak"/>
         <requirement name="!EntityTagCompare" tags="helmetNormal"/>
         <requirement name="!EntityTagCompare" tags="helmetStrong"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHeadShot"/>
+        <requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot"/>
       </effect_group>
       <effect_group help="HeadShot: init and stack">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
@@ -7627,6 +7665,7 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="1"/>
       </effect_group>
       <effect_group help="HeadShot: determine current perc HP range">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercCurrent" operation="Equals" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="1.00">
@@ -7670,6 +7709,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="HeadShot: less damage for helmetWeak">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="EntityTagCompare" tags="helmetWeak"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
@@ -7677,6 +7717,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.50" help="1.0/0.50=2 headshots required to kill"/>
       </effect_group>
       <effect_group help="HeadShot: less damage for helmetNormal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="EntityTagCompare" tags="helmetNormal"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
@@ -7684,6 +7725,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.33" help="1.0/0.33=3 headshots required to kill"/>
       </effect_group>
       <effect_group help="HeadShot: less damage for helmetStrong">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="EntityTagCompare" tags="helmetStrong"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
@@ -7691,12 +7733,14 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.25" help="1.0/0.25=4 headshots required to kill"/>
       </effect_group>
       <effect_group help="HeadShot: apply damage til goal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="10" help="try 0.1 to slowly see the effect in development :)">
           <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GT" value="@.iGSKHeadShotDmgPercGoal"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="HeadShot: if reached goal, prepare for next goal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LTE" value="@.iGSKHeadShotDmgPercGoal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="-1"/>
@@ -7707,6 +7751,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHeadShot" compare_type="or">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotStack" operation="LTE" value="0"/>
           <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -10335,8 +10380,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCosmicStrikeAllowed" operation="set" value="0"/>
       </effect_group>
       <effect_group help="chk allowed">
-        <requirement name="!HasBuff" buff="god"/>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
         <requirement name="!HasBuff" buff="buffGSKCosmicRayStrike13"/>
         <requirement name="CVarCompare" cvar="_biomeradiation" operation="GT" value="2.5" help="clue for radiation.png"/>
         <requirement name="CVarCompare" cvar="iGSKNPCcosmicRayDigger" operation="Equals" value="0"/>
@@ -10414,14 +10459,11 @@
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
-        <!-- HELPGOOD: all these were randomFloat(0.10,0.50)-->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHealDNAandMutationsTmp" operation="set" value="randomInt(100,500)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHealDNAandMutationsTmp" operation="divide" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="@.fGSKHealDNAandMutationsTmp" help="FIXFLOAT:"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="randomFloat(0.10,0.50)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffDrugOhShitzDrops">
           <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
@@ -10633,24 +10675,71 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Vampire: summon thrawls at night if hit the player TODO: only players can call events? it could call a buff that inc the cvar on player, but how to position the thrawls near it?">
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawl" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnZombieDogNearby"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVampCallsThrawl" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group help="VampireSpawn: granted once every night">
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3" help="may take some time to happen, but probably will"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnVampire"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnZombieDogX3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="VampireSpawn:clear cooldown">
+        <requirement name="!IsNight"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="WightSpawn: granted once per day">
+        <requirement name="!IsNight"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3" help="may take some time to happen, but probably will"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnWight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="WightSpawn:clear cooldown">
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="0"/>
+      </effect_group>
       <effect_group help="Spawn DeusEx:Init, countdown, rm deusex debuff">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="1200" help="every 20mins realtime (8h game time) while the player is friendly to them. They are careless yet.">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExDebuff" target="selfAOE" range="60" target_tags="DeusEx" help="The more they die, the more they become aware of the player">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days. They become careful.">
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(10800,32400)" help="3 to 9 days. They are in alert mode.">
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="50"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="100"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="32400" help="every 9 days. They are nearing extinction.">
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="100"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExDebuff" target="selfAOE" range="60" target_tags="DeusEx" help="The more they die, the more they become aware of the player and ready to rage">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKDeusExKillCount"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate. this is just a simple basic countdown"/>
       </effect_group>
-      <effect_group help="Spawn DeusEx:Faster CountDown">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+      <effect_group help="Spawn DeusEx:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit)">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="10" help="the initial 10 enemies will show up much faster"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="1800"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="set" value="@iGSKDeusExKillCount"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="divide" value="5" help="a hero grade player can kill 100 deus ex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="divide" value="5" help=""/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="add" value="1" help="sync with update_time"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="set" value="3">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExTimeoutSub" operation="GT" value="3" help="sync with max timeout in days"/>
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExTimeoutSub" operation="GT" value="3" help="sync with max timeout in days. this will lower the deusex as enemy spawn time"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="@.iGSKSpawnDeusExTimeoutSub"/>
       </effect_group>
@@ -10661,13 +10750,13 @@
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusEx">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] There is a Deus Ex Machina nearby, be careful!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] There is a Deus Ex Machina nearby, you should visit it.">
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] a Deus Ex Machina is hunting you, beware!!!">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] A Deus Ex Machina may hunt you, beware!!!">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0"/>
       </effect_group>
@@ -11203,8 +11292,8 @@
       </effect_group>
       <effect_group help="fix the imperfect god ;). put here only what is causing trouble in god mode...">
         <requirements compare_type="or">
-          <requirement name="HasBuff" buff="god"/>
           <requirement name="HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="HasBuff" buff="god"/>
         </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0"/>
@@ -11609,8 +11698,8 @@
   <set xpath="/buffs/buff[@name='buffLegBroken']/effect_group/passive_effect[@name='Mobility' and @operation='base_add']/@value">-0.75</set>
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group">
     <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiation01">
-      <requirement name="!HasBuff" buff="god"/>
       <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+      <requirement name="!HasBuff" buff="god"/>
       <requirement name="NotHasBuff" buff="buffRadSuit"/>
       <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
     </triggered_effect>
@@ -11909,8 +11998,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="god">
-          <requirement name="!HasBuff" buff="god"/>
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
@@ -11956,6 +12045,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
           <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode">
@@ -12449,7 +12539,9 @@
     </effect_group>
   </append>
   <set xpath="/buffs/buff[@name='buffEncumberedInv']/effect_group/triggered_effect[@action='ModifyCVar' and @cvar='$encumbranceEffect' and @operation='multiply']/@value" help="was 0.002 (move -20%) by 160 slots inv mod. we get 60 slots (3 lines) on start and 100 available (5 lines). 100*0.006=0.60 = move -60%. This much is to make the player really need to use steroids and create better pockets.">0.006</set>
-  <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change. TODO: add a buff that just slow spiders to 0.01 speed instead -->
+  <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change. TODO: add a buff that just slow spiders to 0.01 speed instead 
+  TODO?: mechRobot have a setting that prevents this problem too (but seems much more complex to implement)? this is commented there (NRE is no ragdoll exception?): <property name="HasRagdoll" value="true" /> No ragdoll on entity, but when both Ragdoll and Rootmotion is false, the entity will not animate attacks on dedicated servers.  Set it to true even without a ragdoll but you MUST NOT have an E_Biped_Root tag on the entity or it will NRE
+  -->
   <append xpath="//triggered_effect[@action='Ragdoll']">
     <requirement name="!EntityTagCompare" target="other" tags="animalSpider01"/>
     <requirement name="!EntityTagCompare" target="other" tags="animalSpider02"/>

@@ -45,11 +45,19 @@ source ./libSrcCfgGenericToImport.sh
   #exit $1
 #}
 
-function FUNCapplyChanges() {
-  mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
-  mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
-  echo "PATCHING expectedly WORKED! now test it!"
-}
+#function CFGFUNCapplyChanges() { #helpf <lstrFlOld> <lstrFlNew>
+  #local lstrFlOld="$1";shift
+  #local lstrFlNew="$1";shift
+  #mv -v "${lstrFlOld}" "${lstrFlOld}.`date +"${strCFGDtFmt}"`.OLD"
+  #mv -v "${lstrFlNew}" "${lstrFlOld}"
+  #echo "PATCHING expectedly WORKED! now test it!"
+#};export -f CFGFUNCapplyChanges
+
+#function CFGFUNCapplyChanges() { #helpf <lstrFlOld> <lstrFlNew>
+  #mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
+  #mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
+  #echo "PATCHING expectedly WORKED! now test it!"
+#}
 
 function FUNCapplyChanges2() {
   unix2dos "${strFlToPatch}.GENCODENEWFILE"
@@ -71,7 +79,7 @@ function FUNCapplyChanges2() {
     #mv -v "${strFlToPatch}" "${strFlToPatch}.`date +"${strCFGDtFmt}"`.OLD"
     #mv -v "${strFlToPatch}.GENCODENEWFILE" "${strFlToPatch}"
     #echo "PATCHING expectedly WORKED! now test it!"
-    FUNCapplyChanges
+    CFGFUNCapplyChanges "${strFlToPatch}" "${strFlToPatch}.GENCODENEWFILE"
   else
     CFGFUNCinfo "Nothing changed for '${strFlToPatch}'."
   fi

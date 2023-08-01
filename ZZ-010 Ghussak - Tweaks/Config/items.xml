@@ -1495,6 +1495,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
     </item>
   </append>
+  <append xpath="/items/item[       @name='ammo9mmBulletAP' or       @name='ammo44MagnumBulletAP' or       @name='ammo762mmBulletAP' or       @name='ammoJunkTurretAP'     ]">
+    <property name="Tags" value="ammo,armorPiercing"/>
+  </append>
+  <append xpath="/items/item[       @name='ammoShotgunBreachingSlug' or       @name='ammoShotgunSlug'     ]">
+    <property name="Tags" value="ammo,shotgun,armorPiercing"/>
+  </append>
+  <append xpath="/items/item[       @name='ammoArrowSteelAP' or       @name='ammoCrossbowBoltSteelAP'     ]">
+    <property name="Tags" value="ammo,ranged,attAgility,perkArchery,perkPenetrator,armorPiercing"/>
+  </append>
   <append xpath="/items/item[@name='drugSteroids']">
     <property name="Stacknumber" value="100"/>
   </append>
@@ -1800,6 +1809,51 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="EconomicValue" value="500"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDogCompanion"/>
+      </effect_group>
+    </item>
+    <item name="GSKteleportLikeAMutantPower">
+      <property name="DescriptionKey" value="dkGSKteleportLikeAMutantPower"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="220,150,128"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="7"/>
+      </property>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="7"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="14"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele1No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-7"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="14"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="21"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele2No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-14"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="21"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="28"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele3No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-21"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="28"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="35"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele4No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-28"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="35"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="42"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele5No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-35"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="42"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKElctrnTele6No"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-42"/>
       </effect_group>
     </item>
     <item name="GSKteleToSkyFreeAndSafeCall" help="no crafting">

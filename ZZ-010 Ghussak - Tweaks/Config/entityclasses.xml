@@ -39,6 +39,9 @@
       </triggered_effect>
     </effect_group>
     <effect_group help="Headshot and limb shot cripple">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
+        <requirement name="HoldingItemHasTags" tags="armorPiercing"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
         <requirement name="!HoldingItemHasTags" tags="shotgun"/>
@@ -779,7 +782,7 @@
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCSpiderTouchNet"/>
     </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieMutated')]/property[@name='Tags']/@value">,mutant</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieMutated')]/property[@name='Tags']/@value">,mutant,helmetNormal</append>
   <append xpath="/entity_classes/entity_class[@name='animalRabbit' or @name='zombieMutated' or @name='animalZombieVultureRadiated']">
     <effect_group>
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKMutantRabbits"/>
@@ -853,11 +856,13 @@
       <passive_effect name="RunSpeed" operation="perc_add" value="2.0"/>
       <passive_effect name="AttacksPerMinute" operation="perc_add" value="1.0" help="FAILS?"/>
       <passive_effect name="JumpStrength" operation="perc_add" value="3.0" help="works?"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKVampCallsThrawl" operation="add" value="1" target_tags="player"/>
     </effect_group>
     <property name="LootDropProb" value="1.0"/>
     <property name="LootDropEntityClass" value="EntityLootContainerVampire"/>
   </append>
-  <append xpath="/entity_classes/entity_class[contains(@name,'Wight')]/property[@name='Tags']/@value">,wight</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'zombieScreamer')]/property[@name='Tags']/@value">,vampire,helmetNormal</append>
+  <append xpath="/entity_classes/entity_class[contains(@name,'Wight')]/property[@name='Tags']/@value">,wight,helmetNormal</append>
   <set xpath="/entity_classes/entity_class[@name='zombieArlene']/property[@name='DanceType']/@value">1</set>
   <append xpath="/entity_classes/entity_class[@name='zombieDemolition']">
     <property name="Explosion.Buff" value="buffGSKRadExplosionA"/>
@@ -932,82 +937,6 @@
       </passive_effect>
     </effect_group>
 -->
-  </append>
-  <append xpath="/entity_classes/entity_class[@name='DISABLED_ThisWontWork' and       (starts-with(@name,'zombie') or starts-with(@name,'animal') or starts-with(@name,'npc'))       and contains(@name,'Template')     ]" help="ISSUE: this doesnt work because DamageModifier is the damage given and not the damage received right?">
-    <effect_group help="HeadShot: insta kill (or almost) damage for non helmeted">
-      <requirement name="!EntityTagCompare" tags="helmetWeak"/>
-      <requirement name="!EntityTagCompare" tags="helmetNormal"/>
-      <requirement name="!EntityTagCompare" tags="helmetStrong"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="4" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="6" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="8" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="5"/>
-      </passive_effect>
-      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar=".iGSKHSHPHasHelmet" operation="set" value="-1"/>
-    </effect_group>
-    <effect_group help="HeadShot:helmetWeak">
-      <requirement name="EntityTagCompare" tags="helmetWeak"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.99" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.33" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.66" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.99" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="5"/>
-      </passive_effect>
-      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar=".iGSKHSHPHasHelmet" operation="set" value="1"/>
-    </effect_group>
-    <effect_group help="HeadShot:helmetNormal">
-      <requirement name="EntityTagCompare" tags="helmetNormal"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.66" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.99" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.33" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.66" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="5"/>
-      </passive_effect>
-      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar=".iGSKHSHPHasHelmet" operation="set" value="2"/>
-    </effect_group>
-    <effect_group help="HeadShot:helmetStrong">
-      <requirement name="EntityTagCompare" tags="helmetStrong"/>
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.33" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.66" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="0.99" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="1.33" tags="head">
-        <requirement name="CVarCompare" cvar=".iGSKHSHPDifficulty" operation="Equals" value="5"/>
-      </passive_effect>
-      <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar=".iGSKHSHPHasHelmet" operation="set" value="3"/>
-    </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalChicken']">
     <property name="SoundAlert" value="Animals/Chicken/chickenpain"/>
@@ -1112,7 +1041,7 @@
       <property name="SoundDeath" value="RobotDie"/>
       <property name="SoundHurt" value="RobotRandom"/>
       <property name="SoundSense" value="RobotSense"/>
-      <property name="Tags" value="entity,cp,mech,mechRobot,npc,bandit,ranged"/>
+      <property name="Tags" value="entity,cp,mech,mechRobot,npc,bandit,ranged,helmetButNot"/>
       <property name="Faction" value="whiteriver"/>
       <property name="LookAtAngle" value="0"/>
       <property name="ExperienceGain" value="2500"/>
@@ -1147,7 +1076,7 @@
     </entity_class>
     <entity_class name="mechDeusEx2RocketL" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
       <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
-      <property name="Tags" value="entity,cp,mech,DeusEx"/>
+      <property name="Tags" value="entity,cp,mech,DeusEx,helmetButNot"/>
       <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
       <property name="LootDropProb" value="1.0"/>
       <property name="LootDropEntityClass" value="EntityLootContainerDeusEx"/>
@@ -1186,9 +1115,10 @@
     <entity_class name="mechDeusEx2CalmRocketL" extends="mechDeusEx2RocketL" help="actually just less harmful">
       <property name="AITask-3" value="Leap"/>
       <property name="AITask-5" value="Leap"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>
     </entity_class>
     <entity_class name="_mechDeusEx3RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL: npcRocketLTemplate TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
-      <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2"/>
+      <property name="Tags" value="entity,male,npc,ranged,bandit,UMA2,helmetButNot"/>
       <property name="LookAtAngle" value="0"/>
       <property name="PhysicsBody" value="ASCharacterStandard"/>
       <property name="Names" value="DeusExMachina"/>
@@ -1227,7 +1157,7 @@
       <property name="MoveSpeed" value=".2"/>
       <property name="MoveSpeedAggro" value="0.7, 0.8"/>
       <property name="MoveSpeedPanic" value="0.8"/>
-      <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2"/>
+      <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2,helmetButNot"/>
     </entity_class>
   </append>
 </GhussakTweaks>

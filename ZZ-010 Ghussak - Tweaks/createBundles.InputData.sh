@@ -40,6 +40,8 @@ astr=(
   drinkCanMegaCrush 2
   drinkJarBoiledWater 33 #for the desert
   drugGSKPsyonicsResist 13 #to be able to ignore mutants
+  drugGSKmutantEssence 3
+  GSKteleportLikeAMutantPower 1
   drugSteroids  13
   GSKsimpleBeer        33
   ladderWood            66
@@ -70,6 +72,7 @@ astr=(
 astr=( #TEMPLATE
   ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
   ammoArrowStone 33
+  drugGSKwightEssence 3
   gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
   modGunScopeSmall 1
@@ -214,6 +217,7 @@ astr=(
   medicalBloodBag 13
   medicalBloodBagEmpty 9
   drinkJarGrandpasMoonshine 1
+  drugGSKvampireEssence 3
   medicalFirstAidBandage 13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   foodBoiledMeatBundleSchematic 1

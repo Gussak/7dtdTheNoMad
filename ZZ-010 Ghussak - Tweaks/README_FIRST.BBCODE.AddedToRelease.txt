@@ -1,4 +1,4 @@
-The NoMad, unforgiving lands (developer tools, WIP)  
+The NoMad, unforgiving lands. Explore the world, don't allow chaos to scare you, advance always. What is gone is gone for good, don't look back, let it go...
 .  
 ##############################  OVERHAUL(WIP) ##############################    
 This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very difficult but not impossible) gameplay.    

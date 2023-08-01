@@ -192,6 +192,14 @@ function CFGFUNCmeld() { #helpf <meldParams> or for colordiff or custom better j
   return 0
 };export -f CFGFUNCmeld
 
+function CFGFUNCapplyChanges() { #helpf <lstrFlOld> <lstrFlNew>
+  local lstrFlOld="$1";shift
+  local lstrFlNew="$1";shift
+  cp -v "${lstrFlOld}" "${lstrFlOld}.`date +"${strCFGDtFmt}"`.OLD" #backup
+  mv -vf "${lstrFlNew}" "${lstrFlOld}" #overwrite
+  echo "PATCHING expectedly WORKED! now test it!"
+};export -f CFGFUNCapplyChanges
+
 function CFGFUNCdbg() { echo "$@" >&2; };export -f CFGFUNCdbg; #export CFGdbg='echo "(stack: ${FUNCNAME[@]-})Ln:${LINENO},Ret=$?" >&2;CFGFUNCdbg '
 
 function CFGFUNCxmlGetLinePropertyValue(){ #help <lstrLine> <lstrXmlPathAndPropID>
