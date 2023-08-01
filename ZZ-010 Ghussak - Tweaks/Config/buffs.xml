@@ -474,7 +474,10 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="randomFloat(0.15,0.35)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKNPCarmorDmgPercAdd add randomFloat(0.15,0.35)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,350)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.15,0.35)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=751:      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="randomFloat(0.15,0.35)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="add" value="1"/>
       </effect_group>
     </buff>
@@ -485,7 +488,10 @@
         <requirement name="!EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="randomFloat(0.0001,0.0015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKNPCarmorDmgPercAdd set randomFloat(0.0001,0.0015)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,15)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="10000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0001,0.0015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=775:      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="randomFloat(0.0001,0.0015)"> -->
           <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercAdd" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercent" operation="add" value="@fGSKNPCarmorDmgPercAdd"/>
@@ -524,7 +530,10 @@
   </append>
   <append xpath="/buffs/buff[@name='buffInjuryBleeding']">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"/>
+      <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=855:    <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"/> -->
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffLaceration' or @name='buffInfectionCatch' or @name='buffInjuryBleeding']" help="add anything that can bypass hazmat protection">
@@ -3217,12 +3226,24 @@
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.05,0.20)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgHeatProt add randomFloat(0.005,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4849:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgHeatProt add randomFloat(0.05,0.20)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,200)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4850:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.05,0.20)"> -->
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.005,0.050)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.05,0.20)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgColdProt add randomFloat(0.005,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4854:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.005,0.050)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgColdProt add randomFloat(0.05,0.20)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,200)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4855:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.05,0.20)"> -->
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
       </effect_group>
@@ -3308,11 +3329,17 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="randomFloat(0.005,0.050)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercHL add randomFloat(0.005,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4963:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="randomFloat(0.005,0.050)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="GT" value="1.00"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/>
+        <triggered_effect help="FixTinyRandomFloat:was .GSKtmp set randomFloat(0.0,1.0)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,1000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,1.0)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4981:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/> -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectHLOFF">
           <requirement name="CVarCompare" cvar=".GSKtmp" operation="LT" value="@fGSKDmgPercHL"/>
         </triggered_effect>
@@ -3327,11 +3354,17 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="randomFloat(0.005,0.015)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercWL add randomFloat(0.005,0.015)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4998:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="randomFloat(0.005,0.015)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="GT" value="1.00"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/>
+        <triggered_effect help="FixTinyRandomFloat:was .GSKtmp set randomFloat(0.0,1.0)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,1000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,1.0)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5015:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/> -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectWLOFF">
           <requirement name="CVarCompare" cvar=".GSKtmp" operation="LT" value="@fGSKDmgPercWL"/>
         </triggered_effect>
@@ -3346,11 +3379,17 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="randomFloat(0.005,0.025)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercNV add randomFloat(0.005,0.025)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,25)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.025)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5032:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="randomFloat(0.005,0.025)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="GT" value="1.00"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/>
+        <triggered_effect help="FixTinyRandomFloat:was .GSKtmp set randomFloat(0.0,1.0)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,1000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,1.0)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5049:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtmp" operation="set" value="randomFloat(0.0,1.0)"/> -->
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectNVOFF">
           <requirement name="CVarCompare" cvar=".GSKtmp" operation="LT" value="@fGSKDmgPercNV"/>
         </triggered_effect>
@@ -3364,7 +3403,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="randomFloat(0.010,0.020)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTT add randomFloat(0.010,0.020)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(10,20)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.010,0.020)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5069:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="randomFloat(0.010,0.020)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3374,7 +3416,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="add" value="randomFloat(0.005,0.010)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTS add randomFloat(0.005,0.010)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,10)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.010)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5094:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="add" value="randomFloat(0.005,0.010)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3384,7 +3429,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="add" value="randomFloat(0.050,0.100)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTH add randomFloat(0.050,0.100)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.050,0.100)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5128:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="add" value="randomFloat(0.050,0.100)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3394,7 +3442,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.020,0.050)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTP add randomFloat(0.020,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(20,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.020,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5150:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.020,0.050)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3404,7 +3455,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="add" value="randomFloat(0.020,0.050)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTR add randomFloat(0.020,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(20,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.020,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5163:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="add" value="randomFloat(0.020,0.050)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3414,7 +3468,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="randomFloat(0.001,0.005)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTB add randomFloat(0.001,0.005)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,5)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.001,0.005)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5185:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="randomFloat(0.001,0.005)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -4923,7 +4980,10 @@
       <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0">
         <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LT" value="0"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="add" value="randomFloat(0.005,0.015)"/>
+      <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTA add randomFloat(0.005,0.015)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7321:      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="add" value="randomFloat(0.005,0.015)"/> -->
       <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="1.00">
         <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="1.00"/>
       </triggered_effect>
@@ -5147,23 +5207,38 @@
       </effect_group>
       <effect_group help="NoseBleed">
         <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7611:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="Equals" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7615:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="Equals" value="2"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7619:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="Equals" value="3"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7623:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="Equals" value="4"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7627:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="5"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
         </triggered_effect>
@@ -5727,7 +5802,10 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="randomFloat(0.00,1.00)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercHL add randomFloat(0.00,1.00)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,1000)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.00,1.00)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8473:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="randomFloat(0.00,1.00)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -5738,7 +5816,10 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="randomFloat(0.00,0.33)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercWL add randomFloat(0.00,0.33)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,330)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.00,0.33)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8484:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="randomFloat(0.00,0.33)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -5766,7 +5847,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKDenyGoreHarvest"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKDenyGoreHarvest"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(25,55)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.1,0.3)" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied."/>
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.1,0.3)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,300)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied.;FixTinyRandomFloat: was randomFloat(0.1,0.3)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8542:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.1,0.3)" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied."/> -->
       </effect_group>
     </buff>
     <buff name="buffGSKRadExplosionA" hidden="true" remove_on_death="true">
@@ -5848,11 +5932,17 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="60"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(0.33,0.66)">
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.33,0.66)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(330,660)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,0.66)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8641:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(0.33,0.66)"> -->
           <requirement name="!InBiome" biome="8"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.33,0.66)">
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.33,0.66)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(330,660)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,0.66)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8644:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.33,0.66)"> -->
           <requirement name="InBiome" biome="8"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
@@ -6232,12 +6322,19 @@
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious">
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.50,1.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious;FixTinyRandomFloat: was randomFloat(0.50,1.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9164:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious"> -->
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
           <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.20)" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak"/>
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.10,0.20)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,200)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak;FixTinyRandomFloat: was randomFloat(0.10,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9171:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.20)" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak"> -->
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHealMonster" operation="set" value="randomInt(15,50)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iGSKHealMonster" target="selfAOE" range="12" target_tags="zombie" help="todo: is this working? the game must be running for some time before this kicks in?">
           <requirement name="!HasBuff" buff="buffRadiatedRegenBlock" target="other" help="if other regen is blocked, wont be regenerated by this zombie"/>
@@ -6627,7 +6724,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="103908" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="104408" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
@@ -10230,19 +10327,31 @@
       <update_rate value="1"/>
       <effect_group help="add miasma">
         <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="1.00"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.1)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.1)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,100)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.1)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14082:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.1)"> -->
           <requirement name="InBiome" biome="1"/>
           <!-- HELPGOOD: snow -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.2)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.2)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,200)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.2)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14085:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.2)"> -->
           <requirement name="InBiome" biome="5"/>
           <!-- HELPGOOD: desert -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.35)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.35)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,350)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.35)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14088:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.35)"> -->
           <requirement name="InBiome" biome="8"/>
           <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.3)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.3)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,300)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.3)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14091:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.3)"> -->
           <requirement name="InBiome" biome="9"/>
           <!-- HELPGOOD: burntforest (TODO: make it work like in desert about hazards)-->
         </triggered_effect>
@@ -10459,11 +10568,26 @@
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" force="250" target="selfAOE" range="30" target_tags="zombie,animal,bandit" help="so, this wont affect mobs spawned after the stricke, what is expected and ok."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="100"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Stamina" operation="add" value="100"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="randomFloat(0.10,0.50)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="randomFloat(0.10,0.50)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKCosmicRadMessDNA subtract randomFloat(0.10,0.50)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14412:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was fGSKRadiationMessDNA subtract randomFloat(0.10,0.50)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14413:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.10,0.50)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceWight subtract randomFloat(0.10,0.50)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14414:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="subtract" value="randomFloat(0.10,0.50)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceVampire subtract randomFloat(0.10,0.50)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14415:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="subtract" value="randomFloat(0.10,0.50)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceMutant subtract randomFloat(0.10,0.50)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.10,0.50)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14416:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="subtract" value="randomFloat(0.10,0.50)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="add" value="@.iGSKCosmicBloodMoonRageTmTot"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffDrugOhShitzDrops">
           <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
@@ -12293,9 +12417,10 @@
       <display_value_format value="time"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="set" value="randomInt(500,1500)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="divide" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="@.fGSKEssenceTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceWight add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16896:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -12327,9 +12452,10 @@
       <display_value_format value="time"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssVampTmp" operation="set" value="randomInt(500,1500)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssVampTmp" operation="divide" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="@.fGSKEssVampTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceVampire add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16932:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -12360,9 +12486,10 @@
       <display_value_format value="time"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="set" value="randomInt(500,1500)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKEssenceTmp" operation="divide" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="@.fGSKEssenceTmp" help="FIXFLOAT: was randomFloat(0.5,1.5)"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceMutant add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16966:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="randomFloat(0.5,1.5)"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
@@ -12390,12 +12517,16 @@
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
           <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </passive_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKMessDNATmp" operation="set" value="randomInt(50,100)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKMessDNATmp" operation="divide" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKMessDNATmp" help="FIXFLOAT: was randomFloat(0.05,0.10)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKRadiationMessDNA subtract randomFloat(0.05,0.10)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.10)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16998:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"> -->
           <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKMessDNATmp" help="FIXFLOAT: was randomFloat(0.05,0.10)">
+        <triggered_effect help="FixTinyRandomFloat:was fGSKCosmicRadMessDNA subtract randomFloat(0.05,0.10)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.10)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=17001:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"> -->
           <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>

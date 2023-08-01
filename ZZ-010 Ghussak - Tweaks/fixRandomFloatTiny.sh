@@ -54,7 +54,7 @@ for strFl in "${astrFlList[@]}";do
 
   # fix too small random floats that mostly or always result in max value
   #IFS=$'\n' read -d '' -r -a astrDataList < <(cat "$strFl" |tr -d '\r')&&:
-  IFS=$'\n' read -d '' -r -a astrLineList < <(egrep '="randomFloat\(0\.' -ihn "$strFl" |tr -d '\r')&&:
+  IFS=$'\n' read -d '' -r -a astrLineList < <(egrep '="randomFloat\(0\.' -ihn "$strFl" |egrep -vi "$strHint" |tr -d '\r')&&:
   
   if((${#astrLineList[@]}==0));then CFGFUNCinfo "nothing to do for $strFl";continue;fi
   
@@ -116,14 +116,21 @@ for strFl in "${astrFlList[@]}";do
     
     CFGFUNCinfo "iMatchingLines=$iMatchingLines;iPrecision=$iPrecision;$strTrigger;$strCVar;$strRMin/$strRMinFix;$strRMax/$strRMaxFix;$strOriginalLine"
     
-    strIgnorableAll="${strIgnorableTarget}${strIgnorableRange}${strIgnorableTarget_tags}${strIgnorableCompare_type}${strIgnorableHelp}"
+    strIgnorableAll="${strIgnorableTarget}${strIgnorableRange}${strIgnorableTarget_tags}${strIgnorableCompare_type}"
     
     #strOriginalLine="@${strOriginalLine};"
-    strRecrOrigLine="${iLineNumber}:${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="'"${strRandomFloatString}"'('"${strRMin},${strRMax}"')"'"${strIgnorableAll}${strClosing}"
+    strRecrOrigLine="${iLineNumber}:${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="'"${strRandomFloatString}"'('"${strRMin},${strRMax}"')"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}"
     
     if [[ "$strOriginalLine" != "$strRecrOrigLine" ]];then
-      declare -p strOriginalLine strRecrOrigLine strLeadingSpacesAndToken strTrigger strAction strCVar strOperation strRMin strRMax strClosing strIgnorableHelp
+      declare -p strOriginalLine strRecrOrigLine strLeadingSpaces strXmlToken strTrigger strAction strCVar strOperation strRMin strRMax strClosing strIgnorableHelp
       CFGFUNCerrorExit "unable to recreate original line for matching${strErrTip}"
+    fi
+    
+    strHelpHint="${strHint}: was randomFloat(${strRMin},${strRMax})"
+    if [[ -z "${strIgnorableHelp}" ]];then
+      strIgnorableHelp=" help=\"${strHelpHint}\""
+    else
+      strIgnorableHelp="${strIgnorableHelp%\"};${strHelpHint}\""
     fi
     
     #strIdHex="`crc32 <(echo "${strCVar}") |tr '[:lower:]' '[:upper:]'`"; #this grants same ID to avoid seeing too many changes on diff app
@@ -132,11 +139,11 @@ for strFl in "${astrFlList[@]}";do
     #strCVarTmp=".fGSKFixTinyRandomFloat${strIdRnd}Tmp"
     strCVarTmp=".fGSK${strHint}Tmp"
     
-    strComment='<!-- HELPGOOD:'"${strHint}"':OriginalLineNumber='"${iLineNumber}"':OriginalLineData:'"${strOriginalLine}"'-->'
+    strComment=' <!-- HELPGOOD:'"${strHint}"':OriginalLineData:LineNumber='"${strOriginalLine}"' -->' #the line data begins with the original line number
     
     strFixedLine="${strLeadingSpaces}"'<'"${strXmlToken}"' help="'"${strHint}"':was '"${strCVar}"' '"${strOperation}"' randomFloat('"${strRMin},${strRMax}"')" trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="set" value="randomInt('"${strRMinFix},${strRMaxFix}"')"/>'"${strNL}"
     strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="divide" value="'"${iPower}"'" help="'"${strHint}"'"/>'"${strNL}"
-    strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="@'"${strCVarTmp}"'" help="'"${strHint}"': was randomFloat('"${strRMin},${strRMax}"')"'"${strIgnorableAll}${strClosing}${strComment}"
+    strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="@'"${strCVarTmp}"'"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}${strComment}"
     
     : ${bSingleLine:=true} #help this is to turn the easy to implement multiline above into the final result single line. That single line will be easier to undo/recreate/repatch later if there is any reason to do that. TODO: prevent xmlstarlet from removing all white spaces formatting. But at least that can be reverted by removing '\n' from lines containing 'FixTinyRandomFloat' that also do not contain 'OriginalLineData' with a multiline perl script
     if $bSingleLine;then
