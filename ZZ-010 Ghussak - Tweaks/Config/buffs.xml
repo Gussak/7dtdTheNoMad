@@ -270,19 +270,51 @@
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="set" value="randomInt(900,1800)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="add" value="-3" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExFriendlyIsNearby" target="selfAOE" range="60" target_tags="player"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="9" action="ModifyStats" stat="Health" operation="add" value="9">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal all natural living beings (including hostile animals and bandits)"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0" tags="player,npc,animal" target="other"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie" help="wont heal unnatural beings"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="18" action="ModifyStats" stat="Health" operation="add" value="9">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0" tags="player,npc,animal" target="other"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="27" action="ModifyStats" stat="Health" operation="add" value="9">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0" tags="player,npc,animal" target="other"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="freeze. will stop following and helping the player TODO: if it doesnt work well, find a way to despawn w/o killing to prevent dropping the treasure. Or it could be a treasure key that can be freely crafted and can be used to spawn a treasure chest and is limited like: iGSKDeusExKillCountOpenedTresures LTE iGSKDeusExKillCount">
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="LTE" value="0"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="60" action="AddBuff" buff="buffGSKDeusExFriendlyHybernatesPlayerMsg" target_tags="player">
+          <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="LTE" value="0" help="this is to show the message only once"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="GTE" value="-2"/>
+        </triggered_effect>
+        <passive_effect name="RunSpeed" operation="perc_set" value="0"/>
+        <passive_effect name="WalkSpeed" operation="perc_set" value="0"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_set" value="0"/>
+        <passive_effect name="JumpStrength" operation="perc_set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDeusExFriendlyHybernatesPlayerMsg" hidden="true" remove_on_death="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] This Deus Ex Machina is now hybernating."/>
       </effect_group>
     </buff>
     <buff name="buffGSKDeusExEnemy" hidden="true" remove_on_death="true">
@@ -10914,7 +10946,7 @@
       <effect_group help="VampireSpawn: granted once every night">
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="0"/>
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3" help="may take some time to happen, but probably will"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1" help="may take some time to happen, but probably will"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnVampire"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnZombieDogX3"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="1"/>
@@ -10928,7 +10960,7 @@
       <effect_group help="WightSpawn: granted once per day">
         <requirement name="!IsNight"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="0"/>
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3" help="may take some time to happen, but probably will"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1" help="may take some time to happen, but probably will"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnWight"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel a Wight is nearby!"/>
@@ -10940,18 +10972,18 @@
       </effect_group>
       <effect_group help="DeusExMachina:Init, countdown, rm deusex debuff">
         <!--        HELPGOOD: friend-->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="1200" help="every 20mins realtime (8h game time) while the player is friendly to them. They are careless yet.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="1200" help="every 20mins realtime (8h game time) while the player is friendly to them.">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar="$PlayerLevelBonus" operation="LTE" value="3"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="2400" help="every 40mins realtime (16h game time) while the player is friendly to them. They are careless yet.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="2400" help="every 40mins realtime (16h game time) while the player is friendly to them.">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar="$PlayerLevelBonus" operation="GT" value="3"/>
           <requirement name="CVarCompare" cvar="$PlayerLevelBonus" operation="LTE" value="6"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="3600" help="every 60mins realtime (24h game time) while the player is friendly to them. They are careless yet.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days. every 60-180mins realtime while the player is friendly to them.">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
           <requirement name="CVarCompare" cvar="$PlayerLevelBonus" operation="GT" value="6"/>
