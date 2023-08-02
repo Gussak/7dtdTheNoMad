@@ -285,6 +285,32 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKDeusExEnemy" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExEnemyIsNearby" target="selfAOE" range="60" target_tags="player"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKRespawnDeusExFriendlyIfPossible" help="if the player die, and DeusExMachina are still friendly, and there was one nearby, respawn another as soon as possible">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKDeusExTimeoutMargin" help="this extra is to wait a good time after player respawn to help make it sure deusex will be spawned"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDeusExFriendlyIsNearby" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="60"/>
+    </buff>
+    <buff name="buffGSKDeusExEnemyIsNearby" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="60"/>
+    </buff>
     <buff name="buffGSKToggleDebug" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
@@ -6718,6 +6744,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="61"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
         </triggered_effect>
@@ -7775,7 +7803,9 @@
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group help="HeadShot: special creatures and conditions">
+        <!--        HELPGOOD: 1 is with helmet-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="1"/>
+        <!--        HELPGOOD: try deny HS dmg-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
           <requirement name="EntityTagCompare" tags="wight"/>
           <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
@@ -7786,16 +7816,24 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
           <requirement name="HasBuff" buff="buffGSKNPCproperSneakingProtectFoes"/>
         </triggered_effect>
+        <!--        HELPGOOD: try upgrade to instakill mode (no helmet or AP ammo)-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+          <requirement name="!EntityTagCompare" tags="helmetWeak"/>
+          <requirement name="!EntityTagCompare" tags="helmetNormal"/>
+          <requirement name="!EntityTagCompare" tags="helmetStrong"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1"/>
+        </triggered_effect>
+        <!--        HELPGOOD: denied-->
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="HeadShot: no helmet is insta kill (obs.: some creatures like bears have natural helmet cranium/skin)">
-        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-        <requirement name="!EntityTagCompare" tags="helmetWeak"/>
-        <requirement name="!EntityTagCompare" tags="helmetNormal"/>
-        <requirement name="!EntityTagCompare" tags="helmetStrong"/>
-        <requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="2" help="2 means instakill"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot"/>
       </effect_group>
@@ -8024,19 +8062,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
       </effect_group>
-    </buff>
-    <buff name="buffGSKOnRespawnDeusExFriendlyIfPossible" help="if the player die, and DeusExMachina are still friendly, and there was one nearby, respawn another as soon as possible">
-      <stack_type value="ignore"/>
-      <duration value="0.05"/>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
-        <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="60"/>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKDeusExFriendlyIsNearby" remove_on_death="false">
-      <stack_type value="duration"/>
-      <duration value="60"/>
     </buff>
     <buff name="buffGSKElctrnTeleportToSky">
       <stack_type value="ignore"/>
@@ -10952,6 +10977,14 @@
         </triggered_effect>
         <!--        HELPGOOD: basic granted countdown -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate. this is just a simple basic countdown"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="GT" value="0" help="why it drops down to 0? because at 1 it has a trigger that shall happen only once on this countdown."/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin" help="after a DeusExFriendly is called back, if it does not spawn after .iGSKDeusExFriendlyWaitDelay, try to spawn it again">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="Equals" value="1" help="why 1 and not 0? because 0 is cvar default. 1 means it had a bigger value, therefore means it was actually set in a flow. sync 1 with update_rate (the count down must match it)"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="DeusExMachina:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit)">
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
@@ -10967,20 +11000,45 @@
       </effect_group>
       <effect_group help="DeusExMachina:DoIt">
         <requirement name="!IsBloodMoon" help="prevents it tanking for the player, but... if they player stays near one the whole day TODO: de-spawn DeusEx when bloodmoon begins (kill w/o dropping loot) and re-spawn when it ends (short countdown)"/>
-        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LT" value="60"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
+        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LT" value="@.iGSKDeusExTimeoutMargin"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="1">
+          <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="2">
+          <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearby"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExFriendlyIsNearby"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsNearby"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="set" value="@.iGSKDeusExFriendlyWaitDelay" help="to try respawn if it fails for any reason">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusEx">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] There is a Deus Ex Machina nearby, you should visit it.">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel there may have a Deus Ex Machina nearby..">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] A Deus Ex Machina may hunt you, beware!!!">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] A Deus Ex Machina may be hunting you, beware!!!">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:DeusExMachina:Spawned?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKDeusExKillCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKSpawnDeusExAllowed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKDeusExTimeoutMargin" help="try again real delay">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="DeusExMachina:AnnihilationBonuses">
         <passive_effect name="HealthMax" operation="base_add" value="@iGSKDeusExBonusHP"/>
@@ -12775,6 +12833,7 @@
     </effect_group>
   </append>
   <set xpath="/buffs/buff[@name='buffEncumberedInv']/effect_group/triggered_effect[@action='ModifyCVar' and @cvar='$encumbranceEffect' and @operation='multiply']/@value" help="was 0.002 (move -20%) by 160 slots inv mod. we get 60 slots (3 lines) on start and 100 available (5 lines). 100*0.006=0.60 = move -60%. This much is to make the player really need to use steroids and create better pockets.">0.006</set>
+  <setattribute xpath="/buffs/buff[@name='buffInfection01GetBetter']" name="icon_color" help="to help distinguish this treated from the infected color">180,255,180</setattribute>
   <!-- HELPGOOD:TODO: animal spiders just freeze cuz they dont have ragdoll right? so remove this code if they change. TODO: add a buff that just slow spiders to 0.01 speed instead 
   TODO?: mechRobot have a setting that prevents this problem too (but seems much more complex to implement)? this is commented there (NRE is no ragdoll exception?): <property name="HasRagdoll" value="true" /> No ragdoll on entity, but when both Ragdoll and Rootmotion is false, the entity will not animate attacks on dedicated servers.  Set it to true even without a ragdoll but you MUST NOT have an E_Biped_Root tag on the entity or it will NRE
   -->

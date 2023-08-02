@@ -69,6 +69,11 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   iSellPriceTier4="${astrItemList[iDataLnIniIndex+3]}";CFGFUNCchkNum "$iSellPriceTier4"
   strAddHelp="${astrItemList[iDataLnIniIndex+4]}"
   
+  if [[ "$strItem" =~ .*Bundle ]];then
+    CFGFUNCinfo "Ignoring bundles: $strItem. This reward is meant to at most fill the gap, reach the minimum requirements, and not mass build things."
+    continue;
+  fi
+  
   strHelp=""
   
   strCreativeMode="${CFGastrCacheItem1CreativeMode2List[${strItem}]-}" #tries the cache
@@ -121,7 +126,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ "$strItem" =~ .*Dye.* ]];then #cosmetics (have no advantages, unless if PVP as cammo)
     ((iRewardValue/=10))&&: #240 (based on the collected value)
   fi
-  if [[ "${strShortNameId:0:3}" == "CSM" ]];then #consumables (may be used often w/o problems)
+  if [[ "${strShortNameId:0:3}" =~ (CSM|RSC) ]];then #consumables (may be used often w/o problems)
     if((iSellPriceTier4==0));then #cfg=0 means to use automatic values
       iRewardValue=$((iEconomicValue*3))
     else
@@ -129,11 +134,14 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     fi
   fi
   
+  if((iRewardValue==0));then CFGFUNCerrorExit "iRewardValue==0";fi
+  
   strItemType=""
   if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
   if [[ "${strShortNameId:0:3}" == "SCH" ]];then strItemType="Schematic";fi
   if [[ "${strShortNameId:0:3}" == "ARO" ]];then strItemType="Armor and Outfit";fi
   if [[ "${strShortNameId:0:3}" == "Mod" ]];then strItemType="Item Modification";fi
+  if [[ "${strShortNameId:0:3}" == "RSC" ]];then strItemType="Resource";fi
   if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
   if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi
   if [[ -z "$strItemType" ]];then CFGFUNCerrorExit "invalid undefined strItemType='$strItemType'";fi
