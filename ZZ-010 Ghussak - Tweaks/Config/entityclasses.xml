@@ -1075,14 +1075,14 @@
         <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
       </effect_group>
     </entity_class>
-    <entity_class name="mechDeusEx2" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
-      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
+    <entity_class name="mechDeusEx2Template" extends="mechRobotArmy" help="this one leaps well, runs well, fires rocket +- but ok, hits melee. TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
+      <property name="HideInSpawnMenu" value="true"/>
       <property name="Tags" value="entity,cp,mech,DeusEx,hostile,helmetVanillaDamage"/>
+      <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
       <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
       <property name="LootDropProb" value="1.0"/>
       <property name="LootDropEntityClass" value="EntityLootContainerDeusEx"/>
       <property name="ExperienceGain" value="1750"/>
-      <property name="HideInSpawnMenu" value="true"/>
       <property name="DismemberMultiplierHead" value="0"/>
       <property name="MaxTurnSpeed" value="280"/>
       <property name="MoveSpeed" value=".9"/>
@@ -1094,21 +1094,22 @@
         <passive_effect name="HealthMax" operation="base_set" value="31000" help="a bit less than teleport explosion, but it must be 1 hit kill, so damage resistance must be considered. try once to calc correct HP here."/>
         <passive_effect name="HealthChangeOT" operation="base_add" value="1000" help="TODO: say: self repair 3d printing system activated beep"/>
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExDebuff"/>
-        <triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" target="self" buff="buffGSKDeusExDebuff" help="rage if attacked by player">
+        <triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" target="self" buff="buffGSKDeusExDebuff" help="FOE: rage if attacked by player; FRIEND: will look like it is just following the player;">
           <requirement name="EntityTagCompare" tags="player" target="other"/>
         </triggered_effect>
       </effect_group>
     </entity_class>
-    <entity_class name="mechDeusEx2RocketL" extends="mechDeusEx2">
+    <entity_class name="mechDeusEx2RocketL" extends="mechDeusEx2Template" help="player enemy">
       <property name="HideInSpawnMenu" value="false"/>
+      <property name="Tags" value="entity,cp,mech,DeusEx,hostile,helmetVanillaDamage"/>
       <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag" help="ISSUE: the rocket is fired from the feet..."/>
       <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="AITask-1" value="BreakBlock"/>
       <property name="AITask-2" value="Territorial"/>
-      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=45" help="sync this task index with mechDeusEx2Calm"/>
+      <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=45"/>
       <property name="AITask-4" value="Leap"/>
-      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,40,EntityNPC,60,EntityPlayer,100,EntitySurvivor,60,EntityBandit,80" help="sync this task index with mechDeusEx2Calm"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,90,EntityNPC,15,EntityPlayer,25,EntitySurvivor,15,EntityBandit,15"/>
       <property name="AITask-6" value="ApproachSpot"/>
       <property name="AITask-7" value="Look"/>
       <property name="AITask-8" value="Wander"/>
@@ -1119,7 +1120,7 @@
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy"/>
       </effect_group>
     </entity_class>
-    <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2">
+    <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2Template">
       <property name="HideInSpawnMenu" value="false"/>
       <property name="Tags" value="entity,cp,mech,DeusEx,friendly,helmetVanillaDamage"/>
       <!--      HELPGOOD: these removed sounds are good to keep them mostly quiet while following you -->
@@ -1133,7 +1134,7 @@
       <!--      HELPGOOD: these tasks are important to prevent this friendly DeusEx causing trouble by not leaping and not attacking with rockets. You can shoot them to make them follow you, but then you can use the special item to make them stop following again.-->
       <property name="AITask-1" value="BreakBlock"/>
       <property name="AITask-2" value="Territorial"/>
-      <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityZombie,40" help="only attack the unnatural"/>
+      <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityZombie,100" help="purges zombified organisms"/>
       <property name="AITask-4" value="ApproachSpot"/>
       <property name="AITask-5" value="Look"/>
       <property name="AITask-6" value="Wander"/>
@@ -1143,6 +1144,7 @@
       <property name="HandItem" value="handRobotArmyDeusExCalm2" help="this wont damage the player"/>
       <effect_group help="friendly DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>
+        <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iDeusExExpCredit" operation="add" value="100"/>
       </effect_group>
     </entity_class>
     <entity_class name="_mechDeusEx3RocketL" extends="npcAdvancedRocketLTemplate" help="FAIL: npcRocketLTemplate TODO: use some super fancy model that looks like a organic/implanted/cyborg hybrid with some neon ;). TODO: make it spawn the normal mechs every 300s, but bees every 60s. make bees have like just 1 shot HP, 10HP, and harvest almost nothing from them. TODO: contextualize DeusEx in docs. TODO: prevent mechs from dropping loot, least DeusEx itself.">
