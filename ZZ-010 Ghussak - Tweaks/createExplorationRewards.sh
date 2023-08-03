@@ -54,6 +54,7 @@ source "createExplorationRewards.InputData.sh"
 ### right???
 : ${fMultPriceTier4to6:=1.6} #help
 
+iCallCourierEnergyReq=10
 astrCustomIconIsSelfId=()
 astrLocList=()
 iUpdateEcoItemValCache=0
@@ -188,7 +189,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   if [[ "$strCustomIcon" == "$strItem" ]];then astrCustomIconIsSelfId+=("$strItem");fi
   
-  strItemName='GSKTNMER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
+  strItemName='GSKTNMWER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
   #for((iChkItemNm=0;iChkItemNm<${#astrPrevItemNameList[@]};iChkItemNm++));do if [[ "${astrPrevItemNameList[iChkItemNm]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: $strItemName, $strItem";fi;done
   for strItemChk in ${!astrPrevItemNameList[@]};do if [[ "${astrPrevItemNameList[$strItemChk]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: '$strItemName' $strItemChk vs $strItem";fi;done
   astrPrevItemNameList[${strItem}]="$strItemName"
@@ -221,6 +222,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
         <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="'"${iRewardValue}"'" help="'"${strHelp}; ${strAddHelp}; Dbg:EcV=${iEconomicValue},t4=${iSellPriceTier4},t6=${iSellPriceTier6}"'"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="'"${iCallCourierEnergyReq}"'" />
         <property name="Create_item" value="'"${strItem}"'" />
         <property name="Create_item_count" value="'"${iCountOrTier}"'" />
         <property name="Delay" value="0.25" />
@@ -228,6 +230,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
         <property name="Sound_start" value="nightvision_toggle" />
       </property>
       <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="'"${iCallCourierEnergyReq}"'"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-'"${iRewardValue}"'"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="'"${strCourier}"'" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
@@ -236,9 +239,10 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>' >>"${strFlGenIte}${strGenTmpSuffix}"
-  echo '<recipe name="'"${strItemName}"'" count="1"/>' >>"${strFlGenRec}${strGenTmpSuffix}"
+  echo '<recipe name="'"${strItemName}"'" count="1"><ingredient name="electronicsParts" count="1"/></recipe>' >>"${strFlGenRec}${strGenTmpSuffix}"
+  echo '<recipe name="electronicsParts" count="1"><ingredient name="'"${strItemName}"'" count="1"/></recipe>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
-  astrLocList+=("${strDk},\"[TheNoMad:ExploringReward] ${strItemType}: ${strItemName}\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you (See *Delivery notes).\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
+  astrLocList+=("${strDk},\"[TheNoMad:WorldExplorationReward] ${strItemType}: ${strItemName}\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you (See *Delivery notes).\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
   
   if((iUpdateEcoItemValCache==10));then CFGFUNCwriteCaches;iUpdateEcoItemValCache=0;fi
   if((iUpdateItemHasTiersCache==10));then CFGFUNCwriteCaches;iUpdateItemHasTiersCache=0;fi

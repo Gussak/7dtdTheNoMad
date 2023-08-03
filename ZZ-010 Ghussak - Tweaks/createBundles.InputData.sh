@@ -76,6 +76,7 @@ astr=( #TEMPLATE
   drugGSKwightEssence 3
   gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
+  GlowStickGreen       3 #vs wights
   modGunScopeSmall 1
   thrownAmmoMolotovCocktail6s 13
   thrownAmmoStunGrenade 13
@@ -309,6 +310,7 @@ astr=(
   GSKNoteInfoDeviceExtra 1
   GSKNoteStartNewGameSurvivingFirstDay 1
   GSKTheNoMadOverhaulBundleNoteBkp 1 # this last bundle description bkp
+  NightVisionBattery 3 #required to open packages
   NOTE_GSKStatBlockagesHPStamina 1
   NOTE_GSKTheNoMadCreateRespawnBundleList 1
   

@@ -28,7 +28,7 @@
       <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
       <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
       <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
-      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1">
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1" help="this would be in case player find another way to kill than teleport disintegration">
         <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
@@ -39,69 +39,72 @@
       </triggered_effect>
     </effect_group>
     <effect_group help="Headshot and limb shot cripple">
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
-        <requirement name="HoldingItemHasTags" tags="armorPiercing"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
+        <!-- HELPGOOD: could work with ProjectileHasTags ? 
+        <requirement name="HoldingItemHasTags" tags="armorPiercing" help="ISSUE: This does not work"/>
+-->
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
         <requirement name="HitLocation" body_parts="Head"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
         <requirement name="!HoldingItemHasTags" tags="shotgun"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="5" help="This is from the EffectiveAndImmersiveWeaponsOverhaul. max is 20 pellets"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="10"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="10"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="15"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="15"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="20"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKHeadShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
         <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffGSKLegArmShot">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKLegArmShot">
         <requirement name="HitLocation" body_parts="LeftUpperLeg,RightUpperLeg,LeftLowerLeg,RightLowerLeg,LeftUpperArm,RightUpperArm,LeftLowerArm,RightLowerArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="LeftUpperLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="RightUpperLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="LeftLowerLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerLeg" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="RightLowerLeg"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="LeftUpperArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightUpperArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="RightUpperArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotLeftLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="LeftLowerArm"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKShotRightLowerArm" operation="add" value="@.fGSKLimbShotDebuff" target="other" target_tags="zombie,animal,bandit,mech">
         <requirement name="HitLocation" body_parts="RightLowerArm"/>
       </triggered_effect>
     </effect_group>
     <effect_group>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" help="MeleeBuild:">
         <requirement name="IsAlive" target="other"/>
-        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick" help="MeleeBuild:">
@@ -114,11 +117,12 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
         <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other"/>
-        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player that is not a zombie"/>
+        <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
@@ -126,6 +130,7 @@
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
         <requirement name="EntityTagCompare" target="other" tags="zombie" help="heals only a bit from zombies"/>
+        <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
@@ -214,12 +219,11 @@
     <property name="MoveSpeedAggro" value="1.55, 1.60"/>
   </append>
   <append xpath="/entity_classes/entity_class[       @name='animalBear' or       @name='animalBoar' or       @name='animalBossGrace' or       @name='animalDireWolf' or       @name='animalMountainLion' or       @name='animalWolf' or       @name='animalZombieBear' or       @name='animalZombieDog'      ]">
-    <property name="AITarget-1" value="SetAsTargetIfHurt"/>
-    <property name="AITarget-2" value="BlockIf" data="condition=alert e 0"/>
-    <property name="AITarget-3" value="BlockingTargetTask" help="is like parrying? or is about breaking blocks?"/>
-    <property name="AITarget-4" value="SetNearestCorpseAsTarget" help="this is to keep them busy and easy targets. TODO:CHK: do they destroy the corpse? if so will be a good challenge vs trying to harvest it.."/>
-    <property name="AITarget-5" value="SetNearestEntityAsTarget" data="class=EntityPlayer,22,20,EntityAnimalStag,0,0,EntityNPC,18,13" help="TODOA: what these 2 numbers after class name mean?"/>
-    <property name="AITarget-6" value=""/>
+    <property name="AITarget-1" value="SetAsTargetIfHurt" data="class=EntityAlive,0,EntityNPC,0,EntityPlayer,0,EntitySurvivor,0,EntityBandit,0"/>
+    <property name="AITarget-2" value="BlockingTargetTask" help="is like parrying? or is about breaking blocks? or is about blocking other entities movement?"/>
+    <property name="AITarget-3" value="SetNearestCorpseAsTarget" data="class=EntityPlayer" help="ISSUE: only works with player? trying others will error a lot on the log. TODO: class=EntityAlive,EntityPlayer,EntityAnimalStag,EntityNPC,EntityAnimalRabbit,EntitySurvivor,EntityBandit this is to keep them busy and easy targets. TODO:CHK: do they destroy the corpse? if so will be a good challenge vs trying to harvest it.. EntityAlive means it is alive or is the alive (not zombie) kind?"/>
+    <property name="AITarget-4" value="SetNearestEntityAsTarget" data="class=EntityPlayer,22,20,EntityAnimalStag,0,0,EntityNPC,18,13,EntityAnimalRabbit,8,5" help="TODOA: what these 2 numbers after class name mean?"/>
+    <property name="AITarget-5" value=""/>
   </append>
   <!-- HELPGOOD: mute companion wolf when not in combat, so it's combat sounds become the alert to the player.
   this emptier set gives error: <set xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundRandom']/@value"></set>
@@ -343,7 +347,7 @@
       <property name="LootListOnDeath" value="lootPackRegularWithRocket"/>
     </entity_class>
     <entity_class name="EntityLootContainerDeusEx" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="#Entities/LootContainers?weapon_bags_largePrefab.prefab"/>
+      <property name="Mesh" value="#Entities/LootContainers?tier4LootChestPrefab.prefab" help="looks nice"/>
       <property name="LootListOnDeath" value="hardenedChestT5"/>
     </entity_class>
   </append>
@@ -857,7 +861,21 @@
       <passive_effect name="RunSpeed" operation="perc_add" value="2.0"/>
       <passive_effect name="AttacksPerMinute" operation="perc_add" value="1.0" help="FAILS?"/>
       <passive_effect name="JumpStrength" operation="perc_add" value="3.0" help="works?"/>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKVampCallsThrawl" operation="add" value="1" target_tags="player"/>
+      <!--      HELPGOOD: 5 let it spawn 3, goal is TOT(3) + 2 = 5 = INIT value. If you want 3, you have to set to 5.
+        1st hit: 5; -1=4>1; spawn 1
+        2nd hit: 4; -1=3>1; spawn 2
+        3rd hit: 3; -1=2>1; spawn 3
+        4th hit: 2; -1=1 STOP: Wont be 0 so wont init. Being 1 will fail on GT 1. So STOPs
+-->
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKVampCallsThrawlSelf" operation="set" value="5">
+        <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawlSelf" operation="Equals" value="0" help="tot=3 +2 = 5=init"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKVampCallsThrawlSelf" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawlSelf" operation="GT" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKVampCallsThrawl" operation="add" value="1" target_tags="player">
+        <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawlSelf" operation="GT" value="1"/>
+      </triggered_effect>
     </effect_group>
     <property name="LootDropProb" value="1.0"/>
     <property name="LootDropEntityClass" value="EntityLootContainerVampire"/>
@@ -897,7 +915,34 @@
   <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='DamageModifier' and contains(@tags, 'head')]" help="this resets all TSBX_Headshot_100 DamageModifier changes (that are applied on the player) to redo it here (applying it on foes to detect helmet usage based on 3d model) using buffGSKHeadShot instead"/>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker') or       @name='animalBear'     ]/property[@name='Tags']/@value">,helmetWeak</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition') or       @name='animalZombieBear'     ]/property[@name='Tags']/@value">,helmetNormal</append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       starts-with(@name,'mech')     ]/property[@name='Tags']/@value">,helmetStrong</append>
+  <append xpath="/entity_classes/entity_class[@name='mechSphereII']" help="fix it before other patches">
+    <property name="Tags" value="entity,cp,mech,mechSphereII"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       @name='mechRobot' or       @name='mechRobotArmy'     ]/property[@name='Tags']/@value">,helmetStrong</append>
+  <append xpath="/entity_classes/entity_class[       @name='mechDrone' or       @name='mechSphereI' or       @name='mechSphereII'     ]/property[@name='Tags']/@value">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[@name='mechTemplateHostile']">
+    <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
+    <property name="AITask-1" value="BreakBlock"/>
+    <property name="AITask-2" value="Leap"/>
+    <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityAlive,0"/>
+    <property name="AITask-4" value="ApproachSpot"/>
+    <property name="AITask-5" value="Look"/>
+    <property name="AITask-6" value="Territorial"/>
+    <property name="AITask-7" value="Wander"/>
+    <property name="AITask-8" value=""/>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='mechBee']">
+    <effect_group name="Base Effects">
+      <passive_effect name="HealthMax" operation="base_set" value="50" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
+    </effect_group>
+    <property name="DeadBodyHitPoints" value="20" help="faster harvesting"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'mechSphere')]">
+    <effect_group name="Base Effects">
+      <passive_effect name="HealthMax" operation="base_set" value="75" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
+    </effect_group>
+    <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
+  </append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]">
     <property name="DismemberMultiplierHead" value="0.33"/>
   </append>
@@ -1115,6 +1160,17 @@
       <property name="AITask-8" value="Wander"/>
       <property name="AITask-9" value=""/>
       <property name="AITarget-1" value="SetAsTargetIfHurt"/>
+      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble"/>
+      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30"/>
+      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27"/>
+      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36"/>
+      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27"/>
+      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest"/>
+      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest"/>
+      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest"/>
+      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest"/>
+      <drop event="Destroy" name="resourceScrapIron" count="3,45"/>
+      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
       <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
       <effect_group help="enemy DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy"/>
@@ -1141,6 +1197,17 @@
       <property name="AITask-7" value=""/>
       <property name="AITarget-1" value="SetAsTargetIfHurt" help="w/o damage this works like making it follow the player"/>
       <property name="AITarget-2" value="SetNearestEntityAsTarget" data="class=EntityZombie,95"/>
+      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble"/>
+      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30"/>
+      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27"/>
+      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36"/>
+      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27"/>
+      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest"/>
+      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest"/>
+      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest"/>
+      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest"/>
+      <drop event="Destroy" name="resourceScrapIron" count="3,45"/>
+      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
       <property name="HandItem" value="handRobotArmyDeusExCalm2" help="this wont damage the player"/>
       <effect_group help="friendly DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>

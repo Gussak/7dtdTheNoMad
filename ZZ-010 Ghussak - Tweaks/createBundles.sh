@@ -47,6 +47,8 @@ astrDKAndDescList=("dkGSKFreeBundleExpLossInfo_NOTE,\"${strExpLossInfo}\"")
 astrBundlesItemsLeastLastOne=()
 astrBundlesSchematics=()
 
+iCallCourierEnergyReq=10
+
 iAllFreeBundlesSumExpDebit=0
 
 # sub sections
@@ -138,6 +140,7 @@ function FUNCprepareCraftBundle() {
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
         <requirement name="CVarCompare" cvar="'"${lstrCvar}"'" operation="GT" value="0" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="'"${iCallCourierEnergyReq}"'" />
         <property name="Create_item" value="'"${lstrBundleID}"'" />
         <property name="Create_item_count" value="1" />
         <property name="Delay" value="0.25" />
@@ -145,7 +148,8 @@ function FUNCprepareCraftBundle() {
         <property name="Sound_start" value="nightvision_toggle" />
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="'"${lstrCvar}"'" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="'"${iCallCourierEnergyReq}"'"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="'"${lstrCvar}"'" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="'"${strCourier}"'" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0" />
@@ -154,7 +158,7 @@ function FUNCprepareCraftBundle() {
       </effect_group>
     </item>'
   strXmlCraftBundleCreateRecipesXml+='
-    <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"></recipe>'
+    <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"><ingredient name="electronicsParts" count="1"/></recipe>'
   # not using onSelfDied anymore, unnecessary
   if $lbSchematic || $lbOpenOnceOnly;then
     strXmlCraftBundleCreateBuffsXml+='
@@ -563,7 +567,7 @@ function FUNCprepareBundlePart() {
   fi
   #else #dynamic description
   if ! $lbExternalDK;then
-    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n A courier will bring this package to you.\n Experience Penalty when opening this bundle${lstrOpenOnceOnly}(Remaining open count {cvar(${lstrCvar}:0)}): ${liExpDebt}*({cvar(${lstrBundleCountID}:0)}+1)/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrDkItems}\n ${lstrAddDesc}\"")
+    astrDKAndDescList+=("${lstrBundleDK},\"${lstrBundleDesc}\n Activating this will call a courier that will bring the package to you (but not if there are too many couriers nearby). That call requires ${iCallCourierEnergyReq} battery energy.\n Experience Penalty when opening this bundle${lstrOpenOnceOnly}(Remaining open count {cvar(${lstrCvar}:0)}): ${liExpDebt}*({cvar(${lstrBundleCountID}:0)}+1)/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n ${strExpLossInfo}\n ${lstrDkItems}\n ${lstrAddDesc}\"")
   fi
   #fi
   #if [[ -n "$lstrAddDesc" ]] && [[ "${lstrBundleDesc:0:2}" == "dk" ]];then

@@ -47,7 +47,7 @@ strNL="
 "
 
 #astrFlList=("Config/buffs.xml")
-IFS=$'\n' read -d '' -r -a astrFlList < <(ls Config/*.xml -1 |sort -u)&&:
+IFS=$'\n' read -d '' -r -a astrFlList < <(ls -1 *.xml Config/*.xml |sort -u)&&:
 for strFl in "${astrFlList[@]}";do
 
   #sed -r 's@="randomfloat[(]0[.]@@' Config/buffs.xml >Config/buffs.fixTinyRandomFloat.xml
@@ -70,7 +70,7 @@ for strFl in "${astrFlList[@]}";do
     strLeadingSpaces="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:([\t ]*).*@\1@i'`"
     strXmlToken="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:[\t ]*< *([a-zA-Z0-9_]*).*@\1@i'`"
     strTrigger="`echo "$strOriginalLine" |sed -r 's@.*trigger="([^"]*)".*@\1@i'`"
-    strCVar="`echo "$strOriginalLine" |sed -r 's@.*cvar="([^"]*)".*@\1@i'`";strCVarRegex="`echo "$strCVar" |sed -r 's@[$]@[$]@g'`"
+    strCVar="`echo "$strOriginalLine" |sed -r 's@.*cvar="([^"]*)".*@\1@i'`";strCVarRegex="`echo "$strCVar" |sed -r 's@[$]@[$]@g'`" #this regex protects the $
     strRandomFloatString="`echo "$strOriginalLine" |egrep "randomfloat" -io`"
     strRMin="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(]([^,]*),.*@\1@i'`" #help sed ignore case with 'i' or 'I'
     strRMax="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(][^,]*,([^)]*)[)].*@\1@i'`" #help sed ignore case with 'i' or 'I'
@@ -185,6 +185,8 @@ for strFl in "${astrFlList[@]}";do
 
   #CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 done
+
+#egrep 'randomfloat\(0\.' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -in |egrep -v "${strHint}"
 
 ##last
 #CFGFUNCgencodeApply --cleanChkDupTokenFiles
