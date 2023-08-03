@@ -34,7 +34,7 @@
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other"/>
         <requirement name="IsAlive" target="other"/>
-        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
     </effect_group>
@@ -1173,7 +1173,10 @@
       <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
       <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
       <effect_group help="enemy DeusEx buffs">
-        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy"/>
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy12"/>
+      </effect_group>
+      <effect_group help="enemy DeusEx wins">
+        <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="set" value="0" target="other" target_tags="player" help="resets player score vs DeusExMachinas"/>
       </effect_group>
     </entity_class>
     <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2Template">

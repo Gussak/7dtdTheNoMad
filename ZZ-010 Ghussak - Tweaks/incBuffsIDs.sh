@@ -70,6 +70,7 @@ astrBuffBNList=(
   "buffGSKCosmicBloodMoon"
   "buffGSKCosmicRayStrike"
   "buffGSKCosmicRayStrikeChk"
+  "buffGSKDeusExEnemy"
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
   "buffGSKFallOverLandingHit"

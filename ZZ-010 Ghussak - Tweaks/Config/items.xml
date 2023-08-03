@@ -32,7 +32,7 @@
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
       <property name="Material" value="MresourceScrapIron"/>
-      <property name="Stacknumber" value="10000"/>
+      <property name="Stacknumber" value="1"/>
       <property name="Weight" value="1"/>
       <property name="EconomicValue" value="50" help="this is used just to calc the exp debuff time for free bundles"/>
       <property name="SellableToTrader" value="false"/>
@@ -65,6 +65,7 @@
     <item name="GSKBaseActivatorConsumableFast" help="can be used from inventory, no need to be in the hand">
       <property name="Extends" value="GSKBaseActivator"/>
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="Stacknumber" value="10"/>
       <property class="Action0">
         <property name="Class" value="Eat" help="Could be also class Activate? No, Activate requires melee."/>
         <property name="Delay" value="0.1"/>
@@ -74,6 +75,7 @@
     <item name="GSKBaseActivatorConsumableSlow" help="can be used from inventory, no need to be in the hand">
       <property name="Extends" value="GSKBaseActivator"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Stacknumber" value="10"/>
       <property class="Action0">
         <property name="Class" value="Eat" help="Could be also class Activate? No, Activate requires melee."/>
         <property name="Delay" value="1.0"/>
@@ -90,6 +92,7 @@
     <item name="GSKBaseActivatorFromInventoryFast" help="can be used from inventory, no need to be in the hand, but create_item must be set for each extending identical to self!">
       <property name="Extends" value="GSKBaseActivator"/>
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="Stacknumber" value="1"/>
       <property class="Action0">
         <property name="Class" value="OpenBundle"/>
         <property name="Delay" value="0.1"/>
@@ -101,19 +104,23 @@
     <item name="GSKBaseActivatorFromInventorySlow" help="can be used from inventory, no need to be in the hand, but create_item must be set for each extending identical to self!">
       <property name="Extends" value="GSKBaseActivatorFromInventoryFast"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Stacknumber" value="1"/>
       <property class="Action0">
         <property name="Create_item" value="GSKBaseActivatorFromInventorySlow" help="THIS NEEDS TO BE OVERRIDEN!!!"/>
       </property>
     </item>
     <item name="GSKBaseActivatorReqMeleeFast">
       <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Stacknumber" value="1"/>
     </item>
     <item name="GSKBaseActivatorReqMeleeSlow">
       <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
       <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be even"/>
+      <property name="Stacknumber" value="1"/>
     </item>
     <item name="GSKBaseActivatorReqMeleeConfiguratorFast">
       <property name="Extends" value="GSKBaseActivatorReqMeleeFast" help="because is much less trouble than specifically create_item for OpenBundle class"/>
+      <property name="Stacknumber" value="1"/>
       <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab" help="quick animation"/>
     </item>
   </append>
@@ -1910,6 +1917,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
       <property name="CustomIcon" value="7dtdTeleport"/>
       <property name="CustomIconTint" value="220,150,128"/>
+      <property name="Stacknumber" value="1"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="7"/>
       </property>
@@ -15011,6 +15019,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
     <item name="NightVisionBatteryBase">
+      <property name="CreativeMode" value="None"/>
       <property name="HoldType" value="31"/>
       <property name="CustomIcon" value="carBattery"/>
       <property name="CustomIconTint" value="0,255,0"/>
@@ -15032,6 +15041,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
     </item>
     <item name="NightVisionBatteryBase2">
+      <property name="CreativeMode" value="None"/>
       <property name="HoldType" value="31"/>
       <property name="CustomIcon" value="carBattery"/>
       <property name="CustomIconTint" value="0,255,0"/>
@@ -16013,11 +16023,30 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
       </effect_group>
     </item>
-    <item name="GSKDBGResetDeusExKillCount">
+    <item name="GSKDBGDeusExNextSpawnHappensFaster">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKDeusExTimeoutMargin">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="15">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="165" help=".iGSKDeusExTimeoutMarginX2 + 45">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKDBGDeusExTweakKillCount">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="set" value="0"/>
       </effect_group>
     </item>
     <item name="GSKDBGExperienceDebitInc500">
@@ -17196,6 +17225,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     <item name="GSKElctrnHeroToggle">
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
       <property name="DescriptionKey" value="dkGSKElctrnHeroToggle"/>
+      <property name="Stacknumber" value="1"/>
       <property name="CustomIcon" value="7dtdHero"/>
       <property name="CustomIconTint" value="128,128,128"/>
       <effect_group tiered="false">

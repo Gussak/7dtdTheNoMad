@@ -377,7 +377,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] This Deus Ex Machina is now hybernating."/>
       </effect_group>
     </buff>
-    <buff name="buffGSKDeusExEnemy" hidden="true" remove_on_death="true">
+    <buff name="buffGSKDeusExEnemy12" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3"/>
@@ -403,8 +403,8 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
         <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKDeusExTimeoutMargin" help="this extra is to wait a good time after player respawn to help make it sure deusex will be spawned"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTandDone:buffGSKRespawnDeusExFriendlyIfPossible"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_color="0,0,255">
@@ -413,11 +413,29 @@
     </buff>
     <buff name="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0">
       <stack_type value="replace"/>
-      <duration value="9" help="remove quickly so the player will know it is safe again"/>
-      <update_rate value="1"/>
+      <duration value="20" help="remove quickly (but not too fast) so the player will know it is safe again"/>
+      <update_rate value="1.5" help="this actually controls for how much time (how many times) the alarm is played"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="alarm1" play_in_head="true" help="this shall play only once when foe deusex spawns"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="StopSound" sound="alarm1" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0" help="when the foe dies or despawns, will reset/refresh the timeout"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="false" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKSpawnDeusExTimeout"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF">
+          <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF">
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="@.iGSKDeusExFoeSoonHintPlayer"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKToggleDebug" hidden="true" remove_on_death="true">
@@ -6918,7 +6936,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="61"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
         </triggered_effect>
@@ -11107,6 +11128,14 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="dbg: IsIndoors=1 is just like _sheltered GT 0, but good surrouding sheltering seems to happen only above 0.30">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsInDoors" operation="set" value="1">
+          <requirement name="IsIndoors"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsInDoors" operation="set" value="0">
+          <requirement name="!IsIndoors"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="Vampire: summon thrawls at night if hit the player TODO: only players can call events? it could call a buff that inc the cvar on player, but how to position the thrawls near it?">
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawl" operation="GTE" value="1"/>
@@ -11157,6 +11186,7 @@
       <effect_group help="DeusExMachina:Foe:Init">
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days. They become careful and start hunting.">
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="50"/>
         </triggered_effect>
@@ -11172,14 +11202,28 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKDeusExKillCount"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="DeusExMachina:basic granted spawn countdown">
+      <effect_group help="DeusExMachina:Friend:basic granted spawn countdown">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group help="DeusExMachina:Foe:basic granted spawn countdown">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="@.iGSKDeusExTimeoutMarginX2"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate">
-          <requirement name="StatCompareCurrent" stat="health" operation="GTE" value="70" help="so the player have some chance to survive TODO: could check also how many zombies are nearby 30m day, 15m night, and deny if more than 3"/>
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+      </effect_group>
+      <effect_group help="DeusExMachina:Foe:Cautious spawn countdown. Counters the count down if the player is not well prepared.">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExTimeoutMarginX2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="15" help="sync with update_rate. 15 is like a hint to know it happened here, it could just be 1" compare_type="or">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="70" help="so the player have some chance to survive TODO: could check also how many zombies are nearby 30m day, 15m night, and deny if more than 3"/>
+          <requirement name="StatCompareCurrent" stat="food" operation="LT" value="15"/>
+          <requirement name="StatCompareCurrent" stat="water" operation="LT" value="75"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="0.30" help="some chance to prevent the player being insta killed by surprise"/>
+          <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" help="unnecessary?"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKSpawnDeusExTimeoutMod"/>
       </effect_group>
       <effect_group help="DeusExMachina:Friend:Grant Spawning">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="subtract" value="1">
@@ -11190,6 +11234,12 @@
           <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="Equals" value="1" help="why 1 and not 0? because 0 is cvar default. 1 means it had a bigger value, therefore means it was actually set in a flow. sync 1 with update_rate (the count down must match it)"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="DeusExMachina:Foe:hints player before arrival">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExFoeSoonHintPlayer"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF"/>
       </effect_group>
       <effect_group help="DeusExMachina:Foe:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit). This only lowers the countdown faster if it would already take too long.">
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="1"/>
@@ -11238,10 +11288,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKDeusExTimeoutMargin" help="try again real delay">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="30" help="TODOA: this is just a hint to know it happened here, when working can be removed">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
