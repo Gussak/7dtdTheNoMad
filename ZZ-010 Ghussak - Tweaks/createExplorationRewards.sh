@@ -34,12 +34,13 @@
 #strScriptName="`basename "$0"`"
 
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
-
 eval "`CFGFUNCloadCaches`"
+#CFGFUNCwriteCaches;exit #TODO comment
 
 : ${iRewardValueMult:=15} #help x15 is like the trader price for a tier 6 item just after entering the game the first time (so no trading bonuses)
 : ${iModGenericPrice:=100} #help iModGenericPrice*fMultPriceTier4to6*iRewardValueMult, ex.: 100*1.6*15=2400
 : ${iEndGameValue:=1500} #help end game items are tier6, but this is the sell price of tier4 weapons that will still be converted into tier6 (*fMultPriceTier4to6) and further increased (*iRewardValueMult). In other words, just keep in sync with the sell price of tier4 weapons.
+: ${nPriceDecSize:=5} #help this controls zeros on the left for low prices and nice sorting on the craft list
 
 source "createExplorationRewards.InputData.sh"
 
@@ -59,6 +60,7 @@ astrCustomIconIsSelfId=()
 astrLocList=()
 iUpdateEcoItemValCache=0
 iUpdateItemHasTiersCache=0
+iUpdateCreativeModeCache=0
 declare -A astrPrevItemNameList
 #for strItem in "${astrItemList[@]}";do
 #set -x
@@ -70,10 +72,23 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   iSellPriceTier4="${astrItemList[iDataLnIniIndex+3]}";CFGFUNCchkNum "$iSellPriceTier4"
   strAddHelp="${astrItemList[iDataLnIniIndex+4]}"
   
-  if [[ "$strItem" =~ .*Bundle ]];then
-    CFGFUNCinfo "Ignoring bundles: $strItem. This reward is meant to at most fill the gap, reach the minimum requirements, and not mass build things."
+  if [[ "$strItem" =~ .*Bundle.* ]];then
+    CFGFUNCinfo "Ignoring bundles: $strItem. This reward is meant to at most fill the gap, reach the minimum requirements, and not mass create resources."
     continue;
   fi
+  if [[ "$strItem" =~ .*POI.* ]];then
+    CFGFUNCinfo "Ignoring POI blocks: $strItem."
+    continue;
+  fi
+  if [[ "$strXmlToken" == "block" ]] && [[ "$strItem" =~ ^cnt.* ]];then
+    CFGFUNCinfo "Ignoring container blocks: $strItem."
+    continue;
+  fi
+  #help blocks can be blocked too by adding this to them: <property name="SellableToTrader" value="false"/>
+  #if [[ "$strItem" =~ .*([fF]lagPole|[pP]oolTable|[cC]andelabra|[dD]ogHouse).* ]];then # sync with PreventPlayerCreatingThese at blocks.xml
+    #CFGFUNCinfo "Ignoring PreventPlayerCreatingThese: $strItem."
+    #continue;
+  #fi
   
   strHelp=""
   
@@ -84,9 +99,10 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
       strCreativeMode="`echo "$strCreativeMode" |tr "[:upper:]" "[:lower:]"`"
     fi
     if [[ -z "$strCreativeMode" ]];then
-      strCreativeMode="player"
+      strCreativeMode="player" #when it is not set in the xml, it defaults to 'player' hardcoded in the game engine
     fi
     CFGastrCacheItem1CreativeMode2List["${strItem}"]="$strCreativeMode"
+    ((iUpdateCreativeModeCache++))&&:
   fi
   if [[ "$strCreativeMode" =~ .*(none|dev|test).* ]];then
     CFGFUNCinfo "skip $strItem strCreativeMode='$strCreativeMode'"
@@ -103,15 +119,33 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   if((iSellPriceTier4==0));then
     iEconomicValue="${CFGastrItem1Value2List[${strItem}]-0}" #tries the cache
-    if((iEconomicValue==0));then
+    if((iEconomicValue==0));then # no cache found
       if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$strItem";then
         iEconomicValue="$iFRSPV_PropVal_OUT"
-        CFGastrItem1Value2List["${strItem}"]=$iEconomicValue
-        ((iUpdateEcoItemValCache++))&&:
-        declare -p iUpdateEcoItemValCache
+        CFGFUNCinfo "New iEconomicValue='$iEconomicValue' found for strItem='${strItem}' will be put on cache (iUpdateEcoItemValCache='$iUpdateEcoItemValCache')"
       else
-        CFGFUNCerrorExit "strItem='$strItem' auto price 'EconomicValue' failed, assign a custom price, collet it from ingame sell price at inventory";
+        CFGFUNCinfo "WARN: this strItem='$strItem' cannot be sold (because in the xml: SellableToTrader=false or iEconomicValue=0). A cache with value -1 (means cannot be sold) will be saved to speed it up next time.";
+        iEconomicValue=-1
       fi
+      
+      #if((iEconomicValue==-1));then
+        #CFGFUNCinfo "skipping non sellable block strItem='$strItem'";
+        #continue;
+      #fi
+      if((iEconomicValue==0));then
+        #if [[ "$strXmlToken" == "block" ]];then
+          #CFGFUNCinfo "skipping non sellable block strItem='$strItem'";
+          #continue;
+        #fi
+        CFGFUNCerrorExit "strItem='$strItem' auto price 'EconomicValue'=0 failed, configure a custom price (at input data file) by collecting it from ingame sell price at inventory (just after entering the game for the first time and having sold/bought nothing before)";
+      fi
+      
+      CFGastrItem1Value2List["${strItem}"]=$iEconomicValue
+      ((iUpdateEcoItemValCache++))&&:
+    fi
+    if((iEconomicValue==-1));then # using the cache
+      CFGFUNCinfo "Skipping item that cannot be sold: strItem='${strItem}'"
+      continue;
     fi
       
     #if CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue" "$strXmlToken" "$strItem" "$lstrFlCfgChkFullPath";then # FRSPV
@@ -135,7 +169,17 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
     fi
   fi
   
+  : ${iPriceCap:=36000} #help
+  if((iRewardValue>iPriceCap));then
+    CFGFUNCinfo "strItem='$strItem' above price cap ($iPriceCap) iRewardValue='$iRewardValue', limiting it."
+    iRewardValue="$iPriceCap"
+  fi
+  
   if((iRewardValue==0));then CFGFUNCerrorExit "iRewardValue==0";fi
+  #if((iRewardValue>99999));then
+  if(("${#iRewardValue}">nPriceDecSize));then
+    CFGFUNCerrorExit "strItem='$strItem' iRewardValue='$iRewardValue' bigger than expected (you should increase the nPriceDecSize='$nPriceDecSize' to ${#iRewardValue} as it is used to have a nice list sorting by price with zeros on the left)";
+  fi
   
   strItemType=""
   if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
@@ -145,6 +189,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ "${strShortNameId:0:3}" == "RSC" ]];then strItemType="Resource";fi
   if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
   if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi
+  if [[ "${strShortNameId:0:3}" == "BLK" ]];then strItemType="Block";fi
   if [[ -z "$strItemType" ]];then CFGFUNCerrorExit "invalid undefined strItemType='$strItemType'";fi
   
   if((iCountOrTier==0));then
@@ -189,9 +234,14 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   if [[ "$strCustomIcon" == "$strItem" ]];then astrCustomIconIsSelfId+=("$strItem");fi
   
-  strItemName='GSKTNMWER'"`printf "%05d" "$iRewardValue"`${strShortNameId}"''
+  #strItemName='GSKTNMWER_'"`printf "%0${nPriceDecSize}d" "$iRewardValue"`_${strShortNameId}"''
+  strItemName='GTW'"`printf "%0${nPriceDecSize}d" "$iRewardValue"`${strShortNameId}"''
   #for((iChkItemNm=0;iChkItemNm<${#astrPrevItemNameList[@]};iChkItemNm++));do if [[ "${astrPrevItemNameList[iChkItemNm]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: $strItemName, $strItem";fi;done
-  for strItemChk in ${!astrPrevItemNameList[@]};do if [[ "${astrPrevItemNameList[$strItemChk]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: '$strItemName' $strItemChk vs $strItem";fi;done
+  for strItemChk in ${!astrPrevItemNameList[@]};do
+    if [[ "${astrPrevItemNameList[$strItemChk]}" == "$strItemName" ]];then
+      CFGFUNCerrorExit "item name clash: '$strItemName' $strItemChk vs $strItem";
+    fi;
+  done
   astrPrevItemNameList[${strItem}]="$strItemName"
   
   strDk='dkGSKTNMExplrRwd'"${strItem}"''
@@ -246,6 +296,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   
   if((iUpdateEcoItemValCache==10));then CFGFUNCwriteCaches;iUpdateEcoItemValCache=0;fi
   if((iUpdateItemHasTiersCache==10));then CFGFUNCwriteCaches;iUpdateItemHasTiersCache=0;fi
+  if((iUpdateCreativeModeCache==10));then CFGFUNCwriteCaches;iUpdateCreativeModeCache=0;fi
 done
 if(("${#astrCustomIconIsSelfId[@]}">0));then
   declare -p astrCustomIconIsSelfId |tr '[' '\n'

@@ -425,7 +425,7 @@ function FUNCprepareBundlePart() {
     local liEconomicValue=0
     #local lbCanSell=true
     if [[ -d "$strCFGNewestSavePathConfigsDumpIgnorable" ]];then
-      liEconomicValue="${CFGastrItem1Value2List[${lstrItemID}]-}" #tries the cache
+      liEconomicValue="${CFGastrItem1Value2List[${lstrItemID}]-0}" #tries the cache. 0 is an indicator that there is no cache
       #if [[ -n "${liEconomicValue-}" ]] && [[ "${liItemCount}" =~ ^[0-9]*$ ]] && ((liEconomicValue>0));then
       if CFGFUNCchkNumGT0 "${liEconomicValue}";then
         : #successfully used the cache
@@ -447,46 +447,39 @@ function FUNCprepareBundlePart() {
           #CFGFUNCinfo "WARN: nothing found for lstrItemID='$lstrItemID'";
           ##bFRSPV_CanSell_OUT=true
         #fi
-        local bFoundSomething=false;if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrItemID";then bFoundSomething=true;liEconomicValue="$iFRSPV_PropVal_OUT";fi #the economic  value for items with tier is like item tier4, but the free bundles will only create tier1 items, so they end up overpriced, but that is good to increase the challenge.
+        local bFoundSomething=false;
+        if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$lstrItemID";then
+          bFoundSomething=true; #the economic  value for items with tier is like item tier4, but the free bundles will only create tier1 items, so they end up overpriced, but that is good to increase the challenge.
+          liEconomicValue="$iFRSPV_PropVal_OUT";
+        else
+          liEconomicValue=-1 #this means the item cannot be sold or no inherited value could be found
+        fi 
         
         #lbCanSell="${bFRSPV_CanSell_OUT}"
         #liEconomicValue="${iFRSPV_PropVal_OUT}"
         #if $lbCanSell && [[ -z "$liEconomicValue" ]];then CFGFUNCerrorExit "Can be sold but missing economic value for lstrItemID='${lstrItemID}'";fi
-        if ! $bFoundSomething || $bFRSPV_CanSell_OUT;then #if nothing was found, the user can enter a value manually too now.
-          if ((liEconomicValue==0));then
-            #if [[ "$lstrItemID" == "modGunScopeSmall" ]];then
-              #liEconomicValue=378
-            #elif [[ "$lstrItemID" == "candleTableLight" ]];then
-              #liEconomicValue=72
-            #else
-              CFGFUNCinfo "WARN: Can be sold. But it is missing economic value for lstrItemID='${lstrItemID}'"
-              while true;do
-                #local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think price is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
-                local liItemValueResp;read -p "INPUT: Start a new game. Add to your inventory item '${lstrItemID}'. If the item has tiers, collect the sell price for tier4. If the item has no tiers (like gun mods), collect the trader sell price for it. So, the player must be  lvl 1 w/o any trading bonuses (just after you enter the game the 1st time and w/o any skills or other bonuses from consumables or equipment) (I think price is like +- sellValue=itemTier4SellValue=EconomicValue. sellValue*15=traderSellValue (right?):" liItemValueResp&&:
-                #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
-                if CFGFUNCchkNumGT0 "${liItemValueResp}";then
-                  liEconomicValue="$liItemValueResp"
-                  #liEconomicValue="$((liItemValueResp/15))"
-                  #liEconomicValue=$((liEconomicValue*5/15))&&:
-                  if CFGFUNCprompt -q "economic value for '${lstrItemID}' will be ${liEconomicValue}, is that ok?";then
-                    break
-                  fi
-                else
-                  CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
-                fi
-              done
-            #if [[ "${strFRSPV_XmlTokenFound_OUT}" == "item_modifier" ]];then
-              #CFGFUNCprompt "auto value for ${lstrItemID} 2500"
-              #liEconomicValue=2500 #help this value is based on prices shown on the trader inventory for player lvl 1 w/o trading skills. it is not an average. No problem it being a high value as will be used just to create a experience debuff.
-            #elif [[ "${strFRSPV_XmlTokenFound_OUT}" == "block" ]];then
-              #CFGFUNCprompt "auto value for ${lstrItemID} 20"
-              #liEconomicValue=20 #help this is just to not leave it empty as many blocks (when they have a price) worth almost nothing TODO: create some check for high priced blocks like steel
-            #else
-            #fi
+        if $bFoundSomething;then
+          if ((liEconomicValue==0));then # if found but value is 0. -1 means cannot be sold and have other uses on other scripts
+            liEconomicValue=1 #just to have some value
           fi
         else
-          if ((liEconomicValue==0));then
-            liEconomicValue=1 #just to have something
+          if $bFRSPV_CanSell_OUT && ((liEconomicValue==0 || liEconomicValue==-1));then #if nothing was found, the user can enter a value manually too now.
+            CFGFUNCinfo "WARN: Can be sold. But it is missing economic value for lstrItemID='${lstrItemID}' liEconomicValue='$liEconomicValue'"
+            while true;do
+              #local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think price is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
+              local liItemValueResp;read -p "INPUT: Start a new game. Add to your inventory item '${lstrItemID}'. If the item has tiers, collect the sell price for tier4. If the item has no tiers (like gun mods), collect the trader sell price for it. So, the player must be  lvl 1 w/o any trading bonuses (just after you enter the game the 1st time and w/o any skills or other bonuses from consumables or equipment) (I think price is like +- sellValue=itemTier4SellValue=EconomicValue. sellValue*15=traderSellValue (right?):" liItemValueResp&&:
+              #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
+              if CFGFUNCchkNumGT0 "${liItemValueResp}";then
+                liEconomicValue="$liItemValueResp" #this is a player override
+                #liEconomicValue="$((liItemValueResp/15))"
+                #liEconomicValue=$((liEconomicValue*5/15))&&:
+                if CFGFUNCprompt -q "economic value for '${lstrItemID}' will be ${liEconomicValue}, is that ok?";then
+                  break
+                fi
+              else
+                CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
+              fi
+            done
           fi
         fi
         CFGastrItem1Value2List["${lstrItemID}"]=$liEconomicValue
@@ -502,7 +495,7 @@ function FUNCprepareBundlePart() {
       (( liExpDebt+=(liEconomicValue*liItemCount) ))&&:
     else
       #(( liExpDebt+=(liItemCount/10) ))&&:
-      (( liExpDebt+=liItemCount ))&&:
+      (( liExpDebt+=liItemCount ))&&: #if value is 0 or -1 it is like it is worth at least 1
     fi
     lstrCounts+="$lstrSep${liItemCount}";
     #echo "          ${lstrItemID} ${liItemCount}"

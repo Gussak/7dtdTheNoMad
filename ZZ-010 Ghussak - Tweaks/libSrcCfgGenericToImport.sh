@@ -253,7 +253,7 @@ function CFGFUNCerrorForceEndPRIVATE() { #help this function is important to gra
     echo "====================== ERROR LOG ======================"
     cat "${strCFGErrorLog}"
     echo "====================== ERROR LOG ======================"
-    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: ${strCFGErrorLog} (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >&2
+    echo "ERROR: There are the above errors in the error log file, probably because it happened in a subshell maybe: '${strCFGErrorLog}' (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})" >&2
     echo "QUESTION: did you fix the above errors already? if yes, hit 'y'. The error file will be trashed and the script will continue running. Any other key will exit the script. (${strCFGScriptName}:Stack: ${FUNCNAME[@]-})"
     read -n 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then trash "${strCFGErrorLog}";return 0;fi
     #read -n 1 -p "ERROR: Hit a key to trash the error log file (in case you already fixed the problem of a previous run) to prepare for a clean next run of this script. Or hit ctrl+c to keep it there."
@@ -504,11 +504,16 @@ function CFGFUNCxmlstarletSel() {
   else
     #CFGFUNCinfo "EXEC: ${lastrCmd[@]}"
     local lstrResult="`CFGFUNCexec --noErrorExit "${lastrCmd[@]}"`"&&:
-    if((`echo "${lstrResult}" |wc -l`!=1));then CFGFUNCerrorExit "invalid result, more than one match found lstrResult='${lstrResult}', ${lstrPath} ${lstrFlXml}";fi
+    if((`echo "${lstrResult}" |wc -l`!=1));then 
+      CFGFUNCinfo "WARNING: invalid result, more than one match found lstrResult='${lstrResult}', ${lstrPath} ${lstrFlXml}. The last one will be used as it overrides previous ones.";
+      lstrResult="`echo "$lstrResult" |tail -n 1`"
+    fi
     
     if [[ -n "$lstrResult" ]];then
       echo "$lstrResult"
       return 0
+    #else
+      #CFGFUNCinfo "WARNING: empty lstrResult='$lstrResult' ${lstrPath} ${lstrFlXml}"
     fi
   fi
   
@@ -591,7 +596,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
   if [[ -n "$lstrBoolAllowProp" ]];then
     if ! $bFRSPV_CanSell_OUT;then
       CFGFUNCinfo "DeniedByProp:'${lstrBoolAllowProp}'=false: ${lstrItemID}";
-      return 0
+      return 1
     fi
   fi
   
@@ -644,10 +649,44 @@ function CFGFUNCchkNum() {
   return 1
 };export -f CFGFUNCchkNum
 
-function CFGFUNChashArray() {
-  declare -p "$1" |sed -e 's@[^=]*=@@' |tr '[' '\n' |sort |sha1sum
+function CFGFUNCarrayDataSorted() { # [--noindent]
+  local lstrIndent="  ";if [[ "$1" == "--noindent" ]];then lstrIndent="";shift;fi
+  local lastrArray="$1"
+  
+  #local lstrSedRmArrayClose='s@(.*)[)]$@\1\n)@'
+  #local lstrSedNewLineForFirstEntry="s@${lastrArray}=[(][[]@${lastrArray}=(\n  [@"
+  #local lstrSedNewLineForEachEntry='s@" [[]@"\n  [@g'
+  ## tail ignores first line with declare statement
+  ## head ignores last line
+  #declare -p "${lastrArray}" \
+    #|sed -r \
+      #-e "$lstrSedRmArrayClose" \
+      #-e "$lstrSedNewLineForFirstEntry" \
+      #-e "$lstrSedNewLineForEachEntry" \
+    #|tail -n +2 \
+    #|head -n -1 \
+    #|sort
+    
+  #lstrOutput="$(declare -p "${lastrArray}" |sed -r -e 's@(.*)[)]$@\1@' -e "s@^declare .* ${lastrArray}=[(]@@" -e 's@" [[]@"\n  [@g')";echo "${lstrOutput}"|wc -l
+  #local lstrSedRmArrayClose='s@(.*) *[)] *$@\1@' #and spaces just before and just after it
+  local lstrSedRmArrayClose='s@(.*) +[)] *$@\1@' #`declare -p` !always! add a space before the array closing ')'
+  local lstrSedRmDeclareStatement="s@^declare .* ${lastrArray}=[(] *@${lstrIndent}@" #first entry gets the indent too
+  local lstrSedNewLineForEachEntry="s@\" *[[]@\"\n${lstrIndent}[@g" #works between each entry. this is guess work, values must not contain '[' but that consistency is expected
+  declare -p "${lastrArray}" \
+    |sed -r \
+      -e "$lstrSedRmArrayClose" \
+      -e "$lstrSedRmDeclareStatement" \
+      -e "$lstrSedNewLineForEachEntry" \
+    |sort
+}
+
+function CFGFUNChashArray() { #helpf hash the array data (excludes the array name)
+  #declare -p "$1" |sed -e 's@[^=]*=@@' |tr '[' '\n' |sort |sha1sum
+  #echo "${1}" >>/tmp/debugHashArray237453847.txt;CFGFUNCarrayDataSorted --noindent "${1}" |tr -d '\n' >>/tmp/debugHashArray237453847.txt;echo >>/tmp/debugHashArray237453847.txt #TODOA comment
+  #declare -p "$1" >>/tmp/debugHashArray237453847.txt
+  CFGFUNCarrayDataSorted --noindent "${1}" |tr -d '\n' |sha1sum
 };export -f CFGFUNChashArray
-function CFGFUNCloadCaches() {
+function CFGFUNCloadCaches() { #helpf use like: eval "`CFGFUNCloadCaches`"
   local lstrFlID
   
   # ItemEconomicValue
@@ -688,14 +727,15 @@ function CFGFUNCloadCaches() {
   if [[ -f "${CFGstrFlCreativeModeCACHE}" ]];then source "${CFGstrFlCreativeModeCACHE}";fi
   declare -gx CFGastrCreativeModeHASH="`CFGFUNChashArray CFGastrCacheItem1CreativeMode2List`"
   echo "`declare -p CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE`" #OUTPUT
+  
 };export -f CFGFUNCloadCaches
 function CFGFUNCwriteCaches() {
   local lstrHeader='#PREPARE_RELEASE:REVIEWED:OK
-# this file is auto generated. delete it to be recreated. do not edit!'
+# this file is auto generated. delete it to be recreated. do not edit (unless you know what you are doing, what will be much faster than recreating it)!'
   local lastrCacheList=(
-    CFGstrItemEcoValHASH   CFGastrItem1Value2List           CFGstrFlItemEconomicValueCACHE 
-    CFGstrItemHasTierHASH CFGastrItem1HasTiers2List        CFGstrFlItemHasTierCACHE
-    CFGastrCustomIconHASH CFGastrCacheItem1CustomIcon2List CFGstrFlCustomIconCACHE
+    CFGstrItemEcoValHASH    CFGastrItem1Value2List             CFGstrFlItemEconomicValueCACHE 
+    CFGstrItemHasTierHASH   CFGastrItem1HasTiers2List          CFGstrFlItemHasTierCACHE
+    CFGastrCustomIconHASH   CFGastrCacheItem1CustomIcon2List   CFGstrFlCustomIconCACHE
     CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE
   )
   local liLoopCachesDataLnIniIndex
@@ -713,7 +753,17 @@ function CFGFUNCwriteCaches() {
       ls -l "$lstrFlCache" >&2 &&:
       CFGFUNCtrash "$lstrFlCache"
       echo "${lstrHeader}" >"$lstrFlCache"
-      declare -p "${lastrArray}" >>"$lstrFlCache"
+      
+      #declare -p "${lastrArray}" >>"$lstrFlCache" #simple granted to work
+      #### MoreReadableCache: ###
+      #  This may work if there is no need to escape chars: for lstrIdIndex in $(eval "echo \${!${lastrArray}[@]}"|tr ' ' '\n'|sort);do echo "${lastrArray}[${lstrIdIndex}]='$(eval "echo \${${lastrArray}[${lstrIdIndex}]}")'";done
+      #local lstrOutput="$(declare -p "${lastrArray}" |sed -r -e 's@(.*)[)]$@\1\n)@' -e "s@${lastrArray}=[(][[]@${lastrArray}=(\n  [@" -e 's@" [[]@"\n  [@g')"
+      #echo "${lstrOutput}" |head -n 1 >>"$lstrFlCache" #declare statement
+      declare -p "${lastrArray}" |sed -r -e "s@^(declare .* ${lastrArray}=[(]).*@\1@" >>"$lstrFlCache" #declare statement and array opening '=('
+      #echo "${lstrOutput}" |tail -n +2 |head -n -1 |sort >>"$lstrFlCache" #array data
+      CFGFUNCarrayDataSorted "${lastrArray}" >>"$lstrFlCache"
+      echo ')' >>"$lstrFlCache" #close array
+      
       ls -l "$lstrFlCache" >&2
     fi
   done
