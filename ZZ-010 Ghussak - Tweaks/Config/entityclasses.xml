@@ -935,6 +935,9 @@
   </append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       @name='mechRobot' or       @name='mechRobotArmy'     ]/property[@name='Tags']/@value">,helmetStrong</append>
   <append xpath="/entity_classes/entity_class[       @name='mechDrone' or       @name='mechSphereI' or       @name='mechSphereII'     ]/property[@name='Tags']/@value">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'mech') and not(contains(@name,'DeusEx'))]">
+    <property name="LootDropProb" value="0"/>
+  </append>
   <append xpath="/entity_classes/entity_class[@name='mechTemplateHostile']">
     <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
     <property name="AITask-1" value="BreakBlock"/>
@@ -1139,6 +1142,7 @@
       <property name="HideInSpawnMenu" value="true"/>
       <property name="Tags" value="entity,cp,mech,DeusEx,hostile,helmetVanillaDamage"/>
       <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
+      <!--      HELPGOOD: list materials: egrep '\.mat$' "../../"* -\-include="*.manifest" -iRIh |egrep '[^/]*blue[^/]*\.mat$' -i -->
       <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
       <property name="LootDropProb" value="1.0"/>
       <property name="LootDropEntityClass" value="EntityLootContainerDeusEx"/>
@@ -1162,6 +1166,15 @@
     <entity_class name="mechDeusEx2RocketL" extends="mechDeusEx2Template" help="player enemy">
       <property name="HideInSpawnMenu" value="false"/>
       <property name="Tags" value="entity,cp,mech,DeusEx,hostile,helmetVanillaDamage"/>
+      <!-- HELPGOOD:
+      this is light red is very good, looks like energy, it is transparent tho
+        <property name="ReplaceMaterial0" value="#Other/Items?Food/Materials/jar_liquid_red_tea.mat" />
+      this red is too dark
+        <property name="ReplaceMaterial0" value="#Entities/LootContainers?Materials/backpack_dropped_red.mat" />
+      this light red texture didnt fit well
+        <property name="ReplaceMaterial0" value="#Entities/LootContainers?Materials/zpackRed.mat" />
+-->
+      <property name="ReplaceMaterial0" value="#Other/Items?Food/Materials/jar_liquid_red_tea.mat"/>
       <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag" help="ISSUE: the rocket is fired from the feet..."/>
       <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
       <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncherDeusEx,ammoNPCRocketFrag"/>
@@ -1194,6 +1207,7 @@
     <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2Template">
       <property name="HideInSpawnMenu" value="false"/>
       <property name="Tags" value="entity,cp,mech,DeusEx,friendly,helmetVanillaDamage"/>
+      <property name="ReplaceMaterial0" value="#@modfolder(0-CreaturePackMechs):Resources/RobotArmyMat.unity3d?metal_albedo" help="equal to vanilla mechRobotArmy"/>
       <!--      HELPGOOD: these removed sounds are good to keep them mostly quiet while following you -->
       <property name="SoundRandomTime" value="300.0"/>
       <property name="SoundRandom" value="RobotRandom"/>
@@ -1272,4 +1286,5 @@
       <property name="Tags" value="entity,cp,mech,mechRobotArmy,UMA2,helmetVanillaDamage"/>
     </entity_class>
   </append>
+  <remove xpath="/entity_classes/entity_class[@name='mechRobotArmy']/property[@name='ReplaceMaterial0']" help="This is to let DeusExFriend look like the nice powerful one :)"/>
 </GhussakTweaks>

@@ -253,6 +253,13 @@
         </passive_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKDeusExCountRobots" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="7"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesTotal" operation="add" value="1" target="selfAOE" range="60" target_tags="player"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKDeusExDebuff" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -11423,7 +11430,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="DeusExFoe: spawn 3D printed robots TODO: spawn them from DeusExFoe location">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="set" value="randomInt(20,30)" help="sync with update_rate. so 20*3=60s">
           <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
         </triggered_effect>
@@ -11432,9 +11439,19 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExSmallRobot">
           <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesTotal" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExTinyRobotX3">
           <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesTotal" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="DeusExFoe: spawn 3D printed robots TODO: spawn them from DeusExFoe location">
+        <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
+        <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesTotal" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExCountRobots" target="selfAOE" range="60" target_tags="mech">
+          <requirement name="!EntityTagCompare" target="other" tags="DeusEx"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="Inform game difficulty to foes and NPCs">
