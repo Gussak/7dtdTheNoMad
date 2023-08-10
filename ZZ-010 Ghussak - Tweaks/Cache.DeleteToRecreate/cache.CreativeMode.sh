@@ -1,5 +1,5 @@
 #PREPARE_RELEASE:REVIEWED:OK
-# this file is auto generated. delete it to be recreated. do not edit!
+# this file is auto generated. delete it to be recreated. do not edit (unless you know what you are doing, what will be much faster than recreating it)!
 declare -A CFGastrCacheItem1CreativeMode2List=(
   [airConditioner]="player"
   [airConditionVentFanDouble]="player"
@@ -2760,7 +2760,7 @@ declare -A CFGastrCacheItem1CreativeMode2List=(
   [signTrafficLight]="dev"
   [signTrafficLightOffset]="dev"
   [signYardSign01]="dev"
-  [sinksToiletsBlockVariantHelper]="player" 
+  [sinksToiletsBlockVariantHelper]="player"
   [sleeperBack]="dev"
   [sleeperBearAnimal]="dev"
   [sleeperBoarAnimal]="dev"
@@ -2915,10 +2915,21 @@ declare -A CFGastrCacheItem1CreativeMode2List=(
   [TestSpawnCube2]="player"
   [TestSpawnCube3]="player"
   [TestSpawnCube]="player"
+  [thrownAmmoFlare]="player"
+  [thrownAmmoMolotovCocktail6s]="player"
+  [thrownAmmoMolotovCocktail]="player"
+  [thrownAmmoPipeBomb]="player"
   [thrownAmmoPipeBombSchematic]="player"
+  [thrownAmmoPoisonBomb]="player"
+  [thrownAmmoStunGrenade]="player"
+  [thrownDynamite]="player"
   [thrownDynamiteSchematic]="player"
+  [thrownGrenadeContact]="player"
   [thrownGrenadeContactSchematic]="player"
+  [thrownGrenade]="player"
   [thrownGrenadeSchematic]="player"
+  [thrownTimedCharge]="player"
+  [thrownTimedChargeWeak]="player"
   [toolAnvilSchematic]="player"
   [toolBellowsSchematic]="player"
   [toolForgeCrucibleSchematic]="player"

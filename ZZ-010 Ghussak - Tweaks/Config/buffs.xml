@@ -265,6 +265,10 @@
         <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99" help="this affects leap? no"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKDeusExIsFoeToPlayerPLAYERBUFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
     <buff name="buffGSKDeusExFriendly" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -286,23 +290,26 @@
         <requirement name="!HasBuff" buff="buffGSKDeusExDebuff" help="when it is following the player after the player shoots it"/>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="9" action="AddBuff" buff="buffGSKDeusExFriendlyHealsTheLiving">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal all natural living beings (including hostile animals and bandits)"/>
-          <requirement name="CVarCompare" target="other" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <!-- HELPGOOD: this wont work cuz the cmp is with @cvar as in that @cvar is from self and not from the other.
+        <requirement name="CVarCompare" target="other" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+-->
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie" help="because animals can also be zombies"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="18" action="AddBuff" buff="buffGSKDeusExFriendlyHealsTheLiving">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal all natural living beings (including hostile animals and bandits)"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie" help="because animals can also be zombies"/>
-          <requirement name="CVarCompare" target="other" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="27" action="AddBuff" buff="buffGSKDeusExFriendlyHealsTheLiving">
           <requirement name="EntityTagCompare" target="other" tags="player,npc,animal" help="will heal all natural living beings (including hostile animals and bandits)"/>
           <requirement name="!EntityTagCompare" target="other" tags="zombie" help="because animals can also be zombies"/>
-          <requirement name="CVarCompare" target="other" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="check freeze">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExDoFreeze" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount" help="should de-spawn and re-spawn as foe"/>
+          <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF" help="should de-spawn and re-spawn as foe"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExDoFreeze" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="LTE" value="0"/>
@@ -313,7 +320,7 @@
       </effect_group>
       <effect_group help="check reanimates">
         <requirement name="CVarCompare" cvar=".iGSKDeusExDoFreeze" operation="Equals" value="1"/>
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount" help="still friendly"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="iGSKDeusExFriendlyFreezeCountDown" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExDoFreeze" operation="set" value="0">
           <requirement name="!IsBloodMoon"/>
@@ -397,13 +404,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTandDone:buffGSKRespawnDeusExFriendlyIfPossible"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_color="0,0,255">
+    <buff name="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" name_key="DeusExFriendIsNear" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_color="0,0,255">
       <display_value value="iGSKSpawnDeusExTimeout"/>
       <display_value_format value="time"/>
       <stack_type value="replace"/>
       <duration value="60" help="this timeout must be big to let player have time to respawn. this buff will be detected and let another friendly be spawned"/>
     </buff>
-    <buff name="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0">
+    <buff name="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" name_key="DeusExFoeIsNear" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0">
       <display_value value="iGSKSpawnDeusExTimeout"/>
       <display_value_format value="time"/>
       <stack_type value="replace"/>
@@ -415,7 +422,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="0" help="when the foe dies or despawns, will reset/refresh the timeout"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF" hidden="false" remove_on_death="false" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="false" icon_color="255,0,0">
+    <buff name="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF" hidden="false" remove_on_death="false" name_key="DeusExFoeIsComing" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="false" icon_color="255,0,0">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <display_value value="iGSKSpawnDeusExTimeout"/>
@@ -7020,8 +7027,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="61"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="121"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="15"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
@@ -11211,21 +11218,6 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
-      <effect_group help="DeusExFoe: spawn 3D printed robots TODO: spawn them from DeusExFoe location">
-        <requirement name="CVarCompare" target="other" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="set" value="randomInt(20,30)" help="sync with update_rate. so 20*3=60s">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemies" operation="add" value="-1">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="GT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExSmallRobot">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExTinyRobotX3">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group help="spawn mini spiders indoors">
         <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
@@ -11324,7 +11316,7 @@
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExTimeoutMarginX2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="15" help="sync with update_rate. 15 is like a hint to know it happened here, it could just be 1" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="1" help="sync with update_rate" compare_type="or">
           <requirement name="StatCompareCurrent" stat="health" operation="LT" value="70" help="so the player have some chance to survive TODO: could check also how many zombies are nearby 30m day, 15m night, and deny if more than 3"/>
           <requirement name="StatCompareCurrent" stat="food" operation="LT" value="15"/>
           <requirement name="StatCompareCurrent" stat="water" operation="LT" value="75"/>
@@ -11421,6 +11413,29 @@
         <passive_effect name="StaminaMax" operation="base_add" value="@iGSKDeusExBonusStamina"/>
         <passive_effect name="JumpStrength" operation="perc_add" value="@iGSKDeusExBonusJumpStr"/>
         <passive_effect name="RunSpeed" operation="perc_add" value="@iGSKDeusExBonusRunSpeed"/>
+      </effect_group>
+      <effect_group help="DeusEx: Foe or Friend indicator on player ">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF">
+          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="DeusExFoe: spawn 3D printed robots TODO: spawn them from DeusExFoe location">
+        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="set" value="randomInt(20,30)" help="sync with update_rate. so 20*3=60s">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExSmallRobot">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExTinyRobotX3">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExSpawnSmallEnemiesCountDown" operation="Equals" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="Inform game difficulty to foes and NPCs">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHSHPDifficulty" operation="set" value="1" target="selfAOE" range="60" target_tags="zombie,animal,npc">
@@ -12754,6 +12769,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
         <passive_effect name="RunSpeed" operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
         <passive_effect name="JumpStrength" operation="perc_add" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFull'"/>
       </effect_group>
     </buff>
     <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. DO NOT PUT SUPER POWERS HERE, this is meant just to protect the player in special moments in a normal gameplay" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,180,180">
@@ -12776,6 +12792,7 @@
         <passive_effect name="WalkSpeed" operation="perc_add" value="5.0"/>
         <passive_effect name="RunSpeed"  operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
 -->
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodMode'"/>
       </effect_group>
     </buff>
     <buff name="buffGSKGodModeRespawn" hidden="false" help="do not create a recipe to activate this duh. " tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="100,250,200" icon_blink="true">
@@ -12804,6 +12821,7 @@
           <requirement name="CVarCompare" cvar=".iGSKGodModeRespawnTm" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Rise from your grave!"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeRespawn'"/>
       </effect_group>
     </buff>
     <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200" icon_blink="true">
@@ -12825,6 +12843,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
           <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFirstSpawn'"/>
       </effect_group>
     </buff>
     <buff name="buffGSKGodModeNewbie" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
@@ -12840,13 +12859,14 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeNewbie'"/>
       </effect_group>
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='god']">
     <effect_group>
-      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="BUFF:GodMode:ON"/>
-      <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:GodMode:OFF"/>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="BUFF:VanillaGodMode:ON"/>
+      <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:VanillaGodMode:OFF"/>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffBeer']">

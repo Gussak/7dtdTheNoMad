@@ -2279,6 +2279,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with modMeleeClubBurningShaft">120</set>
   <append xpath="/items" help="DeusEx stuff">
     <item name="gunNPCRocketLauncherDeusEx">
+      <property name="CreativeMode" value="None"/>
       <property name="SizeScale" value="5"/>
       <property name="Extends" value="gunNPCRocketLauncher"/>
       <property name="HoldType" value="32" help="Fail: 0,12,32,69 may be none will work.."/>
@@ -9046,6 +9047,276 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-240"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMAmmoMolotovCocktail6s">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownAmmoMolotovCocktail"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownAmmoMolotovCocktail6s"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownAmmoMolotovCocktail6s"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMAmmoMolotovCocktail">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownAmmoMolotovCocktail"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownAmmoMolotovCocktail"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownAmmoMolotovCocktail"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMAmmoPipeBomb">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownAmmoPipeBomb"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownAmmoPipeBomb"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownAmmoPipeBomb"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00225CSMAmmoPoisonBomb">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownAmmoPipeBomb"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownAmmoPoisonBomb"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="225" help="; ; Dbg:EcV=75,t4=0,t6=120"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownAmmoPoisonBomb"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-225"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMAmmoStunGrenade">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownGrenadeContact"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownAmmoStunGrenade"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownAmmoStunGrenade"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00300CSMDynamite">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownDynamite"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownDynamite"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownDynamite"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMGrenadeContact">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownGrenadeContact"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownGrenadeContact"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownGrenadeContact"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMGrenade">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownGrenade"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownGrenade"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownGrenade"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00123CSMTimedCharge">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownTimedCharge"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownTimedCharge"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="123" help="; ; Dbg:EcV=41,t4=0,t6=66"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownTimedCharge"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-123"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="GTW00060CSMTimedChargeWeak">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="thrownTimedCharge"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwdthrownTimedChargeWeak"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="60" help="; ; Dbg:EcV=20,t4=0,t6=32"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="thrownTimedChargeWeak"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-60"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
