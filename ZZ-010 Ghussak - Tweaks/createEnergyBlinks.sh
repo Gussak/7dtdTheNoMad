@@ -90,14 +90,14 @@ astrVarsList=(
 )
 
 declare -p LINENO
-strCodeToken="GENERATED_CODE:DO_NOT_MODIFY:RUN:$0"
-strCodeTokenBegin="DUMMY:BELOW:${strCodeToken}"
-strCodeTokenEnd="DUMMY:ABOVE:${strCodeToken}"
+#strCodeToken="GENERATED_CODE:DO_NOT_MODIFY:RUN:$0"
+#strCodeTokenBegin="DUMMY:BELOW:${strCodeToken}"
+#strCodeTokenEnd="DUMMY:ABOVE:${strCodeToken}"
 #strFlOut="${0}.xml.tmp"
 strFlOut="${strFlGenBuf}${strGenTmpSuffix}"
 trash "${strFlOut}"&&:
 #echo "<!-- ! ! ! ${strCodeTokenBegin} ! ! ! -->" >>"${strFlOut}"
-echo "<effect_group name=\"${strCodeTokenBegin}\"/>"  >>"${strFlOut}"
+#echo "<effect_group name=\"${strCodeTokenBegin}\"/>"  >>"${strFlOut}"
 declare -p LINENO
 for strVars in "${astrVarsList[@]}";do
   eval "$(echo "$strVars" |awk '{print "strVar="$1";" "iFailLowEnergy="$2";" "fStandbyEnergySpent="$3";" "iWeakLowEnergy="$4";" "fWeakEnergySpent="$5";"}')"
@@ -108,7 +108,7 @@ for strVars in "${astrVarsList[@]}";do
   source createEnergyBlinks.xml # it is much better to edit xml there with syntax highlight!
 done
 #echo "<!-- ! ! ! ${strCodeTokenEnd} ! ! ! -->" >>"${strFlOut}"
-echo "<effect_group name=\"${strCodeTokenEnd}\"/>"  >>"${strFlOut}"
+#echo "<effect_group name=\"${strCodeTokenEnd}\"/>"  >>"${strFlOut}"
 unix2dos "$strFlOut" # to grant CR LF
 cat "$strFlOut"
 

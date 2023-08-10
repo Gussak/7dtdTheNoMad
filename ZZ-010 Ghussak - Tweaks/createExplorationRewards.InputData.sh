@@ -264,7 +264,7 @@ astrItemList=(
   "item_modifier" modVehicleSuperCharger "ModVehicleSuperCharger" 0 ""
   
   "item" potionRespec "CSMRebirthElixir" 360 "cheap compared to drinkJarGrandpasForgettingElixir as  it has many debuffs and the player may need it"
-  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(drink|drug)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(drink|drug)(.*)@  "item" \2\3 "CSM\3" 0@' |tr -d '\r\0' |sort -u
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(drink|drug|thrown)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(drink|drug|thrown)(.*)@  "item" \2\3 "CSM\3" 0 ""@' |tr -d '\r\0' |sort -u
   "item" drinkCanMegaCrush "CSMCanMegaCrush" 0 ""
   "item" drinkJarBeer "CSMJarBeer" 0 ""
   "item" drinkJarBlackStrapCoffee "CSMJarBlackStrapCoffee" 0 ""
@@ -304,6 +304,17 @@ astrItemList=(
   "item" drugSteroids "CSMSteroids" 0 ""
   "item" drugSugarButts "CSMSugarButts" 1000 "CSM final price override, good advantage on trading (was EcV100)"
   "item" drugVitamins "CSMVitamins" 0 ""
+  "item" thrownAmmoFlare "CSMAmmoFlare" 0 ""
+  "item" thrownAmmoMolotovCocktail6s "CSMAmmoMolotovCocktail6s" 0 ""
+  "item" thrownAmmoMolotovCocktail "CSMAmmoMolotovCocktail" 0 ""
+  "item" thrownAmmoPipeBomb "CSMAmmoPipeBomb" 0 ""
+  "item" thrownAmmoPoisonBomb "CSMAmmoPoisonBomb" 0 ""
+  "item" thrownAmmoStunGrenade "CSMAmmoStunGrenade" 0 ""
+  "item" thrownDynamite "CSMDynamite" 0 ""
+  "item" thrownGrenadeContact "CSMGrenadeContact" 0 ""
+  "item" thrownGrenade "CSMGrenade" 0 ""
+  "item" thrownTimedCharge "CSMTimedCharge" 0 ""
+  "item" thrownTimedChargeWeak "CSMTimedChargeWeak" 0 ""
   
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="[^"]*Schematic"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi '^GSK|WerewolftoHuman|Faction|ZombieW7WalkStyle|IsInfected' |sed -r 's@(<item *name=")(.*)(Schematic)"@  "item" \2\3 "SCH\2" 0@' |tr -d '\r\0' |sort -u
   "item" ammoGasCanSchematic "SCHammoGasCan" 0 ""

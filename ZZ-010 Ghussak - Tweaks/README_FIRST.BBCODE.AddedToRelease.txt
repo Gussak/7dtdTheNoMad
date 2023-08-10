@@ -9,6 +9,8 @@ Please follow the server configs below and look for tactical hints (on in-game n
 I have not visited the whole world yet. Some POIs placed somewhat above or below the ground level, or flooded, or something else..., or some POIs overlapping others are still ok as they create something that is unexpected but still playable. But if you find something too weird (in a game breaking sense) tell me.
 .  
 Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experience penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome using the biome teleporter or the underground teleporter.  
+.
+Obs.: I have not tested it multiplayer, so if you have any trouble, describe the problem the best you can.
 .  
 ############################## DEVELOPER(WIP) ##############################   
 This mod contains many tools that can be run on Cygwin (in Windows) or Linux and may be adapted to your mod, there are many variables to configure it to your mod, and if something doesn't work as expected, comment here or drop a patch on github.

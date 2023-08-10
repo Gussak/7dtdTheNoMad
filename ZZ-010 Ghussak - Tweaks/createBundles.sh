@@ -158,7 +158,8 @@ function FUNCprepareCraftBundle() {
       </effect_group>
     </item>'
   strXmlCraftBundleCreateRecipesXml+='
-    <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"><ingredient name="electronicsParts" count="1"/></recipe>'
+    <recipe name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"><ingredient name="electronicsParts" count="1"/></recipe>
+    <recipe name="electronicsParts" count="1"><ingredient name="'"${strFUNCprepareCraftBundle_CraftBundleID_OUT}"'" count="1"/></recipe>'
   # not using onSelfDied anymore, unnecessary
   if $lbSchematic || $lbOpenOnceOnly;then
     strXmlCraftBundleCreateBuffsXml+='

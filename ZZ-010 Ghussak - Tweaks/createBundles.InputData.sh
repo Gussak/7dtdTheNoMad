@@ -275,7 +275,7 @@ astr=(
 );FUNCprepareBundles --color "128,180,128" "MinimalSurvivalKit" "cntStorageGeneric" "Minimal helpful stuff." "${astr[@]}"
 
 astr=(
-  NOTE_LostTribe 1
+  noteGSKTNMLostTribe 1
   # maps
   qt_taylor 1
   qt_nickole 1
@@ -311,8 +311,8 @@ astr=(
   GSKNoteStartNewGameSurvivingFirstDay 1
   GSKTheNoMadOverhaulBundleNoteBkp 1 # this last bundle description bkp
   NightVisionBattery 3 #required to open packages
-  NOTE_GSKStatBlockagesHPStamina 1
-  NOTE_GSKTheNoMadCreateRespawnBundleList 1
+  noteGSKTNMStatBlockagesHPStamina 1
+  noteGSKTNMCreateRespawnBundleList 1
   
   #vanilla
   #keystoneBlock 1 

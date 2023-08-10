@@ -41,8 +41,23 @@
     <effect_group help="Headshot and limb shot cripple">
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
         <!-- HELPGOOD: could work with ProjectileHasTags ? 
-        <requirement name="HoldingItemHasTags" tags="armorPiercing" help="ISSUE: This does not work"/>
+        <requirement name="HoldingItemHasTags" tags="armorPiercing" help="ISSUE: This does not work for loaded ammo"/>
 -->
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="3">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd3"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="2">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd2"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd1"/>
         <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
         <requirement name="HitLocation" body_parts="Head"/>
       </triggered_effect>
@@ -121,14 +136,14 @@
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
-        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player that is not a zombie"/>
+        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1" help="zombies provide minor healing only (this is mainly to make the essence actually useful as there are not many living beings around anymore, tho it lacks reasoning ;)), their vital force is corrupted and so is the health drain (could work? ;), or explaing thru magic means..)">
         <requirement name="EntityTagCompare" target="other" tags="zombie" help="heals only a bit from zombies"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
@@ -1174,9 +1189,6 @@
       <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
       <effect_group help="enemy DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy12"/>
-      </effect_group>
-      <effect_group help="enemy DeusEx wins">
-        <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iGSKDeusExWinsAtCount" operation="set" value="@iGSKDeusExKillCount" target="other" target_tags="player"/>
       </effect_group>
     </entity_class>
     <entity_class name="mechDeusEx2Calm" extends="mechDeusEx2Template">
