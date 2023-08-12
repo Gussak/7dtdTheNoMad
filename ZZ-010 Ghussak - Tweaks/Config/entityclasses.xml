@@ -362,6 +362,7 @@
       <property name="LootListOnDeath" value="lootPackRegularWithRocket"/>
     </entity_class>
     <entity_class name="EntityLootContainerDeusEx" extends="EntityLootContainerRegular">
+      <property name="Tags" value="DeusExDroppedLoot"/>
       <property name="Mesh" value="#Entities/LootContainers?tier4LootChestPrefab.prefab" help="looks nice"/>
       <property name="LootListOnDeath" value="lootDeusExMachina"/>
     </entity_class>
@@ -1144,8 +1145,12 @@
       <property name="SizeScale" value="5" help="ISSUE: the laser of the sword from handRobotArmy does not scale with the model, it remains tiny"/>
       <!--      HELPGOOD: list materials: egrep '\.mat$' "../../"* -\-include="*.manifest" -iRIh |egrep '[^/]*blue[^/]*\.mat$' -i -->
       <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/feral_radiated.mat"/>
+      <property name="LootDropProb" value="0"/>
+      <property name="TimeStayAfterDeath" value="6" help="TODO: make it explode and vanish like a grenade at least"/>
+      <!-- HELPGOOD: this would be good only if there was any way to keep just one DeusEx alive
       <property name="LootDropProb" value="1.0"/>
       <property name="LootDropEntityClass" value="EntityLootContainerDeusEx"/>
+-->
       <property name="ExperienceGain" value="1750"/>
       <property name="DismemberMultiplierHead" value="0"/>
       <property name="MaxTurnSpeed" value="280"/>
@@ -1188,17 +1193,19 @@
       <property name="AITask-8" value="Wander"/>
       <property name="AITask-9" value=""/>
       <property name="AITarget-1" value="SetAsTargetIfHurt"/>
-      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble"/>
-      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30"/>
-      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27"/>
-      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36"/>
-      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27"/>
-      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest"/>
-      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest"/>
-      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest"/>
-      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest"/>
-      <drop event="Destroy" name="resourceScrapIron" count="3,45"/>
-      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
+      <!-- HELPGOOD:ISSUE: this would be ok if I could find a way to keep only one DeusEx alive...
+      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble" />
+      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30" /> 
+      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27" />
+      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36" /> 
+      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27" />
+      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest" />
+      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest" />
+      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest" />
+      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest" />
+      <drop event="Destroy" name="resourceScrapIron" count="3,45" />
+      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1" />      
+-->
       <property name="HandItem" value="handRobotArmyDeusEx" help="replaced by ItemsOnEnterGame?"/>
       <effect_group help="enemy DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExEnemy12"/>
@@ -1230,17 +1237,19 @@
       <property name="AITask-7" value=""/>
       <property name="AITarget-1" value="SetAsTargetIfHurt" help="w/o damage this works like making it follow the player"/>
       <property name="AITarget-2" value="SetNearestEntityAsTarget" data="class=EntityZombie,95"/>
-      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble"/>
-      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30"/>
-      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27"/>
-      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36"/>
-      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27"/>
-      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest"/>
-      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest"/>
-      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest"/>
-      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest"/>
-      <drop event="Destroy" name="resourceScrapIron" count="3,45"/>
-      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1"/>
+      <!-- HELPGOOD:ISSUE: this would be ok if I could find a way to keep only one DeusEx alive...
+      <drop event="Harvest" name="terrStone" count="0" tool_category="Disassemble" />
+      <drop event="Harvest" name="resourceMechanicalParts" tag="salvageHarvest" count="30" /> 
+      <drop event="Harvest" name="resourceScrapIron" tag="salvageHarvest" count="27" />
+      <drop event="Harvest" name="resourceElectricParts" tag="salvageHarvest" count="36" /> 
+      <drop event="Harvest" name="resourceScrapPolymers" tag="salvageHarvest" count="27" />
+      <drop event="Harvest" name="resourceMetalPipe" count="3" tag="salvageHarvest" />
+      <drop event="Harvest" name="carBattery" count="3" prob="0.5" tag="salvageHarvest" />
+      <drop event="Harvest" name="resourceSpring" count="6,12" tag="salvageHarvest" />
+      <drop event="Harvest" name="resourceScrapIron" count="9,21" tag="allHarvest" />
+      <drop event="Destroy" name="resourceScrapIron" count="3,45" />
+      <drop event="Fall" name="scrapMetalPile" count="1" prob="0.75" stick_chance="1" />      
+-->
       <property name="HandItem" value="handRobotArmyDeusExCalm2" help="this wont damage the player"/>
       <effect_group help="friendly DeusEx buffs">
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKDeusExFriendly"/>

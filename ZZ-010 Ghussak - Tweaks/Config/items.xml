@@ -2054,6 +2054,35 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasureAmbush15"/>
       </effect_group>
     </item>
+    <item name="GSKDeusExRewardBundle">
+      <property name="Extends" value="GSKBaseActivatorFromInventorySlow"/>
+      <property name="EconomicValue" value="0"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0">
+        <property name="Create_item" value="ammoRocketHE,ammoRocketFrag,gunExplosivesT3RocketLauncherParts,electronicsParts,resourceForgedSteel,resourceMechanicalParts,resourceScrapIron,resourceScrapIron,resourceScrapIron,resourceElectricParts,resourceScrapPolymers,carBattery,resourceSpring"/>
+        <property name="Create_item_count" value="3-9,3-9,1-3,3-18,3-6,30,27,9-21,3-45,36,27,0-3,6-12"/>
+      </property>
+    </item>
+    <item name="GSKspawnDeusExReward">
+      <property name="DescriptionKey" value="dkGSKspawnDeusExReward"/>
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="cntStorageGeneric"/>
+      <property name="CustomIconTint" value="128,250,250"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKDeusExRewardOpenCount" operation="LT" value="@iGSKDeusExKillCount"/>
+        <property name="Create_item" value="GSKDeusExRewardBundle"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDeusExReward"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExRewardOpenCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY. Must be the weak cuz the strong would beat the tiny robots too fast.. ISSUE: if/when it attack them"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDeusExTinyRobotX3"/>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[starts-with(@name, 'meleeNPC') or starts-with(@name,'meleeHandAnimal')]">
     <effect_group help="GSK hit enemies">

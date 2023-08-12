@@ -2809,6 +2809,16 @@
         <property name="air_spawn" value="true"/>
       </action>
     </action_sequence>
+    <action_sequence name="eventGSKSpawnDeusExReward">
+      <action class="SpawnContainer">
+        <property name="phase" value="10"/>
+        <property name="entity_names" value="EntityLootContainerDeusEx"/>
+        <property name="safe_spawn" value="true"/>
+        <property name="spawn_from_position" value="true"/>
+        <property name="min_distance" value="1"/>
+        <property name="max_distance" value="1"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKSpawnTreasure">
       <action class="SpawnContainer">
         <property name="phase" value="10"/>
@@ -2924,11 +2934,39 @@
       <variable name="iDistMax" value="10"/>
       <variable name="iElevationOffset" value="1"/>
     </action_sequence>
+    <action_sequence name="eventGSKDeusExRemoveAll" help="ISSUE: but it should keep just one at least ...">
+      <requirement class="HasSpawnedEntities">
+        <property name="entity_tags" value="DeusEx"/>
+        <property name="target_only" value="true"/>
+      </requirement>
+      <action class="AddSpawnedEntitiesToGroup">
+        <property name="phase" value="0"/>
+        <property name="group_name" value="grpSpawnedDeusEx"/>
+        <property name="entity_tags" value="DeusEx"/>
+        <property name="target_only" value="true"/>
+      </action>
+      <action class="RemoveEntities">
+        <property name="phase" value="1"/>
+        <property name="target_group" value="grpSpawnedDeusEx"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKDeusExDestroyAllDroppedLoot" help="ISSUE: doesnt work...">
+      <requirement class="HasSpawnedEntities">
+        <property name="entity_tags" value="DeusExDroppedLoot"/>
+        <property name="target_only" value="true"/>
+      </requirement>
+      <action class="AddSpawnedEntitiesToGroup">
+        <property name="phase" value="0"/>
+        <property name="group_name" value="grpSpawnedDeusExDroppedLoot"/>
+        <property name="entity_tags" value="DeusExDroppedLoot"/>
+        <property name="target_only" value="true"/>
+      </action>
+      <action class="RemoveEntities">
+        <property name="phase" value="1"/>
+        <property name="target_group" value="grpSpawnedDeusExDroppedLoot"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKSpawnDeusExBase">
-      <action class="Delay">
-        <property name="phase" value="10" help="this is important to wait DeusExs add their friend/foe buffs into player"/>
-        <property name="time" value="10.0"/>
-      </action>
       <action class="SpawnEntity">
         <property name="phase" value="20"/>
         <property name="entity_names" value="mechDeusEx2RocketL" param1="strNameList"/>
@@ -2941,49 +2979,15 @@
         <property name="air_spawn" value="true" param1="bFlying" help="WORKAROUND: using air spawn always because if you on top of a building the zombies wont spawn until you get down right?"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKSpawnDeusExFoe">
-      <requirement class="HasBuff" help="this prevents a stack of events being fired when it should only happen once?">
-        <property name="phase" value="5"/>
-        <property name="invert" value="true" help="true means NotHasBuff"/>
-        <property name="buff_name" value="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
-      </requirement>
-      <action class="Delay">
-        <property name="phase" value="10" help="this is important to wait DeusExs add their friend/foe buffs into player"/>
-        <property name="time" value="10.0"/>
-      </action>
-      <action class="SpawnEntity">
-        <property name="phase" value="20"/>
-        <property name="entity_names" value="mechDeusEx2RocketL" param1="strNameList"/>
-        <property name="spawn_count" value="1" param1="iCount"/>
-        <property name="safe_spawn" value="true" help="was true."/>
-        <property name="spawn_from_position" value="true"/>
-        <property name="min_distance" value="25" param1="iDistMin"/>
-        <property name="max_distance" value="30" param1="iDistMax"/>
-        <property name="yOffset" value="3"/>
-        <property name="air_spawn" value="true" param1="bFlying" help="WORKAROUND: using air spawn always because if you on top of a building the zombies wont spawn until you get down right?"/>
-      </action>
+    <action_sequence name="eventGSKSpawnDeusExFoe" template="eventGSKSpawnDeusExBase">
+      <variable name="strNameList" value="mechDeusEx2RocketL"/>
+      <variable name="iDistMin" value="25"/>
+      <variable name="iDistMax" value="30"/>
     </action_sequence>
-    <action_sequence name="eventGSKSpawnDeusExCalm">
-      <requirement class="HasBuff" help="this prevents a stack of events being fired when it should only happen once">
-        <property name="phase" value="5"/>
-        <property name="invert" value="true" help="true means NotHasBuff"/>
-        <property name="buff_name" value="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
-      </requirement>
-      <action class="Delay">
-        <property name="phase" value="10" help="this is important to wait DeusExs add their friend/foe buffs into player"/>
-        <property name="time" value="10.0"/>
-      </action>
-      <action class="SpawnEntity">
-        <property name="phase" value="20"/>
-        <property name="entity_names" value="mechDeusEx2Calm" param1="strNameList"/>
-        <property name="spawn_count" value="1" param1="iCount"/>
-        <property name="safe_spawn" value="true" help="was true."/>
-        <property name="spawn_from_position" value="true"/>
-        <property name="min_distance" value="10" param1="iDistMin"/>
-        <property name="max_distance" value="15" param1="iDistMax"/>
-        <property name="yOffset" value="3"/>
-        <property name="air_spawn" value="true" param1="bFlying" help="WORKAROUND: using air spawn always because if you on top of a building the zombies wont spawn until you get down right?"/>
-      </action>
+    <action_sequence name="eventGSKSpawnDeusExCalm" template="eventGSKSpawnDeusExBase">
+      <variable name="strNameList" value="mechDeusEx2Calm"/>
+      <variable name="iDistMin" value="10"/>
+      <variable name="iDistMax" value="15"/>
     </action_sequence>
     <action_sequence name="eventGSKSpawnDeusExSmallRobot" template="eventGSKSpawnDeusExBase">
       <variable name="strNameList" value="mechRobot,mechRobotArmy,mechSphereI,mechSphereII,mechDrone"/>

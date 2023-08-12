@@ -280,29 +280,46 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKDeusExCountAndKill" hidden="true" remove_on_death="false" help="kill all extra DeusEx of the same kind: friend or foe, as I cant find a way to prevent them spawning from the gameevent stack">
+    <buff name="buffGSKDeusExDestroyLootPLAYERBUFF" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="1.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKDeusExDestroyAllDroppedLoot"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDeusExCountAndKill" hidden="true" remove_on_death="false" help="kill all extra DeusEx of the same kind: friend or foe, as I cant find a way to prevent them spawning from the gameevent hidden(?) stack">
       <stack_type value="replace"/>
       <duration value="0" help="enough time to kill with HealthChangeOT is 1s tho"/>
       <update_rate value="5"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKill" operation="add" value="1" target="selfAOE" range="60">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKillSelf" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKillSelf" operation="Equals" value="0"/>
           <requirement name="EntityTagCompare" target="self" tags="friendly"/>
           <requirement name="EntityTagCompare" target="other" tags="friendly"/>
           <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKill" operation="add" value="1" target="selfAOE" range="60">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKillSelf" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKillSelf" operation="Equals" value="0"/>
           <requirement name="EntityTagCompare" target="self" tags="hostile"/>
           <requirement name="EntityTagCompare" target="other" tags="hostile"/>
           <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="GTE" value="1"/>
-        <passive_effect name="LootQuantity" operation="perc_set" value="0"/>
-        <passive_effect name="LootDropProb" operation="perc_set" value="0"/>
-        <passive_effect name="HealthChangeOT" operation="base_add" value="-32000"/>
+        <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKillSelf" operation="GTE" value="1"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="-32000" help="this works as long it drops nothing, tho corpse is still harvestable..."/>
+        <!-- HELPGOOD: the idea is to make them bug and move so fast that they end up leaving the range from the player that keeps them spawned... but doesnt work hehe
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExDebuff"/>
+      <passive_effect name="RunSpeed" operation="perc_add" value="1000"/> 
+      <passive_effect name="WalkSpeed" operation="perc_add" value="1000"/>
+      <passive_effect name="JumpStrength" operation="perc_add" value="1000" help="this affects leap? no"/>
+      -->
+        <!-- HELPGOOD:TODO: is there some way to prevent loot drop using a buff??? just killing them is not good as they always drop loot ignoring these passives below..
+      <passive_effect name="HealthChangeOT" operation="base_add" value="-32000" help="ISSUE: this works, but w/o being able to prevent loot drop and harvesting the corpse, it is pointless..."/>
+      <passive_effect name="LootQuantity" operation="perc_subtract" value="0.999" level="0,1000" target="self" help="ISSUE: changes nothing..."/>
+      <passive_effect name="LootDropProb" operation="perc_subtract" value="0.999" level="0,1000" target="self" help="ISSUE: changes nothing..."/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExDestroyLootPLAYERBUFF" target="selfAOE" range="60" target_tags="player" help="ISSUE: does not work"/>
+-->
       </effect_group>
     </buff>
     <buff name="buffGSKDeusExFriendly" hidden="true" remove_on_death="true">
