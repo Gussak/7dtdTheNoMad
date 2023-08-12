@@ -1,3 +1,14 @@
+astrIgnoreList=( #just a part of the name will work too
+  blkGSKburiedTreasure
+  cnt #containers
+  ConfigFeatureBlock #other mod special block
+  JumpPad #shall only be collected thru the world
+  POI #exclusive POI/prefab blocks
+  Random #prefab stuff
+  TeleportPad
+  trapExplosionPlusPOIexploreGSK
+)
+
 iDataColumns=5;
 astrItemList=( 
   #place here mainly the best items of the game that may not be found otherwise as trader's inv is empty for TNM
@@ -21,6 +32,40 @@ astrItemList=(
   "item" gunRifleT3SniperRifle "WT3SniperRifle" 0 ""
   "item" gunShotgunT3AutoShotgun "WT3AutoShotgun" 0 ""
 
+  #clear;strTier="T0";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*'$strTier'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oh |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*'$strTier')(.*)@  "item" \2\3 "W'$strTier'\3" 0 ""@' |tr -d '\r\0' |sort -u
+  "item" meleeToolRepairT0StoneAxe "WT0StoneAxe" 0 ""
+  "item" meleeToolRepairT0TazasStoneAxe "WT0TazasStoneAxe" 0 ""
+  "item" meleeToolSalvageT0MakeshiftWrench "WT0MakeshiftWrench" 0 ""
+  "item" meleeToolShovelT0StoneShovel "WT0StoneShovel" 0 ""
+  "item" meleeWpnBatonT0PipeBaton "WT0PipeBaton" 0 ""
+  "item" meleeWpnBladeT0BoneKnife "WT0BoneKnife" 0 ""
+  "item" meleeWpnClubT0WoodenClub "WT0WoodenClub" 0 ""
+  "item" meleeWpnKnucklesT0LeatherKnuckles "WT0LeatherKnuckles" 0 ""
+  "item" meleeWpnSledgeT0StoneSledgehammer "WT0StoneSledgehammer" 0 ""
+  "item" meleeWpnSpearT0StoneSpear "WT0StoneSpear" 0 ""
+
+  #clear;strTier="T1";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*'$strTier'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oh |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*'$strTier')(.*)@  "item" \2\3 "W'$strTier'\3" 0 ""@' |tr -d '\r\0' |sort -u
+  "item" meleeToolAxeT1IronFireaxe "WT1IronFireaxe" 0 ""
+  "item" meleeToolFarmT1IronHoe "WT1IronHoe" 0 ""
+  "item" meleeToolPickT1IronPickaxe "WT1IronPickaxe" 0 ""
+  "item" meleeToolRepairT1ClawHammer "WT1ClawHammer" 0 ""
+  "item" meleeToolSalvageT1Wrench "WT1Wrench" 0 ""
+  "item" meleeToolShovelT1IronShovel "WT1IronShovel" 0 ""
+  "item" meleeWpnBladeT1CandyKnife "WT1CandyKnife" 0 ""
+  "item" meleeWpnBladeT1HuntingKnife "WT1HuntingKnife" 0 ""
+  "item" meleeWpnClubT1BaseballBat "WT1BaseballBat" 0 ""
+  "item" meleeWpnClubT1CandyClub "WT1CandyClub" 0 ""
+  "item" meleeWpnKnucklesT1IronKnuckles "WT1IronKnuckles" 0 ""
+  "item" meleeWpnSledgeT1IronSledgehammer "WT1IronSledgehammer" 0 ""
+  "item" meleeWpnSpearT1IronSpear "WT1IronSpear" 0 ""
+  
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*T2[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T2)(.*)@"item" \2\3 "WT2\3" 0 ""@' |tr -d '\r\0' |sort -u
+  "item" meleeToolAxeT2SteelAxe "WT2SteelAxe" 0 ""
+  "item" meleeToolPickT2SteelPickaxe "WT2SteelPickaxe" 0 ""
+  "item" meleeToolSalvageT2Ratchet "WT2Ratchet" 0 ""
+  "item" meleeToolShovelT2SteelShovel "WT2SteelShovel" 0 ""
+  "item" meleeWpnBatonT2StunBaton "WT2StunBaton" 0 ""
+
   #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T3)(.*)@"item" \2\3 "WT3\3" 0@' |tr -d '\r\0' |sort -u
   "item" meleeToolAxeT3Chainsaw "WT3Chainsaw" 0 ""
   "item" meleeToolPickT3Auger "WT3Auger" 0 ""
@@ -32,13 +77,6 @@ astrItemList=(
   "item" meleeWpnKnucklesT3SteelKnuckles "WT3SteelKnuckles" 0 ""
   "item" meleeWpnSledgeT3SteelSledgehammer "WT3SteelSledgehammer" 0 ""
   "item" meleeWpnSpearT3SteelSpear "WT3SteelSpear" 0 ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*t2[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T2)(.*)@"item" \2\3 "WT2\3" 0@' |tr -d '\r\0' |sort -u
-  "item" meleeToolAxeT2SteelAxe "WT2SteelAxe" 0 ""
-  "item" meleeToolPickT2SteelPickaxe "WT2SteelPickaxe" 0 ""
-  "item" meleeToolSalvageT2Ratchet "WT2Ratchet" 0 ""
-  "item" meleeToolShovelT2SteelShovel "WT2SteelShovel" 0 ""
-  "item" meleeWpnBatonT2StunBaton "WT2StunBaton" 0 ""
 
   #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "ARO\3" 0@' |tr -d '\r\0' |sort -u
   "item" armorSteelBoots "AROBoots" 0 ""
@@ -159,7 +197,7 @@ astrItemList=(
   "item" resourceWood "RSCWood" 0 ""
   "item" resourceYuccaFibers "RSCYuccaFibers" 0 ""
 
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed -r -e 's@Mod"@"@' -e 's@.*@& ""@'
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed -r -e 's@Mod"@"@' -e 's@.*@& ""@'
   "item_modifier" modArmorAdvancedMuffledConnectors "ModArmorAdvancedMuffledConnectors" 0 ""
   "item_modifier" modArmorBallCap "ModArmorBallCap" 0 ""
   "item_modifier" modArmorBandolier "ModArmorBandolier" 0 ""
@@ -226,6 +264,13 @@ astrItemList=(
   "item_modifier" modGunTriggerGroupAutomatic "ModGunTriggerGroupAutomatic" 0 ""
   "item_modifier" modGunTriggerGroupBurst3 "ModGunTriggerGroupBurst3" 0 ""
   "item_modifier" modGunTriggerGroupSemi "ModGunTriggerGroupSemi" 0 ""
+  "item_modifier" modGSKElctrnBattery "ModGSKElctrnBattery" 0 ""
+  "item_modifier" modGSKElctrnHero "ModGSKElctrnHero" 0 ""
+  "item_modifier" modGSKElctrnShockArrow "ModGSKElctrnShockArrow" 0 ""
+  "item_modifier" modGSKElctrnTeleport "ModGSKElctrnTeleport" 0 ""
+  "item_modifier" modGSKEnergyHarvest "ModGSKEnergyHarvest" 0 ""
+  "item_modifier" modGSKEnergyShield "ModGSKEnergyShield" 0 ""
+  "item_modifier" modGSKEnergyThorns "ModGSKEnergyThorns" 0 ""
   "item_modifier" modHazmatBoots "ModHazmatBoots" ${iEndGameValue} ""
   "item_modifier" modHazmatGloves "ModHazmatGloves" ${iEndGameValue} ""
   "item_modifier" modHazmatMask "ModHazmatMask" ${iEndGameValue} ""
@@ -304,17 +349,47 @@ astrItemList=(
   "item" drugSteroids "CSMSteroids" 0 ""
   "item" drugSugarButts "CSMSugarButts" 1000 "CSM final price override, good advantage on trading (was EcV100)"
   "item" drugVitamins "CSMVitamins" 0 ""
-  "item" thrownAmmoFlare "CSMAmmoFlare" 0 ""
-  "item" thrownAmmoMolotovCocktail6s "CSMAmmoMolotovCocktail6s" 0 ""
-  "item" thrownAmmoMolotovCocktail "CSMAmmoMolotovCocktail" 0 ""
-  "item" thrownAmmoPipeBomb "CSMAmmoPipeBomb" 0 ""
-  "item" thrownAmmoPoisonBomb "CSMAmmoPoisonBomb" 0 ""
-  "item" thrownAmmoStunGrenade "CSMAmmoStunGrenade" 0 ""
-  "item" thrownDynamite "CSMDynamite" 0 ""
-  "item" thrownGrenadeContact "CSMGrenadeContact" 0 ""
-  "item" thrownGrenade "CSMGrenade" 0 ""
-  "item" thrownTimedCharge "CSMTimedCharge" 0 ""
-  "item" thrownTimedChargeWeak "CSMTimedChargeWeak" 0 ""
+  
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(thrown)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(thrown)(.*)@  "item" \2\3 "TRW\3" 0 ""@' |tr -d '\r\0' |sort -u
+  "item" thrownAmmoFlare "TRWAmmoFlare" 0 ""
+  "item" thrownAmmoMolotovCocktail6s "TRWAmmoMolotovCocktail6s" 0 ""
+  "item" thrownAmmoMolotovCocktail "TRWAmmoMolotovCocktail" 0 ""
+  "item" thrownAmmoPipeBomb "TRWAmmoPipeBomb" 0 ""
+  "item" thrownAmmoPoisonBomb "TRWAmmoPoisonBomb" 0 ""
+  "item" thrownAmmoStunGrenade "TRWAmmoStunGrenade" 0 ""
+  "item" thrownDynamite "TRWDynamite" 0 ""
+  "item" thrownGrenadeContact "TRWGrenadeContact" 0 ""
+  "item" thrownGrenade "TRWGrenade" 0 ""
+  "item" thrownTimedCharge "TRWTimedCharge" 0 ""
+  "item" thrownTimedChargeWeak "TRWTimedChargeWeak" 0 ""
+  
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(ammoBundle)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(ammoBundle)(.*)@  "item" \2\3 "AMO\3" 0 ""@' |tr -d '\r\0' |sort -u
+  "item" ammoBundle44MagnumBulletAP "AMO44MagnumBulletAP" 0 ""
+  "item" ammoBundle44MagnumBulletBall "AMO44MagnumBulletBall" 0 ""
+  "item" ammoBundle44MagnumBulletHP "AMO44MagnumBulletHP" 0 ""
+  "item" ammoBundle762mmBulletAP "AMO762mmBulletAP" 0 ""
+  "item" ammoBundle762mmBulletBall "AMO762mmBulletBall" 0 ""
+  "item" ammoBundle762mmBulletHP "AMO762mmBulletHP" 0 ""
+  "item" ammoBundle9mmBulletAP "AMO9mmBulletAP" 0 ""
+  "item" ammoBundle9mmBulletBall "AMO9mmBulletBall" 0 ""
+  "item" ammoBundle9mmBulletHP "AMO9mmBulletHP" 0 ""
+  "item" ammoBundleArrowExploding "AMOArrowExploding" 0 ""
+  "item" ammoBundleArrowFlaming "AMOArrowFlaming" 0 ""
+  "item" ammoBundleArrowIron "AMOArrowIron" 0 ""
+  "item" ammoBundleArrowSteelAP "AMOArrowSteelAP" 0 ""
+  "item" ammoBundleArrowStone "AMOArrowStone" 0 ""
+  "item" ammoBundleCrossbowBoltExploding "AMOCrossbowBoltExploding" 0 ""
+  "item" ammoBundleCrossbowBoltFlaming "AMOCrossbowBoltFlaming" 0 ""
+  "item" ammoBundleCrossbowBoltIron "AMOCrossbowBoltIron" 0 ""
+  "item" ammoBundleCrossbowBoltSteelAP "AMOCrossbowBoltSteelAP" 0 ""
+  "item" ammoBundleCrossbowBoltStone "AMOCrossbowBoltStone" 0 ""
+  "item" ammoBundleJunkTurretAP "AMOJunkTurretAP" 0 ""
+  "item" ammoBundleJunkTurretRegular "AMOJunkTurretRegular" 0 ""
+  "item" ammoBundleJunkTurretShell "AMOJunkTurretShell" 0 ""
+  "item" ammoBundleMaster "AMOMaster" 0 ""
+  "item" ammoBundleShotgunBreachingSlug "AMOShotgunBreachingSlug" 0 ""
+  "item" ammoBundleShotgunShell "AMOShotgunShell" 0 ""
+  "item" ammoBundleShotgunSlug "AMOShotgunSlug" 0 ""
   
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="[^"]*Schematic"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi '^GSK|WerewolftoHuman|Faction|ZombieW7WalkStyle|IsInfected' |sed -r 's@(<item *name=")(.*)(Schematic)"@  "item" \2\3 "SCH\2" 0@' |tr -d '\r\0' |sort -u
   "item" ammoGasCanSchematic "SCHammoGasCan" 0 ""
@@ -3009,6 +3084,7 @@ astrItemList=(
   "block" trapSpikesWoodDmg1 "BLKtrapSpikesWoodDmg1" 0 ""
   "block" trapSpikesWoodDmg2 "BLKtrapSpikesWoodDmg2" 0 ""
   "block" trapSpikesWoodMaster "BLKtrapSpikesWoodMaster" 0 ""
+  "block" trapTeleportPadY50 "BLKtrapTeleportPadY50" 0 ""
   "block" trapWindowStoreCornerFull "BLKtrapWindowStoreCornerFull" 0 ""
   "block" trapWindowStoreFourSidedFull "BLKtrapWindowStoreFourSidedFull" 0 ""
   "block" trapWindowStoreOneSidedFull "BLKtrapWindowStoreOneSidedFull" 0 ""

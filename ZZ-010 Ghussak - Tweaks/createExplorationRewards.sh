@@ -36,6 +36,7 @@
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 eval "`CFGFUNCloadCaches`"
 #CFGFUNCwriteCaches;exit #TODO comment
+#CFGFUNCchkNum "1.0";exit
 
 : ${iRewardValueMult:=15} #help x15 is like the trader price for a tier 6 item just after entering the game the first time (so no trading bonuses)
 : ${iModGenericPrice:=100} #help iModGenericPrice*fMultPriceTier4to6*iRewardValueMult, ex.: 100*1.6*15=2400
@@ -55,43 +56,21 @@ source "createExplorationRewards.InputData.sh"
 ### right???
 : ${fMultPriceTier4to6:=1.6} #help
 
-iCallCourierEnergyReq=10
-astrCustomIconIsSelfId=()
-astrLocList=()
-iUpdateEcoItemValCache=0
-iUpdateItemHasTiersCache=0
-iUpdateCreativeModeCache=0
-declare -A astrPrevItemNameList
-#for strItem in "${astrItemList[@]}";do
-#set -x
-for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDataColumns));do
-  declare -p iDataLnIniIndex
-  strXmlToken="${astrItemList[iDataLnIniIndex]}";echo ">>>>>>>>>> $strXmlToken" #item type
-  strItem="${astrItemList[iDataLnIniIndex+1]}"
-  strShortNameId="${astrItemList[iDataLnIniIndex+2]}" #shall begin with a 3 letter unique group token
-  iSellPriceTier4="${astrItemList[iDataLnIniIndex+3]}";CFGFUNCchkNum "$iSellPriceTier4"
-  strAddHelp="${astrItemList[iDataLnIniIndex+4]}"
-  
-  if [[ "$strItem" =~ .*Bundle.* ]];then
-    CFGFUNCinfo "Ignoring bundles: $strItem. This reward is meant to at most fill the gap, reach the minimum requirements, and not mass create resources."
-    continue;
+function FUNCchkPropCanPickup() { # req strItem
+  strCanPickup="${CFGastrCacheItem1CanPickup2List[${strItem}]-false}" #tries the cache
+  if CFGFUNCrecursiveSearchPropertyValueAllFiles "CanPickup" "$strItem";then
+    strCanPickup="$iFRSPV_PropVal_OUT"
+    strCanPickup="`echo "$strCanPickup" |tr "[:upper:]" "[:lower:]"`"
   fi
-  if [[ "$strItem" =~ .*POI.* ]];then
-    CFGFUNCinfo "Ignoring POI blocks: $strItem."
-    continue;
+  CFGastrCacheItem1CanPickup2List["${strItem}"]="$strCanPickup"
+  ((iUpdateCanPickupCache++))&&:
+  if [[ "$strCanPickup" == "false" ]];then
+    CFGFUNCinfo "skip block '$strItem' that cannot be picked up"
+    return 1
   fi
-  if [[ "$strXmlToken" == "block" ]] && [[ "$strItem" =~ ^cnt.* ]];then
-    CFGFUNCinfo "Ignoring container blocks: $strItem."
-    continue;
-  fi
-  #help blocks can be blocked too by adding this to them: <property name="SellableToTrader" value="false"/>
-  #if [[ "$strItem" =~ .*([fF]lagPole|[pP]oolTable|[cC]andelabra|[dD]ogHouse).* ]];then # sync with PreventPlayerCreatingThese at blocks.xml
-    #CFGFUNCinfo "Ignoring PreventPlayerCreatingThese: $strItem."
-    #continue;
-  #fi
-  
-  strHelp=""
-  
+  return 0
+}
+function FUNCchkPropCreativeMode() { # req strItem
   strCreativeMode="${CFGastrCacheItem1CreativeMode2List[${strItem}]-}" #tries the cache
   if [[ -z "$strCreativeMode" ]];then
     if CFGFUNCrecursiveSearchPropertyValueAllFiles --no-recursive "CreativeMode" "$strItem";then
@@ -106,8 +85,92 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   if [[ "$strCreativeMode" =~ .*(none|dev|test).* ]];then
     CFGFUNCinfo "skip $strItem strCreativeMode='$strCreativeMode'"
-    continue
+    return 1
   fi
+  return 0
+}
+
+iCallCourierEnergyReq=10
+astrCustomIconIsSelfId=()
+astrLocList=()
+
+iUpdateEcoItemValCache=0
+iUpdateItemHasTiersCache=0
+iUpdateCreativeModeCache=0
+iUpdateCanPickupCache=0
+
+declare -A astrPrevItemNameList
+strIgnoreListRegex="`echo "${astrIgnoreList[@]}" |tr ' ' '|'`"
+#for strItem in "${astrItemList[@]}";do
+#set -x
+for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDataColumns));do
+  declare -p iDataLnIniIndex
+  strXmlToken="${astrItemList[iDataLnIniIndex]}";echo ">>>>>>>>>> $strXmlToken" #item type
+  strItem="${astrItemList[iDataLnIniIndex+1]}"
+  strShortNameId="${astrItemList[iDataLnIniIndex+2]}" #shall begin with a 3 letter unique group token
+  iSellPriceTier4="${astrItemList[iDataLnIniIndex+3]}";CFGFUNCchkNum "$iSellPriceTier4"
+  strAddHelp="${astrItemList[iDataLnIniIndex+4]}"
+  
+  strBundle=""
+  if [[ "$strItem" =~ .*[Bb]undle.* ]];then
+    strBundle=" (BUNDLE)" #todo show the Create_item_count value
+  fi
+  #if [[ "$strItem" =~ .*Bundle.* ]];then
+    #CFGFUNCinfo "Ignoring bundles: $strItem. This reward is meant to at most fill the gap, reach the minimum requirements, and not mass create resources."
+    #continue;
+  #fi
+  #if [[ "$strItem" =~ .*POI.* ]];then
+    #CFGFUNCinfo "Ignoring POI blocks: $strItem."
+    #continue;
+  #fi
+  if [[ "$strItem" =~ .*(${strIgnoreListRegex}).* ]];then
+    CFGFUNCinfo "Ignoring: $strItem. see astrIgnoreList"
+    continue;
+  fi
+  #if [[ "$strXmlToken" == "block" ]] && [[ "$strItem" =~ ^cnt.* ]];then
+    #CFGFUNCinfo "Ignoring container blocks: $strItem."
+    #continue;
+  #fi
+  #help blocks can be blocked too by adding this to them: <property name="SellableToTrader" value="false"/>
+  #if [[ "$strItem" =~ .*([fF]lagPole|[pP]oolTable|[cC]andelabra|[dD]ogHouse).* ]];then # sync with PreventPlayerCreatingThese at blocks.xml
+    #CFGFUNCinfo "Ignoring PreventPlayerCreatingThese: $strItem."
+    #continue;
+  #fi
+  
+  strHelp=""
+  
+  #if [[ "$strXmlToken" == "block" ]];then
+    #strCanPickup="${CFGastrCacheItem1CanPickup2List[${strItem}]-false}" #tries the cache
+    #if CFGFUNCrecursiveSearchPropertyValueAllFiles "CanPickup" "$strItem";then
+      #strCanPickup="$iFRSPV_PropVal_OUT"
+      #strCanPickup="`echo "$strCanPickup" |tr "[:upper:]" "[:lower:]"`"
+    #fi
+    #CFGastrCacheItem1CanPickup2List["${strItem}"]="$strCanPickup"
+    #((iUpdateCanPickupCache++))&&:
+    
+    #if [[ "$strCanPickup" == "false" ]];then
+      #CFGFUNCinfo "skip block '$strItem' that cannot be picked up"
+      #continue
+    #fi
+  #fi
+  
+  #strCreativeMode="${CFGastrCacheItem1CreativeMode2List[${strItem}]-}" #tries the cache
+  #if [[ -z "$strCreativeMode" ]];then
+    #if CFGFUNCrecursiveSearchPropertyValueAllFiles --no-recursive "CreativeMode" "$strItem";then
+      #strCreativeMode="$iFRSPV_PropVal_OUT"
+      #strCreativeMode="`echo "$strCreativeMode" |tr "[:upper:]" "[:lower:]"`"
+    #fi
+    #if [[ -z "$strCreativeMode" ]];then
+      #strCreativeMode="player" #when it is not set in the xml, it defaults to 'player' hardcoded in the game engine
+    #fi
+    #CFGastrCacheItem1CreativeMode2List["${strItem}"]="$strCreativeMode"
+    #((iUpdateCreativeModeCache++))&&:
+  #fi
+  #if [[ "$strCreativeMode" =~ .*(none|dev|test).* ]];then
+    #CFGFUNCinfo "skip $strItem strCreativeMode='$strCreativeMode'"
+    #continue
+  #fi
+  if ! FUNCchkPropCreativeMode;then continue;fi
   
   iCountOrTier=0
   
@@ -120,31 +183,48 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if((iSellPriceTier4==0));then
     iEconomicValue="${CFGastrItem1Value2List[${strItem}]-0}" #tries the cache
     if((iEconomicValue==0));then # no cache found
-      if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$strItem";then
-        iEconomicValue="$iFRSPV_PropVal_OUT"
+      #if CFGFUNCrecursiveSearchPropertyValueAllFiles --boolAllowProp "SellableToTrader" "EconomicValue" "$strItem";then
+      if CFGFUNCrecursiveSearchPropertyValueAllFiles "EconomicValue" "$strItem";then
+        #iEconomicValue="$iFRSPV_PropVal_OUT"
         CFGFUNCinfo "New iEconomicValue='$iEconomicValue' found for strItem='${strItem}' will be put on cache (iUpdateEcoItemValCache='$iUpdateEcoItemValCache')"
-      else
-        CFGFUNCinfo "WARN: this strItem='$strItem' cannot be sold (because in the xml: SellableToTrader=false or iEconomicValue=0). A cache with value -1 (means cannot be sold) will be saved to speed it up next time.";
-        iEconomicValue=-1
+      fi
+      if [[ -n "$iFRSPV_PropVal_OUT" ]];then # an empty return value means it was not found
+        iEconomicValue="$iFRSPV_PropVal_OUT"
       fi
       
-      #if((iEconomicValue==-1));then
-        #CFGFUNCinfo "skipping non sellable block strItem='$strItem'";
-        #continue;
-      #fi
       if((iEconomicValue==0));then
-        #if [[ "$strXmlToken" == "block" ]];then
-          #CFGFUNCinfo "skipping non sellable block strItem='$strItem'";
-          #continue;
-        #fi
-        CFGFUNCerrorExit "strItem='$strItem' auto price 'EconomicValue'=0 failed, configure a custom price (at input data file) by collecting it from ingame sell price at inventory (just after entering the game for the first time and having sold/bought nothing before)";
+        if [[ "$strItem" =~ .*[Bb]undle.* ]];then
+          CFGFUNCinfo "Ignoring bundle that have no economic value: $strItem. TODO: collect property Create_item value, get it's economicvalue, multiply by property Create_item_count value"
+          iEconomicValue=-1
+        fi
+        if [[ "$strXmlToken" == "block" ]];then
+          CFGFUNCinfo "this block that have no economic value: $strItem"
+          
+          #strCanPickup="${CFGastrCacheItem1CanPickup2List[${strItem}]-false}" #tries the cache
+          #if CFGFUNCrecursiveSearchPropertyValueAllFiles "CanPickup" "$strItem";then
+            #strCanPickup="$iFRSPV_PropVal_OUT"
+            #strCanPickup="`echo "$strCanPickup" |tr "[:upper:]" "[:lower:]"`"
+          #fi
+          #CFGastrCacheItem1CanPickup2List["${strItem}"]="$strCanPickup"
+          #((iUpdateCanPickupCache++))&&:
+          #if [[ "$strCanPickup" == "false" ]];then
+            #CFGFUNCinfo "skip block '$strItem' that cannot be picked up"
+            #continue
+          #fi
+          if ! FUNCchkPropCanPickup;then continue;fi
+          #CFGFUNCinfo "Ignoring block that have no economic value: $strItem. They probably cannot be picked up anyway."
+          #iEconomicValue=-1
+        fi
+        if((iEconomicValue==0));then
+          iEconomicValue="`CFGFUNCgetCustomEconomicValue "$strItem"`"
+        fi
       fi
       
       CFGastrItem1Value2List["${strItem}"]=$iEconomicValue
       ((iUpdateEcoItemValCache++))&&:
     fi
     if((iEconomicValue==-1));then # using the cache
-      CFGFUNCinfo "Skipping item that cannot be sold: strItem='${strItem}'"
+      CFGFUNCinfo "Skipping item that was set to be ignored (iEconomicValue=${iEconomicValue}): strItem='${strItem}'"
       continue;
     fi
       
@@ -182,11 +262,15 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   fi
   
   strItemType=""
+  if [[ "${strShortNameId:0:3}" == "AMO" ]];then strItemType="Ammunition";fi
+  if [[ "${strShortNameId:0:3}" == "TRW" ]];then strItemType="Throwable";fi
   if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
   if [[ "${strShortNameId:0:3}" == "SCH" ]];then strItemType="Schematic";fi
   if [[ "${strShortNameId:0:3}" == "ARO" ]];then strItemType="Armor and Outfit";fi
   if [[ "${strShortNameId:0:3}" == "Mod" ]];then strItemType="Item Modification";fi
   if [[ "${strShortNameId:0:3}" == "RSC" ]];then strItemType="Resource";fi
+  if [[ "${strShortNameId:0:3}" == "WT0" ]];then strItemType="Weapon/Tool Tier 0";fi
+  if [[ "${strShortNameId:0:3}" == "WT1" ]];then strItemType="Weapon/Tool Tier I";fi
   if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
   if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi
   if [[ "${strShortNameId:0:3}" == "BLK" ]];then strItemType="Block";fi
@@ -235,7 +319,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ "$strCustomIcon" == "$strItem" ]];then astrCustomIconIsSelfId+=("$strItem");fi
   
   #strItemName='GSKTNMWER_'"`printf "%0${nPriceDecSize}d" "$iRewardValue"`_${strShortNameId}"''
-  strItemName='GTW'"`printf "%0${nPriceDecSize}d" "$iRewardValue"`${strShortNameId}"''
+  strItemName='zGTW'"`printf "%0${nPriceDecSize}d" "$iRewardValue"`${strShortNameId}"'' # prefix z is important to put them as last in the list to not mess it
   #for((iChkItemNm=0;iChkItemNm<${#astrPrevItemNameList[@]};iChkItemNm++));do if [[ "${astrPrevItemNameList[iChkItemNm]}" == "$strItemName" ]];then CFGFUNCerrorExit "item name clash: $strItemName, $strItem";fi;done
   for strItemChk in ${!astrPrevItemNameList[@]};do
     if [[ "${astrPrevItemNameList[$strItemChk]}" == "$strItemName" ]];then
@@ -292,11 +376,12 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   echo '<recipe name="'"${strItemName}"'" count="1"><ingredient name="electronicsParts" count="1"/></recipe>' >>"${strFlGenRec}${strGenTmpSuffix}"
   echo '<recipe name="electronicsParts" count="1"><ingredient name="'"${strItemName}"'" count="1"/></recipe>' >>"${strFlGenRec}${strGenTmpSuffix}"
 #dkGSKTNMExplrRewardScope8x,"This exploring reward requires 5160, and you have {cvar(iGSKexplorationCredits:0)} exploring credits."
-  astrLocList+=("${strDk},\"[TheNoMad:WorldExplorationReward] ${strItemType}: ${strItemName}\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you (See *Delivery notes).\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
+  astrLocList+=("${strDk},\"[TheNoMad:WorldExplorationReward] ${strItemType}: ${strItemName}${strBundle}\nThis exploring reward requires ${iRewardValue} credits.\nYou still have {cvar(iGSKexplorationCredits:0)} exploring credits.\nA courier will bring the reward to you (See *Delivery notes).\nTo collect POI exploring reward credits you must be careful, read exploring tip about such rewards if you need.\n It is not possible to get all rewards, so chose wisely.\"")
   
   if((iUpdateEcoItemValCache==10));then CFGFUNCwriteCaches;iUpdateEcoItemValCache=0;fi
   if((iUpdateItemHasTiersCache==10));then CFGFUNCwriteCaches;iUpdateItemHasTiersCache=0;fi
   if((iUpdateCreativeModeCache==10));then CFGFUNCwriteCaches;iUpdateCreativeModeCache=0;fi
+  if((iUpdateCanPickupCache==10));then CFGFUNCwriteCaches;iUpdateCanPickupCache=0;fi
 done
 if(("${#astrCustomIconIsSelfId[@]}">0));then
   declare -p astrCustomIconIsSelfId |tr '[' '\n'

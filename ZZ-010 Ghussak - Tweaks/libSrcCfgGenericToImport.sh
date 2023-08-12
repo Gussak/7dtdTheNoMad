@@ -524,6 +524,29 @@ function CFGFUNCidWithoutVariant() {
   echo "${1}" |cut -d: -f1 #TODO check for the "VariantHelper" string if it is valid like in "cobblestoneShapes:VariantHelper"
 };export -f CFGFUNCidWithoutVariant
 
+function CFGFUNCgetCustomEconomicValue() { #<lstrItemID> returning -1 means the item shall be ignored
+  #local lstrMsg="$1";shift
+  local lstrItemID="$1";shift
+  while true;do
+    #CFGFUNCinfo "$lstrMsg"
+    #local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think price is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
+    # auto price 'EconomicValue'=0 failed, configure a custom price (at input data file) by collecting it from ingame sell price at inventory (just after entering the game for the first time and having sold/bought nothing before)
+    local liItemValueResp;read -p "INPUT: (a value of -1 will set the item to be ignored) Start a new game. Add to your inventory item '${lstrItemID}'. If the item has tiers, collect the sell price for tier4. If the item has no tiers (like gun mods), collect the trader sell price for it. So, the player must be  lvl 1 w/o any trading bonuses (just after you enter the game the 1st time, having sold/bought nothing before (what lowers the price after some tradings) and w/o any skills or other bonuses from consumables or equipment) (I think price is like +- sellValue=itemTier4SellValue=EconomicValue. sellValue*15=traderSellValue (right?):" liItemValueResp&&:
+    #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
+    if CFGFUNCchkNum "${liItemValueResp}";then
+      local liEconomicValue="$liItemValueResp" #this is a player override
+      #liEconomicValue="$((liItemValueResp/15))"
+      #liEconomicValue=$((liEconomicValue*5/15))&&:
+      if CFGFUNCprompt -q "economic value for '${lstrItemID}' will be ${liEconomicValue}, is that ok?";then
+        break
+      fi
+    else
+      CFGFUNCinfo "WARN: invalid value '$liItemValueResp' integer"
+    fi
+  done  
+  echo "$liEconomicValue"
+}
+
 function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPropertyValue --boolAllowProp "SellableToTrader" "EconomicValue"
   local lbRecursive=true;if [[ "$1" == "--no-recursive" ]];then shift;lbRecursive=false;fi
   local lstrBoolAllowProp="";if [[ "$1" == "--boolAllowProp" ]];then shift;lstrBoolAllowProp="$1";shift;fi
@@ -534,7 +557,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
   
   #OUTPUTS:
   declare -g bFRSPV_CanSell_OUT #TODOA rename everywhere to bFRSPV_PropAllow_OUT
-  declare -g iFRSPV_PropVal_OUT
+  declare -g iFRSPV_PropVal_OUT #returning empty means it was not found TODOA rename everywhere to strFRSPV_PropVal_OUT
   declare -g strFRSPV_XmlTokenFound_OUT #to help determine what kind of id is this, in what xml file it is
   
   declare -g strFRSPV_PreviousItemID
@@ -555,7 +578,7 @@ function CFGFUNCrecursiveSearchPropertyValue() { #tip: CFGFUNCrecursiveSearchPro
       #strFRSPV_XmlTokenFound_OUT=""
       strFRSPV_PreviousItemID="$lstrItemID"
       bFRSPV_CanSell_OUT=true #engine default hardcoded is this
-      iFRSPV_PropVal_OUT=""
+      iFRSPV_PropVal_OUT="" #empty means it was not found
     fi
     
     CFGFUNCinfo "CHECKING: ${lstrChkItem} ${lstrFlCfgChkFullPath}"
@@ -639,13 +662,13 @@ function CFGFUNCrecursiveSearchPropertyValueAllFiles() {
 function CFGFUNCchkNumGT0() {
 #  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
   if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
-  echo "WARN: invalid number: $1" >&2
+  echo "WARN: invalid positive integer > 0: $1" >&2
   return 1
 };export -f CFGFUNCchkNumGT0
 function CFGFUNCchkNum() {
 #  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]] && ((${1}>0));then return 0;fi
-  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^[0-9]*$ ]];then return 0;fi
-  echo "WARN: invalid number: $1" >&2
+  if [[ -n "${1-}" ]] && [[ "${1}" =~ ^-{0,1}[0-9]*$ ]];then return 0;fi
+  echo "WARN: invalid integer: $1" >&2
   return 1
 };export -f CFGFUNCchkNum
 
@@ -728,6 +751,14 @@ function CFGFUNCloadCaches() { #helpf use like: eval "`CFGFUNCloadCaches`"
   declare -gx CFGastrCreativeModeHASH="`CFGFUNChashArray CFGastrCacheItem1CreativeMode2List`"
   echo "`declare -p CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE`" #OUTPUT
   
+  # CanPickups
+  lstrFlID="CanPickup"
+  declare -A CFGastrCacheItem1CanPickup2List
+  declare -gx CFGstrFlCanPickupCACHE="Cache.DeleteToRecreate/cache.${lstrFlID}.sh"
+  if [[ -f "${CFGstrFlCanPickupCACHE}" ]];then source "${CFGstrFlCanPickupCACHE}";fi
+  declare -gx CFGastrCanPickupHASH="`CFGFUNChashArray CFGastrCacheItem1CanPickup2List`"
+  echo "`declare -p CFGastrCanPickupHASH CFGastrCacheItem1CanPickup2List CFGstrFlCanPickupCACHE`" #OUTPUT
+  
 };export -f CFGFUNCloadCaches
 function CFGFUNCwriteCaches() {
   local lstrHeader='#PREPARE_RELEASE:REVIEWED:OK
@@ -737,6 +768,7 @@ function CFGFUNCwriteCaches() {
     CFGstrItemHasTierHASH   CFGastrItem1HasTiers2List          CFGstrFlItemHasTierCACHE
     CFGastrCustomIconHASH   CFGastrCacheItem1CustomIcon2List   CFGstrFlCustomIconCACHE
     CFGastrCreativeModeHASH CFGastrCacheItem1CreativeMode2List CFGstrFlCreativeModeCACHE
+    CFGastrCanPickupHASH    CFGastrCacheItem1CanPickup2List    CFGstrFlCanPickupCACHE
   )
   local liLoopCachesDataLnIniIndex
   for((liLoopCachesDataLnIniIndex=0;liLoopCachesDataLnIniIndex<${#lastrCacheList[@]};liLoopCachesDataLnIniIndex+=3));do

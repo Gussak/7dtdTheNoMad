@@ -465,22 +465,23 @@ function FUNCprepareBundlePart() {
           fi
         else
           if $bFRSPV_CanSell_OUT && ((liEconomicValue==0 || liEconomicValue==-1));then #if nothing was found, the user can enter a value manually too now.
-            CFGFUNCinfo "WARN: Can be sold. But it is missing economic value for lstrItemID='${lstrItemID}' liEconomicValue='$liEconomicValue'"
-            while true;do
-              #local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think price is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
-              local liItemValueResp;read -p "INPUT: Start a new game. Add to your inventory item '${lstrItemID}'. If the item has tiers, collect the sell price for tier4. If the item has no tiers (like gun mods), collect the trader sell price for it. So, the player must be  lvl 1 w/o any trading bonuses (just after you enter the game the 1st time and w/o any skills or other bonuses from consumables or equipment) (I think price is like +- sellValue=itemTier4SellValue=EconomicValue. sellValue*15=traderSellValue (right?):" liItemValueResp&&:
-              #if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
-              if CFGFUNCchkNumGT0 "${liItemValueResp}";then
-                liEconomicValue="$liItemValueResp" #this is a player override
-                #liEconomicValue="$((liItemValueResp/15))"
-                #liEconomicValue=$((liEconomicValue*5/15))&&:
-                if CFGFUNCprompt -q "economic value for '${lstrItemID}' will be ${liEconomicValue}, is that ok?";then
-                  break
-                fi
-              else
-                CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
-              fi
-            done
+            #CFGFUNCinfo "WARN: Can be sold. But it is missing economic value for lstrItemID='${lstrItemID}' liEconomicValue='$liEconomicValue'"
+            #while true;do
+              ##local liItemValueResp;read -p "INPUT: run the game and collect the item '${lstrItemID}' trader value (and paste here) for player lvl 1 w/o trading skills (I think price is like EcoVal/5=playerSellVal*15=traderSellVal or EcoVal=traderSellVal/3 right?):" liItemValueResp&&:
+              #local liItemValueResp;read -p "INPUT: Start a new game. Add to your inventory item '${lstrItemID}'. If the item has tiers, collect the sell price for tier4. If the item has no tiers (like gun mods), collect the trader sell price for it. So, the player must be  lvl 1 w/o any trading bonuses (just after you enter the game the 1st time and w/o any skills or other bonuses from consumables or equipment) (I think price is like +- sellValue=itemTier4SellValue=EconomicValue. sellValue*15=traderSellValue (right?):" liItemValueResp&&:
+              ##if [[ "$liItemValueResp" =~ ^[0-9]*$ ]] && ((liItemValueResp>0));then
+              #if CFGFUNCchkNumGT0 "${liItemValueResp}";then
+                #liEconomicValue="$liItemValueResp" #this is a player override
+                ##liEconomicValue="$((liItemValueResp/15))"
+                ##liEconomicValue=$((liEconomicValue*5/15))&&:
+                #if CFGFUNCprompt -q "economic value for '${lstrItemID}' will be ${liEconomicValue}, is that ok?";then
+                  #break
+                #fi
+              #else
+                #CFGFUNCinfo "WARN: invalid value '$liItemValueResp' must be positive integer."
+              #fi
+            #done
+            liEconomicValue="`CFGFUNCgetCustomEconomicValue "${lstrItemID}"`"
           fi
         fi
         CFGastrItem1Value2List["${lstrItemID}"]=$liEconomicValue

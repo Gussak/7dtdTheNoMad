@@ -153,6 +153,7 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKSpawnTreasureTmOut" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKSpawnRaidersWave"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="set" value="randomInt(1,5)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="subtract" value="@iGSKSpawnRaidersWave">
@@ -165,7 +166,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="set" value="0">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@iGSKSpawnRaidersChancePerc"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Watchout! Raider(s) are nearby!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] TreasureHunt: Raider(s) didn't find you this time.">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] TreasureHunt: Watchout! Raider(s) are nearby!">
           <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GTE" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKSpawnBanditCount"/>
@@ -275,6 +279,31 @@
     <buff name="buffGSKDeusExIsFoeToPlayerPLAYERBUFF" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
+    </buff>
+    <buff name="buffGSKDeusExCountAndKill" hidden="true" remove_on_death="false" help="kill all extra DeusEx of the same kind: friend or foe, as I cant find a way to prevent them spawning from the gameevent stack">
+      <stack_type value="replace"/>
+      <duration value="0" help="enough time to kill with HealthChangeOT is 1s tho"/>
+      <update_rate value="5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKill" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="Equals" value="0"/>
+          <requirement name="EntityTagCompare" target="self" tags="friendly"/>
+          <requirement name="EntityTagCompare" target="other" tags="friendly"/>
+          <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExCountAndKill" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="Equals" value="0"/>
+          <requirement name="EntityTagCompare" target="self" tags="hostile"/>
+          <requirement name="EntityTagCompare" target="other" tags="hostile"/>
+          <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKDeusExCountAndKill" operation="GTE" value="1"/>
+        <passive_effect name="LootQuantity" operation="perc_set" value="0"/>
+        <passive_effect name="LootDropProb" operation="perc_set" value="0"/>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="-32000"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKDeusExFriendly" hidden="true" remove_on_death="true">
       <stack_type value="replace"/>
@@ -403,12 +432,13 @@
     </buff>
     <buff name="buffGSKRespawnDeusExFriendlyIfPossible" help="if the player die, and DeusExMachina are still friendly, and there was one nearby, respawn another as soon as possible">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="15"/>
+      <update_rate value="10"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTandDone:buffGSKRespawnDeusExFriendlyIfPossible"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTandDone:buffGSKRespawnDeusExFriendlyIfPossible"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" name_key="DeusExFriendIsNear" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_color="0,0,255">
@@ -439,7 +469,7 @@
           <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="@.iGSKDeusExFoeSoonHintPlayer"/>
@@ -5010,10 +5040,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterHL set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterHL set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,2.00)">
-          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=62:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(0.25,2.00)"> -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(0.25,10.00)"> -->
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -5068,10 +5098,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterWL set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterWL set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,2.00)">
-          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=62:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(0.25,2.00)"> -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(0.25,10.00)"> -->
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -5126,10 +5156,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterNV set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterNV set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,2.00)">
-          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=62:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(0.25,2.00)"> -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(0.25,10.00)"> -->
           <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -7034,8 +7064,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="10"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="20" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="30" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
@@ -11278,7 +11308,7 @@
       </effect_group>
       <effect_group help="DeusExMachina:Friend:Init">
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="1200" help="every 20mins realtime (8h game time) while the player is friendly to them.">
           <requirement name="CVarCompare" cvar="$PlayerLevelBonus" operation="LTE" value="3"/>
         </triggered_effect>
@@ -11292,7 +11322,7 @@
       </effect_group>
       <effect_group help="DeusExMachina:Foe:Init">
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="0"/>
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="randomInt(3600,10800)" help="1 to 3 days. They become careful and start hunting.">
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LT" value="50"/>
@@ -11305,22 +11335,24 @@
           <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GTE" value="100"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExDebuff" target="selfAOE" range="60" target_tags="DeusEx" help="The more they die, the more they become aware of the player and ready to rage">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKDeusExKillCount"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="DeusExMachina:Friend:basic granted spawn countdown">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate"/>
       </effect_group>
       <effect_group help="DeusExMachina:Foe:basic granted spawn countdown">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="subtract" value="1" help="sync with update_rate">
           <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="@.iGSKDeusExTimeoutMarginX2"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="DeusExMachina:Foe:Cautious spawn countdown. Counters the count down if the player is not well prepared.">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExTimeoutMarginX2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="1" help="sync with update_rate" compare_type="or">
@@ -11337,7 +11369,7 @@
           <requirement name="CVarCompare" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="GT" value="0" help="why it drops down to 0? because at 1 it has a trigger that shall happen only once on this countdown."/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin" help="after a DeusExFriendly is called back, if it does not spawn after .iGSKDeusExFriendlyWaitDelay, try to spawn it again">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
           <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExFriendlySpawnAllowedCountdown" operation="Equals" value="1" help="why 1 and not 0? because 0 is cvar default. 1 means it had a bigger value, therefore means it was actually set in a flow. sync 1 with update_rate (the count down must match it)"/>
         </triggered_effect>
@@ -11347,21 +11379,22 @@
           <requirement name="CVarCompare" cvar="iGSKDeusExFoeSpawnAllowedCountdown" operation="GT" value="0" help="why it drops down to 0? because at 1 it has a trigger that shall happen only once on this countdown."/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMargin" help="after a DeusExFoe is called back, if it does not spawn after .iGSKDeusExFoeWaitDelay, try to spawn it again">
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
           <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
           <requirement name="CVarCompare" cvar="iGSKDeusExFoeSpawnAllowedCountdown" operation="Equals" value="1" help="why 1 and not 0? because 0 is cvar default. 1 means it had a bigger value, therefore means it was actually set in a flow. sync 1 with update_rate (the count down must match it)"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="DeusExMachina:Foe:hints player before arrival">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExFoeSoonHintPlayer"/>
         <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKDeusExEnemyIsComingSoonPLAYERBUFF"/>
       </effect_group>
       <effect_group help="DeusExMachina:Foe:Faster CountDown for DeusEx as enemy, spawn them more often the more you kill them (up to a limit). This only lowers the countdown faster if it would already take too long.">
-        <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+        <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="9" help="the initial enemies will show up much faster"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="GT" value="1800"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="set" value="@iGSKDeusExKillCount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="divide" value="5" help=""/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutSub" operation="add" value="1" help="sync with update_time"/>
@@ -11373,14 +11406,17 @@
       <effect_group help="DeusExMachina:DoSpawn (this may be on hold if it is enemy and player is not healed enough)">
         <requirement name="!IsBloodMoon" help="prevents it cleaning zombs for the player"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LT" value="@.iGSKDeusExTimeoutMargin"/>
+        <!-- HELPGOOD: do not check this. DeusExFoe will require player to be sheltered and it will spawn after some retries..
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="spawning big entities (humanoid or bigger) seem to not work if sheltered?"/>
+-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="LTE" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExAllowed" operation="set" value="2">
           <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
-          <requirement name="CVarCompare" cvar="iGSKDeusExKillCount" operation="GT" value="@iGSKDeusExWinsAtCount"/>
+          <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
@@ -11393,7 +11429,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusEx">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExFoe">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel there may have a Deus Ex Machina nearby..">
@@ -11409,9 +11445,6 @@
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="GTE" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="set" value="@.iGSKDeusExTimeoutMarginX2">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="30" help="TODOA: this is just a hint to know it happened here, when working can be removed">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
@@ -11861,7 +11894,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,1.0)">
           <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=15824:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="randomFloat(0.33,1.0)"> -->
-          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="15"/>
+          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="25"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.01">
           <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="0.01"/>
