@@ -77,6 +77,7 @@ astr=( #TEMPLATE
   gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
   GlowStickGreen       3 #vs wights
+  GSKpsyonicAttackLikeAMutant 1
   modGunScopeSmall 1
   thrownAmmoMolotovCocktail6s 13
   thrownAmmoStunGrenade 13

@@ -718,6 +718,82 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
+    <buff name="buffGSKpsyonicDeath" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpsyonicMutantCountNPCBUFF" hidden="false" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="3.0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPsyonicMarkedToDie" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="1" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="rabbit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="2" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="vulture"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="3" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker" has_all_tags="true"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="4" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker,feral" has_all_tags="true"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="5" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker,feral,radiated" has_all_tags="true"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPsyonicMarkedToDie" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicMarkedToDie" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpsyonicAttackLikeAMutant" hidden="false" remove_on_death="true" icon="7dtdMutantRabbit" icon_blink="false" icon_color="0,255,0" description_key="dkGSKpsyonicAttackLikeAMutant">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="3.0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You focus all your PsyPower in nearby mutants"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" target="selfAOE" range="60" action="AddBuff" buff="buffGSKpsyonicDeath" help="now is 60 range in case they moved away">
+          <requirement name="EntityTagCompare" target="other" tags="mutant"/>
+          <requirement name="CVarCompare" cvar=".iGSKPsyonicMarkedToDie" target="other" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="subtract" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicPermanentPowerAddTmp" operation="set" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicPermanentPowerAddTmp" operation="divide" value="100"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="fGSKPsyonicPermanentPower" operation="add" value="@.iGSKPsyonicPermanentPowerAddTmp">
+          <requirement name="CVarCompare" cvar="fGSKPsyonicPermanentPower" operation="LT" value="75" help="so it requires 7500 points to resist chance max of 75% on the RandomRolls"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] You killed all nearby mutants."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="subtract" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] Your PsyPower is not enough to kill'em all, they attack you."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] You sense no mutants nearby."/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKTeleportLikeAMutant" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="20" help="slow machines may need this much?"/>
@@ -5855,16 +5931,16 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
           <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="3">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6" help="from lvl 5 300s to lvl 1 60s is 240s/6=40s to recover. Heating, recovering from cold you need to be warm.">
           <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
           <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="5">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
           <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="20"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
           <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="30"/>
         </triggered_effect>
       </effect_group>
@@ -5915,30 +5991,39 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
+        <!-- HELPGOOD: this would actually cause a flu...
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="5">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="3">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4" help="from lvl 5 300s to lvl 1 60s is 240s/4=60s to recover. Cooling, recovering from warm, you CANNOT be too cold or you may get a flu.">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
           <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2" help="Bonus for perfect temperature">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-1"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="1"/>
+        </triggered_effect>
+        <!-- HELPGOOD:
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20"/>
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10" />
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30"/>
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20" />
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30" />
+        </triggered_effect>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="_wetness" operation="GT" value="0"/>
@@ -12581,6 +12666,7 @@
       <effect_group help="burn">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKPsyonicPermanentPower"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
         <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
@@ -12590,6 +12676,7 @@
       <effect_group help="shock">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="2"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKPsyonicPermanentPower"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
         <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
@@ -12599,6 +12686,7 @@
       <effect_group help="poison">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="3"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKPsyonicPermanentPower"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
         <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>
@@ -12608,6 +12696,7 @@
       <effect_group help="bleed">
         <requirement name="CVarCompare" cvar="$iGSKMutantRandomChaosChoice" operation="Equals" value="4"/>
         <requirement name="CVarCompare" cvar="$bGSKMutantRandomChaosDone" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKPsyonicPermanentPower"/>
         <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
         <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$bGSKMutantRandomChaosDone" operation="set" value="1"/>

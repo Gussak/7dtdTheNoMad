@@ -1982,6 +1982,20 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnDogCompanion"/>
       </effect_group>
     </item>
+    <item name="GSKpsyonicAttackLikeAMutant">
+      <property name="DescriptionKey" value="dkGSKpsyonicAttackLikeAMutant"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="CustomIcon" value="7dtdMutantRabbit"/>
+      <property name="CustomIconTint" value="220,150,128"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKpsyonicAttackLikeAMutant"/>
+      </effect_group>
+    </item>
     <item name="GSKteleportLikeAMutantPower">
       <property name="DescriptionKey" value="dkGSKteleportLikeAMutantPower"/>
       <property name="SellableToTrader" value="false"/>
@@ -9299,7 +9313,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00720CSMAntibiotics">
+    <item name="zGTW01440DRGAntibiotics">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugAntibiotics"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9308,7 +9322,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="720" help="; ; Dbg:EcV=240,t4=0,t6=384"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1440" help="; ; Dbg:EcV=240,t4=0,t6=384"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugAntibiotics"/>
         <property name="Create_item_count" value="1"/>
@@ -9318,15 +9332,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-720"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1440"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMAtomJunkies">
+    <item name="zGTW00600DRGAtomJunkies">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugAtomJunkies"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9335,7 +9349,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugAtomJunkies"/>
         <property name="Create_item_count" value="1"/>
@@ -9345,7 +9359,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9353,7 +9367,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMCovertCats">
+    <item name="zGTW00600DRGCovertCats">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugCovertCats"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9362,7 +9376,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugCovertCats"/>
         <property name="Create_item_count" value="1"/>
@@ -9372,7 +9386,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9380,7 +9394,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW01000CSMEyeKandy">
+    <item name="zGTW01000DRGEyeKandy">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugEyeKandy"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9389,7 +9403,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1000" help="; CSM final price override, some advantage on finding items (was EcV100); Dbg:EcV=1000,t4=1000,t6=1600"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1000" help="; DRG final price override, some advantage on finding items (was EcV100); Dbg:EcV=1000,t4=1000,t6=1600"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugEyeKandy"/>
         <property name="Create_item_count" value="1"/>
@@ -9407,7 +9421,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00750CSMFortBites">
+    <item name="zGTW01500DRGFortBites">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugFortBites"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9416,7 +9430,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="750" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1500" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugFortBites"/>
         <property name="Create_item_count" value="1"/>
@@ -9426,15 +9440,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-750"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1500"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00030CSMGSKAntiRadiation">
+    <item name="zGTW00060DRGGSKAntiRadiation">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="7dtdLowerRadiation"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9443,7 +9457,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="60" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKAntiRadiation"/>
         <property name="Create_item_count" value="1"/>
@@ -9453,7 +9467,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-60"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9461,7 +9475,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00225CSMGSKAntiRadiationSlow">
+    <item name="zGTW00450DRGGSKAntiRadiationSlow">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="7dtdLowerRadiation"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9470,7 +9484,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="225" help="; ; Dbg:EcV=75,t4=0,t6=120"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="450" help="; ; Dbg:EcV=75,t4=0,t6=120"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKAntiRadiationSlow"/>
         <property name="Create_item_count" value="1"/>
@@ -9480,7 +9494,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-225"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-450"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9488,7 +9502,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMGSKAntiRadiationStrong">
+    <item name="zGTW00600DRGGSKAntiRadiationStrong">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="7dtdLowerRadiation"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9497,7 +9511,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKAntiRadiationStrong"/>
         <property name="Create_item_count" value="1"/>
@@ -9507,7 +9521,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9515,7 +9529,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMGSKHealthTreatment">
+    <item name="zGTW00600DRGGSKHealthTreatment">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9524,7 +9538,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKHealthTreatment"/>
         <property name="Create_item_count" value="1"/>
@@ -9534,7 +9548,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9542,7 +9556,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00150CSMGSKPsyonicsResist">
+    <item name="zGTW00300DRGGSKPsyonicsResist">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="7dtdPsyShield"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9551,7 +9565,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="150" help="; ; Dbg:EcV=50,t4=0,t6=80"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=50,t4=0,t6=80"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKPsyonicsResist"/>
         <property name="Create_item_count" value="1"/>
@@ -9561,7 +9575,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-150"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9569,7 +9583,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00150CSMGSKRadiationResist">
+    <item name="zGTW00300DRGGSKRadiationResist">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="7dtdRadShield"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9578,63 +9592,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="150" help="; ; Dbg:EcV=50,t4=0,t6=80"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=50,t4=0,t6=80"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugGSKRadiationResist"/>
-        <property name="Create_item_count" value="1"/>
-        <property name="Delay" value="0.25"/>
-        <property name="Use_time" value="0.25"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-150"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
-          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
-      </effect_group>
-    </item>
-    <item name="zGTW00090CSMGSKsnakePoisonAntidote">
-      <property name="Extends" value="GSKTRBaseBundle"/>
-      <property name="CustomIcon" value="7dtdPoison"/>
-      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
-      <property name="ItemTypeIcon" value="treasure"/>
-      <property name="DescriptionKey" value="dkGSKTNMExplrRwddrugGSKsnakePoisonAntidote"/>
-      <property class="Action0">
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="90" help="; ; Dbg:EcV=30,t4=0,t6=48"/>
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
-        <property name="Create_item" value="drugGSKsnakePoisonAntidote"/>
-        <property name="Create_item_count" value="1"/>
-        <property name="Delay" value="0.25"/>
-        <property name="Use_time" value="0.25"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-90"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
-          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
-      </effect_group>
-    </item>
-    <item name="zGTW00300CSMHackers">
-      <property name="Extends" value="GSKTRBaseBundle"/>
-      <property name="CustomIcon" value="drugHackers"/>
-      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
-      <property name="ItemTypeIcon" value="treasure"/>
-      <property name="DescriptionKey" value="dkGSKTNMExplrRwddrugHackers"/>
-      <property class="Action0">
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
-        <property name="Create_item" value="drugHackers"/>
         <property name="Create_item_count" value="1"/>
         <property name="Delay" value="0.25"/>
         <property name="Use_time" value="0.25"/>
@@ -9650,7 +9610,61 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00360CSMHerbalAntibiotics">
+    <item name="zGTW00180DRGGSKsnakePoisonAntidote">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="7dtdPoison"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwddrugGSKsnakePoisonAntidote"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="180" help="; ; Dbg:EcV=30,t4=0,t6=48"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="drugGSKsnakePoisonAntidote"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-180"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="zGTW00600DRGHackers">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="drugHackers"/>
+      <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKTNMExplrRwddrugHackers"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="drugHackers"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <item name="zGTW00720DRGHerbalAntibiotics">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugPainkillers"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9659,7 +9673,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="360" help="; ; Dbg:EcV=120,t4=0,t6=192"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="720" help="; ; Dbg:EcV=120,t4=0,t6=192"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugHerbalAntibiotics"/>
         <property name="Create_item_count" value="1"/>
@@ -9669,7 +9683,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-360"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-720"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9677,7 +9691,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW03000CSMJailBreakers">
+    <item name="zGTW03000DRGJailBreakers">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugJailBreakers"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9686,7 +9700,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="3000" help="; CSM final price override, as it lasts enough to open many locks w/o losing the lockpick; Dbg:EcV=3000,t4=3000,t6=4800"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="3000" help="; DRG final price override, as it lasts enough to open many locks w/o losing the lockpick; Dbg:EcV=3000,t4=3000,t6=4800"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugJailBreakers"/>
         <property name="Create_item_count" value="1"/>
@@ -9704,7 +9718,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMNerdTats">
+    <item name="zGTW00600DRGNerdTats">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugNerdTats"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9713,7 +9727,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugNerdTats"/>
         <property name="Create_item_count" value="1"/>
@@ -9723,7 +9737,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9731,7 +9745,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMOhShitzDrops">
+    <item name="zGTW00600DRGOhShitzDrops">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugOhShitzDrops"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9740,7 +9754,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugOhShitzDrops"/>
         <property name="Create_item_count" value="1"/>
@@ -9750,7 +9764,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9758,7 +9772,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00240CSMPainkillers">
+    <item name="zGTW00480DRGPainkillers">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugPainkillers"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9767,7 +9781,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="240" help="; ; Dbg:EcV=80,t4=0,t6=128"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="480" help="; ; Dbg:EcV=80,t4=0,t6=128"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugPainkillers"/>
         <property name="Create_item_count" value="1"/>
@@ -9777,7 +9791,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-240"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-480"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9785,7 +9799,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00750CSMRecog">
+    <item name="zGTW01500DRGRecog">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugRecog"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9794,7 +9808,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="750" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1500" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugRecog"/>
         <property name="Create_item_count" value="1"/>
@@ -9804,15 +9818,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-750"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1500"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMRockBusters">
+    <item name="zGTW00600DRGRockBusters">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugRockBusters"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9821,7 +9835,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugRockBusters"/>
         <property name="Create_item_count" value="1"/>
@@ -9831,7 +9845,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9839,7 +9853,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00300CSMSkullCrushers">
+    <item name="zGTW00600DRGSkullCrushers">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugSkullCrushers"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9848,7 +9862,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="300" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=100,t4=0,t6=160"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugSkullCrushers"/>
         <property name="Create_item_count" value="1"/>
@@ -9858,7 +9872,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9866,7 +9880,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00750CSMSteroids">
+    <item name="zGTW01500DRGSteroids">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugSteroids"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9875,7 +9889,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="750" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1500" help="; ; Dbg:EcV=250,t4=0,t6=400"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugSteroids"/>
         <property name="Create_item_count" value="1"/>
@@ -9885,15 +9899,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-750"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1500"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW01000CSMSugarButts">
+    <item name="zGTW01000DRGSugarButts">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugSugarButts"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9902,7 +9916,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1000" help="; CSM final price override, good advantage on trading (was EcV100); Dbg:EcV=1000,t4=1000,t6=1600"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1000" help="; DRG final price override, good advantage on trading (was EcV100); Dbg:EcV=1000,t4=1000,t6=1600"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugSugarButts"/>
         <property name="Create_item_count" value="1"/>
@@ -9920,7 +9934,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00240CSMVitamins">
+    <item name="zGTW00480DRGVitamins">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="drugVitamins"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9929,7 +9943,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="240" help="; ; Dbg:EcV=80,t4=0,t6=128"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="480" help="; ; Dbg:EcV=80,t4=0,t6=128"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="drugVitamins"/>
         <property name="Create_item_count" value="1"/>
@@ -9939,7 +9953,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-240"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-480"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9947,7 +9961,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00030CSMAloeCream">
+    <item name="zGTW00060MDHAloeCream">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalAloeCream"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9956,7 +9970,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="60" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalAloeCream"/>
         <property name="Create_item_count" value="1"/>
@@ -9966,7 +9980,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-60"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -9974,7 +9988,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00015CSMBandage">
+    <item name="zGTW00030MDHBandage">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalBandage"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -9983,7 +9997,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="15" help="; ; Dbg:EcV=5,t4=0,t6=8"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=5,t4=0,t6=8"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalBandage"/>
         <property name="Create_item_count" value="1"/>
@@ -9993,7 +10007,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-15"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -10001,7 +10015,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00015CSMBloodBag">
+    <item name="zGTW00030MDHBloodBag">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalBloodBag"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -10010,7 +10024,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="15" help="; ; Dbg:EcV=5,t4=0,t6=8"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=5,t4=0,t6=8"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalBloodBag"/>
         <property name="Create_item_count" value="1"/>
@@ -10020,7 +10034,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-15"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -10028,7 +10042,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00045CSMFirstAidBandage">
+    <item name="zGTW00090MDHFirstAidBandage">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalFirstAidBandage"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -10037,7 +10051,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="45" help="; ; Dbg:EcV=15,t4=0,t6=24"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="90" help="; ; Dbg:EcV=15,t4=0,t6=24"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalFirstAidBandage"/>
         <property name="Create_item_count" value="1"/>
@@ -10047,7 +10061,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-45"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-90"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -10055,7 +10069,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00600CSMFirstAidKit">
+    <item name="zGTW01200MDHFirstAidKit">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalFirstAidKit"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -10064,7 +10078,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="600" help="; ; Dbg:EcV=200,t4=0,t6=320"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1200" help="; ; Dbg:EcV=200,t4=0,t6=320"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalFirstAidKit"/>
         <property name="Create_item_count" value="1"/>
@@ -10074,15 +10088,15 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-600"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1200"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00030CSMPlasterCast">
+    <item name="zGTW00120MDHPlasterCast">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalPlasterCast"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -10091,7 +10105,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="120" help="; simple x2 splint value; Dbg:EcV=120,t4=120,t6=192"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalPlasterCast"/>
         <property name="Create_item_count" value="1"/>
@@ -10101,7 +10115,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-120"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -10109,7 +10123,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW00030CSMSplint">
+    <item name="zGTW00060MDHSplint">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalSplint"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -10118,7 +10132,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="30" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="60" help="; ; Dbg:EcV=10,t4=0,t6=16"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalSplint"/>
         <property name="Create_item_count" value="1"/>
@@ -10128,7 +10142,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-30"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-60"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierWeak" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -13052,7 +13066,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
-    <item name="zGTW19200SCHmedicalPlasterCast">
+    <item name="zGTW01440SCHmedicalPlasterCast">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="medicalPlasterCast"/>
       <property name="CustomIconTint" value="200,200,100" help="was 180,180,128"/>
@@ -13061,7 +13075,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="19200" help="; ; Dbg:EcV=800,t4=0,t6=1280"/>
+        <requirement name="CVarCompare" cvar="iGSKexplorationCredits" operation="GTE" value="1440" help="; ; Dbg:EcV=60,t4=60,t6=96"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
         <property name="Create_item" value="medicalPlasterCastSchematic"/>
         <property name="Create_item_count" value="1"/>
@@ -13071,8 +13085,8 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-19200"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKexplorationCredits" operation="add" value="-1440"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourier" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
         </triggered_effect>
@@ -37777,7 +37791,10 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork28"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="1" help="TODO: let player have a psyonic credit to use for teleporting or other things"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKPsyonicChemUseCount add randomFloat(0.5,1.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=40651:        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="randomFloat(0.5,1.5)"/> -->
       </effect_group>
     </item>
     <item name="GSKRadiationResist" help="TODO:RMMAJORVERSION">

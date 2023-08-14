@@ -95,7 +95,13 @@ tail -F "$strFlLog" |while read strLine;do
         if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Shapes success!";break;fi
         echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
         #if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
-        if((li>nIniShapesDelay));then CFGFUNCinfo "[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should SIGKILL the game.";fi
+        if((li>nIniShapesDelay));then 
+          strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should SIGKILL the game."
+          CFGFUNCinfo "$strInfo";
+          if ! pgrep "yad.*TNMMonLog:FrozenShapes" -fa;then
+            (yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus&disown)
+          fi
+        fi
         if ! pgrep -f "$strExecRegex" >/dev/null;then CFGFUNCinfo "[WARN] game stopped running";break;fi
         sleep 1
         #if $bBreakChkShapesLoop;then echo BREAK;break;fi

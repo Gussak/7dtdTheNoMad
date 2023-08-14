@@ -248,6 +248,13 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
       iRewardValue=$iSellPriceTier4 # is a direct override for CSM
     fi
   fi
+  if [[ "${strShortNameId:0:3}" =~ (MDH|DRG) ]];then #consumables (may be used often w/o problems)
+    if((iSellPriceTier4==0));then #cfg=0 means to use automatic values
+      iRewardValue=$((iEconomicValue*6))
+    else
+      iRewardValue=$iSellPriceTier4 # is a direct override for CSM
+    fi
+  fi
   
   : ${iPriceCap:=36000} #help
   if((iRewardValue>iPriceCap));then
@@ -274,6 +281,8 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ "${strShortNameId:0:3}" == "WT2" ]];then strItemType="Weapon/Tool Tier II";fi
   if [[ "${strShortNameId:0:3}" == "WT3" ]];then strItemType="Weapon/Tool Tier III";fi
   if [[ "${strShortNameId:0:3}" == "BLK" ]];then strItemType="Block";fi
+  if [[ "${strShortNameId:0:3}" == "MDH" ]];then strItemType="Medical Healing";fi
+  if [[ "${strShortNameId:0:3}" == "DRG" ]];then strItemType="Medicinal Drug";fi
   if [[ -z "$strItemType" ]];then CFGFUNCerrorExit "invalid undefined strItemType='$strItemType'";fi
   
   if((iCountOrTier==0));then
