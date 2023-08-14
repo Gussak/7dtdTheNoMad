@@ -135,7 +135,7 @@
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
@@ -143,7 +143,7 @@
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1" help="zombies provide minor healing only (this is mainly to make the essence actually useful as there are not many living beings around anymore, tho it lacks reasoning ;)), their vital force is corrupted and so is the health drain (could work? ;), or explaing thru magic means..)">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="1" help="zombies provide minor healing only (this is mainly to make the essence actually useful as there are not many living beings around anymore, tho it lacks reasoning ;)), their vital force is corrupted and so is the health drain (could work? ;), or explaing thru magic means..)">
         <requirement name="EntityTagCompare" target="other" tags="zombie" help="heals only a bit from zombies"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
@@ -329,8 +329,10 @@
       <property name="Model" value="#Entities/LootContainers?tier3LootChestPrefab.prefab"/>
     </entity_class>
   </append>
+  <!--HELPGOOD: change loot bags colors for visibility based on relevance lower to high: blue,red,yellow-->
   <set xpath="/entity_classes/entity_class[contains(@name, 'EntityLootContainerRegular')]/property[contains(@name, 'Mesh')]/@value">#Entities/LootContainers?zpackBluePrefab.prefab</set>
   <set xpath="/entity_classes/entity_class[contains(@name, 'EntityLootContainerStrong')]/property[contains(@name, 'Mesh')]/@value">#Entities/LootContainers?zpackRedPrefab.prefab</set>
+  <!--HELPGOOD    yellow one, also used for NPCs and raiders that have good drops -->
   <set xpath="/entity_classes/entity_class[contains(@name, 'EntityLootContainerBoss')]/property[contains(@name, 'Mesh')]/@value">#Entities/LootContainers?zpackPrefab.prefab</set>
   <append xpath="/entity_classes">
     <entity_class name="EntityLootContainerRegularWithLBow" extends="EntityLootContainerRegular">
@@ -739,12 +741,12 @@
     </entity_class>
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalSnake']">
-    <drop event="Harvest" name="GSKsnakePoison" count="1,5" tag="butcherHarvest"/>
+    <drop event="Harvest" name="GSKsnakePoison" count="3,5" tag="butcherHarvest"/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') and contains(@name,'Mini')]">
-    <drop event="Harvest" name="GSKsnakePoison" count="1,5" tag="butcherHarvest"/>
-    <drop event="Harvest" name="ammoProjectileSpiderWebPlayer" count="1,5" tag="butcherHarvest"/>
-    <drop event="Harvest" name="cobweb" count="1,5" tag="butcherHarvest"/>
+    <drop event="Harvest" name="GSKsnakePoison" count="1" tag="butcherHarvest"/>
+    <drop event="Harvest" name="ammoProjectileSpiderWebPlayer" count="1" tag="butcherHarvest"/>
+    <drop event="Harvest" name="cobweb" count="1" tag="butcherHarvest"/>
     <property name="DeadBodyHitPoints" value="66" help="next grown spider is 100. 30 is too little to work with buff gore harvest that only works from the 2nd hit on."/>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider') and not(contains(@name,'Mini') or contains(@name,'Feral') or contains(@name,'Queen'))]">
@@ -1012,10 +1014,18 @@
     <property name="SoundSense" value="Animals/rabbitpain"/>
   </append>
   <append xpath="/entity_classes">
+    <entity_class name="animalChickenTreasureRadiusReductionIndicator" extends="animalChicken">
+      <property name="TimeStayAfterDeath" value="0.1"/>
+      <property name="Tags" value="entity,animal,chicken,perkAT01,perkAT02,perkAT03,TreasureRadiusReductionIndicator"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="30000"/>
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKEntTrRdRdctIdct"/>
+      </effect_group>
+    </entity_class>
     <entity_class name="EntityLootContainerWight">
       <property name="HideInSpawnMenu" value="true"/>
       <property name="Mesh" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="a rollable entity will add some difficulty to acquire it"/>
-      <property name="SizeScale" value="5.0" help="TODO:FAILs while the server is running but works when the server is restarted"/>
+      <property name="SizeScale" value="2.5" help="ISSUE: FAILs while the server is running or the player is nearby but works when the server is restarted or player moves back from far away I think"/>
       <property name="ModelType" value="Custom"/>
       <property name="Prefab" value="Backpack"/>
       <property name="Class" value="EntityLootContainer"/>
@@ -1028,7 +1038,7 @@
     <entity_class name="EntityLootContainerVampire">
       <property name="HideInSpawnMenu" value="true"/>
       <property name="Mesh" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="a rollable entity will add some difficulty to acquire it"/>
-      <property name="SizeScale" value="5.0" help="TODO:FAILs while the server is running but works when the server is restarted"/>
+      <property name="SizeScale" value="2.5" help="ISSUE: FAILs while the server is running or the player is nearby but works when the server is restarted or player moves back from far away I think"/>
       <property name="ModelType" value="Custom"/>
       <property name="Prefab" value="Backpack"/>
       <property name="Class" value="EntityLootContainer"/>
@@ -1041,7 +1051,7 @@
     <entity_class name="EntityLootContainerMutant">
       <property name="HideInSpawnMenu" value="true"/>
       <property name="Mesh" value="#Other/Items?Food/bottled_waterPrefab.prefab" help="a rollable entity will add some difficulty to acquire it"/>
-      <property name="SizeScale" value="5.0" help="TODO:FAILs while the server is running but works when the server is restarted"/>
+      <property name="SizeScale" value="2.5" help="ISSUE: FAILs while the server is running or the player is nearby but works when the server is restarted or player moves back from far away I think"/>
       <property name="ModelType" value="Custom"/>
       <property name="Prefab" value="Backpack"/>
       <property name="Class" value="EntityLootContainer"/>
@@ -1230,7 +1240,7 @@
       <!--      HELPGOOD: these tasks are important to prevent this friendly DeusEx causing trouble by not leaping and not attacking with rockets. You can shoot them to make them follow you, but then you can use the special item to make them stop following again.-->
       <property name="AITask-1" value="BreakBlock"/>
       <property name="AITask-2" value="Territorial"/>
-      <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityZombie,100" help="purges zombified organisms"/>
+      <property name="AITask-3" value="ApproachAndAttackTarget" data="class=EntityVulture,100,EntityZombieDog,100,EntityZombie,100" help="purges zombified organisms"/>
       <property name="AITask-4" value="ApproachSpot"/>
       <property name="AITask-5" value="Look"/>
       <property name="AITask-6" value="Wander"/>

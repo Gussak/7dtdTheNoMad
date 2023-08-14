@@ -64,6 +64,8 @@ for strVV in "${astrGetVarValueList[@]}";do
   declare -p LINENO ${strVV}
 done
 
+fGSKNVEnUseUpdRateCVARVALUE=0.25 #TODOA collect value with xmlstarlet
+
 function Fbc() {
   local lstrCalc="$1"
   local lstrResult="`bc -sw <<< "scale=6;${lstrCalc}" 2>&1`"

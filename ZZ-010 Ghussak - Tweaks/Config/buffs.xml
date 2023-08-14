@@ -149,7 +149,11 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersWave" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersChancePerc" operation="set" value="95"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="set" value="randomInt(3,15)" help="IMPORTANT: use the update_rate on the minimum"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="add" value="-3" help="IMPORTANT: use the update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="add" value="-3" help="IMPORTANT: use the update_rate">
+          <requirement name="!IsBloodMoon"/>
+          <requirement name="!HasBuff" buff="buffGSKEntTrRdRdctIdct_SuspendAmbush" help="The player could still wait a long time before digging again the treasure place tho and throwing zombies on ambush NPCs would work."/>
+          <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" help="Raiders may get killed by DeusExMachina in rage."/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKSpawnTreasureTmOut" operation="LTE" value="0"/>
@@ -216,6 +220,27 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] It feels safer, raiders are probably gone now..."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpawnTreasureAmbush15"/>
       </effect_group>
+    </buff>
+    <buff name="buffGSKEntTrRdRdctIdct" hidden="false" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKEntTrRdRdctIdct_InformPLAYERBUFF" target="selfAOE" range="60" target_tags="player"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKTreasureDiggingCount" operation="add" value="1"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEntTrRdRdctIdct_InformPLAYERBUFF" hidden="false" remove_on_death="false" name_key="TreasureRadiusReductionIndicator">
+      <stack_type value="ignore"/>
+      <duration value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="subtract" value="32000" target="selfAOE" range="60" target_tags="TreasureRadiusReductionIndicator" help="kills the indicator"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:STARTED:'buffGSKEntityTreasureRadiusReductionIndicator'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKEntTrRdRdctIdct_SuspendAmbush"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEntTrRdRdctIdct_SuspendAmbush" hidden="false" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="900"/>
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffPlayerFallingDamage']/effect_group/triggered_effect[@action='ModifyStats' and @stat='Health' and @operation='subtract']">
@@ -295,7 +320,7 @@
           <requirement name="EntityTagCompare" target="other" tags="friendly"/>
           <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKSpawnDeusExCalm"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKSpawnDeusExCalm" help="this is good cuz it is fast as intended"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDeusExCountAndKill" hidden="true" remove_on_death="false" help="kill all extra DeusEx of the same kind: friend or foe, as I cant find a way to prevent them spawning from the gameevent hidden(?) stack">
@@ -1042,6 +1067,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="selfAOE" range="2">
           <requirement name="EntityTagCompare" target="other" tags="zombie,animal"/>
           <requirement name="!EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03" help="TODO: as they have not ragdoll, they end up being able to leap and attack..."/>
         </triggered_effect>
       </effect_group>
       <effect_group help="CHKNOSNEAK: check non sneaking (npcs only sneak if following a sneaking player right?) npc nearby. no matter friendly or not, the idea is to prevent the player using this workaround to make things easier.">
@@ -1222,7 +1248,7 @@
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="3" help="IMPORTANT!!!! has to be constant value, KEEP IN SYNC WITH fTransferNPCPDS=.buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" target="selfAOE" range="60" operation="add" value="3" help="IMPORTANT!!!! has to be constant value, KEEP IN SYNC WITH fTransferNPCPDS=.buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
@@ -2845,7 +2871,9 @@
     </triggered_effect>
   </append>
   <append xpath="/buffs/buff[@name='buffOrderFollow']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item">
+      <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="10" help="this is to prevent increasing that too much for free"/>
+    </triggered_effect>
     <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="this is just a dummy to prevent miss giving powerarmor to the npc that already come with it and is already high cost">
       <requirement name="EntityTagCompare" tags="powerarmor"/>
       <requirement name="!HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
@@ -5250,6 +5278,8 @@
       </effect_group>
     </buff>
   </append>
+  <setattribute xpath="/buffs/buff[@name='buffShocked']" name="remove_on_death" help="to keep the effect til it ends or corpse vanishes">false</setattribute>
+  <remove xpath="/buffs/buff[@name='buffShocked']/effect_group/triggered_effect[@trigger='onSelfDied' and @action='RemoveParticleEffectFromEntity' and @particle='p_electric_shock']"/>
   <!-- HELPGOOD: makes shocks last longer to apply the full damage -->
   <insertBefore xpath="/buffs/buff[@name='buffShocked']/effect_group/passive_effect[@name='BuffBlink']">
     <!-- HELPGOOD: this helps on vending machines becoming more dangerous or on not requiring to set a value for .buffShockedDurationStart-->
@@ -6536,7 +6566,7 @@
       <duration value="0.10"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(200,900)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(250,500)" help="sync with antidote"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork55">
           <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
         </triggered_effect>
@@ -6575,6 +6605,11 @@
       <update_rate value="3"/>
       <display_value value="iGSKNearDeathPoisonLvl"/>
       <display_value_key value="{0:0.0}/5"/>
+      <effect_group name="poison damage">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="1500" help="it is 300 per ND lvl, so max is 5. this is good also to limit the required antidotes to be used. It subtracts 1 HP per 3s poison duration, to it is like 500HP max possible damage. Antidote is 250-500, so it will require 3-6 antidotes to cure it all. But a single mini spider may bite enough to quickly reach 1500.">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="1500"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group name="antidote cures poison">
         <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
@@ -7091,6 +7126,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKStarvingHPBlockageLimit" operation="set" value="25"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
@@ -7103,9 +7139,12 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="20" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="30" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="25" help="todo: make a cfg item">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="35" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightAddStam" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="set" value="@iGSKEssenceWightMinStam"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="add" value="@.iGSKEssenceWightAddStam"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinHP" operation="set" value="5" help="todo: make a cfg item">
           <requirement name="CVarCompare" cvar="iGSKEssenceWightMinHP" operation="Equals" value="0"/>
         </triggered_effect>
@@ -11588,10 +11627,47 @@
           <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="can only heal starvation HP debuff if well fed for some time">
+      <effect_group help="can only properly heal starvation HP debuff if well fed for some time">
+        <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.70"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.80"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.90"/>
+        </triggered_effect>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKStarvingHPBlockage">
+          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="1"/>
+        </passive_effect>
+      </effect_group>
+      <effect_group help="can only properly heal starvation HP debuff if well fed for some time">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.10">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GT" value="0.95"/>
           <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0,007" help="+-(.fGSKStarvingHPBlockageLimit=25)/3600 (1 in-game day). sync with .fGSKStarvingHPBlockageLimit">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GT" value="0.10"/>
+          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.01"/>
         </triggered_effect>
         <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKStarvingHPBlockage">
           <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="1"/>
@@ -11931,7 +12007,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,1.0)">
           <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=15824:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="randomFloat(0.33,1.0)"> -->
-          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="25"/>
+          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="@.fGSKStarvingHPBlockageLimit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.01">
           <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="0.01"/>
@@ -13145,6 +13221,7 @@
     <buff name="buffGSKWightEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,0,255" description_key="dkbuffGSKWightEssence">
       <stack_type value="effect"/>
       <duration value="0"/>
+      <update_rate value="0.33"/>
       <display_value value="iGSKbuffGSKWightEssenceTm"/>
       <display_value_format value="time"/>
       <effect_group>
@@ -13163,17 +13240,18 @@
         <passive_effect name="StaminaMax" operation="base_add" value="@iGSKEssenceWight"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@iGSKEssenceWight"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@iGSKEssenceWight" help="the more you use the better it becomes"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-0.33" help="sync with update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKWightEssence">
           <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKEssenceWightMinHP"/>
-        <requirement name="StatCompareCurrent" stat="Stamina" operation="LT" value="@iGSKEssenceWightMinStam" help="TODO: use overall stamina blockage to avoid unnecessary or wrong activation"/>
+        <requirement name="StatCompareModMax" stat="Stamina" operation="GTE" value="@.iGSKEssenceWightModMaxStam"/>
+        <requirement name="StatCompareCurrent" stat="Stamina" operation="LT" value="@iGSKEssenceWightMinStam"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="@.iGSKEssenceWightAddStam"/>
       </effect_group>
     </buff>
     <buff name="buffGSKVampireEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="128,0,255" description_key="dkbuffGSKVampireEssence">

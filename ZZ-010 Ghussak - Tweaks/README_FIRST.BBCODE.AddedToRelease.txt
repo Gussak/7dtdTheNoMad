@@ -147,6 +147,7 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
 ################## CHANGES (full detailed change log only from project on github) ##############  
 --------- v1.0aRC1 -----------    
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge and overall gameplay, it is worth the try! (but in case you are just trying to update, !NotRecommended!, you will see several missing buff classes, it just means that they were updated and I forced a name change on them to keep your game in sync)  
+- fix: NPC follower above limit prevent dismiss feature;
 - fix: repair flow of guns (parts shall now be found, dismantled or bought again like in vanilla)  
 - fix: effective weapons mod: protected NPCs from all debuffs like lethal bleeding that could kill them  
 - fix: hazmat armor glove mod  

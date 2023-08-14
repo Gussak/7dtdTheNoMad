@@ -309,7 +309,7 @@ astrItemList=(
   "item_modifier" modVehicleSuperCharger "ModVehicleSuperCharger" 0 ""
   
   "item" potionRespec "CSMRebirthElixir" 360 "cheap compared to drinkJarGrandpasForgettingElixir as  it has many debuffs and the player may need it"
-  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(drink|drug|thrown)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(drink|drug|thrown)(.*)@  "item" \2\3 "CSM\3" 0 ""@' |tr -d '\r\0' |sort -u
+  #clear;strRegex="(drink|drug|medical)";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="'"${strRegex}"'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")'"${strRegex}"'(.*)@  "item" \2\3 "CSM\3" 0 ""@' |tr -d '\r\0' |sort -u
   "item" drinkCanMegaCrush "CSMCanMegaCrush" 0 ""
   "item" drinkJarBeer "CSMJarBeer" 0 ""
   "item" drinkJarBlackStrapCoffee "CSMJarBlackStrapCoffee" 0 ""
@@ -349,6 +349,13 @@ astrItemList=(
   "item" drugSteroids "CSMSteroids" 0 ""
   "item" drugSugarButts "CSMSugarButts" 1000 "CSM final price override, good advantage on trading (was EcV100)"
   "item" drugVitamins "CSMVitamins" 0 ""
+  "item" medicalAloeCream "CSMAloeCream" 0 ""
+  "item" medicalBandage "CSMBandage" 0 ""
+  "item" medicalBloodBag "CSMBloodBag" 0 ""
+  "item" medicalFirstAidBandage "CSMFirstAidBandage" 0 ""
+  "item" medicalFirstAidKit "CSMFirstAidKit" 0 ""
+  "item" medicalPlasterCast "CSMPlasterCast" 0 ""
+  "item" medicalSplint "CSMSplint" 0 ""
   
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(thrown)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(thrown)(.*)@  "item" \2\3 "TRW\3" 0 ""@' |tr -d '\r\0' |sort -u
   "item" thrownAmmoFlare "TRWAmmoFlare" 0 ""

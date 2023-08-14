@@ -9,11 +9,14 @@
   <set xpath="/quests/quest[starts-with(@id,'treasure_')]/objective/property[@name='distance']/@value" help="100 is far enough to have not had yet generated world there right? but anyway I think it is an world override (like POI reset) and could be lower than 100.">100-1250</set>
   <append xpath="/quests/quest[starts-with(@id,'treasure_')]">
     <!-- HELPGOOD:CODEGEN:clear;egrep "spawner" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/gamestages.xml |egrep 'spawner *name="[^"]*"' -oi |egrep -o '"[^"]*"' |tr -d '"' |egrep -i zombie |sort -u |egrep -vi "horde|list" |sed 's@.*@<action type="SpawnGSEnemy" id="&" value="0-1" />@' -->
-    <!-- HELPGOOD: this ends up being like a mini blood somehow -->
+    <!-- HELPGOOD: this ends up being like a mini bloodmoon somehow :) -->
+    <event type="TreasureRadiusReduction" chance="1.00" help="TODOA: is there some way to know if player is near a treasure dig place? this trick still let the patient player to lure zombs on other foes.">
+      <action type="SpawnGSEnemy" id="animalChickenTreasureRadiusReductionIndicator" value="1"/>
+    </event>
     <event type="TreasureRadiusReduction" chance="0.75">
       <action type="SpawnGSEnemy" id="SleeperGSList" value="3-6"/>
       <action type="SpawnGSEnemy" id="animalZombieDog" value="1-2"/>
-      <action type="SpawnGSEnemy" id="zombieFatCop" value="1" help="TODO: 0-1 is not like 50% chance, ends up being like 5% chance? the random is a trunc float not an integer nor a round nearest float?"/>
+      <action type="SpawnGSEnemy" id="zombieFatCop" value="1" help="ISSUE?: 0-1 is not like 50% chance, ends up being like 5% chance? the random is a trunc float not an integer nor a round nearest float?"/>
       <action type="SpawnGSEnemy" id="zombieMutated" value="1"/>
       <action type="SpawnGSEnemy" id="zombieScreamer" value="1"/>
       <action type="SpawnGSEnemy" id="zombieFatHawaiian" value="1"/>
