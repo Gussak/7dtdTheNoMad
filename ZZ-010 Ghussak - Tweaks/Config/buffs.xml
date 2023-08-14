@@ -287,6 +287,17 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKDeusExDestroyAllDroppedLoot"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKDeusExFriendlyRespawn" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="10" help="must be more than buffGSKDeusExCountAndKill update_rate"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExCountAndKillSelf" operation="add" value="1" target="selfAOE" range="60" help="this will trigger self kill on stuck one">
+          <requirement name="EntityTagCompare" target="other" tags="friendly"/>
+          <requirement name="EntityTagCompare" target="other" tags="DeusEx"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKSpawnDeusExCalm"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKDeusExCountAndKill" hidden="true" remove_on_death="false" help="kill all extra DeusEx of the same kind: friend or foe, as I cant find a way to prevent them spawning from the gameevent hidden(?) stack">
       <stack_type value="replace"/>
       <duration value="0" help="enough time to kill with HealthChangeOT is 1s tho"/>
@@ -462,7 +473,7 @@
       <display_value value="iGSKSpawnDeusExTimeout"/>
       <display_value_format value="time"/>
       <stack_type value="replace"/>
-      <duration value="60" help="this timeout must be big to let player have time to respawn. this buff will be detected and let another friendly be spawned"/>
+      <duration value="60" help="this timeout must be big to let player have time to click respawn. this buff will be detected and let another friendly be spawned TODO: may be they could not be despawned at gameevents (right?)"/>
     </buff>
     <buff name="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" hidden="false" remove_on_death="false" name_key="DeusExFoeIsNear" description_key="dkDeusExMachina" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0">
       <display_value value="iGSKSpawnDeusExTimeout"/>
@@ -5239,7 +5250,12 @@
       </effect_group>
     </buff>
   </append>
+  <!-- HELPGOOD: makes shocks last longer to apply the full damage -->
   <insertBefore xpath="/buffs/buff[@name='buffShocked']/effect_group/passive_effect[@name='BuffBlink']">
+    <!-- HELPGOOD: this helps on vending machines becoming more dangerous or on not requiring to set a value for .buffShockedDurationStart-->
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="4">
+      <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0"/>
+    </triggered_effect>
     <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="4">
       <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0"/>
     </triggered_effect>
@@ -6207,7 +6223,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKDenyGoreHarvest"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKDenyGoreHarvest"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(25,55)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,300)" help="using strong strikes will lower this hazard effect"/>
         <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.1,0.3)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,300)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied.;FixTinyRandomFloat: was randomFloat(0.1,0.3)"/>
@@ -7078,6 +7094,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExAllowSpawnFriendly" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKDeusExAllowSpawnFriendly" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
@@ -11445,6 +11464,7 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExCalm">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKDeusExAllowSpawnFriendly" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExFoe">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
@@ -13270,20 +13290,28 @@
     <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
   </append>
   <append xpath="/buffs">
-    <buff name="buffGSKStumbleOnThingsOnTheGround" hidden="true">
+    <buff name="buffGSKStumbleOnThingsOnTheGround" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
       <duration value="6" help="player takes 3s to get up so 6s is like a cooldown safety to let player move away"/>
       <update_rate value="1"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="10"/>
+        </triggered_effect>
+        <!-- HELPGOOD:TODOA: how to detect if player is running/sprinting?
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="_sprinting" operation="Equals" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGtmp" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You stumble in something on the ground.."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You stumble in something on the ground (crouch to prevent this)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-1"/>
       </effect_group>
     </buff>

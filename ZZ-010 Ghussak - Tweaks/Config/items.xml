@@ -1655,6 +1655,38 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKDeusExMachinaFriendlyRespawn">
+      <property name="Extends" value="GSKBaseActivatorFromInventorySlow" help="does not need to be on the hand"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
+      <property name="Material" value="Mglass"/>
+      <property name="DescriptionKey" value="dkGSKDeusExMachinaFriendlyRespawn"/>
+      <property class="Action0">
+        <requirement name="HasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="!HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
+        <property name="Create_item" value="GSKDeusExMachinaFriendlyRespawn"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKDeusExFriendlyRespawn"/>
+      </effect_group>
+    </item>
+    <item name="GSKDeusExMachinaFriendlyAllowSpawn">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
+      <property name="Material" value="Mglass"/>
+      <property name="DescriptionKey" value="dkGSKDeusExMachinaFriendlyAllowSpawn"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExAllowSpawnFriendly" operation="set" value="1" help="allow"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExAllowSpawnFriendly" operation="set" value="2" help="deny"/>
+      </effect_group>
+    </item>
     <item name="drugGSKwightEssence">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
@@ -2087,16 +2119,22 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <append xpath="/items/item[starts-with(@name, 'meleeNPC') or starts-with(@name,'meleeHandAnimal')]">
     <effect_group help="GSK hit enemies">
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoLimit" operation="set" value="500"/>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1">
+        <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCExpCredit" operation="add" value="10" help="sync with gunNPC">
+        <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
         <requirement name="CVarCompare" target="self" cvar="Leader" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/items/item[starts-with(@name, 'gunNPC')]/effect_group[starts-with(@name,'gun')]">
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoLimit" operation="set" value="1000"/>
-    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1"/>
+    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1">
+      <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
+    </triggered_effect>
     <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCExpCredit" operation="add" value="10" help="sync with meleeNPC">
+      <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
       <requirement name="CVarCompare" target="self" cvar="Leader" operation="GT" value="0"/>
     </triggered_effect>
   </append>
@@ -2383,12 +2421,16 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <property name="Delay" value=".6"/>
         <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5"/>
-        <property name="DamageEntity" value="0.01"/>
+        <property name="DamageEntity" value="0.01" help="this prevents damage to everyone not zombie as I found no way to stop them from attacking alive beings"/>
         <property name="DamageBlock" value="32000"/>
       </property>
       <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar=".iGSKDeusExDoFreeze" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyStats" stat="Health" operation="add" value="-32000">
-          <requirement name="CVarCompare" cvar=".iGSKDeusExDoFreeze" operation="Equals" value="0"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="NotHasBuff" target="other" buff="buffGSKNPCproperSneakingProtectFoes"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffShocked">
           <requirement name="EntityTagCompare" target="other" tags="zombie"/>
           <requirement name="NotHasBuff" target="other" buff="buffGSKNPCproperSneakingProtectFoes"/>
         </triggered_effect>
@@ -37042,8 +37084,11 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="RepairExpMultiplier" value="5.5"/>
     </item>
   </append>
-  <append xpath="/items/item[       @name='meleeToolSalvageT0MakeshiftWrench' or       @name='meleeToolSalvageT1Wrench' or       @name='meleeToolSalvageT2Ratchet' or       @name='meleeToolSalvageT3ImpactDriver'     ]">
+  <append xpath="/items/item[       @name='meleeToolSalvageT0MakeshiftWrench'   or       @name='meleeToolSalvageT1Wrench'            or       @name='meleeToolSalvageT2Ratchet'           or       @name='meleeToolSalvageT3ImpactDriver'     ]">
     <effect_group tiered="false">
+      <triggered_effect trigger="onSelfSecondaryActionRayHit" target="other" action="ModifyStats" stat="Health" operation="add" value="-200" help="it ends like double damage with onSelfAttackedOther too">
+        <requirement name="EntityTagCompare" target="other" tags="mech"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyStats" stat="Health" operation="add" value="-200">
         <requirement name="EntityTagCompare" target="other" tags="mech"/>
       </triggered_effect>
@@ -37290,7 +37335,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <display_value name="dExRadius" value="6"/>
       </effect_group>
     </item>
-    <item name="resourceAnimalFatBall">
+    <item name="resourceAnimalFatBall" help="simple x10 animal fat, and the craft time considers the consume usage time for 1 animal fat">
       <property name="HoldType" value="31"/>
       <property name="DisplayType" value="foodRaw"/>
       <property name="DescriptionKey" value="resourceAnimalFatDesc"/>
@@ -37312,12 +37357,18 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="20"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-50"/>
-        <display_value name="foodHealthAmount" value="-50"/>
+        <!-- HELPGOOD: this may confuse the player in making decisions and may end up killing the player.. so using simpler alternative below
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="20" />
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-50" />
+        <display_value name="foodHealthAmount" value="-50" help="TODO: this is tricky... the above add 20 seems to lower the displayed to -30 what may confuse the player in the end..."/>
+-->
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-30"/>
+        <display_value name="foodHealthAmount" value="-30"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="-10"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="25.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="10" help="this will create a debuff that will quickly be removed just to call attention: eating so much fat at once is not healthy anyway"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
       </effect_group>
     </item>
     <item name="foodCharredMeatBall">
