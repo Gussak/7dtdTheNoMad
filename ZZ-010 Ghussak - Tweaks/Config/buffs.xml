@@ -542,6 +542,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathPsyPowerLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloodLossLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotTime"/>
@@ -760,8 +761,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You focus all your PsyPower in nearby mutants"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="300" help="lvl5=60s*5 sync with time per lvl"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
       </effect_group>
       <effect_group>
@@ -787,7 +787,7 @@
         <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="GTE" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="@.iGSKMutantNearbyCount"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="subtract" value="@.iGSKMutantNearbyCount"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] Your PsyPower is not enough to kill'em all, they attack you."/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] Your PsyPower is not enough to kill'em all..."/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="Equals" value="0"/>
@@ -6078,6 +6078,9 @@
       <effect_group>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPsyPowerLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPsyPowerLvl"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
         </triggered_effect>
@@ -7185,6 +7188,7 @@
       <!-- HELPGOOD: 'iGSKNearDeathPoisonLvl' is controlled by 'buffGSKSnakePoisonWork55' -->
       <effect_group>
         <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
@@ -8180,13 +8184,28 @@
         <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="10" help="like -1000%, but not being on the exact center of the explosion (the player location) it wont damage all it should right? this doesnt help anyway..."/>
 -->
         <passive_effect name="HealthChangeOT" operation="base_add" value="-32000" help="this will grant this teleport attack will kill anything"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPlayerKilledDeusExPLAYERBUFF" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
           <requirement name="EntityTagCompare" tags="DeusEx"/>
           <!-- HELPGOOD:
           <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0" help="this wont work cuz dead entity means stopped buff right?"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKEntIDTeleportAttacker" help="ISSUE: this doesnt work, only constant values right?"/>
 -->
         </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPlayerKilledDeusExPLAYERBUFF">
+      <stack_type value="ignore"/>
+      <duration value="1.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeDeusExBless"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDeusExKillCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKDeusExDeathExplosion">
+          <requirement name="CVarCompare" cvar="iGSKDeusExDeathExplosionAlt" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKDeusExDeathExplosionAlt">
+          <requirement name="CVarCompare" cvar="iGSKDeusExDeathExplosionAlt" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPlayerKilledDeusExPLAYERBUFF"/>
       </effect_group>
     </buff>
     <buff name="buffGSKProtectHead85perc">
@@ -11415,6 +11434,14 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="psy power neardeath">
+        <requirement name="CVarCompare" cvar="fGSKNearDeathPsyPowerTimeout" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="-12" help="sync with update_rate for 20s from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="subtract" value="@fGSKPsyonicPermanentPower"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="set" value="@fGSKNearDeathPsyPowerTimeout"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="divide" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="@.iGSKNearDeathPsyPowerLvlTmp"/>
+      </effect_group>
       <effect_group help="spawn mini spiders indoors">
         <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
@@ -12329,6 +12356,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeusExWinsAtCount" operation="set" value="@iGSKDeusExKillCount" help="same is done at buffGSKDeusExWinsPLAYERBUFF">
           <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathBloodLossLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="0"/>
@@ -13112,6 +13140,22 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeNewbie'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeDeusExBless" hidden="false" description_key="dkbuffGSKGodModeDeusExBless" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,250">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeDeusExBless"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="set" value="66"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeDeusExBless">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeDeusExBless" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeDeusExBless'"/>
       </effect_group>
     </buff>
   </append>

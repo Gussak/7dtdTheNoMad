@@ -2361,11 +2361,11 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with modMeleeClubBurningShaft">60</set>
   <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with modMeleeClubBurningShaft">120</set>
   <append xpath="/items" help="DeusEx stuff">
-    <item name="gunNPCRocketLauncherDeusEx">
+    <item name="_gunNPCRocketLauncherDeusEx2" help="FAIL: this doesnt work to create explosions on melee attacks">
       <property name="CreativeMode" value="None"/>
       <property name="SizeScale" value="5"/>
       <property name="Extends" value="gunNPCRocketLauncher"/>
-      <property name="HoldType" value="32" help="Fail: 0,12,32,69 may be none will work.."/>
+      <property name="HoldType" value="32" help="Fail: 0,12,32,69 may be none will work to place it at shoulder or chest height"/>
       <!--
       HELPGOOD: trying to guess a good holdtype: 
       clear; egrep "holdtype|<item " _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -ih |egrep '<item' -A 1 |egrep 'HoldType' -B 1 |egrep -v '^-\-' |tr -d '\n\r' |sed -r 's@<item@\n<item@g' |sort
@@ -2374,15 +2374,14 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       
       <property name="SideOffset" value="0,10,0" help="does nothing"/>
 -->
-      <property class="Action0" help="TODO:ISSUE: melee hit messes player look at direction (could be because too high damage? anyway it is 1 hit kill against anyone else so this only happens in god mode..)">
+      <property class="Action0">
         <property name="Delay" value=".6"/>
-        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5, ISSUE: this trick seems to work only with mech melee hand.."/>
-        <property name="DamageEntity" value="31000"/>
-        <property name="DamageBlock" value="31000"/>
+        <property name="Class" value="LauncherSDX, SCore"/>
+        <property name="Magazine_items" value="ammoNPCRocketFrag"/>
       </property>
       <property class="Action1">
         <property name="Class" value="LauncherSDX, SCore"/>
-        <property name="Magazine_items" value="ammoNPCRocketFrag"/>
+        <property name="Magazine_items" value="ammoNPCRocketHE" help="ammoNPCRocketFrag is too easy to avoid. ammoNPCRocketHE is too disruptive but is coherent after all it is a DeusExMachina in rage!"/>
         <!-- HELPGOOD:ISSUE: doesnt fix rockets flying from feet..
         <property name="SideOffset" value="0,10,0" />
 -->
@@ -2414,6 +2413,66 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <passive_effect name="MagazineSize" operation="base_set" value="9"/>
         <passive_effect name="RoundsPerMinute" operation="base_set" value="180" help="3/s"/>
         <passive_effect name="BurstRoundCount" operation="base_set" value="9"/>
+      </effect_group>
+    </item>
+    <item name="gunNPCRocketLauncherDeusEx">
+      <property name="CreativeMode" value="None"/>
+      <property name="SizeScale" value="5"/>
+      <property name="Extends" value="gunNPCRocketLauncher"/>
+      <property name="HoldType" value="32" help="Fail: 0,12,32,69 may be none will work to place it at shoulder or chest height"/>
+      <!--
+      HELPGOOD: trying to guess a good holdtype: 
+      clear; egrep "holdtype|<item " _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -ih |egrep '<item' -A 1 |egrep 'HoldType' -B 1 |egrep -v '^-\-' |tr -d '\n\r' |sed -r 's@<item@\n<item@g' |sort
+      clear; egrep "holdtype" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -ih |sed -r 's@.*value="([^"]*)".*@\1@' |sort -nu |tr '\n' ','
+      # 0,1,2,3,4,5,6,7,9,10,12,13,14,16,17,18,19,20,23,24,25,26,27,29,30,31,32,33,34,35,36,37,39,40,44,45,46,47,48,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,
+      
+      <property name="SideOffset" value="0,10,0" help="does nothing"/>
+-->
+      <property class="Action0" help="TODO:ISSUE: melee hit messes player look at direction (could be because too high damage? anyway it is 1 hit kill against anyone else so this only happens in god mode..)">
+        <property name="Delay" value=".1" help="ISSUE: this makes any difference?"/>
+        <property name="Range" value="12.5" help="sync with DeusEx scale * 2.5, ISSUE: this trick seems to work only with mech melee hand.."/>
+        <property name="DamageEntity" value="31000"/>
+        <property name="DamageBlock" value="31000"/>
+      </property>
+      <property class="Action1">
+        <property name="Class" value="LauncherSDX, SCore"/>
+        <property name="Magazine_items" value="ammoNPCRocketHE" help="ammoNPCRocketFrag is too easy to avoid. ammoNPCRocketHE is too disruptive but is coherent after all it is a DeusExMachina in rage!"/>
+        <!-- HELPGOOD:ISSUE: doesnt fix rockets flying from feet..
+        <property name="SideOffset" value="0,10,0" />
+-->
+      </property>
+      <effect_group name="gunExplosivesT3RocketLauncherDeusEx">
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
+        <passive_effect name="MaxRange" operation="base_set" value="40" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="40" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="base_set" value=".4" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="160,350" tier="1,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="0" tags="perkDemolitionsExpert"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="9"/>
+        <passive_effect name="RoundsPerMinute" operation="base_set" value="180" help="3/s"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="9"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffShocked">
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+        </triggered_effect>
       </effect_group>
     </item>
     <item name="handRobotArmyDeusEx" help="ISSUE: the sword's laser wont scale up with the NPC model">
@@ -34578,7 +34637,11 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </triggered_effect>
   </append>
   <append xpath="/items/item[         (          starts-with(@name,'melee') or           starts-with(@name,'gun') or          starts-with(@name,'hand')         )         and not(contains(@name,'Schematic') or contains(@name,'Parts'))       ]" help="hand is for mechs">
-    <effect_group>
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfAttackedOther" action="RemoveBuff" target="selfAOE" range="60" buff="buffGSKDeusExDebuff" target_tag="DeusEx" help="a mech 3D printed by DeusEx will rage DeusEx when found and attacked the player">
+        <requirement name="EntityTagCompare" tags="mech" target="self"/>
+        <requirement name="EntityTagCompare" tags="player" target="other"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffHiredNPCdamageArmor103">
         <requirement name="!EntityTagCompare" tags="player" target="other"/>
       </triggered_effect>
@@ -35026,6 +35089,22 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleportDistIndex"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGiGSKDeusExDeathExplosionAlt">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="DescriptionKey" value="dkGSKCFGiGSKDeusExDeathExplosionAlt"/>
+      <property name="Extends" value="GSKBaseActivatorFromInventoryFast"/>
+      <property class="Action0" help="base must have no requirements">
+        <property name="Create_item" value="GSKCFGiGSKDeusExDeathExplosionAlt" help="THIS NEEDS TO BE OVERRIDEN!!!"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExDeathExplosionAlt" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDeusExDeathExplosionAlt" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKDeusExDeathExplosionAlt" operation="GT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKDeusExDeathExplosionAlt"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </item>
     <item name="GSKCFGDbgTmpQuickTestIndex" help="use this for temporary things only. use .iGSKDbgTmpIndex as requirement to test each part of the logic (or each/aWhole set of logic parts) w/o having to restart the game for every test">
