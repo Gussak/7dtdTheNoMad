@@ -80,7 +80,7 @@
       <variable name="iBlastPower" value="850"/>
       <variable name="bNotHasHeroBuff" value="false" help="false means HasBuff buffGSKElctrnHero"/>
     </action_sequence>
-    <action_sequence name="_eventGSKElctrnTele">
+    <action_sequence name="_eventGSK_ElctrnTele">
       <action class="Teleport">
         <property name="phase" value="7"/>
         <property name="target_position" value="0,0,7" param1="v3Dir"/>
@@ -118,7 +118,7 @@
       <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
         <property name="phase" value="10"/>
         <property name="blast_power" value="75"/>
-        <property name="block_damage" value="32000"/>
+        <property name="block_damage" value="32000" param1="iXplodDmgBlk"/>
         <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
         <property name="entity_damage" value="0"/>
         <property name="entity_radius" value="0"/>
@@ -162,16 +162,9 @@
         <property name="entity_damage" value="30"/>
         <property name="entity_radius" value="5" param1="iXplodRangeSonicBlastEnt"/>
       </action>
-      <action class="SetCVar">
-        <property name="phase" value="40"/>
-        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
-        <property name="value" value="40" help="the phase"/>
-      </action>
-      <action class="SetCVar">
-        <property name="phase" value="1000"/>
-        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase"/>
-        <property name="value" value="1000" help="the phase"/>
-      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKElctrnTeleNoBlockDmg" template="eventGSKElctrnTele">
+      <variable name="iXplodDmgBlk" value="0"/>
     </action_sequence>
     <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety" template="eventGSKElctrnTele">
       <variable name="v3Dir" value="0,-50,0" help="this far down to also help stay away of mutants psyonic attack and rads range"/>
@@ -212,6 +205,11 @@
         <property name="phase" value="20"/>
         <property name="game_events" value="eventGSKElctrnTele" help="to create the default tele explosions"/>
       </action>
+      <action class="SetCVar">
+        <property name="phase" value="30"/>
+        <property name="cvar" value=".bGSKEventFeedbackTeleportToHomeOrBackCompleted"/>
+        <property name="value" value="1"/>
+      </action>
     </action_sequence>
     <action_sequence name="eventGSKElctrnTeleLandclaim">
       <action class="TeleportToSpecial">
@@ -220,7 +218,12 @@
       </action>
       <action class="CallGameEvent">
         <property name="phase" value="20"/>
-        <property name="game_events" value="eventGSKElctrnTele" help="to create the default tele explosions"/>
+        <property name="game_events" value="eventGSKElctrnTeleNoBlockDmg" help="it would be just annoying to have to reconfigure the landclaim block TODO make landclaim block indestructible? but it must also not fall or if fall should respawn it identical with same cfgs."/>
+      </action>
+      <action class="SetCVar">
+        <property name="phase" value="30"/>
+        <property name="cvar" value=".bGSKEventFeedbackTeleportToHomeOrBackCompleted"/>
+        <property name="value" value="1"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKElctrnTeleToGround" help="trick to use the engine auto placement if outside the world below; -2000 it enough for the 1st spawn fixing">

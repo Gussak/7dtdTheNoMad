@@ -39,9 +39,9 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 strCraftBundlePrefixID="GSK${strModNameForIDs}CreateRespawnBundle"
 
-strPartToken="_TOKEN_NEWPART_MARKER_"
+strNewSectionToken="_TOKEN_NEWPART_MARKER_"
 strSchematics="Schematics"
-strSCHEMATICS_BEGIN_TOKEN="${strPartToken}:${strSchematics}"
+strSCHEMATICS_BEGIN_TOKEN="${strNewSectionToken}:${strSchematics}"
 strExpLossInfo="CurrentExpLoss: {cvar(.fGSKExpDebtPercx100:0)}%\n CurrentExpDebit: {cvar(fGSKExpDebt:0.00)}/{cvar(fGSKAllFreeBundlesSumExpDebit:0)}\n RealTimeHoursRemainingToEndExpLoss: {cvar(.fGSKExpDebtTmRemain:0.0)}\nOpening free bundles that increase exp loss beyond the maximum will only increase the remaining time."
 astrDKAndDescList=("dkGSKFreeBundleExpLossInfo_NOTE,\"${strExpLossInfo}\"")
 astrBundlesItemsLeastLastOne=()
@@ -126,7 +126,7 @@ function FUNCprepareCraftBundle() {
   if $lbSchematic;then ((liB+=130));fi
   local lstrColor="$liR,$liG,$liB"
   #local lstrCvar="iGSKRespawnItemsBundleHelper${lstrBundleShortName}"
-  local lstrCB="'CB:' items are craftable freely (can be dropped). Don't rush to your backpack. Each bundle has (exp penalty). Resurrecting adds 1 to remaining bundles (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now. (See *Delivery notes). "
+  local lstrCB="'CB:' items: Let you not need to rush to your backpack. Each bundle has '(ExpPenalty)'. Resurrecting adds 1 to remaining bundles (and to ExpPenalty multiplier) (least a few like schematics, maps..) that you can open (up to {cvar(iGSKFreeBundlesRemaining:0)} now. (See *Delivery notes). "
   strFUNCprepareCraftBundle_CraftBundleID_OUT="${strCraftBundlePrefixID}${lstrBundleShortName}"
   strCourier="`CFGFUNCcourier ${liExpDebt} 1000 3000`"
   strXmlCraftBundleCreateItemsXml+='
@@ -206,67 +206,94 @@ function FUNCprepareBundlePart_specificItemsChk_MULTIPLEOUTPUTVALUES() { # OUT v
     if ! egrep '< *('"${CFGstrFlCfgChkRegex}"') *name *= *"'"${lstrChkItemId}"'"' "${CFGastrFlCfgChkFullPathList[@]}" -inw;then CFGFUNCerrorExit "item id lstrChkItemId='${lstrChkItemId}' is missing (or was changed): strItemID='${strItemID}'. try: egrep 'TypePreviousIdHere' * -iRnI --include=\"*.xml\"";fi
   fi
   
+  #local lstrXmlDmgBefore='      <!-- HELPGOOD: initially damaged items below -->
+      #<effect_group name="damaged starter item: '"$strItemID"'" tiered="false">';
+  #local lstrXmlDmgAfter='
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      #</effect_group>';
   local fDmg=0.75
-  if [[ "$strItemID" == "apparelNightvisionGoggles" ]];then
-    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="'$fDmg'" />
+  local lastrItemDmgableVsCVarList=(
+    apparelNightvisionGoggles fGSKDmgPercNV
+    meleeToolFlashlight02     fGSKDmgPercWL # meleeToolFlashlight02 works like a weapon with light when in hand
+    meleeToolFlashlight02     fGSKDmgPercHL # again because meleeToolFlashlight02 can be used to create a helmet light
+    modArmorHelmetLight       fGSKDmgPercHL
+    modGSKElctrnTeleport      fGSKDmgPercTP
+    modGSKEnergyThorns        fGSKDmgPercTT
+  )
+  #for lstrItemDmgChk in "${lastrItemDmgableVsCVarList[@]}";do
+  for((iDmgChk=0;iDmgChk<${#lastrItemDmgableVsCVarList[@]};iDmgChk+=2));do
+    if [[ "$strItemID" == "${lastrItemDmgableVsCVarList[iDmgChk]}" ]];then
+      local lstrCVarDmg="${lastrItemDmgableVsCVarList[iDmgChk+1]}";
+      #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+    #<!-- HELPGOOD: initially damaged items below -->
+      strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='
+    <effect_group name="InitiallyDamagedItem: '"$strItemID"'" tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="'"${lstrCVarDmg}"'" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="'"${lstrCVarDmg}"'" operation="LTE" value="'$fDmg'" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="'$fDmg'">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="0.01" />
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="'"${lstrCVarDmg}"'" operation="add" value="'$fDmg'">
+          <requirement name="CVarCompare" cvar="'"${lstrCVarDmg}"'" operation="LTE" value="0.01" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
-      </effect_group>'
-  fi
-  if [[ "$strItemID" == "meleeToolFlashlight02" ]];then
-    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0" >
-          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="'$fDmg'" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="'$fDmg'" >
-          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.01" />
-        </triggered_effect>
-        
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="0" >
-          <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="'$fDmg'" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="'$fDmg'" >
-          <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="0.01" />
-        </triggered_effect>
-        
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
-      </effect_group>'
-  fi
-  if [[ "$strItemID" == "modGSKElctrnTeleport" ]];then
-    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="'$fDmg'">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
-      </effect_group>'
-  fi
-  if [[ "$strItemID" == "modGSKEnergyThorns" ]];then
-    bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
-    strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: '"$strItemID"'" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="'$fDmg'">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
-      </effect_group>'
-  fi
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
+    </effect_group>';
+          #</triggered_effect>'"${strXmlDmgAfter}"
+    fi
+  done
+  #if [[ "$strItemID" == "apparelNightvisionGoggles" ]];then
+    #strCVarDmg="";
+    #bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="0">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="'$fDmg'" />
+        #</triggered_effect>
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="'$fDmg'">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="0.01" />
+        #</triggered_effect>'"${strXmlDmgAfter}"
+  #fi
+  #if [[ "$strItemID" == "modArmorHelmetLight" ]];then
+    #strCVarDmg="";
+    #bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0" >
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="'$fDmg'" />
+        #</triggered_effect>
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="'$fDmg'" >
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.01" />
+        #</triggered_effect>'"${strXmlDmgAfter}"
+  #fi
+  #if [[ "$strItemID" == "meleeToolFlashlight02" ]];then
+    #strCVarDmg="";
+    #bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="0" >
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="'$fDmg'" />
+        #</triggered_effect>
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="'$fDmg'" >
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="0.01" />
+        #</triggered_effect>'"${strXmlDmgAfter}"
+  #fi
+  #if [[ "$strItemID" == "modGSKElctrnTeleport" ]];then
+    #strCVarDmg="";
+    #bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="'$fDmg'" />
+        #</triggered_effect>
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="'$fDmg'">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01" />
+        #</triggered_effect>'"${strXmlDmgAfter}"
+  #fi
+  #if [[ "$strItemID" == "modGSKEnergyThorns" ]];then
+    #strCVarDmg="";
+    #bFUNCprepareBundlePart_specificItemsChk_HasDmgDevs_OUT=true
+    #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+="${strXmlDmgBefore}"'
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="'$fDmg'" />
+        #</triggered_effect>
+        #<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="'$fDmg'">
+          #<requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.01" />
+        #</triggered_effect>'"${strXmlDmgAfter}"
+  #fi
   
   #if [[ "$strItemID" == "GSKTheNoMadOverhaulBundleNoteBkp" ]];then
     #strFUNCprepareBundlePart_specificItemsChk_AddCode_OUT+='      <!-- HELPGOOD: allows opening the CreateBundle items -->
@@ -647,8 +674,9 @@ function FUNCprepareBundles() {
   local lastrItemAndCountListPart=()
   for((i=0;i<${#lastrItemAndCountList[@]};i+=2));do 
     strNm="${lastrItemAndCountList[i]}"
+    #CFGFUNCprompt "$lstrBundleName $strNm " #TODODBG COMMENT
     #declare -p strNm
-    if [[ "${strNm}" =~ ^${strPartToken}.* ]];then
+    if [[ "${strNm}" =~ ^${strNewSectionToken}.* ]];then
       if((${#lastrItemAndCountListPart[*]}>0));then
         FUNCprepareBundlePart "$lbIgnTopList" "$lbRnd" "$lstrBundleName" "" "${lastrParams[@]}" "${lastrItemAndCountListPart[@]}"
       fi

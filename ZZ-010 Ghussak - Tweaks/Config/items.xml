@@ -851,27 +851,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="DescriptionKey" value="dkGSKTheNoMadOverhaulBundle"/>
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-    <!-- HELPGOOD:GENCODE:createBundles.sh: ForgeCrafting Schematics -->
-    <item name="GSKForgeCraftingSchematicsBundle">
-      <property name="Extends" value="GSKTRBaseBundle"/>
-      <property name="CustomIcon" value="cntLootChestHeroInsecureT1"/>
-      <property name="ItemTypeIcon" value="book"/>
-      <property name="CustomIconTint" value="192,192,192"/>
-      <property name="DescriptionKey" value="dkGSKForgeCraftingSchematicsBundle"/>
-      <property class="Action0">
-        <property name="Create_item" help="it has 5 diff items" value="cementMixerSchematic,forgeSchematic,toolAnvilSchematic,toolBellowsSchematic,toolForgeCrucibleSchematic"/>
-        <property name="Create_item_count" value="1,1,1,1,1"/>
-      </property>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-4000" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKForgeCraftingSchematicsBundleCount" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="4000"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@iGSKForgeCraftingSchematicsBundleCount"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="4000"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
-      </effect_group>
-    </item>
     <!-- HELPGOOD:GENCODE:createBundles.sh: ExploringNPC  -->
     <item name="GSKExploringNPCBundle">
       <property name="Extends" value="GSKTRBaseBundle"/>
@@ -902,31 +881,32 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <property name="Create_item" help="it has 6 diff items" value="apparelNightvisionGoggles,GlowStickGreen,GSKfireFuelFull,meleeToolFlashlight02,meleeToolTorch,NightVisionBattery"/>
         <property name="Create_item_count" value="1,33,1,1,1,66"/>
       </property>
-      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: apparelNightvisionGoggles" tiered="false">
+      <effect_group name="InitiallyDamagedItem: apparelNightvisionGoggles" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="0.75"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="0.75">
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LTE" value="0.01"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
       </effect_group>
-      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: meleeToolFlashlight02" tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.75"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="0.75">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.01"/>
-        </triggered_effect>
+      <effect_group name="InitiallyDamagedItem: meleeToolFlashlight02" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="0.75"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="0.75">
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LTE" value="0.01"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
+      </effect_group>
+      <effect_group name="InitiallyDamagedItem: meleeToolFlashlight02" tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="0.75">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LTE" value="0.01"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
       </effect_group>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-5379" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
@@ -1007,16 +987,46 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKExploringETCBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 10 diff items" value="drinkCanEmptyCookingOneUse,drugFortBites,drugJailBreakers,thrownTimedCharge,resourceDuctTape,resourceMechanicalParts,resourceFeather,resourceLockPick,resourceWood,resourceYuccaFibers"/>
-        <property name="Create_item_count" value="33,3,3,9,1,1,1,1,66,33"/>
+        <property name="Create_item" help="it has 12 diff items" value="drinkCanEmptyCookingOneUse,drugFortBites,drugJailBreakers,thrownTimedCharge,resourceDuctTape,resourceMechanicalParts,resourceFeather,resourceLockPick,resourceWood,resourceYuccaFibers,modGSKElctrnTeleport,NightVisionBattery"/>
+        <property name="Create_item_count" value="33,3,3,9,1,1,1,1,66,33,1,13"/>
       </property>
+      <effect_group name="InitiallyDamagedItem: modGSKElctrnTeleport" tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="0.75">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
+      </effect_group>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-3731" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-5120" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKExploringETCBundleCount" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="3731"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="5120"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@iGSKExploringETCBundleCount"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="3731"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="5120"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD:GENCODE:createBundles.sh: ForgeCrafting Schematics -->
+    <item name="GSKForgeCraftingSchematicsBundle">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="cntLootChestHeroInsecureT1"/>
+      <property name="ItemTypeIcon" value="book"/>
+      <property name="CustomIconTint" value="192,192,192"/>
+      <property name="DescriptionKey" value="dkGSKForgeCraftingSchematicsBundle"/>
+      <property class="Action0">
+        <property name="Create_item" help="it has 5 diff items" value="cementMixerSchematic,forgeSchematic,toolAnvilSchematic,toolBellowsSchematic,toolForgeCrucibleSchematic"/>
+        <property name="Create_item_count" value="1,1,1,1,1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-4000" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKForgeCraftingSchematicsBundleCount" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="4000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@iGSKForgeCraftingSchematicsBundleCount"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="4000"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>
@@ -1027,16 +1037,16 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKCombatWeaponsBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 11 diff items" value="ammo9mmBulletBall,ammoArrowStone,drugGSKwightEssence,gunHandgunT1PistolPartsRepair,gunHandgunT3SMG5,GlowStickGreen,modGunScopeSmall,thrownAmmoMolotovCocktail6s,thrownAmmoStunGrenade,trapSpikesIronDmg0,resourceNail"/>
-        <property name="Create_item_count" value="1998,33,3,33,1,3,1,13,13,33,66"/>
+        <property name="Create_item" help="it has 12 diff items" value="ammo9mmBulletBall,ammoArrowStone,drugGSKwightEssence,gunHandgunT1PistolPartsRepair,gunHandgunT3SMG5,GlowStickGreen,GSKpsyonicAttackLikeAMutant,modGunScopeSmall,thrownAmmoMolotovCocktail6s,thrownAmmoStunGrenade,trapSpikesIronDmg0,resourceNail"/>
+        <property name="Create_item_count" value="1998,33,3,33,1,3,1,1,13,13,33,66"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-23386" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-23387" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKCombatWeaponsBundleCount" operation="add" value="1" help="as default cvar value is 0, first is 100%, 2nd 200% ..."/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="23386"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="set" value="23387"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKExpDebtBundleTmp" operation="multiply" value="@iGSKCombatWeaponsBundleCount"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="@.fGSKExpDebtBundleTmp"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="23386"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="23387"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
       </effect_group>
     </item>
@@ -1134,15 +1144,14 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <property name="Create_item" help="it has 8 diff items" value="ammoJunkTurretRegular,armorClothHat,drugOhShitzDrops,gunBotT2JunkTurret,GSKNoteElctrnTeleporToSkyFirstTime,modGSKEnergyThorns,NightVisionBattery,NVBatteryCreate"/>
         <property name="Create_item_count" value="666,1,1,1,1,1,13,1"/>
       </property>
-      <!-- HELPGOOD: initially damaged items below -->
-      <effect_group name="damaged starter item: modGSKEnergyThorns" tiered="false">
+      <effect_group name="InitiallyDamagedItem: modGSKEnergyThorns" tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.75"/>
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.75"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="add" value="0.75">
-          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LTE" value="0.01"/>
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LTE" value="0.01"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations" help="stack_type=ignore"/>
       </effect_group>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-7739" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
@@ -1446,7 +1455,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="CustomIconTint" value="192,192,192"/>
       <property name="DescriptionKey" value="dkGSKSomeSchematicBundlesBundle"/>
       <property class="Action0">
-        <property name="Create_item" help="it has 9 diff items" value="GSKTheNoMadOverhaulCreateRespawnBundleForgeCraftingSchematics,GSKTheNoMadOverhaulCreateRespawnBundleExploringVisibilitySchematics,GSKTheNoMadOverhaulCreateRespawnBundleExploringMobilitySchematics,GSKTheNoMadOverhaulCreateRespawnBundleCombatWeaponsSchematics,GSKTheNoMadOverhaulCreateRespawnBundleElctrnEnergySchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingHarmSchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingFeedSchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingHPSchematics,GSKTheNoMadOverhaulCreateRespawnBundleFarmingSchematics"/>
+        <property name="Create_item" help="it has 9 diff items" value="GSKTheNoMadOverhaulCreateRespawnBundleExploringVisibilitySchematics,GSKTheNoMadOverhaulCreateRespawnBundleExploringMobilitySchematics,GSKTheNoMadOverhaulCreateRespawnBundleForgeCraftingSchematics,GSKTheNoMadOverhaulCreateRespawnBundleCombatWeaponsSchematics,GSKTheNoMadOverhaulCreateRespawnBundleElctrnEnergySchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingHarmSchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingFeedSchematics,GSKTheNoMadOverhaulCreateRespawnBundleHealingHPSchematics,GSKTheNoMadOverhaulCreateRespawnBundleFarmingSchematics"/>
         <property name="Create_item_count" value="1,1,1,1,1,1,1,1,1"/>
       </property>
       <effect_group tiered="false">
@@ -33755,34 +33764,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </item>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEEXPLORATIONREWARDS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createExplorationRewards.sh ===== -->
     <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-    <!-- HELPGOOD:Respawn:CreateBundle:GSKForgeCraftingSchematicsBundle -->
-    <item name="GSKTheNoMadOverhaulCreateRespawnBundleForgeCraftingSchematics" help="on death free items helper">
-      <property name="Extends" value="GSKTRBaseBundle"/>
-      <property name="CustomIcon" value="cntLootChestHeroInsecureT1"/>
-      <property name="ItemTypeIcon" value="book"/>
-      <property name="CustomIconTint" value="110,110,240"/>
-      <property name="DescriptionKey" value="dkGSKForgeCraftingSchematicsBundle"/>
-      <property class="Action0">
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
-        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="GT" value="0"/>
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
-        <property name="Create_item" value="GSKForgeCraftingSchematicsBundle"/>
-        <property name="Create_item_count" value="1"/>
-        <property name="Delay" value="0.25"/>
-        <property name="Use_time" value="0.25"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
-      </property>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong" help="COURIER_DELIVERY"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
-          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
-      </effect_group>
-    </item>
     <!-- HELPGOOD:Respawn:CreateBundle:GSKExploringNPCBundle -->
     <item name="GSKTheNoMadOverhaulCreateRespawnBundleExploringNPC" help="on death free items helper">
       <property name="Extends" value="GSKTRBaseBundle"/>
@@ -33940,6 +33921,34 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringETC" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong" help="COURIER_DELIVERY"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
+          <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
+      </effect_group>
+    </item>
+    <!-- HELPGOOD:Respawn:CreateBundle:GSKForgeCraftingSchematicsBundle -->
+    <item name="GSKTheNoMadOverhaulCreateRespawnBundleForgeCraftingSchematics" help="on death free items helper">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CustomIcon" value="cntLootChestHeroInsecureT1"/>
+      <property name="ItemTypeIcon" value="book"/>
+      <property name="CustomIconTint" value="110,110,240"/>
+      <property name="DescriptionKey" value="dkGSKForgeCraftingSchematicsBundle"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCNonHireableNearby" operation="LT" value="@.iGSKMaxCouriersNearby"/>
+        <requirement name="CVarCompare" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="10"/>
+        <property name="Create_item" value="GSKForgeCraftingSchematicsBundle"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpwCourierStrong" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0"/>
@@ -35514,6 +35523,57 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <effect_group tiered="false" help="common">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToBedrollLowCost">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportLowCost"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost" help="this is part of being low cost"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar=".GSKDummy" operation="Equals" value="1986295" help="any random value just to block this Action1 to prevent player destroying this item by mistake"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToLandClaimLowCost">
+      <property name="Extends" value="GSKElctrnTeleportToBedrollLowCost"/>
+      <property class="Action0">
+        <property name="Create_item" value="GSKElctrnTeleportToLandClaimLowCost"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToHomeAndBack">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost" help="this is part of being low cost"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <property class="Action1" help="cancels the delayed teleport">
+        <requirement name="HasBuff" buff="buffGSKTeleportLowCost"/>
+        <property name="Create_item" value="GSKElctrnTeleportToHomeAndBack"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
       </effect_group>
     </item>
     <item name="GSKElctrnTeleportToSky">
@@ -38587,7 +38647,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="Meshfile" value="#Other/Items?Food/emptyJarPrefab.prefab"/>
       <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
       <property name="Material" value="Mglass"/>
-      <property name="Stacknumber" value="6"/>
+      <property name="Stacknumber" value="6" help="being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 stacks of 6 drinkJarEmptyToGetWater. As a bucket can create at most 5 water blocks if you are careful."/>
       <property name="Weight" value="10"/>
       <property name="EconomicValue" value="6"/>
       <property name="CraftingIngredientTime" value="9"/>
@@ -39083,24 +39143,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
     </effect_group>
   </append>
-  <!--  HELPGOOD: to avoid spending a huge lot of time looking at the inventory and managing resources on nearby camps... and spend more time exploring and fighting. this is the limit after reloading the game -->
-  <set xpath="//property[@name='Stacknumber' and not(@value='1')]/@value">65535</set>
-  <!--  HELPGOOD: items with stack greater than 1 wont accept mods-->
-  <set xpath="/items/item[starts-with(@name,'apparel')]/property[@name='Stacknumber']/@value">1</set>
-  <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots -->
-  <set xpath="/items/item[@name='bucketRiverWater' or @name='bucketEmpty']/property[@name='Stacknumber']/@value">1</set>
   <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players. TODO: prevent from sea salty water tho as even boiled would still be salty, but how?"/>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
   <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
-  <!-- HELPGOOD: other things that call or should be only 1 -->
-  <set xpath="/items/item[@name='GSKDbgNVBatteryCreate']/property[@name='Stacknumber']/@value">1</set>
-  <!-- HELPGOOD: other things that had no Stacknumber but should -->
-  <!-- HELPGOOD: meleeToolTorch is a melee item and wont stack, but the alternative is to stack with wallTorchLight that is the same thing in the end
-  <append xpath="/items/item[@name='meleeToolTorch']">
-    <property name="Stacknumber" value="65535"/>
-  </append>
--->
-  <!-- HELPGOOD: 1 bucket of water is set to provide at most 3 murky water. so going to snow biome will provide 30 snowballs per slot. The reason is that you will still need to collect rain water one day if not in snow biome. -->
+  <!-- HELPGOOD: 1 bucket of water is set to provide at most 30 murky water. so going to snow biome will provide 30 snowballs per slot. The reason is that you will still need to collect rain water one day if not in snow biome. -->
   <set xpath="/items/item[@name='resourceSnowBall']/property[@name='Stacknumber']/@value">30</set>
-  <!-- HELPGOOD: =================================== PUT NOTHING BELOW HERE ====================== -->
 </GhussakTweaks>

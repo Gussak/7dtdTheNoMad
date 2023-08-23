@@ -10,7 +10,7 @@ The NoMad, unforgiving lands. Explore the world, don't allow chaos scare you, ad
 .  
   Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experience penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome (like in the case you did not spawn in the desert) using the biome or underground free teleporter.  
 .  
-  No fortress building means you will be able to carry as much you want (least a few things like dirty water to prevent unlimited water glitch), and the stacks have "no" limit. This is the only way I found til now for a fast gameplay (more action FPS less RPG) where you mostly do not need to revisit any place. Always advance, always explore and discover new places, never (as much as possible) come back. (See TODO*1002,1003).  
+  No fortress building: you have a low cost teleport to home and from it feature, but the idea is not to stay at home during bloodmoons. Always advance, always explore and discover new places, never (as much as possible) come back. (See TODO*1002,1003).  
 .  
   Obs.: I have not tested it multiplayer, so if you have any trouble, describe the problem the best you can.  
 .    
@@ -137,8 +137,7 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
   1) Dosimeter helmet mod that uses battery energy and can be damaged (damage will blink the detection indicators). Detects radiation sources (rad zombs and mutants including bunny). have many quality levels based on some skill that determines the detection distance. will substitute the related effect from animal tracker skill.  
   2) Contextualize new notes added to journal based on game events to let the player read them from time to time (like in vanilla).  
  Difficult:  
-  1002) A fortress coping with this overhaul could be implemented, with some cheap teleporting way (mark where you are and teleport from/to it at the cost of some battery energy), but it would end up being a place you could flee to anytime (making things easy), and (to me) would just be boring to keep giving maintenance on everything destroyed there on blood moons, so just find new places to defend and survive, always a new challenge. But I guess many ppl would love it. (I think this would required some special mod as .DLL that I don't know how to implement)  
-  1003) A pocket dimension bag of holding (with unlimited storage scrolling slots or slots pages, could also be an indestructible NPC follower or drone) could be used to store all extra items (and accessed with some cost like battery energy per item weight retrieved or stored), so vanilla inventory item's small stack could be kept. That would keep the challenge of not having so many resources in hand w/o a cost. It should only be accessible out of combat. (I think this would required some special mod as .DLL that I don't know how to implement)  
+  1003) A pocket dimension bag of holding (with unlimited storage scrolling slots or slots pages, could also be an indestructible NPC follower or drone that doesnt tank, no luring foes, nor attack) could be used to store all extra items (and accessed with some cost like battery energy per item weight retrieved or stored). That would keep the challenge of not having so many resources in hand w/o a cost. It should only be accessible out of combat. (I think this would required some special mod as .DLL that I don't know how to implement)  
 .  
 .  
 .  
@@ -195,7 +194,7 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
 - animal spiders will jump now and tiny ones spawns inside buildings always  
 - no more easy loot drop from friendly NPCs    
 - added workaround to try to quickly place a follower NPC near the player: vehicleGSKNPChelperPlaceable  
-- water bucket can only pickup world generated water now, not water placed by the player. this keeps the bucket after being used and prevents water creation overpower. To pickup water placed by the player, use the new empty drink jar.    
+- water bucket can only pickup world generated water now, not water placed by the player. this keeps the bucket after being used and prevents unlimited water creation overpower glitch. To pickup water placed by the player, use the new empty drink jar.    
 - (and many other minor things I forgot to add here...)
 .    
 --------- v0.9a -----------    

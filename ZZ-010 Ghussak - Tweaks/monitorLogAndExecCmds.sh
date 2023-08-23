@@ -68,6 +68,9 @@ tail -F "$strFlLog" |while read strLine;do
     if ! pgrep -fa "${strExecRegex}";then
       echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
     else
+      CFGFUNCinfo "+[EXEC:ProtectCfgDump] $strLine (to make it easier to avoid editing them by mistake ...)"
+      chmod -Rv ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/
+      
       CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
       CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
       strInfo="the game finished loading and is ready to play"

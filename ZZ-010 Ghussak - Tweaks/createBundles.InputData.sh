@@ -1,13 +1,4 @@
 ####################### DATA
-astr=(
-  "$strSCHEMATICS_BEGIN_TOKEN" 0
-  cementMixerSchematic 1 
-  forgeSchematic 1 
-  toolAnvilSchematic 1 
-  toolBellowsSchematic 1 
-  toolForgeCrucibleSchematic 1 
-);FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
-
 strExploringBase="Use this if you think exploring the world is unreasonably difficult (there is no vehicle in it tho).\n"
 astr=(
   casinoCoin 666
@@ -61,14 +52,25 @@ astr=(
   drugJailBreakers 3
   thrownTimedCharge 9
   #meleeWpnSpearT0StoneSpear 1
-  resourceDuctTape 1
-  resourceMechanicalParts 1
-  resourceFeather        1
-  resourceLockPick 1
-  resourceWood         66
-  resourceYuccaFibers  33
+  resourceDuctTape         1
+  resourceMechanicalParts  1
+  resourceFeather          1
+  resourceLockPick         1
+  resourceWood            66
+  resourceYuccaFibers     33
+  modGSKElctrnTeleport     1 # to help going to home and back
+  NightVisionBattery      13
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "ExploringETC" "bundleVehicle4x4" "${strExploringBase}This have a few other things to help open locked containers, cooking, etc" "${astr[@]}"
+
+astr=(
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+  cementMixerSchematic 1 
+  forgeSchematic 1 
+  toolAnvilSchematic 1 
+  toolBellowsSchematic 1 
+  toolForgeCrucibleSchematic 1 
+);FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
 
 astr=( #TEMPLATE
   ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving

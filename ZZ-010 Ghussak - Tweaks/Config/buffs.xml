@@ -542,6 +542,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathLowCostTeleportLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathPsyPowerLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloodLossLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathDryHotLvl"/>
@@ -718,6 +719,44 @@
     <buff name="buffGSKmodArmorWaterPurifier" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
+    </buff>
+    <buff name="buffGSKTeleportLowCost" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKElctrnTeleport" icon_color="215,180,220">
+      <stack_type value="ignore"/>
+      <update_rate value="3.0"/>
+      <duration value="0"/>
+      <display_value value=".iGSKTeleLowCostCountDown"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKEventFeedbackTeleportToHomeOrBackCompleted" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll">
+          <requirement name="CVarCompare" cvar="iGSKLowCostTeleportTarget" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim">
+          <requirement name="CVarCompare" cvar="iGSKLowCostTeleportTarget" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleLowCostCountDown" operation="set" value="13"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleLowCostCountDown" operation="add" value="-3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="30" action="AddBuff" buff="buffGSKCountNearbyFoes" target_tags="zombie,bandit,enemy,DeusExAngry,hostile"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleportLowCostOnce" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportToHomeOrBackCompleted" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKLowCostTeleportTarget" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
     <buff name="buffGSKpsyonicDeath" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
@@ -6078,6 +6117,9 @@
       <effect_group>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathLowCostTeleportLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathLowCostTeleportLvl"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPsyPowerLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPsyPowerLvl"/>
         </triggered_effect>
@@ -7188,6 +7230,7 @@
       <!-- HELPGOOD: 'iGSKNearDeathPoisonLvl' is controlled by 'buffGSKSnakePoisonWork55' -->
       <effect_group>
         <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
@@ -7244,7 +7287,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="104557" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="105947" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
@@ -7581,7 +7624,12 @@
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="0" help="the mayhem loop will deplet the battery but wont cause too much trouble. will become negative only once"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="@iGSKElctrnTeleportEnergy"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKElctrnTeleportDistIndex"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="multiply" value="@iGSKElctrnTeleportDistIndex">
+          <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTTETmp" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTTFBattGood" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@.iGSKTTETmp"/>
@@ -8130,7 +8178,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10000"/>
         <!-- HELPGOOD: this always gives max float 0.10, why?
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="random Float(0.05,0.10)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="add" value="random Float(0.05,0.10)"/>
 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKDmgTmpTP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKToSkyDmtMode" operation="set" value="0"/>
@@ -8143,7 +8191,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="multiply" value="10">
           <requirement name="CVarCompare" cvar=".bGSKToSkyDmtMode" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="@iGSKEnergyLvlTP">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="10">
+          <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgTmpTP" operation="divide" value="@iGSKEnergyLvlTP" help="more skill and better equipment works better">
           <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GT" value="1.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKDmgTmpTP"/>
@@ -8152,6 +8203,13 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="0" help="resets to prepare for next"/>
+      </effect_group>
+      <effect_group help="LowCost side effects">
+        <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] This cheap teleport makes you feel dizzy..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleportLowCostOnce" operation="set" value="0"/>
       </effect_group>
       <effect_group help="finalize, rm this buff and prepare for next call of this buff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKExternalForceTeleport" operation="set" value="0" help="consume. that var is increased but this consumes it all. teleport loop w/o proper delay is not good."/>
@@ -11299,6 +11357,7 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
+        <requirement name="IsAlive"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="add" value="1" target="selfAOE" range="15" help="sync with this buff call range">
           <requirement name="EntityTagCompare" target="other" tags="player"/>
         </triggered_effect>
@@ -11434,9 +11493,17 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="lowcost teleport neardeath sideeffects">
+        <requirement name="CVarCompare" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="-12" help="sync with update_rate for 20s total duration from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="subtract" value="@iGSKEnergyLvlTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="set" value="@fGSKNearDeathLowCostTeleportTimeout"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="divide" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="@.iGSKNearDeathLowCostTeleportLvlTmp"/>
+      </effect_group>
       <effect_group help="psy power neardeath">
         <requirement name="CVarCompare" cvar="fGSKNearDeathPsyPowerTimeout" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="-12" help="sync with update_rate for 20s from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="-12" help="sync with update_rate for 20s total duration from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="subtract" value="@fGSKPsyonicPermanentPower"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="set" value="@fGSKNearDeathPsyPowerTimeout"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="divide" value="60"/>
@@ -12356,6 +12423,7 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeusExWinsAtCount" operation="set" value="@iGSKDeusExKillCount" help="same is done at buffGSKDeusExWinsPLAYERBUFF">
           <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathBloodLossLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0"/>
@@ -12622,9 +12690,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnItemsBundleHelper" operation="set" value="1"/>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEBUNDLES_CRAFTBUNDLES_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createBundles.sh ===== -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringNPC" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringVisibility" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringVisibilitySchematics" operation="add" value="1">
@@ -12635,6 +12700,9 @@
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperExploringETC" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperForgeCraftingSchematics" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeapons" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
