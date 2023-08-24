@@ -56,6 +56,7 @@ export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
 export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
+export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do
 tail -F "$strFlLog" |while read strLine;do
@@ -64,7 +65,10 @@ tail -F "$strFlLog" |while read strLine;do
   
   #if ! pgrep -fa "${strExecRegex}";then
     #echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
-  if [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
+  if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
+    CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
+    chmod -Rv u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/
+  elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
     if ! pgrep -fa "${strExecRegex}";then
       echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
     else

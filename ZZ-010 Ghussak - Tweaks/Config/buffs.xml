@@ -720,7 +720,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
-    <buff name="buffGSKTeleportLowCost" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkbuffGSKElctrnTeleport" icon_color="215,180,220">
+    <buff name="buffGSKTeleportLowCost" remove_on_death="true" hidden="false" icon="7dtdTeleport" icon_blink="true" description_key="dkGSKElctrnTeleportToHomeAndBack" icon_color="215,180,220">
       <stack_type value="ignore"/>
       <update_rate value="3.0"/>
       <duration value="0"/>
@@ -734,21 +734,24 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim">
           <requirement name="CVarCompare" cvar="iGSKLowCostTeleportTarget" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleLowCostCountDown" operation="set" value="13"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleLowCostCountDown" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleLowCostCountDown" operation="add" value="-3"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="30" action="AddBuff" buff="buffGSKCountNearbyFoes" target_tags="zombie,bandit,enemy,DeusExAngry,hostile"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="Equals" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleportLowCostOnce" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost">
+          <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLowCost">
+          <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportToHomeOrBackCompleted" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportToHomeOrBackCompleted" operation="Equals" value="1"/>
@@ -756,6 +759,8 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKLowCostTeleportTarget" operation="GTE" value="2"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CVarLogValue" cvar=".iGSKTeleLowCostCountDown"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:TNM:TeleportToHomeOrBackCompleted"/>
       </effect_group>
     </buff>
     <buff name="buffGSKpsyonicDeath" hidden="true" remove_on_death="false">
@@ -5418,6 +5423,8 @@
   <append xpath="/buffs/buff[@name='buffShocked']">
     <effect_group help="spasms knocks down">
       <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+        <requirement name="!HasBuff" buff="buffGSKElctrnTeleportAndDebuff" help="ragdoll prevents teleport?"/>
+        <requirement name="!HasBuff" buff="buffGSKTeleportLowCost" help="ragdoll prevents teleport?"/>
         <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="LTE" value="0"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
@@ -8116,6 +8123,7 @@
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="629"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:TNM:TeleportedToDirection"/>
       </effect_group>
       <effect_group help="tele specials">
         <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleSpecialBEGIN"/>
@@ -8135,6 +8143,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnExplodeExtra23">
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSpecialZero" help="tele 0,0,0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:TNM:TeleportedToSpecial"/>
       </effect_group>
       <effect_group help="tele sky">
         <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="GTE" value="@.iGSKElctrnTeleSkyBEGIN"/>
@@ -8166,6 +8175,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleportToSkyNotSoHighAbove">
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleDir" operation="Equals" value="@.iGSKElctrnTeleSkyAboveButLower"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:TNM:TeleportedToSky"/>
       </effect_group>
       <effect_group help="damage per use">
         <requirement name="CVarCompare" cvar=".iGSKExternalForceTeleport" operation="Equals" value="0"/>
@@ -8208,7 +8218,9 @@
         <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] This cheap teleport makes you feel dizzy..."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <!-- HELPGOOD: being in ragdoll prevents teleport right?
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" />
+-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleportLowCostOnce" operation="set" value="0"/>
       </effect_group>
       <effect_group help="finalize, rm this buff and prepare for next call of this buff">
