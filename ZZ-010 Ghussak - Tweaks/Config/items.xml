@@ -35527,7 +35527,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </item>
     <item name="GSKElctrnTeleportToBedrollLowCost">
       <property name="Extends" value="GSKElctrnTeleportBase"/>
-      <property name="DescriptionKey" value="dkGSKElctrnTeleportLowCost"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
         <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
@@ -35536,12 +35536,16 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost" help="this is part of being low cost"/>
         <property name="Create_item_count" value="1"/>
       </property>
-      <property class="Action1">
-        <requirement name="CVarCompare" cvar=".GSKDummy" operation="Equals" value="1986295" help="any random value just to block this Action1 to prevent player destroying this item by mistake"/>
+      <property class="Action1" help="cancels the delayed teleport">
+        <requirement name="HasBuff" buff="buffGSKTeleportLowCost"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost"/>
+        <property name="Create_item_count" value="1"/>
       </property>
       <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="1" help="forces bedroll"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
       </effect_group>
     </item>
     <item name="GSKElctrnTeleportToLandClaimLowCost">
@@ -35549,9 +35553,14 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property class="Action0">
         <property name="Create_item" value="GSKElctrnTeleportToLandClaimLowCost"/>
       </property>
+      <property class="Action1" help="cancels the delayed teleport">
+        <property name="Create_item" value="GSKElctrnTeleportToLandClaimLowCost"/>
+      </property>
       <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="0" help="forces landclaim"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
       </effect_group>
     </item>
     <item name="GSKElctrnTeleportToHomeAndBack">

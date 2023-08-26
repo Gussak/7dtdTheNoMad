@@ -103,10 +103,15 @@ tail -F "$strFlLog" |while read strLine;do
         echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
         #if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
         if((li>nIniShapesDelay));then 
-          strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should SIGKILL the game."
+          strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
           CFGFUNCinfo "$strInfo";
           if ! pgrep "yad.*TNMMonLog:FrozenShapes" -fa;then
-            (yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus&disown)
+            function FUNCyad_FrozenShapes() {
+              if yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus;then
+                xterm -title "TNMMonLog:FrozenShapes" -e wineserver -k
+              fi
+            };export -f FUNCyad_FrozenShapes
+            (FUNCyad_FrozenShapes&disown)
           fi
         fi
         if ! pgrep -f "$strExecRegex" >/dev/null;then CFGFUNCinfo "[WARN] game stopped running";break;fi

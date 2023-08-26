@@ -56,6 +56,8 @@ strPrefabsXml="prefabs.xml"
 #: ${strGenWorldName:="East Nikazohi Territory"} #h elp
 #strFlGenPrefabsOrig="${strPathToUserData}/GeneratedWorlds/${strGenWorldName}/${strPrefabsXml}"
 
+iMainProcTm=$SECONDS
+
 CFGFUNCinfo "MainGoal: place ALL AVAILABLE POIs in a SINGLE WORLD."
 CFGFUNCinfo " OtherGoal: place POIs in the underground with collapsing ceiling what is overall fun and a good trap against the player."
 CFGFUNCinfo " OtherGoal: place custom small traps around all POIs, bigger POIs will have more traps, they are actually useful if you do not fall on them."
@@ -324,8 +326,21 @@ function FUNCcalcPOINewY() { # <lnY> <lstrPOIold> <lstrPOInew> this will return 
 IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig" |tr -d '\r' |sort)&&:
 #if [[ "`FUNCxmlGetName "${strPatchedPOIdataLine}"`" =~ ^${strRegexProtectedPOIs}.*$ ]];then echo -n "Pt,";continue;fi #skip things from the Prefabs/Parts folder
 
+iMainInitTmPrev=$SECONDS
+strMainIDPrev="init"
+declare -A astrMainSectionsInfo=()
+function FUNC_MAIN_INFO() {
+  local lstrMainID="$1";shift
+  local lstrDesc="$1";shift
+  astrMainSectionsInfo[${strMainIDPrev}]="PrevMainDelay=$((SECONDS-iMainInitTmPrev))"
+  CFGFUNCinfo "PREV_MAIN:${strMainIDPrev};Info:${astrMainSectionsInfo[${strMainIDPrev}]}"
+  CFGFUNCinfo "MAIN: $lstrDesc."
+  declare -g strMainIDPrev="$lstrMainID"
+  declare -g iMainInitTmPrev=$SECONDS
+}
+
 strFlAddExtraPOIs="`basename "$0"`.AddExtraPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
-CFGFUNCinfo "MAIN:adding extra manually placed POI locations for the current configured world RWG data: ${strFlAddExtraPOIs}"
+FUNC_MAIN_INFO "AddExtraPOIs" "adding extra manually placed POI locations for the current configured world RWG data: ${strFlAddExtraPOIs}."
 if [[ -f "$strFlAddExtraPOIs" ]];then
   IFS=$'\n' read -d '' -r -a astrFlAddExtraPOIsList < <(egrep "<decoration " "$strFlAddExtraPOIs" |tr -d '\r' |sort)&&:
   astrRWGOriginalPOIdataLineList+=("${astrFlAddExtraPOIsList[@]}")
@@ -356,12 +371,12 @@ if((iTotalChkBiome==0));then
   bUpdateBiomeCache=true
 fi
 if((iTotalChkBiome>0));then
-  if CFGFUNCprompt -q "Biome cache found: iTotalChkBiome=$iTotalChkBiome. Update biome cache anyway (will take a very long time)? this is required if you just used the Engine RWG and have a new prefabs.xml file and a new biome png file.";then #todo check sha1sum for biome and prefabs file, if they changed this will be automatic
+  if CFGFUNCprompt -q "Biome cache found: iTotalChkBiome=$iTotalChkBiome. Update biome cache anyway (will take a very long time)? this is required if you just used the Engine RWG and have a new prefabs.xml file and a new biome png file (in case you just painted it too by hand).";then #todo check sha1sum for biome and prefabs file, if they changed this will be automatic
     bUpdateBiomeCache=true
   fi
 fi
 if $bUpdateBiomeCache;then
-  CFGFUNCinfo "MAIN:updating all biomes info for all prefabs originally placed by RWG at '${strFlGenPrefabsOrig}'. This happens only once and will take a lot of time. Please wait this step end."
+  FUNC_MAIN_INFO "UpdateBiomesInfo" "updating all biomes info for all prefabs originally placed by RWG at '${strFlGenPrefabsOrig}'. This happens only once and will take a lot of time. Please wait this step end"
   for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
     ((iTotalChkBiome++))&&:
     CFGFUNCinfo "UpdateBiomeDataFor(${iTotalChkBiome}/${#astrRWGOriginalPOIdataLineList[@]}): ${strGenPOIdataLine}"
@@ -385,7 +400,7 @@ fi
 IFS=$'\n' read -d '' -r -a astrPrefabPathList < <(cd "${strCFGGameFolder}"/;find "`pwd`/" -type d -iregex ".*[/]Prefabs[/]\(POIs\|Parts\|RWGTiles\|Test\)")&&:
 declare -p astrPrefabPathList |tr '[' '\n'
 
-CFGFUNCinfo "MAIN:colleting all valid POIs from prefabs xmls (later will check if any was ignored by RWG or removed from non wasteland town areas)"
+FUNC_MAIN_INFO "CollectValidPOIs" "colleting all valid POIs from prefabs xmls (later will check if any was ignored by RWG or removed from non wasteland town areas)"
 IFS=$'\n' read -d '' -r -a astrAllPOIsList < <(
   for strPrefabPath in "${astrPrefabPathList[@]}";do
     if [[ "${strPrefabPath}" =~ .*/POIs$ ]];then
@@ -397,7 +412,7 @@ IFS=$'\n' read -d '' -r -a astrAllPOIsList < <(
 )&&:
 if((${#astrAllPOIsList[@]}==0));then CFGFUNCerrorExit "astrAllPOIsList empty";fi
 
-CFGFUNCinfo "MAIN:colleting all POIs Y offset and size from prefabs"
+FUNC_MAIN_INFO "CollectAllPOIsYOff" "colleting all POIs Y offset and size from prefabs"
 #strFlTmp="`mktemp`"
 strFlTmp="`pwd`/_tmp/`basename "$0"`.POIsYOS.tmp.txt" #todo cache this. deleting it will refresh the cache
 echo -n >"$strFlTmp"
@@ -449,7 +464,7 @@ strFlImportantBuildings="`basename "$0"`.AddedToRelease.ImportantBuildings.txt" 
 echo -n >>"$strFlImportantBuildings" #just to create it if needed
 astrSpecialBuildingPOI=(`cat "$strFlImportantBuildings"`)&&:
 if [[ -z "${astrSpecialBuildingPOI[@]-}" ]];then
-  CFGFUNCinfo "MAIN:show special POIs (usually the tallest) to cherry pick for buildings, that are like a small town to explore"
+  FUNC_MAIN_INFO "ShowSpecialPOIs" "show special POIs (usually the tallest) to cherry pick for buildings, that are like a small town to explore"
   for strPOI in "${!astrAllPrefabSize[@]}";do
     if [[ -f "${strCFGGameFolder}/Prefabs/POIs/${strPOI}.xml" ]];then
       FUNCgetWHL "${astrAllPrefabSize[$strPOI]}"
@@ -465,7 +480,7 @@ function FUNChelpInfoPOI() {
   echo "${lstrName},YOffset=${astrAllPrefabYOS[${lstrName}]-},Size=${astrAllPrefabSize[${lstrName}]-}"
 }
 
-CFGFUNCinfo "MAIN:create help and sorter xml properties for all POIs"
+FUNC_MAIN_INFO "CreateHelpAndSorterXML" "create help and sorter xml properties for all POIs"
 #for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
 for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
   strGenPOIdataLine="${astrRWGOriginalPOIdataLineList[i]}"
@@ -482,7 +497,7 @@ for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
 done
 declare -p astrRWGOriginalPOIdataLineList |tr '[' '\n'
 
-CFGFUNCinfo "MAIN:collecting original location (to know the Y) for each POI originally placed by RWG. that Y was calculated based on the POI YOffset originally placed there (I guess). This Y can be used to calculate the new Y based on the difference of the YOffset of the old POI and the new POI that will be placed there (just skip the underground ones that are a fun trap)."
+FUNC_MAIN_INFO "CollectOrigLocat" "collecting original location (to know the Y) for each POI originally placed by RWG. that Y was calculated based on the POI YOffset originally placed there (I guess). This Y can be used to calculate the new Y based on the difference of the YOffset of the old POI and the new POI that will be placed there (just skip the underground ones that are a fun trap)"
 declare -A astrRWGOriginalLocationVsPOI=()
 #for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
 for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
@@ -497,7 +512,7 @@ for((i=0;i<"${#astrRWGOriginalPOIdataLineList[@]}";i++));do
   CFGFUNCinfo "UPDATED:HelpInfo:${astrRWGOriginalPOIdataLineList[$i]}"
 done
 
-CFGFUNCinfo "MAIN:delete all POIs from TOWNS that are outside wasteland and were originally placed by RWG at '${strFlGenPrefabsOrig}'" #TODO keep only one there tho
+FUNC_MAIN_INFO "DelAllTownPOIs" "delete all POIs from TOWNS that are outside wasteland and were originally placed by RWG at '${strFlGenPrefabsOrig}'" #TODO keep only one there tho
 astrPatchedPOIdataLineList=()
 iTotalRemovedPOIsFromTownsOutsideWasteland=0
 declare -A astrVaporisedTownsRestoreOnePOIPerRectangle
@@ -523,7 +538,7 @@ if((${#astrVaporisedTownsRestoreOnePOIPerRectangle[@]}>0));then
   astrPatchedPOIdataLineList+=("${astrVaporisedTownsRestoreOnePOIPerRectangle[@]}") #TODO replace with strDummyPOI ?
 fi
 
-CFGFUNCinfo "MAIN:collecting special buildings POIs that shall all be placed only in the wasteland"
+FUNC_MAIN_INFO "CollectSpecialPOIs" "collecting special buildings POIs that shall all be placed only in the wasteland"
 astrSpecialBuildingList=()
 #for strPOI in "${astrAllPOIsList[@]}";do
 for((i=0;i<"${#astrAllPOIsList[@]}";i++));do
@@ -540,7 +555,7 @@ astrAllPOIsList=("${astrAllPOIsList[@]}") #fixes the array after removing the en
 iTotalUniqueSpecialBuildings=${#astrSpecialBuildingList[@]}
 if((iTotalUniqueSpecialBuildings==0));then CFGFUNCerrorExit "invalid iTotalUniqueSpecialBuildings=0. Special POIs are required to prepare end game Wasteland region";fi
 
-CFGFUNCinfo "MAIN:replacing special buildings outside wasteland with a dup to be replaced again later with unique POIs"
+FUNC_MAIN_INFO "ReplaceSpecialPOIsOutWast" "replacing special buildings outside wasteland with a dup to be replaced again later with unique POIs"
 strDummyPOI="abandoned_house_01" #this simple POI may happen many times to be replaced
 iRemovedSpecialBuildingsFromNonWasteland=0
 for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
@@ -567,7 +582,7 @@ for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   fi
 done
 
-CFGFUNCinfo "MAIN:replacing POIs inside wasteland with a dup so the remaining ones will be replaced again later with special buildings or missing POIs"
+FUNC_MAIN_INFO "ReplacePOIsInWast" "replacing POIs inside wasteland with a dup so the remaining ones will be replaced again later with special buildings or missing POIs"
 iTotalWastelandPOIsLeastInTowns=0
 declare -A astrPOIindexWithPosInTownXZ=()
 for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
@@ -598,7 +613,7 @@ for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   fi
 done
 
-CFGFUNCinfo "MAIN:placing special buildings in the wasteland"
+FUNC_MAIN_INFO "PlaceSpecialPOIsInWast" "placing special buildings in the wasteland"
 strMarkToSkip="_MARKED_TO_BE_SKIPPED_"
 iLastPPOIindexReplaced=0
 : ${iReservedWastelandPOICountForMissingPOIs:=0} #help after running the script, if there is missing POIs, put that value on this var TODO check the prefabs ignored thru strRegexIgnoreGen, may be some of them could be used instead of preventing buildings being added on the wasteland below
@@ -650,14 +665,14 @@ while true;do #this loop will try to populate the whole wasteland (least the RGW
   done
   if ! $bTryFitMore;then break;fi
 done
-CFGFUNCinfo "MAIN:placing special buildings in the wasteland: remove skip marker from IDs"
+FUNC_MAIN_INFO "PlaceSpecialPOIsInWast:RmSkipMark" "placing special buildings in the wasteland: remove skip marker from IDs"
 for((i=0;i<"${#astrPatchedPOIdataLineList[@]}";i++));do
   echo -en "$i/${#astrPatchedPOIdataLineList[@]}.\r"
   astrPatchedPOIdataLineList[i]="`echo "${astrPatchedPOIdataLineList[i]}" |sed -r "s/${strMarkToSkip}//"`"
 done
 declare -p astrPatchedPOIdataLineList |tr '[' '\n'
 
-CFGFUNCinfo "MAIN:collecting remaining POIs originally placed by RWG"
+FUNC_MAIN_INFO "CollectRemPOIsOrigRWG" "collecting remaining POIs originally placed by RWG"
 IFS=$'\n' read -d '' -r -a astrGenPOIsList < <(
   #cd "${strCFGGameFolder}"; # bash uses the symlinked path while ls and cat use the realpath
   #pwd >/dev/stderr;
@@ -671,7 +686,7 @@ IFS=$'\n' read -d '' -r -a astrGenPOIsList < <(
 )&&:
 if((${#astrGenPOIsList[@]}==0));then CFGFUNCerrorExit "astrGenPOIsList empty";fi
 
-CFGFUNCinfo "MAIN:searching for missing POIs (that RWG ignored or were removed from non wasteland town areas)"
+FUNC_MAIN_INFO "SearchMissPOIs" "searching for missing POIs (that RWG ignored or were removed from non wasteland town areas)"
 astrMissingPOIsList=()
 iSkipTinyPOIs=0
 iSkipNRAPOI=0
@@ -706,7 +721,7 @@ if((${#astrMissingPOIsList[@]}==0));then
   exit 0
 fi
 
-CFGFUNCinfo "MAIN:granting POIs IDs (from filenames) have no spaces (if they have, this script must be updated to prevent errors)"
+FUNC_MAIN_INFO "GrantPOIsIDs" "granting POIs IDs (from filenames) have no spaces (if they have, this script must be updated to prevent errors)"
 #echo "DEBUG:$LINENO:astrMissingPOIsList:Size:${#astrMissingPOIsList[@]}"
 for strMissingPOI in "${astrMissingPOIsList[@]}";do
   if [[ "${strMissingPOI}" =~ .*[\ ].* ]];then
@@ -724,8 +739,8 @@ astrMPOItmp=("${astrMissingPOIsList[@]}")
 astrMPOIbkp=("${astrMissingPOIsList[@]}")
 
 #: ${nSeedRandomPOIs:=1337} #help this seed wont give the same result on other game versions that have a different ammount of POIs (or if you added new custom POIs)
-#CFGFUNCinfo "MAIN:randomizing POIs order using seed '$nSeedRandomPOIs'"
-CFGFUNCinfo "MAIN:randomizing POIs order using (expectedly, as any minor change may affect the result..) predictable random seed"
+#CFGFUNCinfo "MAIN:randomizing POIs order using seed '$nSeedRandomPOIs'. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
+FUNC_MAIN_INFO "RandomPOIsOrder" "randomizing POIs order using (expectedly, as any minor change may affect the result..) predictable random seed"
 #RANDOM=${nSeedRandomPOIs} 
 astrMissingPOIsList=() #reset to randomize
 #for strPOI in "${astrMPOItmp[@]}";do
@@ -759,7 +774,7 @@ if [[ "`echo "${astrMissingPOIsList[@]}" |tr " " "\n" |sort`" != "`echo "${astrM
 fi
 declare -p astrMissingPOIsList |tr "[" "\n"
 
-#CFGFUNCinfo "MAIN:detecting repetead POIs"
+#CFGFUNCinfo "MAIN:detecting repetead POIs. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
 #declare -A astrGenPOIsDupCountList=()
 #for strGenPOI in "${astrGenPOIsList[@]}";do
   #if [[ "${strGenPOI}" =~ ^${strRegexProtectedPOIs}.*$ ]];then echo -n "Pt,";continue;fi #skip things from the Prefabs/Parts folder
@@ -776,7 +791,7 @@ declare -p astrMissingPOIsList |tr "[" "\n"
 
 #astrGenPOIsDupCountList=("${astrGenPOIsDupCountList[@]}")
 
-#CFGFUNCinfo "MAIN:delete all prefabs from towns that are outside wasteland: '${strFlGenPrefabsOrig}'" #TODO keep only one there tho
+#CFGFUNCinfo "MAIN:delete all prefabs from towns that are outside wasteland: '${strFlGenPrefabsOrig}'. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS #TODO keep only one there tho
 #IFS=$'\n' read -d '' -r -a astrRWGOriginalPOIdataLineList < <(egrep "<decoration " "$strFlGenPrefabsOrig")&&:
 #astrPatchedPOIdataLineList=()
 #for strGenPOIdataLine in "${astrRWGOriginalPOIdataLineList[@]}";do
@@ -788,7 +803,7 @@ declare -p astrMissingPOIsList |tr "[" "\n"
   #fi
 #done
 
-CFGFUNCinfo "MAIN:preparing patch file: only decorations lines"
+FUNC_MAIN_INFO "PreparePatchFl:Deco" "preparing patch file: only decorations lines"
 #"${strFlPatched}${strGenTmpSuffix}"
 : ${strFlPatched:="${strTmpPath}/tmp.`basename "$0"`.`date +"${strCFGDtFmt}"`.${strPrefabsXml}${strGenTmpSuffix}"} #help
 strEnclosurerToken="ENCLOSURER_TOKEN_REMOVE_THIS_LINE"
@@ -803,7 +818,7 @@ echo "</${strEnclosurerToken}>" >>"$strFlPatched"
 #(cd "${strCFGGameFolder}";cp -fv "$strFlGenPrefabsOrig" "$strFlPatched")
 cp -v "$strFlPatched" "${strFlPatched}.BackupBeforeFurtherPatchingIt.xml" #good to see data to help debugging
 
-CFGFUNCinfo "MAIN:detecting repetead POIs"
+FUNC_MAIN_INFO "DetectRepeatPOIs" "detecting repetead POIs"
 declare -A astrGenPOIsDupCountList=()
 declare astrGenPOIsUniquesList=() #these POIs will not be replaced
 for strGenPOI in "${astrGenPOIsList[@]}";do
@@ -858,7 +873,7 @@ function FUNCget2ndMatchingPrefabOnPatcherFile() { #[--1st] <lstrPrefab> works a
   #eval "$strPos" #nX nY nZ
 #}
 
-CFGFUNCinfo "MAIN:preparing patch file: replacing repeated POIs with random new POIs"
+FUNC_MAIN_INFO "PreparePatchFl:ReplRepPOIs" "preparing patch file: replacing repeated POIs with random new POIs"
 function FUNCpatchFileCurrentIndex_HelpGet() {
   local lstrHelp="`xmlstarlet sel -t -v "//decoration[@helpFilterIndex='${iXLDFilterIndex}']/@help" "$strFlPatched"`"
   echo "$lstrHelp"
@@ -1622,13 +1637,13 @@ for strGPD in "${!astrGenPOIsDupCountList[@]}";do
 done
 declare -p astrRestoredPOIs |tr '[' '\n' |tee -a "$strCFGScriptLog"
 
-#CFGFUNCinfo "MAIN:add traps and POI marker to unique POIs (that have no DUPs and are vanilla placed by RWG)"
+#CFGFUNCinfo "MAIN:add traps and POI marker to unique POIs (that have no DUPs and are vanilla placed by RWG). PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
 #for strGPD in "${astrGenPOIsUniquesList[@]}";do
   #CFGFUNCinfo "Working with Unique POI: $strGPD"  
   #bSuccessfullyPlacedUnderground=false;FUNCgetXYZfromXmlLine_outXYZaXLDglobals "todoa xml line";FUNCpatchFileCurrentIndex_ExplosionAdd #todoa supply the required input vars
   #FUNCpatchFileCurrentIndex_TrapAdd #todoa supply the required input vars
 #done
-CFGFUNCinfo "MAIN:preparing patch file: adding traps to non DUP (unique or finally unique) POIs"
+FUNC_MAIN_INFO "PreparePatchFl:AddTraps" "preparing patch file: adding traps to non DUP (unique or finally unique) POIs"
 #for strRWGsinglePOI in "${astrRWGsinglePOIsList[@]}";do
 declare -p astrAllPrefabSize |tr '[' '\n' |tee -a "$strCFGScriptLog"
 for strRWGsinglePOI in "${astrGenPOIsUniquesList[@]}" "${astrNewUniquefiedPOIs[@]}";do #"${astrSkippedNonDummyPOIatWasteland[@]}" "${astrSkippedProtPOIduringDUPreplace[@]}"
@@ -1655,10 +1670,10 @@ for strRWGsinglePOI in "${astrGenPOIsUniquesList[@]}" "${astrNewUniquefiedPOIs[@
   FUNCpatchFileCurrentIndex_ExplosionAdd #This is the POI progress marker/trap. all the above prepared the data required for this calls
 done
 
-CFGFUNCinfo "MAIN:Cleanup patcher file: ${strFlPatched}"
+FUNC_MAIN_INFO "PreparePatchFl:Cleanup" "Cleanup patcher file: ${strFlPatched}"
 #sed -i -r 's"@@@""' "${strFlPatched}" #clean ignore mark to let game accept the data
 sed -i -r "s/${strMarkToSkip}//" "${strFlPatched}" #clean ignore mark to let game accept the data
-#CFGFUNCinfo "MAIN:Remove prefabs from town areas outside the wasteland"
+#CFGFUNCinfo "MAIN:Remove prefabs from town areas outside the wasteland. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
 #cat "${strFlPatched}" |egrep -v "@D@" >"${strFlPatched}.DeleteTowns.tmp"
 #ls -l "${strFlPatched}" "${strFlPatched}.DeleteTowns.tmp"
 #CFGFUNCmeld "${strFlPatched}" "${strFlPatched}.DeleteTowns.tmp"
@@ -1686,10 +1701,10 @@ FUNCcleanupFlPatch "Sorted" sort
 #echo;echo "#####################################################################################"
 #declare -p astrGenPOIsDupCountList |tr '[' '\n' #|egrep -v '="1"'
 
-CFGFUNCinfo "MAIN:Check still missing POIs: ${strFlPatched}"
+FUNC_MAIN_INFO "ChkMissPOIs" "Check still missing POIs: ${strFlPatched}"
 #iStillMissingPOIs=$((${#astrMissingPOIsList[@]}-iCountAtMissingPOIs))
 #if((iStillMissingPOIs>0));then
-  #CFGFUNCinfo "MAIN:Listing missing POIs"
+  #CFGFUNCinfo "MAIN:Listing missing POIs. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
   #for((i=iCountAtMissingPOIs;i<${#astrMissingPOIsList[@]};i++));do
     #echo "${astrMissingPOIsList[i]}"
   #done |sort |tee -a "$strCFGScriptLog"
@@ -1706,7 +1721,7 @@ done
 declare -p astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strCFGScriptLog"
 iStillMissingPOIs=${#astrStillMissingPOIsList[@]}
 
-CFGFUNCinfo "MAIN:Check consistency of: ${strFlPatched}"
+FUNC_MAIN_INFO "ChkConsistencyPatchFl" "Check consistency of: ${strFlPatched}"
 #if egrep "name=\"${strRegexProtectedPOIs}.*NewPOI\(" "${strFlPatched}" |egrep -v "NewPOI\(${strRegexProtectedPOIs}";then
 strChkWrongReplace="`egrep "OriginalPOI\(${strRegexProtectedPOIs}.*NewPOI\(" "${strFlPatched}"`"&&:
 if [[ -n "$strChkWrongReplace" ]];then
@@ -1727,7 +1742,7 @@ declare -p astrCFGIdForRandomVsCurrentIndex |tr '[' '\n' |tee -a "${strCFGScript
 
 iMaxAllowedReservablePOIsInWasteland=$((iTotalWastelandPOIsLeastInTowns-iTotalUniqueSpecialBuildings))
 strFlResultsFinal="`basename "$0"`.AddedToRelease.LastRunStatus.txt" #help if you delete the cache file it will be recreated
-CFGFUNCinfo "MAIN:REPORT FINAL STATUS"
+FUNC_MAIN_INFO "Report" "REPORT FINAL STATUS"
 #astrFinalStatus=()
 echo "[[[Totals:]]]" >"$strFlResultsFinal" #trunc
 echo "POI places:total original RWG generated (not necessarily buildings 'real POIs' tho): ${#astrRWGOriginalPOIdataLineList[@]}" >>"$strFlResultsFinal"
@@ -1772,6 +1787,7 @@ $((nExplodeAboveCount+iUndergroundPOIs)):(\
  SkippedProtectedPOIsDuringDupReplace:#astrSkippedProtPOIduringDUPreplace:${#astrSkippedProtPOIduringDUPreplace[@]}\
 )" >>"$strFlResultsFinal"
 fi
+#declare -p astrMainSectionsInfo |tr '[' '\n' >>"$strFlResultsFinal"
 declare -p astrPOIsMatchMode astrStillMissingPOIsList |tr '[' '\n' |tee -a "$strFlResultsFinal" #may be useful
 CFGFUNCinfo "`cat "$strFlResultsFinal"`"
 
@@ -1807,7 +1823,7 @@ CFGFUNCgencodeApply --subTokenId "ExplodeAbove" "${strFlPatched}.ExplodeAbove.xm
 #fi
 
 strFlAddExtraSpecialPOIs="`basename "$0"`.AddExtraSpecialPOIs.${strCFGGeneratedWorldTNMFixedAsID}.${strCFGGeneratedWorldSpecificDataAsID}.xml"
-CFGFUNCinfo "MAIN:adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}"
+FUNC_MAIN_INFO "AddManuallyPlacedSpecialPOIs" "adding extra special manually placed POIs for the current configured world RWG data: ${strFlAddExtraSpecialPOIs}"
 if [[ -f "$strFlAddExtraSpecialPOIs" ]];then
   egrep "HELPGOOD|<decoration" "${strFlAddExtraSpecialPOIs}" |egrep -v "dummy" >>"${strFlPatched}"
 else
@@ -1830,7 +1846,7 @@ CFGFUNCgencodeApply --subTokenId "ManuallyAddedPrefabs" "${strFlPatched}" "${str
 CFGFUNCgencodeApply --subTokenId "UndergroundPOIs" "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 CFGFUNCgencodeApply --xmlcfg ".iGSKElctrnTeleUndergroundIndexMax" "${iMaxUndergroundIndex}"
 
-#CFGFUNCinfo "MAIN:updating this mod's prefabs file"
+#CFGFUNCinfo "MAIN:updating this mod's prefabs file. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
 #strModGenWorlTNMPath="GeneratedWorlds.ManualInstallRequired/${strCFGGeneratedWorldTNM}"
 #CFGFUNCcreateBackup "${strModGenWorlTNMPath}/${strPrefabsXml}"
 #CFGFUNCmeld "${strModGenWorlTNMPath}/${strPrefabsXml}" "${strFlPatched}"
@@ -1854,10 +1870,12 @@ CFGFUNCgencodeApply --xmlcfg ".iGSKElctrnTeleUndergroundIndexMax" "${iMaxUndergr
   ##echo "SUCCESS!!!"
 #fi
 
-CFGFUNCinfo "MAIN:Listing to check for dups (tho town in wasteland shall not be touched!)"
+FUNC_MAIN_INFO "ChkDups" "Listing to check for dups (tho town in wasteland shall not be touched!)"
 egrep "<decoration" "${strModGenWorlTNMPath}/${strPrefabsXml}" |egrep 'name="[^"]*"' -o |sort #todo try to list just the dups
 
-CFGFUNCinfo "MAIN:SUCCESS!"
+CFGFUNCinfo "`declare -p astrMainSectionsInfo |tr '[' '\n'`"
+
+CFGFUNCinfo "MAIN:SUCCESS!. PrevDelay=$((SECONDS-iMainProcTm)))";iMainProcTm=$SECONDS
 
 CFGFUNCprompt "MAIN: you should update the spawn points file now! and install the improved file '${strModGenWorlTNMPath}/${strPrefabsXml}' (and the spawnpoints file) at the game folder (outside this modlet folder): ./createSpawnPoints.sh;./installSpecificFilesIntoGameFolder.sh"
 
