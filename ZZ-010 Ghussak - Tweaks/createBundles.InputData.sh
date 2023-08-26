@@ -34,6 +34,9 @@ astr=(
   drugGSKPsyonicsResist 13 #to be able to ignore mutants
   drugGSKmutantEssence 3
   GSKteleportLikeAMutantPower 1
+  GSKElctrnTeleportToBedrollLowCost 1
+  GSKElctrnTeleportToLandClaimLowCost 1
+  GSKElctrnTeleportToHomeAndBack 1
   drugSteroids  13
   GSKsimpleBeer        33
   ladderWood            66

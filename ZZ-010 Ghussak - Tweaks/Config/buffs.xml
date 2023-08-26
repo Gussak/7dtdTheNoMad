@@ -11846,47 +11846,40 @@
           <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="can only properly heal starvation HP debuff if well fed for some time">
+      <effect_group help="Starving: recovering, sync with update_rate like 1% in 100s with 10% food, so 250s to recover 25% with 100% food">
         <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.01"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.20"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.30"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.40"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.50"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.60"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.70"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.80"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.01">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
           <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.90"/>
         </triggered_effect>
-        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKStarvingHPBlockage">
-          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="1"/>
-        </passive_effect>
-      </effect_group>
-      <effect_group help="can only properly heal starvation HP debuff if well fed for some time">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.10">
-          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GT" value="0.95"/>
-          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0.0001">
+          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GTE" value="0.99"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="-0,007" help="+-(.fGSKStarvingHPBlockageLimit=25)/3600 (1 in-game day). sync with .fGSKStarvingHPBlockageLimit">
-          <requirement name="StatComparePercCurrentToMax" stat="food" operation="GT" value="0.10"/>
-          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="0.01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="0"/>
         </triggered_effect>
         <passive_effect name="HealthMaxBlockage" operation="base_add" value="@fGSKStarvingHPBlockage">
           <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="GTE" value="1"/>
