@@ -1716,9 +1716,9 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     <item name="drugGSKwightEssence">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
-      <property name="CustomIconTint" value="0,0,255"/>
       <property name="Meshfile" value="#Other/Items?Food/bottled_waterPrefab.prefab"/>
       <property name="Material" value="Mglass"/>
+      <property name="CustomIconTint" value="0,0,255"/>
       <property name="DescriptionKey" value="dkbuffGSKWightEssence"/>
       <property class="Action0">
         <property name="Class" value="Eat"/>
@@ -35548,13 +35548,20 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="Extends" value="GSKElctrnTeleportBase"/>
       <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
       <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
         <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
         <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="NotHasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost" help="this is part of being low cost"/>
         <property name="Create_item_count" value="1"/>
       </property>
+      <!-- HELPGOOD
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar=".GSKDummy" operation="Equals" value="1986295" help="any random value just to block this Action1 to prevent player destroying this item by mistake"/>
+      </property>
+-->
       <property class="Action1" help="cancels the delayed teleport">
         <requirement name="HasBuff" buff="buffGSKTeleportLowCost"/>
         <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost"/>
@@ -35583,21 +35590,13 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </effect_group>
     </item>
     <item name="GSKElctrnTeleportToHomeAndBack">
-      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="Extends" value="GSKElctrnTeleportToBedrollLowCost"/>
       <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
       <property class="Action0">
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
-        <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
-        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
-        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
         <property name="Create_item" value="GSKElctrnTeleportToHomeAndBack" help="this is part of being low cost"/>
-        <property name="Create_item_count" value="1"/>
       </property>
       <property class="Action1" help="cancels the delayed teleport">
-        <requirement name="HasBuff" buff="buffGSKTeleportLowCost"/>
         <property name="Create_item" value="GSKElctrnTeleportToHomeAndBack"/>
-        <property name="Create_item_count" value="1"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
