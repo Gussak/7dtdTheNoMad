@@ -5,6 +5,7 @@ astr=(
   foodRawMeat 3 #for dog companion
   GSKspawnDogCompanion 3
   GSKCFGNPCproperSneakingWorkaround 1
+  GSKDeusExMachinaFriendlyRespawn 1
   GSKDeusExMachinaFriendlySlowDown 1
   GSKNPCHiredHeals30perc 13
   GSKNPCHiredHeals180perc 1

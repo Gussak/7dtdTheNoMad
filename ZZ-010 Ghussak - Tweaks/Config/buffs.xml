@@ -883,7 +883,7 @@
       <effect_group help="wait teleport and finish">
         <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportCompleted" operation="Equals" value="1" help="after teleport phase"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKEventFeedbackTeleportCompleted"/>
-        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKElctrnExplodeExtraWeakenNPCs">
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKTeleportExplosionDisintegrateFoes">
           <requirement name="!EntityTagCompare" target="other" tags="player"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLikeAMutant"/>
@@ -3563,17 +3563,17 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercHL" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75" help="cheap and fragile"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercWL" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25" help="used in guns shall be higher quality than HL"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercNV" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="35"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTA" operation="Equals" value="1"/>
@@ -3587,19 +3587,19 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTH" operation="Equals" value="1"/>
-          <requirement name="HasBuff" buff="buffGSKElctrnHero"/>
+          <requirement name="HasBuff" buff="buffGSKElctrnHero" help="only while active"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="75" help="will be active for a short time usually"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5" help="minimal to prevent having to unequip to keep it in shape and as is used rarely"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTR" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LT" value="1.0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="add" value="@fGSKDegrade">
           <requirement name="CVarCompare" cvar="bGSKEnergyTS" operation="Equals" value="1"/>
@@ -3966,10 +3966,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="0"/>
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTP add randomFloat(0.020,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(20,50)"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTP add randomFloat(0.001,0.005)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,5)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.020,0.050)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5150:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.020,0.050)"/> -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="very little as this mod is not exposed to attacks;FixTinyRandomFloat: was randomFloat(0.001,0.005)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5741:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="add" value="randomFloat(0.001,0.005)" help="very little as this mod is not exposed to attacks"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -3994,8 +3994,8 @@
         </triggered_effect>
         <triggered_effect help="FixTinyRandomFloat:was fGSKDmgPercTB add randomFloat(0.001,0.005)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,5)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.001,0.005)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5185:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="randomFloat(0.001,0.005)"/> -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="very little as this mod is not exposed to attacks;FixTinyRandomFloat: was randomFloat(0.001,0.005)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5776:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="add" value="randomFloat(0.001,0.005)" help="very little as this mod is not exposed to attacks"/> -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="1.00">
           <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="1.00"/>
         </triggered_effect>
@@ -7294,7 +7294,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="105947" helpgencode="DoNotModify:run:createBundles.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="105951" helpgencode="DoNotModify:run:createBundles.sh"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
@@ -8237,15 +8237,16 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportCompleted" operation="Equals" value="1" help="must be after teleport phase"/>
-        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKElctrnExplodeExtraWeakenNPCs" help="sync range with eventGSKElctrnTele00">
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKTeleportExplosionDisintegrateFoes" help="sync range with eventGSKElctrnTele00">
           <requirement name="!EntityTagCompare" target="other" tags="player"/>
+          <requirement name="CVarCompare" cvar=".iGSKTeleportLowCostOnce" operation="Equals" value="0" help="low cost teleports will not be so powerful"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKElctrnTele00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnExplodeExtra23"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVE:buffGSKElctrnExplodeExtra23"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKElctrnExplodeExtraWeakenNPCs" remove_on_death="false" help="This is applied on the NPC">
+    <buff name="buffGSKTeleportExplosionDisintegrateFoes" remove_on_death="false" help="This is applied on the NPC">
       <stack_type value="replace"/>
       <duration value="5" help="should be enough time for the teleport00 event complete the explosion"/>
       <update_rate value="1"/>
@@ -8644,6 +8645,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="60" help="prevent swarming the player just after join">
+          <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LT" value="60"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
         </triggered_effect>
@@ -11387,7 +11391,7 @@
         <requirement name="CVarCompare" cvar=".iGSKCosmicStrikeDoIt" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="add" value="0.10"/>
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6" force="250" target="selfAOE" range="15" target_tags="zombie,animal,bandit" help="this actually expectedly helps the player a bit"/>
-        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="2" action="AddBuff" buff="buffGSKElctrnExplodeExtraWeakenNPCs" help="this range is short, meant to be difficult to kill nearby foes (intentionally or unintentionally)">
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="2" action="AddBuff" buff="buffGSKTeleportExplosionDisintegrateFoes" help="this range is short, meant to be difficult to kill nearby foes (intentionally or unintentionally)">
           <requirement name="!EntityTagCompare" target="other" tags="player"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="NotEquals" value="@EntityID" help="protects followers and hired ones"/>
         </triggered_effect>
@@ -11533,6 +11537,11 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="let snowballs melt">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyMeltSnowBall" operation="add" value="-1" help="this is like the inverse action: you would take time to let snow ball melt, but this way it happens instantly but needs to wait before  another. the final result is equivalent">
+          <requirement name="CVarCompare" cvar="iGSKDenyMeltSnowBall" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="lowcost teleport neardeath sideeffects">
         <requirement name="CVarCompare" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="-12" help="sync with update_rate for 20s total duration from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
@@ -11549,15 +11558,46 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="divide" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="@.iGSKNearDeathPsyPowerLvlTmp"/>
       </effect_group>
-      <effect_group help="spawn mini spiders indoors">
-        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30"/>
+      <effect_group help="SpawnMiniSpider:countdown. Forest has more spiders.">
+        <requirement name="!IsBloodMoon" help="to avoid this that would just be an annoyance"/>
+        <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-2" help="forest spawns spiders faster indoors">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="forest have spiders in the wilderness too">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="0.30" help="wilderness or not well sheltered"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1">
+          <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(1,4)">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(0,2)">
+          <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="SpawnMiniSpider:DoIt. many spiders spawning at once will increase the cooldown">
+        <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniIndoor" operation="Equals" value="0"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniIndoor" operation="set" value="randomInt(60,120)">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniIndoor" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
+          <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniIndoor" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="randomInt(60,120)">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="randomInt(120,240)">
+          <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="dbg: IsIndoors=1 is just like _sheltered GT 0, but good surrouding sheltering seems to happen only above 0.30">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsInDoors" operation="set" value="1">
@@ -11649,12 +11689,15 @@
         <requirement name="HasBuff" buff="buffGSKDeusExIsFoeToPlayerPLAYERBUFF"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExTimeoutMarginX2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="1" help="sync with update_rate" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="1" help="sync with update_rate. this check can be ignored by .iGSKDeusExAllowSpawnFoeOnce=1" compare_type="or">
           <requirement name="StatCompareCurrent" stat="health" operation="LT" value="70" help="so the player have some chance to survive TODO: could check also how many zombies are nearby 30m day, 15m night, and deny if more than 3"/>
-          <requirement name="StatCompareCurrent" stat="food" operation="LT" value="15"/>
-          <requirement name="StatCompareCurrent" stat="water" operation="LT" value="75"/>
+          <requirement name="StatCompareCurrent" stat="food" operation="LT" value="50"/>
+          <requirement name="StatCompareCurrent" stat="water" operation="LT" value="95"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="0.30" help="some chance to prevent the player being insta killed by surprise"/>
           <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" help="unnecessary?"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1">
+          <requirement name="CVarCompare" cvar=".iGSKDeusExAllowSpawnFoeOnce" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnDeusExTimeout" operation="add" value="@.iGSKSpawnDeusExTimeoutMod"/>
       </effect_group>
@@ -11725,6 +11768,9 @@
           <requirement name="CVarCompare" cvar="iGSKDeusExAllowSpawnFriendly" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnDeusExFoe">
+          <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDeusExAllowSpawnFoeOnce" operation="set" value="0">
           <requirement name="CVarCompare" cvar=".iGSKSpawnDeusExAllowed" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel there may have a Deus Ex Machina nearby..">
@@ -12233,7 +12279,7 @@
           <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="0.01"/>
           <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingFatigueCountdown" operation="set" value="randomInt(20,30)" compare_type="or">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingFatigueCountdown" operation="set" value="randomInt(20,30)" compare_type="or" help="this is about the many times .bGSKStarvingSideEffectsApplyNow happens, so may take a long time">
           <requirement name="HasBuff" buff="buffDrugVitamins"/>
           <requirement name="CVarCompare" cvar="iGSKStarvingFatigueCountdown" operation="Equals" value="0"/>
         </triggered_effect>

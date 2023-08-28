@@ -135,11 +135,12 @@
         <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
         <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="3">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="5">
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
       </triggered_effect>
@@ -148,6 +149,7 @@
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
       </triggered_effect>
@@ -1198,7 +1200,7 @@
       <property name="AITask-2" value="Territorial"/>
       <property name="AITask-3" value="RangedAttackTarget" data="itemType=1;cooldown=15;duration=3;minRange=1;maxRange=60"/>
       <property name="AITask-4" value="Leap"/>
-      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityZombie,90,EntityNPC,15,EntityPlayer,95,EntitySurvivor,15,EntityBandit,15"/>
+      <property name="AITask-5" value="ApproachAndAttackTarget" data="class=EntityPlayer,95,EntityZombie,75"/>
       <property name="AITask-6" value="ApproachSpot"/>
       <property name="AITask-7" value="Look"/>
       <property name="AITask-8" value="Wander"/>
