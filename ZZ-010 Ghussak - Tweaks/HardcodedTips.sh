@@ -54,7 +54,7 @@ if $bHCTCrouchHeight;then
     #property[@name='OneBlockCrouch']/@value">true</set>
     #0-SCore
     
-  : ${fCrouchHeight:="0.40"} #help this string must be a float with 4 characters as the original is "0.75". Keep the float above 0.00 and below 1.00, but should be below original value to have a meaning, and <= 0.50 to be useful
+  : ${fCrouchHeight:="0.40"} #help this string must be a float with 4 characters as the original is "0.75". Keep the float above 0.00 and below 1.00, but should be below original value to have a meaning, and <= 0.50 to be useful. Btw, using 'weather fog 1.0' console command will help prevent you seeing what you shouldnt as this will glitch the camera and let you see thru walls TODOA: a proper camera that looks thru 1 block height is required to prevent the glitch.
   
   #TRYING TO GUESS: clear;strings "../../7DaysToDie_Data/resources.assets" |egrep "0[.]25" -C 10 |egrep camera -C 10 -i |egrep "0[.]25|camera" -C 100 -i
   #TRY GUESS: clear;strings "../../7DaysToDie_Data/resources.assets" |egrep '[a-zA-Z]{1,}[a-zA-Z0-9_]{4,} [-]*[0-9]{1,}[0-9.]*' -o |sort -u #shows all existing vars

@@ -803,7 +803,20 @@
       <update_rate value="3.0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers"/>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="40" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="40"/>
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="50" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="50"/>
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="60"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You focus all your PsyPower in nearby mutants"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
@@ -2886,10 +2899,10 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimmingWork45'"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimmingWork45'"/>
-        <passive_effect name="WalkSpeed" operation="perc_add" value="2.0">
+        <passive_effect name="WalkSpeed" operation="perc_add" value="1.75" help="was 2.0, a bit too fast">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
-        <passive_effect name="RunSpeed" operation="perc_add" value="7.5" help="must be much more to work well. in god mode where it is 15, is too fast tho for normal gameplay">
+        <passive_effect name="RunSpeed" operation="perc_add" value="6.0" help="must be much more to work well. was 7.5, too fast. in god mode where it is 15, is too fast tho for normal gameplay">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
@@ -6171,8 +6184,10 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="set" value="100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="add" value="@$PlayerLevelBonus"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="set" value="28" help="max is 75% of this value, so 21"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
+        </triggered_effect>
       </effect_group>
       <!-- HELPGOOD: existing ModifyScreenEffect options (?) from resources.assets, read also Data/Config/XML.txt
         AtDeath (MAYBE)
@@ -6306,8 +6321,8 @@
       <effect_group>
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
         <requirement name="!HasBuff" buff="god"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fHWBlockageStam" operation="set" value="@.fHWBlockageStamTmp"/>
-        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fHWBlockageStam"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="@.fHWBlockageStamTmp" help="must be set after calc on the tmp to prevent it varying"/>
+        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fNearDeathBlockageStam"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40" compare_type="or">
@@ -11537,6 +11552,19 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="low health indicator. test 'dying'">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="dead" intensity="1.00" fade="3.0">
+          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="dead" intensity="0.00" fade="3.0">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="10"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="psy powa">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="-0.001" help="temporary psy power slowly decreases with time">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GT" value="0.001"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="let snowballs melt">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyMeltSnowBall" operation="add" value="-1" help="this is like the inverse action: you would take time to let snow ball melt, but this way it happens instantly but needs to wait before  another. the final result is equivalent">
           <requirement name="CVarCompare" cvar="iGSKDenyMeltSnowBall" operation="GT" value="0"/>
@@ -11627,7 +11655,7 @@
         <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="0"/>
       </effect_group>
-      <effect_group help="WightSpawn: granted once per day">
+      <effect_group help="WightSpawn: granted once per day TODOA: check if wight spawned, if not keep retring, this problem may probably happen if player is underground">
         <requirement name="!IsNight"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,300" operation="LTE" value="1" help="may take some time to happen, but probably will. sync with update_rate"/>

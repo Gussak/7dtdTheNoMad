@@ -35,6 +35,7 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 #help existing ModifyScreenEffect options (?) from resources.assets, read also Data/Config/XML.txt
 #help egrep 'ModifyScreenEffect' ../* -rIn --include="*.xml" |egrep 'effect_name="[^"]*"' -o |sort -u
+#help strings "../../7DaysToDie_Data/globalgamemanagers" |grep screeneffects -i
 
 astrScrEffList=( # the '#?' means nothing changed on the screen...
   #AtDeath #?
