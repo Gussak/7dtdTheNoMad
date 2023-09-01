@@ -2892,7 +2892,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKProperSwimmingWork45" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
+    <buff name="buffGSKProperSwimmingWork45" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0" help="TODO: find a way to improve swimming up, is still ultra slow">
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="0.25"/>
@@ -2902,7 +2902,7 @@
         <passive_effect name="WalkSpeed" operation="perc_add" value="1.75" help="was 2.0, a bit too fast">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
-        <passive_effect name="RunSpeed" operation="perc_add" value="6.0" help="must be much more to work well. was 7.5, too fast. in god mode where it is 15, is too fast tho for normal gameplay">
+        <passive_effect name="RunSpeed" operation="perc_add" value="5.0" help="must be much more to work well. was 7.5, too fast. in god mode where it is 15, is too fast tho for normal gameplay">
           <requirement name="!IsBloodMoon"/>
         </passive_effect>
         <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
@@ -11437,8 +11437,15 @@
       <display_value_key value="{0:0}"/>
       <duration value="0"/>
       <update_rate value="10" help="count 6 is 1min"/>
-      <effect_group help="hold spawnings control">
+      <effect_group help="init">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(3,40)" help="min is the smallest counter limit value"/>
+      </effect_group>
+      <effect_group help="player must not be sheltered or spawns wont work. TODO if there is a workaround to let spawns work, remove this effect_group">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="1"/>
+      </effect_group>
+      <effect_group help="hold spawnings control">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-1" help="fix if needed">
           <requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GT" value="-1"/>
         </triggered_effect>
@@ -11446,6 +11453,7 @@
           <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
       </effect_group>
       <effect_group help="update counters based on limits">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
@@ -11501,6 +11509,7 @@
       <effect_group help="spawn foes">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0"/>
         </triggered_effect>
@@ -11542,6 +11551,7 @@
       <effect_group help="rm buff">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff13">
           <requirement name="!IsBloodMoon"/>
+          <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff13">
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="NotEquals" value="2"/>
@@ -11552,6 +11562,12 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="WORKAROUND:this should prevent player falling thru water like it was thru air TODO:RM when engine improves.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKHelperSwimUp">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_fallSpeed" operation="GT" value="0.1"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="low health indicator. test 'dying'">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="dead" intensity="1.00" fade="3.0">
           <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
@@ -13651,6 +13667,9 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@iGSKEssenceMutant"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="-5" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning02"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning03"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantEssence">
           <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LTE" value="0"/>
         </triggered_effect>
@@ -13685,6 +13704,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="10"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
         </triggered_effect>
         <!-- HELPGOOD:TODOA: how to detect if player is running/sprinting?
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">

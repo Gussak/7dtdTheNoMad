@@ -91,7 +91,7 @@ tail -F "$strFlLog" |while read strLine;do
     CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
     #@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad
     #function FUNCchkShapesIni() {
-      : ${nIniShapesDelay:=25} #help shapes shall take only a few seconds to complete (here)
+      : ${nIniShapesDelay:=35} #help shapes shall take not more than this seconds to complete (on my pc)
       lstrKeyShapesIni="`ls -l "$strFlLog"`"
       li=0
       #bBreakChkShapesLoop=false
