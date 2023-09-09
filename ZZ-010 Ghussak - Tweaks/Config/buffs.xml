@@ -11562,6 +11562,11 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="Summon animals cooldown">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSummonAnimalCooldown" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKSummonAnimalCooldown" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="WORKAROUND:this should prevent player falling thru water like it was thru air TODO:RM when engine improves.">
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKHelperSwimUp">
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
@@ -12371,7 +12376,8 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="NearDeathOverhydrated:UpdateTime">
-        <requirement name="IsStatAtMax" stat="water"/>
+        <!-- HELPGOOD:        <requirement name="IsStatAtMax" stat="water" help="this doesnt work?"/>-->
+        <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.99"/>
         <requirement name="CVarCompare" cvar="$waterAmountAdd" operation="GT" value="@$waterOverEatAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="set" value="@$waterAmountAdd"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKOHFExtra" operation="subtract" value="@$waterOverEatAmount"/>
@@ -13379,7 +13385,8 @@
   <remove xpath="/buffs/buff[@name='buffHealFood']/effect_group[@name='stat is at max, convert more slowly']"/>
   <append xpath="/buffs/buff[@name='buffHealFood']" help="it's update rate is 0.1">
     <effect_group name="increaseFat">
-      <requirement name="IsStatAtMax" stat="food"/>
+      <!-- HELPGOOD:      <requirement name="IsStatAtMax" stat="food" help="this doesnt work?"/>-->
+      <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GTE" value="0.99"/>
       <requirement name="CVarCompare" cvar="$foodAmountAdd" operation="GT" value="@$foodOverEatAmount"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="0.00333" help="+1 every 30s"/>
     </effect_group>
@@ -13397,6 +13404,24 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="subtract" value="@.fGSKModWaterTmp"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKModFoodTmp" operation="set" value="randomInt(5,15)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="subtract" value="@.fGSKModFoodTmp"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpowerImmuneLikeAWight" hidden="false" remove_on_death="false" name_key="PowerWightDmgImmunity" description_key="dkGSKpowerImmuneLikeAWight" icon="7dtdShockTip" icon_blink="false">
+      <stack_type value="effect"/>
+      <display_value value="iGSKpowerWightPlayerTime"/>
+      <display_value_format value="time"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKpowerImmuneLikeAWight">
+          <requirement name="CVarCompare" cvar="iGSKpowerWightPlayerTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
       </effect_group>
     </buff>
     <buff name="buffGSKWightPower" hidden="true">

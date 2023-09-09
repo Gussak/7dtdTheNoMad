@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <!--  HELPGOOD:
+  -ISSUE: spawning entities may fail if player is hidden in a dug hole on the ground. The spawning event seems to hold for some time (it may happen as soon the player goes unsheltered) but may not work and wont hold forever. In other words, spawning is not granted. Workarounds like lowering the distance they spawn from the player is not good as would break every other balance logic implemented based on that distance. TODO: try to count how many got spawned and retry spawning them if none appeared in less than 20s.
+  -ISSUE: unable to teleport other entities than player itself
+-->
   <!-- HELPGOOD: to have nothing to click on first spawn and remove that context text for this mod 'lore' -->
   <remove xpath="/gameevents/action_sequence/action[@class='AddJournalTip']"/>
   <append xpath="/gameevents">
@@ -2870,6 +2874,13 @@
         <property name="yOffset" value="50" help="was 50. ISSUE: if player is far underground, 50 seems to prevent them spawning? may have something to do with the sphere range around the player with maxdist and yoffset? may be it could be actually -50 or -300 (world highest point is 260?), to let the engine place it on the ground instead (needs testing yet), but falling from sky is interesting because the player may be on the top of a large building and this may spawn some up there for a surprise ;)"/>
         <property name="air_spawn" value="true" param1="bFlying" help="WORKAROUND: using air spawn always because if you on top of a building the zombies wont spawn until you get down right?"/>
       </action>
+      <!-- HELPGOOD:TODO: to grant zombies spawned, there could have AddCvar but it should only happen if zomb really spawned above.. SetCVar wont help when spawning many at once
+      <action class="SetCVar">
+        <property name="phase" value="10" />
+        <property name="cvar" value=".iGSKEventFeedbackBMSpawnZomb" />
+        <property name="value" value="1"/>
+      </action>
+-->
     </action_sequence>
     <action_sequence name="eventGSKSpwBMZombMutated" template="eventGSKSpawnExtraBloodmoonZombie">
       <variable name="strNameList" value="zombieMutatedRadiated"/>
@@ -3165,6 +3176,34 @@
         <property name="yOffset" value="1"/>
         <property name="air_spawn" value="true" param1="bFlying" help="WORKAROUND: using air spawn always because if you on top of a building the zombies wont spawn until you get down right?"/>
       </action>
+    </action_sequence>
+    <action_sequence name="eventGSKpowerPlayerVampSummonBase">
+      <action class="SpawnEntity">
+        <property name="entity_names" value="todoa" param1="strNameList"/>
+        <property name="spawn_count" value="1" param1="iCount"/>
+        <property name="safe_spawn" value="true" help="spawn on safe zones"/>
+        <property name="spawn_from_position" value="true"/>
+        <property name="min_distance" value="10" param1="iDistMin"/>
+        <property name="max_distance" value="15" param1="iDistMax"/>
+        <property name="yOffset" value="1"/>
+        <property name="air_spawn" value="false" param1="bFlying"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKpowerPlayerVampSummonCoyote5" template="eventGSKpowerPlayerVampSummonBase">
+      <variable name="strNameList" value="animalCoyote"/>
+      <variable name="iCount" value="5"/>
+    </action_sequence>
+    <action_sequence name="eventGSKpowerPlayerVampSummonWolf3" template="eventGSKpowerPlayerVampSummonBase">
+      <variable name="strNameList" value="animalWolf"/>
+      <variable name="iCount" value="3"/>
+    </action_sequence>
+    <action_sequence name="eventGSKpowerPlayerVampSummonDireWolf2" template="eventGSKpowerPlayerVampSummonBase">
+      <variable name="strNameList" value="animalDireWolf"/>
+      <variable name="iCount" value="2"/>
+    </action_sequence>
+    <action_sequence name="eventGSKpowerPlayerVampSummonStrongAnimal1" template="eventGSKpowerPlayerVampSummonBase">
+      <variable name="strNameList" value="animalBear,animalMountainLion"/>
+      <variable name="iCount" value="1"/>
     </action_sequence>
     <action_sequence name="eventQuestTreasureSpawnRaiders">
       <property name="action_type" value="Game"/>

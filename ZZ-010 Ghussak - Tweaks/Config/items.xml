@@ -1680,6 +1680,12 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="10000"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="1.0" help="sync with bathtub"/>
       </effect_group>
+      <effect_group name="Refreshing against heat" tiered="false">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
     </item>
     <item name="GSKDeusExMachinaFoeAllowSpawnOnce">
       <property name="Extends" value="GSKBaseActivatorFromInventorySlow" help="does not need to be on the hand"/>
@@ -2126,7 +2132,61 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLikeAMutant"/>
       </effect_group>
     </item>
-    <item name="GSKteleportLikeAMutantPower2" help="ISSUE: this requires the player to hold PRIMARY til after teleporting, so when releasing it DeusEx will be killed">
+    <item name="GSKpowerSummonLikeAVampire">
+      <property name="DescriptionKey" value="dkGSKpowerSummonLikeAVampire"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="220,150,128"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKSummonAnimalCooldown" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="GTE" value="7"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GTE" value="55"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKSummonAnimalCooldown" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="GTE" value="7"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GTE" value="55"/>
+      </property>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKpowerPlayerVampSummonCoyote5"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKpowerPlayerVampSummonWolf3"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKpowerPlayerVampSummonDireWolf2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKpowerPlayerVampSummonStrongAnimal1"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKSummonAnimalCooldown" operation="set" value="3600"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKSummonAnimalCooldown" operation="set" value="3600"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-7"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-7"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-50"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-50"/>
+      </effect_group>
+    </item>
+    <item name="GSKpowerImmuneLikeAWight" help="costs a lot as is too powerful">
+      <property name="DescriptionKey" value="dkGSKpowerImmuneLikeAWight"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="220,150,128"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="GTE" value="21"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="GTE" value="21"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKpowerImmuneLikeAWight"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="-21"/>
+      </effect_group>
+    </item>
+    <item name="_GSKteleportLikeAMutantPower2" help="ISSUE: this requires the player to hold PRIMARY til after teleporting, so when releasing it DeusEx will be killed">
       <property name="DescriptionKey" value="dkGSKteleportLikeAMutantPower"/>
       <property name="SellableToTrader" value="false"/>
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
@@ -38508,6 +38568,12 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
       </triggered_effect>
     </effect_group>
+    <effect_group name="Refreshing against heat" tiered="false">
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
   </append>
   <append xpath="/items/item[@name='drinkJarPureMineralWater']">
     <property class="Action1">
@@ -38526,6 +38592,12 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(3.0,6.0)"/>
       <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group name="Refreshing against heat" tiered="false">
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
   </append>
