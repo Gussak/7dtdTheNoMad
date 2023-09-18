@@ -1,4 +1,4 @@
-The NoMad, unforgiving lands A20. Explore the world, don't allow chaos scare you, advance always. What is gone is gone for good, don't look back, let it go...  
+(A20) The NoMad, unforgiving lands. Explore the world, don't allow chaos scare you, advance always. What is gone is gone for good, don't look back, let it go...  
 .  
 [color=#00ff00]################### OVERHAUL[/color][color=#ff0000](WIP)[/color][color=#00ff00] ###################[/color]  
   This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very difficult but not impossible) gameplay.    
@@ -13,7 +13,7 @@ The NoMad, unforgiving lands A20. Explore the world, don't allow chaos scare you
   No fortress building: you have a low cost teleport to home and from it feature, but the idea is not to stay at home during bloodmoons. Always advance, always explore and discover new places, never (as much as possible) come back. (See TODO*1002,1003).  
 .  
   Obs.: I have not tested it multiplayer, so if you have any trouble, describe the problem the best you can.  
-  PS.: After I finish it for A20, I will update to A21. Many things are ready for A21 (wont need to be changed) but would need to be split from the main mod.
+  PS.: After I finish it for A20, I will update to A21. Many things are ready for A21 (wont need to be changed) but would need to be split from the main mod at least.
 .    
 [color=#0000ff]###################### [/color][color=#00ffff]MOD FEATURES OVERVIEW:[/color][color=#0000ff] ##################[/color]  
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
