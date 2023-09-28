@@ -1,4 +1,4 @@
-(A20) The NoMad, unforgiving lands. Explore the world, don't allow chaos scare you, advance always. What is gone is gone for good, don't look back, let it go...  
+(A20) The NoMad, unforgiving lands. Explore the world, no fortress building, advance always.  
 .  
 [color=#00ff00]################### OVERHAUL[/color][color=#ff0000](WIP)[/color][color=#00ff00] ###################[/color]  
   This mod is an overhaul balanced towards exploring (no fortress building) and hardcore (very difficult but not impossible) gameplay.    
@@ -10,10 +10,9 @@
 .  
   Beware tho, you may initially spawn (1st game join) in a very difficult place; that is usually related to radiation from sleeping zombies; if that happens, quickly open the free bundles (they have experience penalty tho), mainly the healing bundle and use anti-radiation (all the types) and psyonicResist chem, equip yourself and try to hunt them fast; or you can try to relocate yourself to an easier biome (like in the case you did not spawn in the desert) using the biome or underground free teleporter.  
 .  
-  No fortress building: you have a low cost teleport to home and from it feature, but the idea is not to stay at home during bloodmoons. Always advance, always explore and discover new places, never (as much as possible) come back. (See TODO*1002,1003).  
+  No fortress building: you have a low cost teleport to home and from it feature, but the idea is not to stay at home during bloodmoons. Always advance, always explore and discover new places, never (as much as possible) go back. (See TODO*1002,1003).  
 .  
   Obs.: I have not tested it multiplayer, so if you have any trouble, describe the problem the best you can.  
-  PS.: After I finish it for A20, I will update to A21. Many things are ready for A21 (wont need to be changed) but would need to be split from the main mod at least.
 .    
 [color=#0000ff]###################### [/color][color=#00ffff]MOD FEATURES OVERVIEW:[/color][color=#0000ff] ##################[/color]  
 There are several mini mods here that may work without this main mod (the Tweaks folder).  
@@ -145,7 +144,8 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
 .  
 .  
 ################## CHANGES (full detailed change log only from project on github) ##############  
---------- v1.0aRC1 -----------    
+--------- v1.0aRC1 (A20) -----------    
+- this is probably the last patch for A20. Many things are ready for A21 (wont need to be changed) but would need to be split from the main mod at least.
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge and overall gameplay, it is worth the try! (but in case you are just trying to update, !NotRecommended!, you will see several missing buff classes, it just means that they were updated and I forced a name change on them to keep your game in sync)  
 - fix: NPC follower above limit prevent dismiss feature;
 - fix: repair flow of guns (parts shall now be found, dismantled or bought again like in vanilla)  
@@ -198,7 +198,7 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
 - water bucket can only pickup world generated water now, not water placed by the player. this keeps the bucket after being used and prevents unlimited water creation overpower glitch. To pickup water placed by the player, use the new empty drink jar.    
 - (and many other minor things I forgot to add here...)
 .    
---------- v0.9a -----------    
+--------- v0.9a (A20) -----------    
 - initial release.    
 - Some minor things are still missing: still needs better new item's names and descriptions and alternative icons instead of colored vanilla ones.    
 - Many other ideas were not implemented yet, so I may release new things soon.    
