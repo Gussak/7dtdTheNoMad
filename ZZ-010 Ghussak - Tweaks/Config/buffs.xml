@@ -11431,7 +11431,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKBloodMoonStuff14" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false" help="tweaked vanilla low difficulty gamestages to be more challenging, so this buff doesnt make much difference now but may still be interesting">
+    <buff name="buffGSKBloodMoonStuff15" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false" help="tweaked vanilla low difficulty gamestages to be more challenging, so this buff doesnt make much difference now but may still be interesting">
       <stack_type value="replace"/>
       <display_value value=".iGSKBMFoeAliveCount"/>
       <display_value_key value="{0:0}"/>
@@ -11454,6 +11454,10 @@
           <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group help="faster end the blood moon extra effect if the player was sheltered during blood moon">
+        <requirement name="!IsBloodMoon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
       </effect_group>
       <effect_group help="update counters based on limits">
@@ -11550,11 +11554,11 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="rm buff">
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff14">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
           <requirement name="!IsBloodMoon"/>
           <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff14">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="NotEquals" value="2"/>
         </triggered_effect>
       </effect_group>
@@ -12088,15 +12092,15 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="bloodmoon stuff">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff14">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
           <requirement name="IsBloodMoon"/>
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="2"/>
-          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff14"/>
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff14">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
           <requirement name="!IsBloodMoon"/>
           <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="2"/>
-          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff14"/>
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15"/>
           <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0" help="this is in case the server crashes or during a restart of the game"/>
         </triggered_effect>
       </effect_group>
