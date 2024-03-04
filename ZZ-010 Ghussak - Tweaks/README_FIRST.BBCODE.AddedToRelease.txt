@@ -144,7 +144,7 @@ FOR YOU THE PLAYER THAT JUST WANTS TO PLAY IT, NOT MOD.
 .  
 .  
 ################## CHANGES (full detailed change log only from project on github) ##############  
---------- v1.0aRC1 (A20) -----------    
+--------- A20.v1.0aRC1 -----------    
 - this is probably the last patch for A20. Many things are ready for A21 (wont need to be changed) but would need to be split from the main mod at least.
 - it is recommended to start a new game as many things changed and so did the first spawn and initial levels challenge and overall gameplay, it is worth the try! (but in case you are just trying to update, !NotRecommended!, you will see several missing buff classes, it just means that they were updated and I forced a name change on them to keep your game in sync)  
 - fix: NPC follower above limit prevent dismiss feature;

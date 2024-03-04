@@ -36970,6 +36970,19 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="LogMessage" message="GSK:TEST:GSKParachuteSQNb:for game event teleport"/>
       </effect_group>
     </item>
+    <item name="GSKfixTmpWorkaroundDevMod_AddBuffBloodMoon" help="TODO:RMMAJORVERSION this is meant to be used only while developing the mod">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <property name="CustomIconTint" value="1,1,100"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKBloodMoonStuff14"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-10">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKWorkAroundFixBuffs" help="some buffs may refuse to start working. this will fix them. Could this require the game engine to be stopped/exited and restarted to fix w/o usting this trick?">
       <property name="Extends" value="GSKDbgBASE"/>
       <property name="CustomIconTint" value="1,1,100"/>

@@ -129,7 +129,10 @@ tail -F "$strFlLog" |while read strLine;do
     #nEndShapesSecs=$SECONDS
     bExecCmd=true
   else
+		: ${nSecondsPrevious:=$SECONDS}
+		echo " < DelayFromPrevious: $(($SECONDS - ${nSecondsPrevious}))s > "
     echo "-[SKIP] $strLine"
+    nSecondsPrevious=$SECONDS
   fi
   #if ! $bExecCmd;then  echo "[IGNOREDLINE] $strLine";fi
 done
