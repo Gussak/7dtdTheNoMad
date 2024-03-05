@@ -38,6 +38,7 @@ if CFGFUNCprompt -q "write (paint) the screenshot filename on the image data of 
   bAnnotate=true
 fi
 
+#TODO create relative symlinks: cd LoadingScreens; ln -sf ../../../Screenshots/*.jpg ./
 #set -x
 #IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
 IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop
