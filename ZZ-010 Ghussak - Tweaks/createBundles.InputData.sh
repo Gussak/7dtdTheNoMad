@@ -34,7 +34,7 @@ astr=(
   drinkJarBoiledWater 33 #for the desert
   drugGSKPsyonicsResist 13 #to be able to ignore mutants
   drugGSKmutantEssence 3
-  GSKteleportLikeAMutantPower 1
+  GSKpowerTeleportLikeAMutant 1
   GSKElctrnTeleportToBedrollLowCost 1
   GSKElctrnTeleportToLandClaimLowCost 1
   GSKElctrnTeleportToHomeAndBack 1
@@ -83,7 +83,7 @@ astr=( #TEMPLATE
   gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
   GlowStickGreen       3 #vs wights
-  GSKpsyonicAttackLikeAMutant 1
+  GSKpowerPsyonicAttackLikeAMutant 1
   modGunScopeSmall 1
   thrownAmmoMolotovCocktail6s 13
   thrownAmmoStunGrenade 13
@@ -117,6 +117,7 @@ astr=( #TEMPLATE
   #armorScrapLegs 1
   armorClothPants 1
   armorClothBoots 1
+  GSKpowerImmuneLikeAWight 1
   "$strSCHEMATICS_BEGIN_TOKEN" 0
 );FUNCprepareBundles "CombatArmor" "bundleArmorLight" "$strCombatArmorHelp" "${astr[@]}"
 
@@ -218,6 +219,7 @@ astr=(
   drinkJarBoiledWater 13
   treePlantedMountainPine1m 13
   foodSpaghetti 1
+  GSKpowerSummonLikeAVampire 1 # this is more about attacking, but as they also attack the player and GSKpowerPsyonicAttackLikeAMutant is already in CombatWeapons, this fits well here like a 2ndary intent :)
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   modArmorWaterPurifierSchematic 1
 );FUNCprepareBundles "HealingFeed" "bundleFood" "Use this if you need food and water." "${astr[@]}"

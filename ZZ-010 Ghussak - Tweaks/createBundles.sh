@@ -153,6 +153,8 @@ function FUNCprepareCraftBundle() {
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="'"${strCourier}"'" help="COURIER_DELIVERY"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCCourierForPlayerEntId" operation="set" value="@EntityID" target="selfAOE" range="5" help="TODO: the player can set a @var on NPCs? or only constant values? so this wont right?">
           <requirement name="CVarCompare" cvar="iGSKNPCCourierForPlayerEntId" target="other" operation="Equals" value="0" />
+          <requirement name="EntityTagCompare" target="other" tags="npc" />
+          <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="hireable,bandit,animal" />
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
