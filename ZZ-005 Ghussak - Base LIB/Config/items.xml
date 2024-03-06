@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items" help="base easy activators">
+    <item name="GSKBaseActivator">
+      <property name="NoScrapping" value="true"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="7dtdShockTip" help="was modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="128,128,128"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="#Other/Items?Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapIron"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="50" help="this is used just to calc the exp debuff time for free bundles"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="junk"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <!-- HELPGOOD: Action0 and Action1 can have only specific properties customized on extenders, like you could just change the Delay time! these below are the safest defaults having also properties not used by Melee class... -->
+      <property class="Action0" help="base must have no requirements">
+        <property name="Class" value="Melee"/>
+        <property name="Delay" value="0.1"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+        <property name="Use_time" value="..."/>
+      </property>
+      <property class="Action1" help="the secondary melee action cannot be used from inventory, must be in hand. base must have no requirements">
+        <property name="Class" value="Melee"/>
+        <property name="Delay" value="0.1"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+        <property name="Use_time" value="..."/>
+      </property>
+    </item>
+    <item name="GSKBaseActivatorConsumableFast" help="can be used from inventory, no need to be in the hand">
+      <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0" help="base must have no requirements">
+        <property name="Class" value="Eat" help="Could be also class Activate? No, Activate requires melee."/>
+        <property name="Delay" value="0.1"/>
+      </property>
+      <!-- HELPGOOD: do not make Action1 Eat class because there may have nothing configured on the extending item and it will be lost. -->
+    </item>
+    <item name="GSKBaseActivatorConsumableSlow" help="can be used from inventory, no need to be in the hand">
+      <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0" help="base must have no requirements">
+        <property name="Class" value="Eat" help="Could be also class Activate? No, Activate requires melee."/>
+        <property name="Delay" value="1.0"/>
+      </property>
+      <!-- HELPGOOD: disabed this because it would just destroy the item if there is no onSelfSecondaryActionEnd implemented
+      <property class="Action1">
+        <property name="Class" value="Eat" />
+        <property name="Delay" value="1.0" />
+        <property name="Use_time" value="..." />
+        <property name="Sound_start" value="nightvision_toggle" />
+      </property>
+-->
+    </item>
+    <item name="GSKBaseActivatorFromInventoryFast" help="can be used from inventory, no need to be in the hand, but create_item must be set for each extending identical to self!">
+      <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0" help="base must have no requirements">
+        <property name="Class" value="OpenBundle"/>
+        <property name="Delay" value="0.1"/>
+        <property name="Use_time" value="0"/>
+        <property name="Create_item" value="GSKBaseActivatorFromInventoryFast" help="THIS NEEDS TO BE OVERRIDEN!!!"/>
+        <property name="Create_item_count" value="1" help="creates just one of self allowing unlimited uses"/>
+      </property>
+    </item>
+    <item name="GSKBaseActivatorFromInventorySlow" help="can be used from inventory, no need to be in the hand, but create_item must be set for each extending identical to self!">
+      <property name="Extends" value="GSKBaseActivatorFromInventoryFast"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <property name="Create_item" value="GSKBaseActivatorFromInventorySlow" help="THIS NEEDS TO BE OVERRIDEN!!!"/>
+      </property>
+    </item>
+    <item name="GSKBaseActivatorReqMeleeFast">
+      <property name="Extends" value="GSKBaseActivator"/>
+      <property name="Stacknumber" value="1"/>
+    </item>
+    <item name="GSKBaseActivatorReqMeleeSlow">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be even"/>
+      <property name="Stacknumber" value="1"/>
+    </item>
+    <item name="GSKBaseActivatorReqMeleeConfiguratorFast">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeFast" help="because is much less trouble than specifically create_item for OpenBundle class"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="Meshfile" value="#Other/Items?Misc/sackPrefab.prefab" help="quick animation"/>
+    </item>
+  </append>
+</GhussakTweaks>
