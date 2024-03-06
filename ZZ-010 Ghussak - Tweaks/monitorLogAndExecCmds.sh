@@ -43,11 +43,11 @@ declare -p strExecRegex
 export strExecRegex
 
 function FUNCpromptGfx() {
-  if which yad;then
-    while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "$@. You need to click OK to continue.";do :;done
-  else
-    CFGFUNCprompt "$@"
-  fi
+	if which yad;then
+		while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "$@. You need to click OK to continue.";do :;done
+	else
+		CFGFUNCprompt "$@"
+	fi
 };export -f FUNCpromptGfx
 function FUNCrawMatchRegex() { echo "$1" |sed -r 's@.@[&]@g'; };export -f FUNCrawMatchRegex
 
@@ -60,92 +60,100 @@ export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocol
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do
 tail -F "$strFlLog" |while read strLine;do
-  #echo "while.PID=$$"
-  bExecCmd=false
-  
-  #if ! pgrep -fa "${strExecRegex}";then
-    #echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
-  if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
-    CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
-    chmod -Rv u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/
-  elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
-    if ! pgrep -fa "${strExecRegex}";then
-      echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
-    else
-      CFGFUNCinfo "+[EXEC:ProtectCfgDump] $strLine (to make it easier to avoid editing them by mistake ...)"
-      chmod -Rv ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/
-      
-      CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
-      CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
-      strInfo="the game finished loading and is ready to play"
-      #if which yad;then
-        #while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
-      #else
-        #CFGFUNCprompt "$strInfo"
-      #fi
-      FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
-      CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
-      bExecCmd=true
-    fi
-  elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then
-    CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
-    #@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad
-    #function FUNCchkShapesIni() {
-      : ${nIniShapesDelay:=35} #help shapes shall take not more than this seconds to complete (on my pc)
-      lstrKeyShapesIni="`ls -l "$strFlLog"`"
-      li=0
-      #bBreakChkShapesLoop=false
-      #trap 'bBreakChkShapesLoop=true' INT
-      while true;do
-        #echo "while2.PID=$$"
-        ((li++))&&:
-        if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Shapes success!";break;fi
-        echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
-        #if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
-        if((li>nIniShapesDelay));then 
-          strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
-          CFGFUNCinfo "$strInfo";
-          if ! pgrep "yad.*TNMMonLog:FrozenShapes" -fa;then
-            function FUNCyad_FrozenShapes() {
-              if yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus;then
-                xterm -title "TNMMonLog:FrozenShapes" -e wineserver -k
-              fi
-            };export -f FUNCyad_FrozenShapes
-            (FUNCyad_FrozenShapes&disown)
-          fi
-        fi
-        if ! pgrep -f "$strExecRegex" >/dev/null;then CFGFUNCinfo "[WARN] game stopped running";break;fi
-        sleep 1
-        #if $bBreakChkShapesLoop;then echo BREAK;break;fi
-        #read -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
-        #read -u 0 -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
-        #read -e -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
-      done
-    #}
-    #FUNCchkShapesIni
-    
-    #nIniShapesSecs=$SECONDS
-  #elif [[ "$strLine" == " INF Block IDs with mapping" ]]
-    #nEndShapesSecs=$SECONDS
-    bExecCmd=true
-  else
+	#echo "while.PID=$$"
+	bExecCmd=false
+	
+	#if ! pgrep -fa "${strExecRegex}";then
+		#echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
+	if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
+		CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
+		while ! CFGFUNCexec --noErrorExit chmod -Rv u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
+			if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
+				FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
+			fi
+		done
+	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
+		if ! pgrep -fa "${strExecRegex}";then
+			echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
+		else
+			CFGFUNCinfo "+[EXEC:ProtectCfgDump] $strLine (to make it easier to avoid editing them by mistake ...)"
+			while ! CFGFUNCexec --noErrorExit chmod -Rv ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
+				if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
+					FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
+				fi
+			done
+			
+			CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
+			CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
+			strInfo="the game finished loading and is ready to play"
+			#if which yad;then
+				#while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
+			#else
+				#CFGFUNCprompt "$strInfo"
+			#fi
+			FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
+			CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
+			bExecCmd=true
+		fi
+	elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then
+		CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
+		#@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad
+		#function FUNCchkShapesIni() {
+			: ${nIniShapesDelay:=35} #help shapes shall take not more than this seconds to complete (on my pc)
+			lstrKeyShapesIni="`ls -l "$strFlLog"`"
+			li=0
+			#bBreakChkShapesLoop=false
+			#trap 'bBreakChkShapesLoop=true' INT
+			while true;do
+				#echo "while2.PID=$$"
+				((li++))&&:
+				if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Shapes success!";break;fi
+				echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
+				#if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
+				if((li>nIniShapesDelay));then 
+					strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
+					CFGFUNCinfo "$strInfo";
+					if ! pgrep "yad.*TNMMonLog:FrozenShapes" -fa;then
+						function FUNCyad_FrozenShapes() {
+							if yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus;then
+								xterm -title "TNMMonLog:FrozenShapes" -e wineserver -k
+							fi
+						};export -f FUNCyad_FrozenShapes
+						(FUNCyad_FrozenShapes&disown)
+					fi
+				fi
+				if ! pgrep -f "$strExecRegex" >/dev/null;then CFGFUNCinfo "[WARN] game stopped running";break;fi
+				sleep 1
+				#if $bBreakChkShapesLoop;then echo BREAK;break;fi
+				#read -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
+				#read -u 0 -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
+				#read -e -n 1 -t 1 strResp&&:;if [[ "$strResp" =~ [yY] ]];then break;fi
+			done
+		#}
+		#FUNCchkShapesIni
+		
+		#nIniShapesSecs=$SECONDS
+	#elif [[ "$strLine" == " INF Block IDs with mapping" ]]
+		#nEndShapesSecs=$SECONDS
+		bExecCmd=true
+	else
 		: ${nSecondsPrevious:=$SECONDS}
 		echo " < DelayFromPrevious: $(($SECONDS - ${nSecondsPrevious}))s > "
-    echo "-[SKIP] $strLine"
-    nSecondsPrevious=$SECONDS
-  fi
-  #if ! $bExecCmd;then  echo "[IGNOREDLINE] $strLine";fi
+		echo "-[SKIP] $strLine"
+		nSecondsPrevious=$SECONDS
+	fi
+	#if ! $bExecCmd;then  echo "[IGNOREDLINE] $strLine";fi
 done
 
 echo "below error chk not ready";exit 0 #todo rm
 while true;do
-  read -p "." -t 3&&:
-  strRegex="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC " #todo ignore some errors like "Object reference not set to an instance of an object"
-  if egrep -q "$strRegex" "$strFlLog";then
-    egrep "$strRegex" "$strFlLog" -A 20 #todo show range til each log sector end
-    #todo yad tiny alert
-  fi
-  #todo ignore old lines
+	read -p "." -t 3&&:
+	strRegex="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC " #todo ignore some errors like "Object reference not set to an instance of an object"
+	if egrep -q "$strRegex" "$strFlLog";then
+		egrep "$strRegex" "$strFlLog" -A 20 #todo show range til each log sector end
+		#todo yad tiny alert
+	fi
+	#todo ignore old lines
 done
 
 #2023-04-12T18:22:27 316.119 EXC Object reference not set to an instance of an object
