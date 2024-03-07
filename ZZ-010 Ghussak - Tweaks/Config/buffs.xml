@@ -133,6 +133,13 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKRagdollFriendly" hidden="true" help="TODO: only allow if there is no enemy nearby to prevent ragdoll the enemy NPCs">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKRagdollFriendlyNPCs"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKSpawnTreasure15" hidden="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
@@ -5809,6 +5816,7 @@
         <!-- HELPGOOD: cfg -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoFodLim" operation="set" value="0.66"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoWetLim" operation="set" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazSnoFatLim" operation="set" value="0.20"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingLvl" operation="set" value="0"/>
@@ -5835,6 +5843,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFZHeatingTmSub" operation="set" value="@fGSKFireHeatingMult"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFZHeatingTmSub" operation="multiply" value="3"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="subtract" value="@.fGSKFZHeatingTmSub"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingTime" operation="GTE" value="60"/>
+        <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="@fGSKHazSnoFatLim"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="-60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="subtract" value="@fGSKHazSnoFatLim"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="0">

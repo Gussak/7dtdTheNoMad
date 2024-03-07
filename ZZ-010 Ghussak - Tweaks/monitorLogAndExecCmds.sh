@@ -44,7 +44,7 @@ export strExecRegex
 
 function FUNCpromptGfx() {
 	if which yad;then
-		while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "$@. You need to click OK to continue.";do :;done
+		while ! CFGFUNCexec --noErrorExit yad --title "7DTD Log Monitor" --on-top --center --text "$@.\n\nYou need to click OK to continue checking the log.";do :;done
 	else
 		CFGFUNCprompt "$@"
 	fi
@@ -62,7 +62,7 @@ export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocol
 tail -F "$strFlLog" |while read strLine;do
 	#echo "while.PID=$$"
 	bExecCmd=false
-	
+	bRelevant=true
 	#if ! pgrep -fa "${strExecRegex}";then
 		#echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
 	if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
@@ -72,6 +72,9 @@ tail -F "$strFlLog" |while read strLine;do
 				FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
 			fi
 		done
+	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
+		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
+		FUNCpromptGfx "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
 	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
 		if ! pgrep -fa "${strExecRegex}";then
 			echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
@@ -137,24 +140,28 @@ tail -F "$strFlLog" |while read strLine;do
 		#nEndShapesSecs=$SECONDS
 		bExecCmd=true
 	else
-		: ${nSecondsPrevious:=$SECONDS}
-		echo " < DelayFromPrevious: $(($SECONDS - ${nSecondsPrevious}))s > "
-		echo "-[SKIP] $strLine"
-		nSecondsPrevious=$SECONDS
+		: ${bShowSkippedLines:=false} #help
+		if $bShowSkippedLines;then echo "-[SKIP] $strLine";fi
+		bRelevant=false
 	fi
+	
+	: ${nSecondsPrevious:=$SECONDS}
+	nDelayFromPrevious=$(($SECONDS - ${nSecondsPrevious}))
+	if $bRelevant && ((nDelayFromPrevious>0));then echo " < DelayFromPrevious: ${nDelayFromPrevious}s > ";fi
+	nSecondsPrevious=$SECONDS
 	#if ! $bExecCmd;then  echo "[IGNOREDLINE] $strLine";fi
 done
 
-echo "below error chk not ready";exit 0 #todo rm
-while true;do
-	read -p "." -t 3&&:
-	strRegex="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC " #todo ignore some errors like "Object reference not set to an instance of an object"
-	if egrep -q "$strRegex" "$strFlLog";then
-		egrep "$strRegex" "$strFlLog" -A 20 #todo show range til each log sector end
-		#todo yad tiny alert
-	fi
-	#todo ignore old lines
-done
+#echo "below error chk not ready";exit 0 #todo rm
+#while true;do
+	#read -p "." -t 3&&:
+	#strRegex="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC " #todo ignore some errors like "Object reference not set to an instance of an object"
+	#if egrep -q "$strRegex" "$strFlLog";then
+		#egrep "$strRegex" "$strFlLog" -A 20 #todo show range til each log sector end
+		##todo yad tiny alert
+	#fi
+	##todo ignore old lines
+#done
 
 #2023-04-12T18:22:27 316.119 EXC Object reference not set to an instance of an object
 #UnityEngine.StackTraceUtility:ExtractStringFromException(Object)
