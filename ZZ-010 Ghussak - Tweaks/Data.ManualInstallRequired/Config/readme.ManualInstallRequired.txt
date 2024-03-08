@@ -12,9 +12,10 @@ Generate a new world (this will use the new rwgmixer.xml)
    towns: few
    allothers: many
    plains: 0
-   hills&mountains: 10
+   hills & mountains: max
    random: 3
-This will create the "East Nikazohi Territory" world with nice biomes (any better suggestion?).
+   (ignore biomes)
+This will create the "East Nikazohi Territory" world, now read "../GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/biomes.png.AddedToRelease.README.txt"
 
 # Follow the instructions at 
 #   "../GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/readme.ManualInstallRequired.txt"
