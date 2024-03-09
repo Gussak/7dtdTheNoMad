@@ -312,9 +312,11 @@
           <requirement name="CVarCompare" cvar="fGSKTraderPaidProtection" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTraderIsNearby" operation="subtract" value="3" help="sync with update_rate"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffTraderRequiresPaymentForProtection1">
-          <requirement name="CVarCompare" cvar="iGSKTraderIsNearby" operation="LTE" value="0"/>
-        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTraderIsNearby" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKTraderProtSub" operation="set" value="0.00" help="to look correct on desc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffTraderRequiresPaymentForProtection1"/>
       </effect_group>
     </buff>
     <buff name="buffTraderGotPaidForProtection" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_blink="true" icon_color="0,255,0" description_key="dkTraderProtection" help="trick: spending many quickly makes it last more TODO: this buff is not working...">
