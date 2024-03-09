@@ -809,6 +809,9 @@
         <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKTeleLowCostCountDown" operation="LTE" value="50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleportLowCostOnce" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
       </effect_group>
       <effect_group>
@@ -923,6 +926,9 @@
       <update_rate value="0.5"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKEventFeedbackTeleportCompleted" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="7"/>
@@ -8192,7 +8198,7 @@
 -->
         <passive_effect name="HealthChangeOT" operation="base_add" value="-32000" help="this will grant this teleport attack will kill anything"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPlayerKilledDeusExPLAYERBUFF" target="selfAOE" range="8" target_tags="player" help="sync range with 2*range used to apply this buff at :buffGSKElctrnExplodeExtra23: TODO: this could be used by 2 players to inc on both, but there is no problem considering they are helping each other in an unsafe proximity to DeusEx">
-          <requirement name="EntityTagCompare" tags="DeusEx"/>
+          <requirement name="EntityTagCompare" tags="DeusEx" help="only a DeusExMachina can send this buff to player"/>
           <!-- HELPGOOD:
           <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0" help="this wont work cuz dead entity means stopped buff right?"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKEntIDTeleportAttacker" help="ISSUE: this doesnt work, only constant values right?"/>
@@ -8603,6 +8609,9 @@
       <effect_group help="tele AndOr debuff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to initialize the 'flying' trick as soon as possible">
           <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
@@ -13109,6 +13118,19 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeDeusExBless'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeForTeleport" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after teleporting, this is to prevent that.">
+      <stack_type value="ignore"/>
+      <duration value="10"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForTeleport'"/>
       </effect_group>
     </buff>
   </append>
