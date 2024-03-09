@@ -120,6 +120,7 @@ astrBuffBNList=(
   "buffNightVisionUsesBatteries"
   "buffNPCAddExpDebitToLeader"
   "buffPlayerEnhancesNearbyFriendlyNPCs"
+  "buffTraderRequiresPaymentForProtection"
 )
 astrBuffBNList=(`echo "${astrBuffBNList[@]}" |tr " " "\n" |sort -u`) # grant unique entries
 declare -p astrBuffBNList |tr '[' '\n'

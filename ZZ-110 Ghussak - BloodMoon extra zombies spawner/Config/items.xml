@@ -8,10 +8,13 @@
       <property name="CustomIconTint" value="180,128,128"/>
       <property name="DescriptionKey" value="dkGSKAllowExtraBloodMoonSpawns"/>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="2">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="add" value="1" help="cycle ON modes">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="1">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="2">
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GT" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="1" help="off">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="add" value="-1">
@@ -34,7 +37,7 @@
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="add" value="2"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="add" value="-2">
-          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="GTE" value="4" help="min is 2"/>
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="GT" value="@iGSKBMFoeAliveMin"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKBMFoeAliveMax"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKBMFoeAliveMax"/>

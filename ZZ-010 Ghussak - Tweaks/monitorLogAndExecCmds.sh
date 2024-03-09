@@ -67,7 +67,7 @@ tail -F "$strFlLog" |while read strLine;do
 		#echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
 	if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
 		CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
-		while ! CFGFUNCexec --noErrorExit chmod -Rv u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
+		while ! CFGFUNCexec --noErrorExit chmod -R u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
 			if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
 				FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
 			fi
@@ -80,7 +80,7 @@ tail -F "$strFlLog" |while read strLine;do
 			echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
 		else
 			CFGFUNCinfo "+[EXEC:ProtectCfgDump] $strLine (to make it easier to avoid editing them by mistake ...)"
-			while ! CFGFUNCexec --noErrorExit chmod -Rv ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
+			while ! CFGFUNCexec --noErrorExit chmod -R ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
 				if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
 					FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
 				fi
