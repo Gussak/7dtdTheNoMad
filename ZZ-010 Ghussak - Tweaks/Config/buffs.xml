@@ -2,6 +2,7 @@
 <GhussakTweaks>
   <!-- HELPGOOD: tech tips (all all correct?)
   - BUFFS: calling many buffs like: onSelfBuffStart addBuff may not work? needs to be onSelfBuffUpdate right?
+  - BUFFS: stack_type value="replace", will prevent onSelfBuffUpdate from working if it happens faster than the update time!!! beware!!!
   - PASSIVEEFFECTS: passive effects must use a unique cvar (not a temp shared one) as it will use the value after the var is changed elsewhere at any time
   - (Issue*1)NPCS: NPCs can't change cvar on player but can apply buffs to transfer cvar values bit by bit!
   - NPCS: the NPC can set constant values on player cvars but is unable to read a self cvar to copy it's value to the player right?
@@ -291,7 +292,7 @@
       </effect_group>
     </buff>
     <buff name="buffTraderRequiresPaymentForProtection1" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0" description_key="dkTraderProtection">
-      <stack_type value="replace"/>
+      <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group>
@@ -316,7 +317,7 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffTraderGotPaidForProtection" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_blink="false" icon_color="0,255,0" description_key="dkTraderProtection" help="trick: spending many quickly makes it last more">
+    <buff name="buffTraderGotPaidForProtection" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_blink="true" icon_color="0,255,0" description_key="dkTraderProtection" help="trick: spending many quickly makes it last more TODO: this buff is not working...">
       <stack_type value="duration"/>
       <duration value="1.5"/>
       <effect_group>
@@ -327,7 +328,7 @@
       <stack_type value="ignore"/>
       <duration value="1.5"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffChkTraderNearbyAnswerONTRADER" target="selfAOE" range="50" target_tags="trader"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffChkTraderNearbyAnswerONTRADER" target="selfAOE" range="50" target_tags="trader" help="that distance is to try to grant the whole trader building is considered by luck, expecting no building will be bigger than that dist..."/>
       </effect_group>
     </buff>
     <buff name="buffChkTraderNearbyAnswerONTRADER">
@@ -337,7 +338,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffChkTraderNearbyConfirmed" target="selfAOE" range="50" target_tags="player"/>
       </effect_group>
     </buff>
-    <buff name="buffChkTraderNearbyConfirmed" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0" description_key="dkTraderProtection">
+    <buff name="buffChkTraderNearbyConfirmed" hidden="true" remove_on_death="false" icon="7dtdShockTip" icon_blink="true" icon_color="255,0,0" description_key="dkTraderProtection">
       <stack_type value="ignore"/>
       <duration value="1.5"/>
       <effect_group>
