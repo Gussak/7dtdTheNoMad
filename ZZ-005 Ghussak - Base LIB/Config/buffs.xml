@@ -4,6 +4,7 @@
     <buff name="buffGSKGodModeMinimum" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,80,180" help="minimum help to player. put here only stuff that do not heal nor feed etc, things that do not prevent spending resources after the god mode ends">
       <stack_type value="ignore"/>
       <duration value="0"/>
+      <update_rate value="0.33"/>
       <display_value_key value="buffGodModeNameShort"/>
       <display_value value="xxx"/>
       <effect_group>
@@ -14,6 +15,13 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
         <passive_effect name="PlayerExpGain" operation="perc_add" value="-1.00" help="this prevent player abuse the god mode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation" help="the player may try to heal radiation, this copes with it">
+          <requirement name="CVarCompare" cvar="fGSKRadiationBkpGodModeMin" operation="GT" value="@$buffStatusRadiation"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="@fGSKRadiationBkpGodModeMin" help="prevents increasing the radiation">
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadiationBkpGodModeMin"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKGodModeForEnterGameDuringBloodMoon" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after entering the game during a blood moon and being instantly received by many zombies surrouding.">
@@ -27,9 +35,11 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon">
           <requirement name="CVarCompare" cvar=".iGSKGodModeEGDBM" operation="LTE" value="0"/>
         </triggered_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
           <requirement name="!HasBuff" buff="buffGSKGodModeMinimum"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeMinimum"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForEnterGameDuringBloodMoon'"/>
       </effect_group>
     </buff>
