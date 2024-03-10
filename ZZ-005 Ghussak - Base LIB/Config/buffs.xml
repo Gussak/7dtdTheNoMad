@@ -1,9 +1,23 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffGSKGodModeForEnterGameDuringBloodMoon" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after entering the game during a blood moon and being instantly received by many zombies surrouding.">
+      <stack_type value="ignore"/>
+      <duration value="60"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForEnterGameDuringBloodMoon'"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKDetectEnterGame">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
@@ -11,9 +25,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="60" help="prevent swarming the player just after join">
           <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LT" value="60"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right?">
+          <requirement name="IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDetectEnterGame"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDetectRespawn">

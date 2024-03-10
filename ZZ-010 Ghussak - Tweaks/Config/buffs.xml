@@ -10972,6 +10972,14 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="blood moon detected, to show in descriptions as it may help understand what is happening">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBloodMoonIsActive" operation="set" value="1">
+          <requirement name="IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBloodMoonIsActive" operation="set" value="0">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="log player stats: sometimes we seem to die for no good reason, this tries to help understand what happened...">
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STAT:HP:Low LTE 25%">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.25"/>
