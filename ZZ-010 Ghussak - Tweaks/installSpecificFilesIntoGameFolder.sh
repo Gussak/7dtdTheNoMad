@@ -158,7 +158,7 @@ FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/prefa
   "$strCFGGeneratedWorldTNMFolder"
 FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/spawnpoints.xml" \
   "$strCFGGeneratedWorldTNMFolder"
-FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/radiation.png" \
+FUNCinstall "../ZZ-120 Ghussak - Cosmic Rays/GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/radiation.png" \
   "$strCFGGeneratedWorldTNMFolder"
 FUNCinstall "GeneratedWorlds.ManualInstallRequired/East Nikazohi Territory/biomes.png" \
   "$strCFGGeneratedWorldTNMFolder"
