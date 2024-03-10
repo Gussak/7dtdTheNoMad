@@ -13128,6 +13128,34 @@
     </buff>
   </append>
   <append xpath="/buffs" help="Monster Essences">
+    <buff name="buffGSKMonsterMixEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="255,0,0" description_key="dkGSKMonsterEssence">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.20"/>
+      <display_value value="iGSKMonsterMixJuiceStep"/>
+      <display_value_key value="{0:0}/15"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKWightEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVampireEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="5"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="10"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMonsterMixEssence"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKWightEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,0,255" description_key="dkbuffGSKWightEssence">
       <stack_type value="effect"/>
       <duration value="0"/>
