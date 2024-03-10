@@ -30,12 +30,13 @@
       <display_value value=".iGSKGodModeEGDBM"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="set" value="180"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon">
           <requirement name="CVarCompare" cvar=".iGSKGodModeEGDBM" operation="LTE" value="0"/>
         </triggered_effect>
-        <passive_effect name="RunSpeed" operation="perc_add" value="1.0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="10.0" help="do not increase walkspeed to let player decide if wanna run"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
           <requirement name="!HasBuff" buff="buffGSKGodModeMinimum"/>
         </triggered_effect>
@@ -57,7 +58,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right?">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right? TODO: could instead just kill all zombies, but prevent dropping loot then">
           <requirement name="IsBloodMoon"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDetectEnterGame"/>
