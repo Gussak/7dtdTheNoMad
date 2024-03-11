@@ -6684,10 +6684,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonAntidoteDur" operation="subtract" value="@iGSKPoisonSub"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="subtract" value="@iGSKPoisonSub"/>
       </effect_group>
-      <effect_group name="antidote stays longer if no poison">
+      <effect_group name="antidote stays much longer if no poison">
         <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonAntidoteDur" operation="subtract" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonAntidoteDur" operation="subtract" value="1"/>
       </effect_group>
       <effect_group name="poison damage">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="subtract" value="3"/>
@@ -11359,9 +11359,12 @@
         <passive_effect name="HealthMax" operation="base_subtract" value="@iGSKDeathPenaltyHP" help="default initial HP is 100. Max penalty here will still always leave 75HP at least. So even if player dies 1000 times, will still have at least 75HP from this penalty alone."/>
       </effect_group>
       <effect_group help="Poison work">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSnakePoisonWork55">
-          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
-          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+          <requirements compare_type="or">
+            <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
+            <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
+          </requirements>
         </triggered_effect>
       </effect_group>
       <effect_group help="ExplorationBonuses">
