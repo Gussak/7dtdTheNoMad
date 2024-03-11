@@ -73,6 +73,7 @@ astrBuffBNList=(
   "buffGSKDeusExEnemy"
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
+  "buffGSKendBloodMoon"
   "buffGSKFallOverLandingHit"
   "buffGSKGasMaskWork"
   "buffGSKHazardousWBloodLoss"
@@ -109,6 +110,7 @@ astrBuffBNList=(
   "buffGSKRadResistWork"
   "buffGSKRespawnPreventWaterBkp"
   "buffGSKShowWaterBkp"
+  "buffGSKSlowDownZombiesInDayLight"
   "buffGSKSnakePoisonWork"
   "buffGSKSpawnTreasureAmbush"
   "buffGSKSpiderNet"
@@ -191,6 +193,7 @@ for strBuffBN in "${astrBuffBNList[@]}";do
     exit 1;
   fi
   
+  #TODO: patch all my mods, needs to `cd ..` and test...: egrep "${strBuffBN}${iId}" --include="*.xml" --exclude-dir="_*" -rnIc ../ZZ-*
   IFS=$'\n' read -d '' -r -a astrFlList < <(egrep "${strBuffBN}${iId}" --include="*.xml" --exclude-dir="_*" -rnIc |grep -v :0 |cut -d: -f1)&&:
   declare -p astrFlList |tr '[' '\n'
   for strFl in "${astrFlList[@]}";do

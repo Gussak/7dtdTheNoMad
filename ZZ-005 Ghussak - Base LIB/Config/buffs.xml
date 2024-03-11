@@ -58,20 +58,24 @@
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
           <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right? TODO: could instead just kill all zombies, but prevent dropping loot then">
-          <requirement name="IsBloodMoon"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDetectEnterGame"/>
+        <!-- HELPGOOD: mmm...
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right? TODO: could instead just kill all zombies, but prevent dropping loot then">
+					<requirement name="IsBloodMoon"/>
+				</triggered_effect>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKDetectEnterGame" help="keep like this to let other buffs be added from here as only works with onSelfBuffUpdate right?"/>
       </effect_group>
     </buff>
     <buff name="buffGSKDetectRespawn">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnFreeBundlesLimit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" cvar="buffGSKDetectRespawn" help="keep like this. other buffs can only be added from here if using onSelfBuffUpdate"/>
       </effect_group>
     </buff>
     <buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations. Only place CVARs config here! Even if they are used by other mods, the point is them all shall depend on the base lib. Setup only many cvars has no problem.">

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKendBloodMoon1">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.33" help="cannot be 0.05 or will throw exception (why?)"/>
+      <effect_group>
+        <requirement name="IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEndBloodMoonOnDeathCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKEndBloodMoonOnDeathCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce">
+          <requirement name="CVarCompare" cvar=".iGSKEndBloodMoonOnDeathCount" operation="GT" value="21" help="wait the respawn animation end (blindly, no confirmation possible right?)"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="!IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" event="buffGSKendBloodMoon1"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKDetectRespawn']">
+    <effect_group help="end blood moon if player dies (respawns)">
+      <requirement name="IsBloodMoon"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKendBloodMoon1"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>
