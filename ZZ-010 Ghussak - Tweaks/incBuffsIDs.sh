@@ -31,6 +31,8 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+#TODO: is this unnecessary since 20.7b1 ? are buffs being updated on server restart?
+
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 echo "HELP:

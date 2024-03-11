@@ -5,11 +5,21 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKgotDamagedCount" operation="Equals" value="0" help="still did not get alerted by any reason."/>
+        <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.95"/>
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="!IsNight"/>
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90">
-          <requirement name="CVarCompare" cvar="iGSKgotDamagedCount" operation="Equals" value="0" help="not alerted by any reason"/>
-          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.95"/>
-          <requirement name="!IsBloodMoon"/>
-          <requirement name="!IsNight"/>
+          <requirement name="!EntityTagCompare" tags="feral"/>
+          <requirement name="!EntityTagCompare" tags="radiated"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.85">
+          <requirement name="EntityTagCompare" tags="feral"/>
+          <requirement name="!EntityTagCompare" tags="radiated"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.80">
+          <requirement name="EntityTagCompare" tags="feral"/>
+          <requirement name="EntityTagCompare" tags="radiated"/>
         </passive_effect>
       </effect_group>
     </buff>

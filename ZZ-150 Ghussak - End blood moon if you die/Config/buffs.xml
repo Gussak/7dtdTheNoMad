@@ -7,14 +7,17 @@
       <update_rate value="0.33" help="cannot be 0.05 or will throw exception (why?)"/>
       <effect_group>
         <requirement name="IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKendBloodMoon1'"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEndBloodMoonOnDeathCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKEndBloodMoonOnDeathCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce">
           <requirement name="CVarCompare" cvar=".iGSKEndBloodMoonOnDeathCount" operation="GT" value="21" help="wait the respawn animation end (blindly, no confirmation possible right?)"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKEndBloodMoonOnDeathCount"/>
       </effect_group>
       <effect_group>
         <requirement name="!IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:END:'buffGSKendBloodMoon1'"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" event="buffGSKendBloodMoon1"/>
       </effect_group>
     </buff>
