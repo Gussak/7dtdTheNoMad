@@ -242,6 +242,28 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
 -->
       <property name="DescriptionKey" value="dkGSKStatBlockages"/>
     </item>
+    <item name="GSKnoobHelperCreateBundles">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="DescriptionKey" value="dkGSKnoobHelperCreateBundles"/>
+      <property name="CustomIconTint" value="255,0,0"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKnoobHelperCreateBundleDebuff" operation="LT" value="18"/>
+        <property name="Create_item" value="electronicsParts,NightVisionBattery"/>
+        <property name="Create_item_count" value="6,1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKnoobHelperCreateBundleDebuff" operation="add" value="6"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] Remember to pay your debt."/>
+      </effect_group>
+    </item>
+    <item name="GSKnoobHelperCreateBundlesRestore">
+      <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
+      <property name="DescriptionKey" value="dkGSKnoobHelperCreateBundles"/>
+      <property name="CustomIconTint" value="255,255,0"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKnoobHelperCreateBundleDebuff" operation="add" value="-6"/>
+      </effect_group>
+    </item>
     <item name="GSKEditPrefabPOIBundle" help="to use only at prefab editor">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIconTint" value="180,140,120"/>
