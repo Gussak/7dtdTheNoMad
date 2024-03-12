@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKHeadShot" help="helmetWeak requires 2 shots to kill. helmetNormal 3 shots. helmetStrong 4 shots. No helmet is 1 shot. Armor piercing ammo is 1 shot on any helmet. helmetVanillaDamage will consider the head as having vanilla armor therefore vanilla headshot/headhit damage. TODO: there are several possible grades, from pistols to snipers, from bone knife to steel spear... Only top grades: sniper gun with AP bullet, and steel spear, and steel sledge hammer, should be one hit kill on the strongest helmet available.">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.05" help="if calc frames are not skipped: (1s/0.05updateRate) = 20 calcs / s"/>
+      <effect_group help="HeadShot: special creatures and conditions">
+        <!--        HELPGOOD: 1 is with helmet-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="1"/>
+        <!--        HELPGOOD: try deny HS dmg-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
+          <requirement name="EntityTagCompare" tags="wight"/>
+          <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
+          <requirement name="EntityTagCompare" tags="helmetVanillaDamage"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
+          <requirement name="HasBuff" buff="buffGSKNPCproperSneakingProtectFoes"/>
+        </triggered_effect>
+        <!--        HELPGOOD: try upgrade to instakill mode (no helmet or AP ammo)-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+          <requirement name="!EntityTagCompare" tags="helmetWeak"/>
+          <requirement name="!EntityTagCompare" tags="helmetNormal"/>
+          <requirement name="!EntityTagCompare" tags="helmetStrong"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1"/>
+        </triggered_effect>
+        <!--        HELPGOOD: denied-->
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: no helmet is insta kill (obs.: some creatures like bears have natural helmet cranium/skin)">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="2" help="2 means instakill"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot"/>
+      </effect_group>
+      <effect_group help="HeadShot: init and stack">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="1"/>
+        <!-- HELPGOOD: 
+					will lower more HP per iteration if it has more max hp.
+					ex.: value 10 * ((1s/0.05updateRate)=20) = -200hp/1s
+					ex.: value 50 * ((1s/0.05updateRate)=20) = -1000hp/1s, average Max HP is 1000, 1000/20=50
+					this is important to work fast if the max HP is too high or if the HP regen is too high (where time really matters)
+					tip: try 0.1 to slowly see the effect in development :)
+					-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHpSub" operation="set" value="10" help="-200hp/s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHpSub" operation="set" value="17.5" help="-350hp/s">
+          <requirement name="StatCompareMax" stat="health" operation="GT" value="200"/>
+          <requirement name="StatCompareMax" stat="health" operation="LT" value="500"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHpSub" operation="set" value="50" help="-1000hp/s">
+          <requirement name="StatCompareMax" stat="health" operation="GT" value="500"/>
+          <requirement name="StatCompareMax" stat="health" operation="LT" value="1500"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHpSub" operation="set" value="100" help="-2000hp/s">
+          <requirement name="StatCompareMax" stat="health" operation="GT" value="1500"/>
+          <requirement name="StatCompareMax" stat="health" operation="LT" value="2500"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHpSub" operation="set" value="200" help="-4000hp/s">
+          <requirement name="StatCompareMax" stat="health" operation="GT" value="2500"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: determine current perc HP range">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercCurrent" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="1.00">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.95"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.90">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.95"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.85"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.80">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.85"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.70">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.75"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.65"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.60">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.65"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.55"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.50">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.55"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.45"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.40">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.45"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.35"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.30">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.35"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.25"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.20">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.25"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="0.10">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value="0.15"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value="0.05"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: ragdoll">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="1" force="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="1" force="0"/>
+      </effect_group>
+      <effect_group help="HeadShot: ragdoll">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetNormal"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3" force="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="3" force="0"/>
+      </effect_group>
+      <effect_group help="HeadShot: ragdoll">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetWeak"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="5" force="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="5" force="0"/>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetWeak">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetWeak"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.50" help="1.0/0.50=2 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetNormal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetNormal"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.33" help="1.0/0.33=3 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: less damage for helmetStrong">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="0.25" help="1.0/0.25=4 headshots required to kill"/>
+      </effect_group>
+      <effect_group help="HeadShot: apply damage til goal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <!-- HELPGOOD: 40 is not good because it will lower too much and instead of 4 hits it would require just 2 probably. The subtraction must be more precise as we cant work directly by collecting the health value (right?)
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="40" help="try 0.1 to slowly see the effect in development :). CALC: default average zombie HP is 150. Max hits required is 4 (will lower 25% each hit). 150/4=37.5~=40. was 10, too slow mainly against high HP like vampires.">
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="@.iGSKHpSub">
+          <requirement name="StatComparePercCurrentToMax" stat="Health" operation="GT" value="@.iGSKHeadShotDmgPercGoal"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="HeadShot: if reached goal, prepare for next goal">
+        <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
+        <requirement name="StatComparePercCurrentToMax" stat="Health" operation="LTE" value="@.iGSKHeadShotDmgPercGoal"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
+      </effect_group>
+      <effect_group help="HeadShot: finish TODO: make head randomly explode here in some way, for chances: shotgun 85%, sledgehammer 100%, if there are exploding bullet it should be 100% for them too.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHeadShot" compare_type="or">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotStack" operation="LTE" value="0"/>
+          <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>

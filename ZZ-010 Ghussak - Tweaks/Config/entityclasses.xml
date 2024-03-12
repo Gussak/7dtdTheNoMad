@@ -38,56 +38,7 @@
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
     </effect_group>
-    <effect_group help="Headshot and limb shot cripple">
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
-        <!-- HELPGOOD: could work with ProjectileHasTags ? 
-        <requirement name="HoldingItemHasTags" tags="armorPiercing" help="ISSUE: This does not work for loaded ammo"/>
--->
-        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
-        <requirement name="HitLocation" body_parts="Head"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="3">
-        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd3"/>
-        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
-        <requirement name="HitLocation" body_parts="Head"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="2">
-        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd2"/>
-        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
-        <requirement name="HitLocation" body_parts="Head"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
-        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd1"/>
-        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
-        <requirement name="HitLocation" body_parts="Head"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
-        <requirement name="!HoldingItemHasTags" tags="shotgun"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="5" help="This is from the EffectiveAndImmersiveWeaponsOverhaul. max is 20 pellets"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="10"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="10"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="15"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="15"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="20"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
-      </triggered_effect>
+    <effect_group help="Limb shot cripple">
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKLegArmShot">
         <requirement name="HitLocation" body_parts="LeftUpperLeg,RightUpperLeg,LeftLowerLeg,RightLowerLeg,LeftUpperArm,RightUpperArm,LeftLowerArm,RightLowerArm"/>
       </triggered_effect>
@@ -949,14 +900,6 @@
     <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
     <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
   </append>
-  <remove xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/passive_effect[@name='DamageModifier' and contains(@tags, 'head')]" help="this resets all TSBX_Headshot_100 DamageModifier changes (that are applied on the player) to redo it here (applying it on foes to detect helmet usage based on 3d model) using buffGSKHeadShot instead"/>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker') or       @name='animalBear'     ]/property[@name='Tags']/@value">,helmetWeak</append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition') or       @name='animalZombieBear'     ]/property[@name='Tags']/@value">,helmetNormal</append>
-  <append xpath="/entity_classes/entity_class[@name='mechSphereII']" help="fix it before other patches">
-    <property name="Tags" value="entity,cp,mech,mechSphereII"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       @name='mechRobot' or       @name='mechRobotArmy'     ]/property[@name='Tags']/@value">,helmetStrong</append>
-  <append xpath="/entity_classes/entity_class[       @name='mechDrone' or       @name='mechSphereI' or       @name='mechSphereII'     ]/property[@name='Tags']/@value">,helmetWeak</append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'mech') and not(contains(@name,'DeusEx'))]">
     <property name="LootDropProb" value="0"/>
   </append>
@@ -982,47 +925,6 @@
       <passive_effect name="HealthMax" operation="base_set" value="75" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
     </effect_group>
     <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker')     ]">
-    <property name="DismemberMultiplierHead" value="0.33"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieDemolition')     ]">
-    <property name="DismemberMultiplierHead" value="0.15"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier')     ]">
-    <property name="DismemberMultiplierHead" value="0.05"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'mech')     ]">
-    <property name="DismemberMultiplierHead" value="0.00"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[     starts-with(@name,'zombieUtilityWorker') or     starts-with(@name,'zombieBiker') or     starts-with(@name,'zombieDemolition') or     starts-with(@name,'zombieSoldier') or     starts-with(@name,'mech')   ]">
-    <property name="DismemberMultiplierHead" value="0" help="this prevents instakill right?"/>
-    <!--
-    HELPGOOD: this doesnt protect their heads, just prevents them from attacking
-    <property name="ItemsOnEnterGame.GameModeSurvival" value="armorSteelHelmet" />
-    <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="armorSteelHelmet" />
-    <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="armorSteelHelmet" />   
--->
-  </append>
-  <append xpath="/entity_classes/entity_class[@name='playerMale']">
-    <!-- HELPGOOD: using buffGSKHeadShot instead
-    <effect_group help="HeadShot: more damage">
-      <passive_effect name="DamageModifier" operation="perc_set" value="1" tags="head" help="is this like a reset/override for any previous settings?"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2.5" tags="head"/>
-      <passive_effect name="DamageModifier" operation="perc_add" value="2" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="2"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="4" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="3"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="6" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="4"/>
-      </passive_effect>
-      <passive_effect name="DamageModifier" operation="perc_add" value="8" tags="head" >
-        <requirement name="CVarCompare" cvar="_difficulty" operation="Equals" value="5"/>
-      </passive_effect>
-    </effect_group>
--->
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalChicken']">
     <property name="SoundAlert" value="Animals/Chicken/chickenpain"/>
