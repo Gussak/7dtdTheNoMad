@@ -6,7 +6,10 @@
       <duration value="0"/>
       <update_rate value="0.20" help="must be faster than a player can shoot to prevent AP working with melee or gun w/o AP"/>
       <effect_group help="Workaround for RemoveBuff happening after AddBuff of the new gun with AP bullet :(">
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKEquippedArmorPiercingAmmo'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKEquippedArmorPiercingAmmo'"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEquippedArmorPiercingAmmo">
