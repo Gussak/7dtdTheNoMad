@@ -1,12 +1,28 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <!--HELPGOOD:
     <buff name="buffGSKEquippedArmorPiercingAmmo2" hidden="false" help="hidden: no need to show this one after the bug is fixed tho" icon="7dtdShockTip" icon_color="0,255,255" description_key="dkbuffGSKEquippedArmorPiercingAmmo">
-      <stack_type value="ignore"/>
+			<stack_type value="ignore"/>
+			<duration value="0" />
+		</buff>
+-->
+    <buff name="buffGSKEquippedArmorPiercingAmmo2" hidden="false" help="hidden: no need to show this one" icon="7dtdShockTip" icon_color="0,255,255" description_key="dkbuffGSKEquippedArmorPiercingAmmo">
+      <stack_type value="effect"/>
       <duration value="0"/>
+      <update_rate value="0.20" help="must be faster than a player can shoot to prevent AP working with melee or gun w/o AP"/>
+      <effect_group help="Workaround for RemoveBuff happening after AddBuff of the new gun with AP bullet :(">
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKEquippedArmorPiercingAmmo2'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKEquippedArmorPiercingAmmo2'"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
+        <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEquippedArmorPiercingAmmo2">
+          <requirement name="CVarCompare" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
-    <!--		HELPGOOD: this workaround doesnt work. When changing to non AP ammo, it will bug again. try find something like onGunReload? or onAmmoSwap?
-    <buff name="buffGSKEquippedArmorPiercingAmmo2" hidden="true" help="hidden: no need to show this one" icon="7dtdShockTip" icon_color="0,255,255" description_key="dkbuffGSKEquippedArmorPiercingAmmo">
+    <!--		HELPGOOD: this workaround doesnt work. When changing to non AP ammo, it will bug again. try find something like onGunReload? or onAmmoSwap? 
+    <buff name="buffGSKEquippedArmorPiercingAmmo" hidden="false" help="hidden: no need to show this one" icon="7dtdShockTip" icon_color="0,255,255" description_key="dkbuffGSKEquippedArmorPiercingAmmo">
 			<stack_type value="effect"/>
 			<duration value="0" />
 			<update_rate value="0.20" help="must be faster than a player can shoot to prevent AP working with melee or gun w/o AP"/>
