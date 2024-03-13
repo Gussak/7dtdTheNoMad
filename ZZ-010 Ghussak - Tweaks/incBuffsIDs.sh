@@ -76,6 +76,7 @@ astrBuffBNList=(
   "buffGSKElctrnExplodeExtra"
   "buffGSKElctrnOverchargeDmg"
   "buffGSKendBloodMoon"
+  "buffGSKEquippedArmorPiercingAmmo"
   "buffGSKFallOverLandingHit"
   "buffGSKGasMaskWork"
   "buffGSKHazardousWBloodLoss"
