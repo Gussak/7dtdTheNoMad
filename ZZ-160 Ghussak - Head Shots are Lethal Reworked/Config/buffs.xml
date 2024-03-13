@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
-    <buff name="buffGSKHeadShot" help="helmetWeak requires 2 shots to kill. helmetNormal 3 shots. helmetStrong 4 shots. No helmet is 1 shot. Armor piercing ammo is 1 shot on any helmet. helmetVanillaDamage will consider the head as having vanilla armor therefore vanilla headshot/headhit damage. TODO: there are several possible grades, from pistols to snipers, from bone knife to steel spear... Only top grades: sniper gun with AP bullet, and steel spear, and steel sledge hammer, should be one hit kill on the strongest helmet available.">
+    <buff name="buffGSKHeadShot" help="helmet higher protection requires more shots to kill. No helmet is 1 shot. Armor piercing ammo is not 1 shot on any helmet, depends on gun barrel length and bulelt weight. helmetVanillaDamage will consider the head as having vanilla armor therefore vanilla headshot/headhit damage. TODO: there are several possible grades, from pistols to snipers, from bone knife to steel spear... Only top grades: sniper gun with AP bullet, and steel spear, and steel sledge hammer, should be one hit kill on the strongest helmet available.">
       <stack_type value="effect"/>
       <duration value="0"/>
       <update_rate value="0.05" help="when calc frames are not skipped: (1s/0.05updateRate) = 20 calcs per second. But if there are too many zombies, a big delay may happen and the effect will fail to be insta-kill making you believe you need to spend more bullets..."/>
@@ -26,9 +26,16 @@
         <!--        HELPGOOD: try upgrade to instakill mode (no helmet or AP ammo)-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-          <requirement name="!EntityTagCompare" tags="helmetWeak"/>
-          <requirement name="!EntityTagCompare" tags="helmetNormal"/>
-          <requirement name="!EntityTagCompare" tags="helmetStrong"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection1"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection2"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection3"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection4"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection5"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection6"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection7"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection8"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection9"/>
+          <requirement name="!EntityTagCompare" tags="helmetProtection10"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKHeadShotAllowed">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotLog" operation="Equals" value="1"/>
@@ -140,21 +147,59 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKHeadShotDmgPercCurrent"/>
       </effect_group>
+      <effect_group help="helmet protection:OnStart">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="10">
+          <requirement name="EntityTagCompare" tags="helmetProtection10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="9">
+          <requirement name="EntityTagCompare" tags="helmetProtection9"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="8">
+          <requirement name="EntityTagCompare" tags="helmetProtection8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="7">
+          <requirement name="EntityTagCompare" tags="helmetProtection7"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="6">
+          <requirement name="EntityTagCompare" tags="helmetProtection6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="5">
+          <requirement name="EntityTagCompare" tags="helmetProtection5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="4">
+          <requirement name="EntityTagCompare" tags="helmetProtection4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="3">
+          <requirement name="EntityTagCompare" tags="helmetProtection3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="2">
+          <requirement name="EntityTagCompare" tags="helmetProtection2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHelmetProtection" operation="set" value="1">
+          <requirement name="EntityTagCompare" tags="helmetProtection1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKHelmetProtection">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotLog" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="HeadShot: ragdoll">
         <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-        <requirement name="EntityTagCompare" tags="helmetStrong"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="LTE" value="3"/>
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="1" force="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="1" force="0"/>
       </effect_group>
       <effect_group help="HeadShot: ragdoll">
         <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-        <requirement name="EntityTagCompare" tags="helmetNormal"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="GT" value="3"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="LTE" value="6"/>
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3" force="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="3" force="0"/>
       </effect_group>
       <effect_group help="HeadShot: ragdoll">
         <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-        <requirement name="EntityTagCompare" tags="helmetWeak"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="GT" value="6"/>
+        <requirement name="CVarCompare" cvar=".iGSKHelmetProtection" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="5" force="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="Ragdoll" duration="5" force="0"/>
       </effect_group>
@@ -164,40 +209,11 @@
         <requirement name="CVarCompare" cvar=".iGSKHeadShotDmgPercGoal" operation="Equals" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="@.iGSKHeadShotDmgPercCurrent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="set" value="1.00"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="10" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="9" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection9"/>
-          <requirement name="EntityTagCompare" tags="helmetStrong"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="8" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection8"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="7" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection7"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="6" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection6"/>
-          <requirement name="EntityTagCompare" tags="helmetNormal"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="5" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection5"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="4" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection4"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="3" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection3"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="2" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection2"/>
-          <requirement name="EntityTagCompare" tags="helmetWeak"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="1" compare_type="or">
-          <requirement name="EntityTagCompare" tags="helmetProtection1"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgSubCalc" operation="divide" value="@.iGSKHelmetProtection"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="subtract" value="@.iGSKHeadShotDmgSubCalc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKHeadShotDmgSubCalc">
+          <requirement name="CVarCompare" cvar=".iGSKHeadShotLog" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKHeadShotDmgPercGoal">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotLog" operation="Equals" value="1"/>
         </triggered_effect>
