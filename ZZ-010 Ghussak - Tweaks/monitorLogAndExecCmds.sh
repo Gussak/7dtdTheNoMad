@@ -51,6 +51,18 @@ function FUNCpromptGfx() {
 };export -f FUNCpromptGfx
 function FUNCrawMatchRegex() { echo "$1" |sed -r 's@.@[&]@g'; };export -f FUNCrawMatchRegex
 
+function FUNCsuspendPopup() {
+	CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
+	strInfo="$1"
+	#if which yad;then
+		#while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
+	#else
+		#CFGFUNCprompt "$strInfo"
+	#fi
+	FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
+	CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
+}
+
 export strChkAutoStopOnLoad="`FUNCrawMatchRegex " INF Created player with id="`"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
@@ -69,12 +81,12 @@ tail -F "$strFlLog" |while read strLine;do
 		CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
 		while ! CFGFUNCexec --noErrorExit chmod -R u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
 			if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
-				FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
+				FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 			fi
 		done
 	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
 		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
-		FUNCpromptGfx "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
+		FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
 	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
 		if ! pgrep -fa "${strExecRegex}";then
 			echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
@@ -82,20 +94,12 @@ tail -F "$strFlLog" |while read strLine;do
 			CFGFUNCinfo "+[EXEC:ProtectCfgDump] $strLine (to make it easier to avoid editing them by mistake ...)"
 			while ! CFGFUNCexec --noErrorExit chmod -R ugo-w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
 				if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
-					FUNCpromptGfx "failed to updateNewestSavegameSymlink.sh";
+					FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 				fi
 			done
 			
 			CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
-			CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}"
-			strInfo="the game finished loading and is ready to play"
-			#if which yad;then
-				#while ! CFGFUNCexec --noErrorExit yad --on-top --center --text "${strInfo}. Close to SIGCONT the game.";do :;done
-			#else
-				#CFGFUNCprompt "$strInfo"
-			#fi
-			FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
-			CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
+			FUNCsuspendPopup "the game finished loading and is ready to play"
 			bExecCmd=true
 		fi
 	elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then

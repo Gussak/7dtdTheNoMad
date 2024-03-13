@@ -16,9 +16,12 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKEquippedArmorPiercingAmmo2'"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
         <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEquippedArmorPiercingAmmo2">
-          <requirement name="CVarCompare" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="LTE" value="0"/>
-        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEquippedArmorPiercingAmmo2"/>
       </effect_group>
     </buff>
     <!--		HELPGOOD: this workaround doesnt work. When changing to non AP ammo, it will bug again. try find something like onGunReload? or onAmmoSwap? 
