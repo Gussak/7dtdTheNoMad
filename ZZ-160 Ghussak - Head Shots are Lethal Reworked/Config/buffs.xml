@@ -1,6 +1,19 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffGSKEquippedArmorPiercingAmmo" hidden="true" help="hidden: no need to show this one" icon="7dtdShockTip" icon_color="0,255,255" description_key="dkbuffGSKEquippedArmorPiercingAmmo">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.20" help="must be faster than a player can shoot to prevent AP working with melee or gun w/o AP"/>
+      <effect_group help="Workaround for RemoveBuff happening after AddBuff of the new gun with AP bullet :(">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKfixAPbulletBuffRmAddBug"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKEquippedArmorPiercingAmmo">
+          <requirement name="CVarCompare" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHeadShot" help="helmet higher protection requires more shots to kill. No helmet is 1 shot. Armor piercing ammo is not 1 shot on any helmet, depends on gun barrel length and bulelt weight. helmetVanillaDamage will consider the head as having vanilla armor therefore vanilla headshot/headhit damage. TODO: there are several possible grades, from pistols to snipers, from bone knife to steel spear... Only top grades: sniper gun with AP bullet, and steel spear, and steel sledge hammer, should be one hit kill on the strongest helmet available.">
       <stack_type value="effect"/>
       <duration value="0"/>
