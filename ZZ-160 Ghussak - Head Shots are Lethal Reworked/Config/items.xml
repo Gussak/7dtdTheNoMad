@@ -9,9 +9,11 @@
     <effect_group tiered="false">
       <!-- HELPGOOD:ISSUE: RemoveBuff seems to happen after the other gun with AP bullets AddBuff? so we would need to re-equip the other gun again :(-->
       <!-- HELPGOOD:ISSUE: changing ammo to non AP will keep AP buff as doing that wont trigger onSelfEquipStop for ammo, it seems related only to the gun-->
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="add" value="1"/>
-      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="add" value="-1"/>
-      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo2"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfPrimaryActionRayHit" target_tags="zombie,animal,bandit,mech" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfPrimaryActionRayHit" target_tags="zombie,animal,bandit,mech" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo"/>
     </effect_group>
   </append>
   <!-- HELPGOOD:
