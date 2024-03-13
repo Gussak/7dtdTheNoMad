@@ -12,15 +12,44 @@
   <append xpath="/entity_classes/entity_class[@name='mechSphereII']" help="fix it before other patches">
     <property name="Tags" value="entity,cp,mech,mechSphereII"/>
   </append>
-  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker') or       @name='animalBear' or       @name='mechDrone' or       @name='mechSphereI' or       @name='mechSphereII'     ]/property[@name='Tags']/@value">,helmetWeak</append>
+  <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieUtilityWorker') or       starts-with(@name,'zombieBiker') or       @name='animalBear' or       @name='mechDrone' or       @name='mechSphereI' or       @name='mechSphereII' or       @name='mechBee'     ]/property[@name='Tags']/@value">,helmetWeak</append>
   <append xpath="/entity_classes/entity_class[       @name='animalZombieBear'     ]/property[@name='Tags']/@value">,helmetNormal</append>
   <append xpath="/entity_classes/entity_class[       starts-with(@name,'zombieSoldier') or       starts-with(@name,'zombieDemolition') or       @name='mechRobot' or       @name='mechRobotArmy'     ]/property[@name='Tags']/@value">,helmetStrong</append>
+  <append xpath="/entity_classes/entity_class[       contains(@name,'mechDeusEx')     ]/property[@name='Tags']/@value">,helmetVanillaDamage</append>
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
     <effect_group help="Headshot">
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
-        <!-- HELPGOOD: could work with ProjectileHasTags ? 
-        <requirement name="HoldingItemHasTags" tags="armorPiercing" help="ISSUE: This does not work for loaded ammo"/>
--->
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="10">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd10"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="9">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd9"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="8">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd8"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="7">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd7"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="6">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd6"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="5">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd5"/>
+        <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="HitLocation" body_parts="Head"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="4">
+        <requirement name="HoldingItemHasTags" tags="armorPiercingAdd4"/>
         <requirement name="HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
         <requirement name="HitLocation" body_parts="Head"/>
       </triggered_effect>
@@ -43,28 +72,40 @@
         <requirement name="HitLocation" body_parts="Head" help="this is about where the player is aiming and not where the target is receiving the hit right?"/>
         <requirement name="!HoldingItemHasTags" tags="shotgun"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
+    </effect_group>
+    <effect_group help="Headshot by non AP shotgun pellets ISSUE: this will work even if just one of the pellets hit the head right?">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="1">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="5" help="This is from the EffectiveAndImmersiveWeaponsOverhaul. max is 20 pellets"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="10"/>
+        <requirement name="!HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="GTE" value="5" help="This is from the EffectiveAndImmersiveWeaponsOverhaul. max is 20 pellets"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="LT" value="10"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="2">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="!HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="GTE" value="10"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="LT" value="15"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="3">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="!HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="GTE" value="15"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="LT" value="20"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit,mech" cvar=".iGSKShotByArmorPiercing" operation="add" value="4">
+        <requirement name="HitLocation" body_parts="Head"/>
+        <requirement name="HoldingItemHasTags" tags="shotgun"/>
+        <requirement name="!HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="CVarCompare" target="other" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
         <requirement name="HitLocation" body_parts="Head"/>
         <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="10"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="15"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="15"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LT" value="20"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,mech" buff="buffGSKHeadShot">
-        <requirement name="HitLocation" body_parts="Head"/>
-        <requirement name="HoldingItemHasTags" tags="shotgun"/>
-        <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
+        <requirement name="!HasBuff" buff="buffGSKEquippedArmorPiercingAmmo"/>
+        <requirement name="CVarCompare" target="other" cvar=".iGSKShotByArmorPiercing" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
   </append>

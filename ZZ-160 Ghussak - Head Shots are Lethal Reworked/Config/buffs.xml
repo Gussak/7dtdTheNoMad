@@ -4,7 +4,7 @@
     <buff name="buffGSKHeadShot" help="helmetWeak requires 2 shots to kill. helmetNormal 3 shots. helmetStrong 4 shots. No helmet is 1 shot. Armor piercing ammo is 1 shot on any helmet. helmetVanillaDamage will consider the head as having vanilla armor therefore vanilla headshot/headhit damage. TODO: there are several possible grades, from pistols to snipers, from bone knife to steel spear... Only top grades: sniper gun with AP bullet, and steel spear, and steel sledge hammer, should be one hit kill on the strongest helmet available.">
       <stack_type value="effect"/>
       <duration value="0"/>
-      <update_rate value="0.05" help="if calc frames are not skipped: (1s/0.05updateRate) = 20 calcs / s"/>
+      <update_rate value="0.05" help="when calc frames are not skipped: (1s/0.05updateRate) = 20 calcs per second. But if there are too many zombies, a big delay may happen and the effect will fail to be insta-kill making you believe you need to spend more bullets..."/>
       <effect_group help="HeadShot: special creatures and conditions">
         <!--        HELPGOOD: 1 is with helmet-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="1"/>
@@ -14,7 +14,7 @@
           <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
-          <requirement name="EntityTagCompare" tags="helmetVanillaDamage"/>
+          <requirement name="EntityTagCompare" tags="helmetVanillaDamage" help="this is meant to force vanilla damage in head"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
           <requirement name="HasBuff" buff="buffGSKNPCproperSneakingProtectFoes"/>
@@ -26,10 +26,13 @@
           <requirement name="!EntityTagCompare" tags="helmetNormal"/>
           <requirement name="!EntityTagCompare" tags="helmetStrong"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
-          <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
-          <requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1"/>
-        </triggered_effect>
+        <!-- HELPGOOD: below is overkill just to make it work if it is not as intended (like if it is too slow, will not work like insta-kill) during development... -->
+        <!-- HELPGOOD
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
+					<requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1" />
+					<requirement name="CVarCompare" cvar=".iGSKShotByArmorPiercing" operation="GTE" value="1" />
+				</triggered_effect>
+-->
         <!--        HELPGOOD: denied-->
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
@@ -45,8 +48,10 @@
         <requirement name="StatCompareCurrent" stat="health" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercGoal" operation="set" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotDmgPercCurrent" operation="set" value="-1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="set" value="@.iGSKShotByArmorPiercing"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotByArmorPiercing" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKHeadShotStack" operation="add" value="@.iGSKShotByArmorPiercing"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKShotByArmorPiercing" operation="set" value="0"/>
         <!-- HELPGOOD: 
 					will lower more HP per iteration if it has more max hp.
 					ex.: value 10 * ((1s/0.05updateRate)=20) = -200hp/1s
