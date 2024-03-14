@@ -414,8 +414,8 @@
       </effect_group>
       <effect_group help="zombies wont die of slow bleeding">
         <requirement name="EntityTagCompare" tags="zombie"/>
-        <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="2"/>
-        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="4"/>
+        <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="3"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedDuration" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest"/>
@@ -456,6 +456,7 @@
       <duration value="0.05"/>
       <effect_group>
         <requirement name="!EntityTagCompare" tags="player,trader"/>
+        <requirement name="NotHasBuff" buff="buffEWExtraBurning"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
           <requirement name="NotHasBuff" buff="buffEWConfig"/>
         </triggered_effect>
@@ -471,6 +472,11 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWExtraBurning">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="try to set a nearby/touched entity on fire too so it may spread">
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="1.5" action="AddBuff" buff="buffEWExtraBurningAdd">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="while buffIsOnFire is active, let it act alone. buffEWExtraBurning kicks in only after buffIsOnFire ends">
@@ -528,8 +534,7 @@
       </effect_group>
       <effect_group help="zombies wont die of slow burning">
         <requirement name="EntityTagCompare" tags="zombie"/>
-        <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="2"/>
-        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="4"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning"/>
@@ -539,8 +544,11 @@ Zombies/Materials/HD_Burnt_Zombie_Radiated.mat
 Zombies/Materials/HD_Burnt_Zombie.mat
 Zombies/Materials/HD_Burnt_Zombie_Feral.mat
 Zombies/Materials/Burnt_Zombie_.mat
+	how to change texture/material/skin from buffs.xml? this only works from entityclasses.xml:
+				<property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+				<property name="ReplaceMaterial1" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+				<property name="ReplaceMaterial2" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
 				-->
-        <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
       </effect_group>
       <!--HELPGOOD: will continue slow burning until extinguished (only player can access buffExtinguishFire on self?) -->
       <effect_group help="finalize">
@@ -551,7 +559,9 @@ Zombies/Materials/Burnt_Zombie_.mat
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWExtraBurning:REMOVED">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
-        <!--HELPGOOD: this will keep the corpse burning. -->
+        <triggered_effect trigger="onSelfBuffRemove" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,-.2,0" parent_transform="LOD0" shape_mesh="true" help="TODO:ISSUE:FAILS: this keeps the corpse burning">
+          <requirement name="!IsAlive"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_onFire">
           <requirement name="IsAlive"/>
         </triggered_effect>
@@ -581,9 +591,21 @@ Zombies/Materials/Burnt_Zombie_.mat
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtExplKORandomTime" operation="set" value="randomInt(66,666)"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtExplKO" help="while knocked down, it will regenerate slowly til it rises again"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="3" help="sync with update_rate">
-          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iEWtmpHpRegenRest" operation="set" value="randomFloat(1.0,5.0)" help="sync with update_rate for between min,max"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iEWtmpHpRegenRest"/>
+      </effect_group>
+      <effect_group>
+        <!--        HELPGOOD:TODO: how to force end ragdoll when zombie reaches good hp regen? these wont end the ragdoll mode, it just breaks the cvar coherency to WYSIWYG :(
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdoll" operation="set" value="0">
+					<requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95" />
         </triggered_effect>
+        <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="ragdoll" operation="set" value="0">
+					<requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.33" />
+				</triggered_effect>
+				-->
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWZombieRevigoratingRest">
           <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
         </triggered_effect>
