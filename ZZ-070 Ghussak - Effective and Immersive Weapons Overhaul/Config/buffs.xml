@@ -455,7 +455,7 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
-        <requirement name="!EntityTagCompare" tags="player,trader"/>
+        <requirement name="!EntityTagCompare" tags="player,trader,burnt" compare_type="or"/>
         <requirement name="NotHasBuff" buff="buffEWExtraBurning"/>
         <requirement name="NotHasBuff" buff="buffEWZombieRevigoratingRest"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
@@ -463,6 +463,17 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtraBurningCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtraBurning"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEWTrySetNearbyEntitiesOnFire" hidden="true">
+      <damage_type value="heat"/>
+      <stack_type value="replace"/>
+      <update_rate value="1.0"/>
+      <duration value="0"/>
+      <effect_group help="try to set a nearby/touched entity on fire too so it may spread">
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="1.25" action="AddBuff" buff="buffEWExtraBurningAdd">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="5"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffEWExtraBurning" hidden="true">
@@ -474,11 +485,8 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWExtraBurning">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
-      </effect_group>
-      <effect_group help="try to set a nearby/touched entity on fire too so it may spread">
-        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="1.5" action="AddBuff" buff="buffEWExtraBurningAdd">
-          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
       </effect_group>
       <effect_group help="while buffIsOnFire is active, let it act alone. buffEWExtraBurning kicks in only after buffIsOnFire ends">
         <requirement name="NotHasBuff" buff="buffIsOnFire" help="so, do all these things only after buffIsOnFire ends"/>
