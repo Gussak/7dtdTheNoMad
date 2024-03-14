@@ -69,7 +69,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="0">
           <requirement name="HasBuff" buff="buffGSKNPCproperSneakingProtectFoes"/>
         </triggered_effect>
-        <!--        HELPGOOD: try upgrade to instakill mode (no helmet or AP ammo)-->
+        <!--        HELPGOOD: try upgrade to instakill mode (target is not using helmet. ammo doesnt need to be AP)-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHeadShotAllowed" operation="set" value="2">
           <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="1"/>
           <requirement name="!EntityTagCompare" tags="helmetProtection1"/>
@@ -98,7 +98,7 @@
           <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="HeadShot: no helmet is insta kill (obs.: some creatures like bears have natural helmet cranium/skin)">
+      <effect_group help="HeadShot: no helmet is insta kill for any bullet (obs.: some creatures like bears have natural helmet cranium/skin)">
         <requirement name="CVarCompare" cvar=".iGSKHeadShotAllowed" operation="Equals" value="2" help="2 means instakill"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKHeadShot"/>

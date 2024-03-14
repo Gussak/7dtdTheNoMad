@@ -401,16 +401,26 @@
       <duration value="0"/>
       <effect_group>
         <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBleedAmount" help="per second"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1" help="a small chance to lower bleeding">
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
-          <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="GT" value="1"/>
+          <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="GT" value="1" help="keep a very weak bleeding tho til it timeout"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1">
-          <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="LTE" value="0" help="quickly (not intantly) stop bleeding if it timeouts"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedDuration" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="GT" value="0"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="zombies wont die of slow bleeding">
+        <requirement name="EntityTagCompare" tags="zombie"/>
+        <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="2"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="4"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedDuration" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest"/>
+      </effect_group>
+      <effect_group help="finalize">
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWBleed">
           <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="0"/>
@@ -463,27 +473,30 @@
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
-        <requirement name="NotHasBuff" buff="buffIsOnFire"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="iEWExtraBurningCount" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="Equals" value="0"/>
+      <effect_group help="while buffIsOnFire is active, let it act alone. buffEWExtraBurning kicks in only after buffIsOnFire ends">
+        <requirement name="NotHasBuff" buff="buffIsOnFire" help="so, do all these things only after buffIsOnFire ends"/>
+        <!-- HELPGOOD: damage starts in 1 to let it vanish or grow slower taking more time to kill the foe -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="1" help="grants init, MUST BE BEFORE inc iEWExtraBurningCount">
+          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="Equals" value="0" help="means it was not set yet"/>
+          <requirement name="CVarCompare" cvar="iEWExtraBurningCount" operation="Equals" value="0" help="means the buff was just added or re-added"/>
+          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="Equals" value="0" help="means iEWBurnAmount was not lowered to 0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWExtraBurningCount" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWExtraBurningCount">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWToggleBurnAddCount" operation="add" value="1"/>
+        <!--HELPGOOD: it will try to increse OR decrease iEWBurnAmount ONCE per loop -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWToggleBurnAddCount" operation="add" value="1" help="a counter to let a toggle work"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bEWToggleBurnAdd" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bEWToggleBurnAdd" operation="set" value="0">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bEWToggleBurnAdd" operation="set" value="0" help="0 is false, means subtract">
           <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWToggleBurnAddCount" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="GTE" value="2"/>
         </triggered_effect>
+        <!--HELPGOOD: increse OR decreate iEWBurnAmount -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bEWToggleBurnAdd" operation="Equals" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="20"/>
@@ -493,6 +506,7 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
           <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="GT" value="0"/>
         </triggered_effect>
+        <!--HELPGOOD: extinguish fire if not burning for a few seconds, rare condition -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="add" value="1">
           <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="0"/>
         </triggered_effect>
@@ -504,7 +518,7 @@
           <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="GT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
-          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="GTE" value="7"/>
+          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="GTE" value="7" help="requires 7 retries failing to burn to extinguish the fire"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWBurnAmount">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
@@ -512,7 +526,24 @@
         <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBurnAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,-.2,0" parent_transform="LOD0" shape_mesh="true"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="zombies wont die of slow burning">
+        <requirement name="EntityTagCompare" tags="zombie"/>
+        <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="2"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="4"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest" help="TODO: alternatively should kill and instantly de-spawn the zombie and spawn a knocked down burn zombie with low HP (just above the exploding trigger) exactly where this zombie died, but how to place it at previous zombie position? May be, just set the zombie skin to the burnt skin and add to it the burn zombie power."/>
+        <!--      HELPGOOD: list materials: egrep '\.mat$' "../../"* -\-include="*.manifest" -iRIh |egrep '[^/]*burnt[^/]*\.mat$' -i 
+Zombies/Materials/HD_Burnt_Zombie_Radiated.mat
+Zombies/Materials/HD_Burnt_Zombie.mat
+Zombies/Materials/HD_Burnt_Zombie_Feral.mat
+Zombies/Materials/Burnt_Zombie_.mat
+				-->
+        <property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+      </effect_group>
+      <!--HELPGOOD: will continue slow burning until extinguished (only player can access buffExtinguishFire on self?) -->
+      <effect_group help="finalize">
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWExtraBurning"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_wetness">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="3"/>
@@ -520,6 +551,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWExtraBurning:REMOVED">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
         </triggered_effect>
+        <!--HELPGOOD: this will keep the corpse burning. -->
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_onFire">
           <requirement name="IsAlive"/>
         </triggered_effect>
@@ -542,6 +574,21 @@
     </buff>
   </append>
   <append xpath="/buffs">
+    <buff name="buffEWZombieRevigoratingRest" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtExplKORandomTime" operation="set" value="randomInt(66,666)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtExplKO" help="while knocked down, it will regenerate slowly til it rises again"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="3" help="sync with update_rate">
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWZombieRevigoratingRest">
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffEWExtExplKOAdd" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
