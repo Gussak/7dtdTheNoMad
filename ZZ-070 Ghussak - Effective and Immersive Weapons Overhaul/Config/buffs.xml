@@ -457,6 +457,7 @@
       <effect_group>
         <requirement name="!EntityTagCompare" tags="player,trader"/>
         <requirement name="NotHasBuff" buff="buffEWExtraBurning"/>
+        <requirement name="NotHasBuff" buff="buffEWZombieRevigoratingRest"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
           <requirement name="NotHasBuff" buff="buffEWConfig"/>
         </triggered_effect>
@@ -532,8 +533,11 @@
         <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBurnAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,-.2,0" parent_transform="LOD0" shape_mesh="true"/>
       </effect_group>
-      <effect_group help="zombies wont die of slow burning">
+      <effect_group help="zombies wont die of extra burning">
         <requirement name="EntityTagCompare" tags="zombie"/>
+        <!-- HELPGOOD: this would be only for slow burning
+				<requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="5"/>
+-->
         <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0"/>
@@ -552,6 +556,9 @@ Zombies/Materials/Burnt_Zombie_.mat
       </effect_group>
       <!--HELPGOOD: will continue slow burning until extinguished (only player can access buffExtinguishFire on self?) -->
       <effect_group help="finalize">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+          <requirement name="HasBuff" buff="buffEWZombieRevigoratingRest"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWExtraBurning"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_wetness">
           <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="3"/>

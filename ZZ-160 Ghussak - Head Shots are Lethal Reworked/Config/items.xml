@@ -11,8 +11,13 @@
       <!-- HELPGOOD:ISSUE: changing ammo to non AP will keep AP buff as doing that wont trigger onSelfEquipStop for ammo, it seems related only to the gun-->
       <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
       <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo"/>
-      <triggered_effect trigger="onReloadUpdate" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+      <!--      HELPGOOD: onReloadStart,onReloadUpdate,onReloadStop happens not on reloading the same ammo, only when changing ammo and if there is any ammo to change, so 0 ammo wont trigger this.-->
+      <triggered_effect trigger="onReloadUpdate" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="TODO:ISSUE:FAILS: this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
       <triggered_effect trigger="onReloadStop" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="TODO:ISSUE:FAILS: this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+      <triggered_effect trigger="onReloadStart" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="TODO:ISSUE:FAILS: this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+      <triggered_effect trigger="onReloadStart" action="LogMessage" message="GSK:onReloadStart"/>
+      <triggered_effect trigger="onReloadUpdate" action="LogMessage" message="GSK:onReloadUpdate"/>
+      <triggered_effect trigger="onReloadStop" action="LogMessage" message="GSK:onReloadStop"/>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="0"/>
     </effect_group>
   </append>
