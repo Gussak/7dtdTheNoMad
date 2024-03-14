@@ -458,6 +458,7 @@
         <requirement name="!EntityTagCompare" tags="player,trader,burnt" compare_type="or"/>
         <requirement name="NotHasBuff" buff="buffEWExtraBurning"/>
         <requirement name="NotHasBuff" buff="buffEWZombieRevigoratingRest"/>
+        <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
           <requirement name="NotHasBuff" buff="buffEWConfig"/>
         </triggered_effect>
@@ -550,6 +551,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBecomeBurntZombieAfterFullRest" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest" help="TODO: alternatively should kill and instantly de-spawn the zombie and spawn a knocked down burn zombie with low HP (just above the exploding trigger) exactly where this zombie died, but how to place it at previous zombie position? May be, just set the zombie skin to the burnt skin and add to it the burn zombie power."/>
         <!--      HELPGOOD: list materials: egrep '\.mat$' "../../"* -\-include="*.manifest" -iRIh |egrep '[^/]*burnt[^/]*\.mat$' -i 
 Zombies/Materials/HD_Burnt_Zombie_Radiated.mat
@@ -564,8 +566,9 @@ Zombies/Materials/Burnt_Zombie_.mat
       </effect_group>
       <!--HELPGOOD: will continue slow burning until extinguished (only player can access buffExtinguishFire on self?) -->
       <effect_group help="finalize">
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning" compare_type="or">
           <requirement name="HasBuff" buff="buffEWZombieRevigoratingRest"/>
+          <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWExtraBurning"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_wetness">
@@ -611,6 +614,18 @@ Zombies/Materials/Burnt_Zombie_.mat
         <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iEWtmpHpRegenRest" operation="set" value="randomFloat(1.0,5.0)" help="sync with update_rate for between min,max"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iEWtmpHpRegenRest"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95"/>
+        <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="1"/>
+        <!--				HELPGOOD:TODO: instead should just spawn a burnt zombie where this one is with the same stats-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" parent_transform="Hips"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
+        <!-- HELPGOOD:
+				<triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="RadiatedParticlesOnMesh" local_offset="0,0.75,0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_torch_wall" local_offset="0,0.3,0" parent_transform="Head" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,0,0" parent_transform="LOD0" shape_mesh="true" />
+-->
       </effect_group>
       <effect_group>
         <!--        HELPGOOD:TODO: how to force end ragdoll when zombie reaches good hp regen? these wont end the ragdoll mode, it just breaks the cvar coherency to WYSIWYG :(
