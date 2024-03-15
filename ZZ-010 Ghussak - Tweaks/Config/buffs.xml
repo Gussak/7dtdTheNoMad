@@ -1050,7 +1050,22 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1000"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: put something that doesnt call attention at night (that is not a light source), but all smokes are failing right?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO?: put something that doesnt call attention at night (that is not a light source)? but all smokes are failing right? despite the torch looks interesting too">
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" help="only when they get up"/>
+        </triggered_effect>
+        <!-- HELPGOOD: no smoke will work. only light sources work: (clear;cd ..;egrep 'particle="[^"]*"' * -hiRIao -\-exclude-dir="ConfigsDump" -\-exclude-dir="*_GitHub_*" -\-exclude-dir="*_ReleasePackageFiles_*") 2>/dev/null |sort -u
+particle="materials/airdrop_smoke"
+particle="materials/campfire_smoke"
+particle="ParticleEffects/RadiatedParticlesOnMesh"
+particle="p_burning_barrel" ok but lights and sound
+particle="p_electric_shock" ok but lights and sound
+particle="p_gunfire_pistol"
+particle="p_impact_metal_on_organic"
+particle="p_nozzlesmokeuzi"
+particle="p_onFire" ok but lights
+particle="p_torch_wall" ok but lights
+particle="torch02_firePrefab"
+-->
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab"/>
       </effect_group>
       <effect_group>
