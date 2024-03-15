@@ -1050,12 +1050,14 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="materials/campfire_smoke" local_offset="0,0,0" local_rotation="0,0,0" parent_transform="head"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="materials/campfire_smoke"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCproperSneakingProtectFoes" compare_type="or">
           <requirement name="!IsNight"/>
-          <requirement name="IsIndoors" help="this works?"/>
+          <requirement name="IsIndoors" help="this works for zombies?"/>
           <requirement name="IsBloodMoon"/>
         </triggered_effect>
       </effect_group>
@@ -10699,6 +10701,16 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKCountNearbyFoes30m">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30m" operation="add" value="1" target="selfAOE" range="35" help="sync with this buff call range">
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKPermanentGenericCheck21" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -11223,6 +11235,15 @@
       <effect_group help="NPCSneak: count nearby foes (must be after the count check otherwise it would always be 0 there)">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes" target="selfAOE" range="10" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveTotal30m" operation="set" value="@.iGSKNearbyFoeAliveCount30m"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30m" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes30m" target="selfAOE" range="30" compare_type="or">
           <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
           <requirement name="EntityTagCompare" target="other" tags="zombie"/>
           <requirement name="EntityTagCompare" target="other" tags="bandit"/>

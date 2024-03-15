@@ -16,11 +16,68 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKendBloodMoon1"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKmakeDayLightEnd" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_color="255,255,0" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKmakeDayLightEnd'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:'buffGSKmakeDayLightEnd'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKmakeDayLightEnd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKdenyMakeNightEnd"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKdenyMakeNightEnd" hidden="false" remove_on_death="false" help="no icon to show only on the detailed list">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeNightEnd"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKmakeNightEnd" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_color="255,255,0" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <requirement name="IsNight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKmakeNightEnd'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:'buffGSKmakeNightEnd'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKmakeNightEnd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKdenyMakeDayLightEnd" hidden="false" remove_on_death="false" help="no icon to show only on the detailed list">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <requirement name="IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKDetectRespawn']">
     <effect_group help="end blood moon if player dies (respawns)">
       <requirement name="IsBloodMoon"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKendBloodMoon1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKendBloodMoon1">
+        <requirement name="CVarCompare" cvar="iGSKEndBloodMoodAllowed" operation="Equals" value="1"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEndBloodMoodAllowed" operation="set" value="1"/>
     </effect_group>
   </append>
 </GhussakTweaks>

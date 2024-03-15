@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="GSKCfgEndBloodMoon">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCfgEndBloodMoon"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoodAllowed" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoodAllowed" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKwaitTheNightEnd">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
+      <property name="CustomIcon" value="foodCropMushrooms"/>
+      <property name="CustomIconTint" value="128,180,250"/>
+      <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
+        <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="300">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingTime" operation="LT" value="300"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKwaitTheDayLightEnd">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
+      <property name="CustomIcon" value="foodCropMushrooms"/>
+      <property name="CustomIconTint" value="128,128,220"/>
+      <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+        <requirement name="!IsNight"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
+        <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="300">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingTime" operation="LT" value="300"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>
