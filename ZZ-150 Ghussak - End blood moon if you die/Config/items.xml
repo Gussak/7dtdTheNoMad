@@ -11,26 +11,17 @@
     </item>
     <item name="GSKwaitTimePassBase">
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
+      <property name="CreativeMode" value="None"/>
       <property name="CustomIcon" value="foodCropMushrooms"/>
       <property name="CustomIconTint" value="128,180,250"/>
       <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
-      <property class="Action0">
-        <requirement name="!IsBloodMoon"/>
-        <requirement name="IsNight"/>
-        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
-        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
-        <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
-        <property name="Class" value="Activate"/>
-        <property name="Delay" value="1.0"/>
-        <property name="Use_time" value="..."/>
-      </property>
       <property class="Action1">
         <requirement name="!IsBloodMoon"/>
-        <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
         <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
         <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
         <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="1"/>
+        <property name="Class" value="Eat" help="to destroy/consume it"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="add" value="1"/>
@@ -38,9 +29,11 @@
           <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="set" value="300">
-          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingTime" operation="LT" value="300"/>
-        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.15,0.32)" trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,320)"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="means 1st to 3rd near death level if it was 0.00;FixTinyRandomFloat: was randomFloat(0.15,0.32)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=33:				<triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.15,0.32)" help="means 1st to 3rd near death level if it was 0.00"/> -->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(1.0,2.0)"/>
       </effect_group>
     </item>
     <item name="GSKwaitTheNightEnd">
@@ -48,9 +41,11 @@
       <property name="CustomIconTint" value="128,180,250"/>
       <property class="Action0">
         <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd"/>
+        <requirement name="IsNight"/>
       </property>
       <property class="Action1">
         <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd"/>
+        <requirement name="IsNight"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd"/>
@@ -61,9 +56,11 @@
       <property name="CustomIconTint" value="128,128,220"/>
       <property class="Action0">
         <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+        <requirement name="!IsNight"/>
       </property>
       <property class="Action1">
         <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+        <requirement name="!IsNight"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd"/>
