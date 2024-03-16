@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <append xpath="/items/item[starts-with(@name,'food')]" help="rationale: anything you use to feed">
+    <effect_group name="regen a bit of blood loss" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss subtract randomFloat(0.001,0.002)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,2)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="TODO? could alternatively heal a tiny bit every time food bar is consumed;FixTinyRandomFloat: was randomFloat(0.001,0.002)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5:			<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="randomFloat(0.001,0.002)" help="TODO? could alternatively heal a tiny bit every time food bar is consumed"> -->
+        <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
   <!-- HELPGOOD: ================================================================
 		tweaks for fGSKHitpointsBlockageChemUse
 	-->
@@ -50,13 +60,6 @@
       <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.15,0.33)">
         <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=21242:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.15,0.33)"> -->
         <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'food')]" help="rationale: anything you use to feed">
-    <effect_group name="regen a bit of blood loss" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="randomFloat(0.001,0.002)" help="TODO? could alternatively heal a tiny bit every time food bar is consumed">
-        <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.0"/>
       </triggered_effect>
     </effect_group>
   </append>
