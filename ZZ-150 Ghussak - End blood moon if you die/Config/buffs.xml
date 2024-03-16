@@ -66,10 +66,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeDayLightEnd"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKtimePassDebuff" hidden="false" remove_on_death="false" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
+    <buff name="buffGSKtimePassDebuff" hidden="false" remove_on_death="true" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
       <stack_type value="ignore"/>
-      <duration value="0.10"/>
-      <update_rate value="0.07" help="to update only once"/>
+      <duration value="9"/>
+      <update_rate value="5" help="to update only once just after ragdoll ends"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
         <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.25,0.37)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,370)"/>
@@ -81,6 +81,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="this will be harder in snow biome, make a campfire;FixTinyRandomFloat: was randomFloat(2.5,5.0)"/>
         <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=0:<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(2.5,5.0)" help="this will be harder in snow biome, make a campfire"/> -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0" help="so the player wont use it from inventory by mistake messing the game time unintentionally"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKtimePassDebuff"/>
       </effect_group>
     </buff>
   </append>
