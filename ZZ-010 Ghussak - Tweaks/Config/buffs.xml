@@ -11450,10 +11450,10 @@ particle="torch02_firePrefab"
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="2.5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFatClearScrEff" operation="set" value="0"/>
       </effect_group>
-      <effect_group help="FAT: extra fat helps on avoiding death too">
+      <effect_group help="FAT: extra fat helps on avoiding death by starvation too">
         <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LTE" value="0.04" help="the inverse check at buffStatusHungry03(starvation) to add buffStatusHungry02 that will end removing buffStatusHungry03"/>
         <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="0.1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="food" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKStarvingSideEffectsApplyNow" operation="set" value="1"/>
       </effect_group>
@@ -11548,6 +11548,7 @@ particle="torch02_firePrefab"
           <requirement name="!HasBuff" buff="buffDrugVitamins"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKStarvingSideEffectsApplyNow" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Starving consumes fat and makes you tired."/>
       </effect_group>
       <effect_group help="STARVING:bad passive effects (with or without fat)">
         <requirement name="CVarCompare" cvar="fGSKStarvingDebuffTime" operation="GTE" value="1"/>

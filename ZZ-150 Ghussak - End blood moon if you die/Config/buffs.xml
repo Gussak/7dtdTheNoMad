@@ -66,6 +66,19 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeDayLightEnd"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKtimePassDebuff" hidden="false" remove_on_death="false" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <update_rate value="0.07" help="to update only once"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.32,0.40)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(320,400)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="means 1st to 3rd near death level if it was 0.00;FixTinyRandomFloat: was randomFloat(0.32,0.40)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=33:				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.32,0.40)" help="means medium to max near death level if it was 0.00"/> -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(2.5,5.0)" help="this will be harder in snow biome, make a campfire"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKDetectRespawn']">
     <effect_group help="end blood moon if player dies (respawns)">

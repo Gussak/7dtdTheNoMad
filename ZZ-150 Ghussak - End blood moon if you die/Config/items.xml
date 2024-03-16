@@ -9,9 +9,8 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoodAllowed" operation="set" value="0"/>
       </effect_group>
     </item>
-    <item name="GSKwaitTheNightEnd">
+    <item name="GSKwaitTheNightEnd" help="TODO: requirements and effect_groups are not extended? so a base item wouldnt help here, have to dup all logic :(">
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
-      <property name="CreativeMode" value="None"/>
       <property name="CustomIcon" value="foodCropMushrooms"/>
       <property name="CustomIconTint" value="128,180,250" help="DIFFERS"/>
       <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
@@ -35,17 +34,11 @@
           <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GTE" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd" help="DIFFERS"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.15,0.32)" trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,320)"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="means 1st to 3rd near death level if it was 0.00;FixTinyRandomFloat: was randomFloat(0.15,0.32)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=33:				<triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.15,0.32)" help="means 1st to 3rd near death level if it was 0.00"/> -->
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(1.0,2.0)"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
       </effect_group>
     </item>
     <item name="GSKwaitTheDayLightEnd">
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
-      <property name="CreativeMode" value="None"/>
       <property name="CustomIcon" value="foodCropMushrooms"/>
       <property name="CustomIconTint" value="128,128,220" help="DIFFERS"/>
       <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
@@ -69,12 +62,7 @@
           <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GTE" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd" help="DIFFERS"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.15,0.32)" trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,320)"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="means 1st to 3rd near death level if it was 0.00;FixTinyRandomFloat: was randomFloat(0.15,0.32)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=33:				<triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.15,0.32)" help="means 1st to 3rd near death level if it was 0.00"/> -->
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(1.0,2.0)"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
       </effect_group>
     </item>
   </append>
