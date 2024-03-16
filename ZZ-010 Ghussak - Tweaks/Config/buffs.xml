@@ -11519,7 +11519,9 @@ particle="torch02_firePrefab"
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="0.5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="0.5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.33" help="some value near to letting almost no healing happen if feeding only on remaining fat. sync with update_rate"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-100">
+          <requirement name="!HasBuff" buff="buffGSKWightEssence" help="otherwise this would just end almost killing the player by converting HP into stamina, and seems cool having that power affect this too"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="Player$Hungry" play_in_head="true"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFatClearScrEff" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="120" help="sync with 2x this starvation check delay iGSKStarvingSideEffectsCountdown, but this may happen more often depending on fat consumption rate (to counter starvation)"/>
@@ -12808,7 +12810,7 @@ particle="torch02_firePrefab"
     <buff name="buffFortifyingGripDebuffAttack" hidden="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
-      <effect_group>
+      <effect_group help="do not mess with stamina because HP is already very low">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="set" value="0.0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".5"/>
