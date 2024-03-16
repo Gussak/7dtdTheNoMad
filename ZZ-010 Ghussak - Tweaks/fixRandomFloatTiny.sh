@@ -41,10 +41,132 @@ strHint="FixTinyRandomFloat" #only use letters and numbers
 
 strErrTip=". Adjusting the xml file to not error here is easier than improving this script (unless it is worth like the ignorable/optional properties), so keep the expected order of the xml elements (trigger, action etc), and place no xml comments on that same line before nor after the expected xml token."
 
-CFGFUNCprompt "You can code normally with tiny randomFloat values and then just run this script right after! Also be sure there is nothing that matches on the xml comments${strErrTip}"
-
 strNL="
 "
+
+function FUNCfixLine() {
+	#iLineNumber="`echo "$strOriginalLine" |egrep "^[0-9]*:" -io`";iLineNumber="${iLineNumber%:}"
+	#strLeadingSpacesAndToken="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:([\t ]*<triggered_effect *).*@\1@i'`"
+	strLeadingSpaces="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:([\t ]*).*@\1@i'`"
+	strXmlToken="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:[\t ]*< *([a-zA-Z0-9_]*).*@\1@i'`"
+	strTrigger="`echo "$strOriginalLine" |sed -r 's@.*trigger="([^"]*)".*@\1@i'`"
+	strCVar="`echo "$strOriginalLine" |sed -r 's@.*cvar="([^"]*)".*@\1@i'`";strCVarRegex="`echo "$strCVar" |sed -r 's@[$]@[$]@g'`" #this regex protects the $
+	strRandomFloatString="`echo "$strOriginalLine" |egrep "randomfloat" -io`"
+	strRMin="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(]([^,]*),.*@\1@i'`" #help sed ignore case with 'i' or 'I'
+	strRMax="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(][^,]*,([^)]*)[)].*@\1@i'`" #help sed ignore case with 'i' or 'I'
+	strAction="`echo "$strOriginalLine" |sed -r 's@.*action="([^"]*)".*@\1@i'`"
+	strOperation="`echo "$strOriginalLine" |sed -r 's@.*operation="([^"]*)".*@\1@i'`"
+	#thing that may not exist
+	strIgnorableHelp="`echo "$strOriginalLine" |egrep ' *help="[^"]*"' -o`"&&:
+	strIgnorableTarget="`echo "$strOriginalLine" |egrep ' *target="[^"]*"' -o`"&&:
+	strIgnorableRange="`echo "$strOriginalLine" |egrep ' *range="[^"]*"' -o`"&&:
+	strIgnorableTarget_tags="`echo "$strOriginalLine" |egrep ' *target_tags="[^"]*"' -o`"&&:
+	strIgnorableCompare_type="`echo "$strOriginalLine" |egrep ' *compare_type="[^"]*"' -o`"&&:
+	
+	#strHelp="`echo "$strOriginalLine" |sed -r 's@.*help="([^"]*)".*@\1@i'`"&&:
+	#strClosing="`echo "$strOriginalLine" |sed -r 's@.*([/]>)$@\1@i'`"
+	strClosing="`echo "$strOriginalLine" |egrep " */> *$" -o`"&&:;if [[ -z "$strClosing" ]];then strClosing="`echo "$strOriginalLine" |egrep " *> *$" -o`"&&:;fi
+	#declare -p strClosing
+	
+	if [[ -z "$strClosing" ]];then CFGFUNCerrorExit "invalid strClosing='$strClosing'${strErrTip}";fi
+	#strIgnorableHelp="";if [[ -n "${strHelp}" ]];then strIgnorableHelp=" help=\"$strHelp\"";fi
+	
+	iPrecision=3 # *1000 is easy to think/convert, for me ;)
+	if((${#strRMin}>(iPrecision+2)));then #+2 is about prefix '0.'
+		iPrecision=$((${#strRMin}-2))&&:
+	fi
+	if((${#strRMax}>(iPrecision+2)));then #+2 is about prefix '0.'
+		iPrecision=$((${#strRMax}-2))&&:
+	fi
+	
+	iPower="`bc <<< "10^$iPrecision"`"
+	strRMinFix="$(printf "%.0f" `bc <<< "scale=0;${strRMin}*$iPower"`)" #printf removes the suffix .0
+	strRMaxFix="$(printf "%.0f" `bc <<< "scale=0;${strRMax}*$iPower"`)"
+	
+	#bMatchLinesFail=false
+	##set -x
+	#if ! strMatchingLines="`egrep "$strCVarRegex" -i "$strFl" |egrep "$strTrigger" -i |egrep "randomFloat *[(] *$strRMin *, *$strRMax *[)]" -i`";then
+		#bMatchLinesFail=true
+	#fi
+	#if [[ -z "$strMatchingLines" ]];then
+		#bMatchLinesFail=true
+	#fi
+	##set +x
+	#iMatchingLines="`echo "$strMatchingLines" |wc -l`"
+	
+	#CFGFUNCinfo "iMatchingLines=$iMatchingLines;iPrecision=$iPrecision;$strTrigger;$strCVar;$strRMin/$strRMinFix;$strRMax/$strRMaxFix;$strOriginalLine"
+	
+	strIgnorableAll="${strIgnorableTarget}${strIgnorableRange}${strIgnorableTarget_tags}${strIgnorableCompare_type}"
+	
+	#strOriginalLine="@${strOriginalLine};"
+	strRecrOrigLine="${iLineNumber}:${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="'"${strRandomFloatString}"'('"${strRMin},${strRMax}"')"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}"
+	
+	if [[ "$strOriginalLine" != "$strRecrOrigLine" ]];then
+		echo "[strOriginalLine]"
+		echo "$strOriginalLine"
+		echo "[strRecrOrigLine]"
+		echo "$strRecrOrigLine"
+		declare -p strLeadingSpaces strXmlToken strTrigger strAction strCVar strOperation strRMin strRMax strClosing strIgnorableHelp
+		CFGFUNCerrorExit "unable to recreate original line for matching${strErrTip}"
+	fi
+	
+	strHelpHint="${strHint}: was randomFloat(${strRMin},${strRMax})"
+	if [[ -z "${strIgnorableHelp}" ]];then
+		strIgnorableHelp=" help=\"${strHelpHint}\""
+	else
+		strIgnorableHelp="${strIgnorableHelp%\"};${strHelpHint}\""
+	fi
+	
+	#strIdHex="`crc32 <(echo "${strCVar}") |tr '[:lower:]' '[:upper:]'`"; #this grants same ID to avoid seeing too many changes on diff app
+	#strIdDec="`printf %d 0x${strIdHex}`"
+	#RANDOM=$strIdDec;strIdRnd="$RANDOM"
+	#strCVarTmp=".fGSKFixTinyRandomFloat${strIdRnd}Tmp"
+	strCVarTmp=".fGSK${strHint}Tmp"
+	
+	strComment=' <!-- HELPGOOD:'"${strHint}"':OriginalLineData:LineNumber='"${strOriginalLine}"' -->' #the line data begins with the original line number
+	
+	strFixedLine="${strLeadingSpaces}"'<'"${strXmlToken}"' help="'"${strHint}"':was '"${strCVar}"' '"${strOperation}"' randomFloat('"${strRMin},${strRMax}"')" trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="set" value="randomInt('"${strRMinFix},${strRMaxFix}"')"/>'"${strNL}"
+	strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="divide" value="'"${iPower}"'" help="'"${strHint}"'"/>'"${strNL}"
+	strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="@'"${strCVarTmp}"'"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}${strComment}"
+	
+	: ${bSingleLine:=true} #help this is to turn the easy to implement multiline above into the final result single line. That single line will be easier to undo/recreate/repatch later if there is any reason to do that. TODO: prevent xmlstarlet from removing all white spaces formatting. But at least that can be reverted by removing '\n' from lines containing 'FixTinyRandomFloat' that also do not contain 'OriginalLineData' with a multiline perl script
+	if $bSingleLine;then
+		strFixedLine="`echo "${strFixedLine}" |tr -d '\n'`" 
+	fi
+	
+	echo
+	declare -p strFixedLine
+	echo
+	CFGFUNCinfo "$strFixedLine"
+	echo
+	echo "$strFixedLine"
+	
+	#if $bMatchLinesFail;then CFGFUNCerrorExit "strMatchingLines='$strMatchingLines' empty?${strErrTip}";fi
+	#if((iMatchingLines==0));then echo "$strMatchingLines";CFGFUNCerrorExit "iMatchingLines=$iMatchingLines != 1${strErrTip}";fi
+	##if((${#strRMin}>6));then CFGFUNCerrorExit "strRMin='$strRMin' and it's precision it too much having ${#strRMin} chars. should be at most 0.0000, to work with *10000 what is";exit;fi;
+	##if((${#strRMax}>6));then echo ${#strRMax};exit;fi; #0.0000
+	
+	##astrDataList[$iLineNumber]="${strFixedLine}"
+	##strAbove="`head -n $((iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
+	##strBelow="`tail -n $((iTotLines-iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
+	##echo "${strAbove}" >"${strFl}.fixTinyRandomFloats.NEW"
+	##echo "${strFixedLine}" >>"${strFl}.fixTinyRandomFloats.NEW"
+	##echo "${strBelow}" >>"${strFl}.fixTinyRandomFloats.NEW"
+	#head -n $((iLineNumber-1)) "${strFl}.${strHint}.NEW" >"${strFl}.${strHint}.2.NEW"
+	#echo "${strFixedLine}" >>"${strFl}.${strHint}.2.NEW"
+	#tail -n $((iTotLines-iLineNumber)) "${strFl}.${strHint}.NEW" >>"${strFl}.${strHint}.2.NEW"
+	#mv -v "${strFl}.${strHint}.2.NEW" "${strFl}.${strHint}.NEW"
+}
+
+strSimpleInput="${1-}" #help paste a single line to prepare the fix containing everything needed
+if [[ -n "$strSimpleInput" ]];then
+	iLineNumber=0
+	strOriginalLine="${iLineNumber}:${strSimpleInput}"
+	FUNCfixLine
+	exit 0;
+fi
+
+CFGFUNCprompt "You can code normally with tiny randomFloat values and then just run this script right after! Also be sure there is nothing that matches on the xml comments${strErrTip}"
 
 #astrFlList=("Config/buffs.xml")
 IFS=$'\n' read -d '' -r -a astrFlList < <(ls -1 *.xml Config/*.xml |sort -u)&&:
@@ -65,109 +187,41 @@ for strFl in "${astrFlList[@]}";do
   
   #declare -p astrLineList |tr '[' '\n'
   for strOriginalLine in "${astrLineList[@]}";do
-    iLineNumber="`echo "$strOriginalLine" |egrep "^[0-9]*:" -io`";iLineNumber="${iLineNumber%:}"
-    #strLeadingSpacesAndToken="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:([\t ]*<triggered_effect *).*@\1@i'`"
-    strLeadingSpaces="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:([\t ]*).*@\1@i'`"
-    strXmlToken="`echo "$strOriginalLine" |sed -r 's@^[0-9]*:[\t ]*< *([a-zA-Z0-9_]*).*@\1@i'`"
-    strTrigger="`echo "$strOriginalLine" |sed -r 's@.*trigger="([^"]*)".*@\1@i'`"
-    strCVar="`echo "$strOriginalLine" |sed -r 's@.*cvar="([^"]*)".*@\1@i'`";strCVarRegex="`echo "$strCVar" |sed -r 's@[$]@[$]@g'`" #this regex protects the $
-    strRandomFloatString="`echo "$strOriginalLine" |egrep "randomfloat" -io`"
-    strRMin="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(]([^,]*),.*@\1@i'`" #help sed ignore case with 'i' or 'I'
-    strRMax="`echo "$strOriginalLine" |sed -r 's@.*randomFloat[(][^,]*,([^)]*)[)].*@\1@i'`" #help sed ignore case with 'i' or 'I'
-    strAction="`echo "$strOriginalLine" |sed -r 's@.*action="([^"]*)".*@\1@i'`"
-    strOperation="`echo "$strOriginalLine" |sed -r 's@.*operation="([^"]*)".*@\1@i'`"
-    #thing that may not exist
-    strIgnorableHelp="`echo "$strOriginalLine" |egrep ' *help="[^"]*"' -o`"&&:
-    strIgnorableTarget="`echo "$strOriginalLine" |egrep ' *target="[^"]*"' -o`"&&:
-    strIgnorableRange="`echo "$strOriginalLine" |egrep ' *range="[^"]*"' -o`"&&:
-    strIgnorableTarget_tags="`echo "$strOriginalLine" |egrep ' *target_tags="[^"]*"' -o`"&&:
-    strIgnorableCompare_type="`echo "$strOriginalLine" |egrep ' *compare_type="[^"]*"' -o`"&&:
+		iLineNumber="`echo "$strOriginalLine" |egrep "^[0-9]*:" -io`";iLineNumber="${iLineNumber%:}"
+		
+    FUNCfixLine
     
-    #strHelp="`echo "$strOriginalLine" |sed -r 's@.*help="([^"]*)".*@\1@i'`"&&:
-    #strClosing="`echo "$strOriginalLine" |sed -r 's@.*([/]>)$@\1@i'`"
-    strClosing="`echo "$strOriginalLine" |egrep " */> *$" -o`"&&:;if [[ -z "$strClosing" ]];then strClosing="`echo "$strOriginalLine" |egrep " *> *$" -o`"&&:;fi
-    #declare -p strClosing
+		bMatchLinesFail=false
+		#set -x
+		if ! strMatchingLines="`egrep "$strCVarRegex" -i "$strFl" |egrep "$strTrigger" -i |egrep "randomFloat *[(] *$strRMin *, *$strRMax *[)]" -i`";then
+			bMatchLinesFail=true
+		fi
+		if [[ -z "$strMatchingLines" ]];then
+			bMatchLinesFail=true
+		fi
+		#set +x
+		iMatchingLines="`echo "$strMatchingLines" |wc -l`"
+		
+		CFGFUNCinfo "iMatchingLines=$iMatchingLines;iPrecision=$iPrecision;$strTrigger;$strCVar;$strRMin/$strRMinFix;$strRMax/$strRMaxFix;$strOriginalLine"
     
-    if [[ -z "$strClosing" ]];then CFGFUNCerrorExit "invalid strClosing='$strClosing'${strErrTip}";fi
-    #strIgnorableHelp="";if [[ -n "${strHelp}" ]];then strIgnorableHelp=" help=\"$strHelp\"";fi
     
-    iPrecision=3 # *1000 is easy to think/convert, for me ;)
-    if((${#strRMin}>(iPrecision+2)));then #+2 is about prefix '0.'
-      iPrecision=$((${#strRMin}-2))&&:
-    fi
-    if((${#strRMax}>(iPrecision+2)));then #+2 is about prefix '0.'
-      iPrecision=$((${#strRMax}-2))&&:
-    fi
-    
-    iPower="`bc <<< "10^$iPrecision"`"
-    strRMinFix="$(printf "%.0f" `bc <<< "scale=0;${strRMin}*$iPower"`)" #printf removes the suffix .0
-    strRMaxFix="$(printf "%.0f" `bc <<< "scale=0;${strRMax}*$iPower"`)"
-    
-    bMatchLinesFail=false
-    #set -x
-    if ! strMatchingLines="`egrep "$strCVarRegex" -i "$strFl" |egrep "$strTrigger" -i |egrep "randomFloat *[(] *$strRMin *, *$strRMax *[)]" -i`";then
-      bMatchLinesFail=true
-    fi
-    if [[ -z "$strMatchingLines" ]];then
-      bMatchLinesFail=true
-    fi
-    #set +x
-    iMatchingLines="`echo "$strMatchingLines" |wc -l`"
-    
-    CFGFUNCinfo "iMatchingLines=$iMatchingLines;iPrecision=$iPrecision;$strTrigger;$strCVar;$strRMin/$strRMinFix;$strRMax/$strRMaxFix;$strOriginalLine"
-    
-    strIgnorableAll="${strIgnorableTarget}${strIgnorableRange}${strIgnorableTarget_tags}${strIgnorableCompare_type}"
-    
-    #strOriginalLine="@${strOriginalLine};"
-    strRecrOrigLine="${iLineNumber}:${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="'"${strRandomFloatString}"'('"${strRMin},${strRMax}"')"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}"
-    
-    if [[ "$strOriginalLine" != "$strRecrOrigLine" ]];then
-      declare -p strOriginalLine strRecrOrigLine strLeadingSpaces strXmlToken strTrigger strAction strCVar strOperation strRMin strRMax strClosing strIgnorableHelp
-      CFGFUNCerrorExit "unable to recreate original line for matching${strErrTip}"
-    fi
-    
-    strHelpHint="${strHint}: was randomFloat(${strRMin},${strRMax})"
-    if [[ -z "${strIgnorableHelp}" ]];then
-      strIgnorableHelp=" help=\"${strHelpHint}\""
-    else
-      strIgnorableHelp="${strIgnorableHelp%\"};${strHelpHint}\""
-    fi
-    
-    #strIdHex="`crc32 <(echo "${strCVar}") |tr '[:lower:]' '[:upper:]'`"; #this grants same ID to avoid seeing too many changes on diff app
-    #strIdDec="`printf %d 0x${strIdHex}`"
-    #RANDOM=$strIdDec;strIdRnd="$RANDOM"
-    #strCVarTmp=".fGSKFixTinyRandomFloat${strIdRnd}Tmp"
-    strCVarTmp=".fGSK${strHint}Tmp"
-    
-    strComment=' <!-- HELPGOOD:'"${strHint}"':OriginalLineData:LineNumber='"${strOriginalLine}"' -->' #the line data begins with the original line number
-    
-    strFixedLine="${strLeadingSpaces}"'<'"${strXmlToken}"' help="'"${strHint}"':was '"${strCVar}"' '"${strOperation}"' randomFloat('"${strRMin},${strRMax}"')" trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="set" value="randomInt('"${strRMinFix},${strRMaxFix}"')"/>'"${strNL}"
-    strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVarTmp}"'" operation="divide" value="'"${iPower}"'" help="'"${strHint}"'"/>'"${strNL}"
-    strFixedLine+="${strLeadingSpaces}"'<'"${strXmlToken}"' trigger="'"${strTrigger}"'" action="'"${strAction}"'" cvar="'"${strCVar}"'" operation="'"${strOperation}"'" value="@'"${strCVarTmp}"'"'"${strIgnorableAll}${strIgnorableHelp}${strClosing}${strComment}"
-    
-    : ${bSingleLine:=true} #help this is to turn the easy to implement multiline above into the final result single line. That single line will be easier to undo/recreate/repatch later if there is any reason to do that. TODO: prevent xmlstarlet from removing all white spaces formatting. But at least that can be reverted by removing '\n' from lines containing 'FixTinyRandomFloat' that also do not contain 'OriginalLineData' with a multiline perl script
-    if $bSingleLine;then
-      strFixedLine="`echo "${strFixedLine}" |tr -d '\n'`" 
-    fi
-    
-    CFGFUNCinfo "$strFixedLine"
-    
-    if $bMatchLinesFail;then CFGFUNCerrorExit "strMatchingLines='$strMatchingLines' empty?${strErrTip}";fi
-    if((iMatchingLines==0));then echo "$strMatchingLines";CFGFUNCerrorExit "iMatchingLines=$iMatchingLines != 1${strErrTip}";fi
-    #if((${#strRMin}>6));then CFGFUNCerrorExit "strRMin='$strRMin' and it's precision it too much having ${#strRMin} chars. should be at most 0.0000, to work with *10000 what is";exit;fi;
-    #if((${#strRMax}>6));then echo ${#strRMax};exit;fi; #0.0000
-    
-    #astrDataList[$iLineNumber]="${strFixedLine}"
-    #strAbove="`head -n $((iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
-    #strBelow="`tail -n $((iTotLines-iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
-    #echo "${strAbove}" >"${strFl}.fixTinyRandomFloats.NEW"
-    #echo "${strFixedLine}" >>"${strFl}.fixTinyRandomFloats.NEW"
-    #echo "${strBelow}" >>"${strFl}.fixTinyRandomFloats.NEW"
-    head -n $((iLineNumber-1)) "${strFl}.${strHint}.NEW" >"${strFl}.${strHint}.2.NEW"
-    echo "${strFixedLine}" >>"${strFl}.${strHint}.2.NEW"
-    tail -n $((iTotLines-iLineNumber)) "${strFl}.${strHint}.NEW" >>"${strFl}.${strHint}.2.NEW"
-    mv -v "${strFl}.${strHint}.2.NEW" "${strFl}.${strHint}.NEW"
-    
+		if $bMatchLinesFail;then CFGFUNCerrorExit "strMatchingLines='$strMatchingLines' empty?${strErrTip}";fi
+		if((iMatchingLines==0));then echo "$strMatchingLines";CFGFUNCerrorExit "iMatchingLines=$iMatchingLines != 1${strErrTip}";fi
+		#if((${#strRMin}>6));then CFGFUNCerrorExit "strRMin='$strRMin' and it's precision it too much having ${#strRMin} chars. should be at most 0.0000, to work with *10000 what is";exit;fi;
+		#if((${#strRMax}>6));then echo ${#strRMax};exit;fi; #0.0000
+		
+		#astrDataList[$iLineNumber]="${strFixedLine}"
+		#strAbove="`head -n $((iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
+		#strBelow="`tail -n $((iTotLines-iLineNumber-1)) "${strFl}.fixTinyRandomFloats.NEW"`"
+		#echo "${strAbove}" >"${strFl}.fixTinyRandomFloats.NEW"
+		#echo "${strFixedLine}" >>"${strFl}.fixTinyRandomFloats.NEW"
+		#echo "${strBelow}" >>"${strFl}.fixTinyRandomFloats.NEW"
+		head -n $((iLineNumber-1)) "${strFl}.${strHint}.NEW" >"${strFl}.${strHint}.2.NEW"
+		echo "${strFixedLine}" >>"${strFl}.${strHint}.2.NEW"
+		tail -n $((iTotLines-iLineNumber)) "${strFl}.${strHint}.NEW" >>"${strFl}.${strHint}.2.NEW"
+		mv -v "${strFl}.${strHint}.2.NEW" "${strFl}.${strHint}.NEW"
+		
+	    
     echo
   done
 
