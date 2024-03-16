@@ -5668,6 +5668,7 @@ particle="torch02_firePrefab"
       </effect_group>
       <effect_group help="NoseBleed">
         <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKNoseBleedChk" operation="set" value="@fGSKBloodLoss"/>
         <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss add randomFloat(0.005,0.015)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,15)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.015)">
@@ -5702,6 +5703,9 @@ particle="torch02_firePrefab"
           <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=7627:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="randomFloat(0.005,0.015)"> -->
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="5"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Too dry, your nose bleeds.">
+          <requirement name="CVarCompare" cvar=".fGSKNoseBleedChk" operation="LT" value="@fGSKBloodLoss"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryAirIndicator">
           <requirement name="!HasBuff" buff="buffGSKHazardWDryAirIndicator"/>
