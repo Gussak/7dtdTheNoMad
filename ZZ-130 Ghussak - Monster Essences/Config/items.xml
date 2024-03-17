@@ -202,5 +202,25 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKCFGwightStaminaConvertedFromHP">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="DescriptionKey" value="dkGSKpowerImmuneLikeAWight"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="LT" value="100"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="GT" value="0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="add" value="5"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="add" value="-5"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKEssenceWightMinStam"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKEssenceWightMinStam"/>
+      </effect_group>
+    </item>
   </append>
 </GhussakTweaks>
