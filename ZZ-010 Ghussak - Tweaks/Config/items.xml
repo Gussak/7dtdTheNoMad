@@ -351,6 +351,26 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] A courier brings the package to you."/>
       </effect_group>
     </item>
+    <item name="GSKRewindTime">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="200,200,100"/>
+      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="DescriptionKey" value="dkGSKRewindTime"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
+        <requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="LTE" value="0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKrewindTimeOnce"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] You feel Druidic Magic in the air."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-1000" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="1000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="1000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKrewindTimeCoolDown" operation="add" value="3600" help="one whole hour in real time TODO: should be the game time the player uses to determine one whole day in game time"/>
+      </effect_group>
+    </item>
     <item name="GSKSwimUpDownFasterHelper" help="TODO: rm this when engine improves">
       <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="TODO: tho if player is falling thru water like thru air, it would be more useful to be GSKBaseActivatorReqMeleeFast but you will be able to dive much faster what is not good"/>
       <property name="ItemTypeIcon" value="computer"/>
@@ -2159,6 +2179,10 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </effect_group>
       <property name="Group" value="Resources"/>
       <property name="CraftingIngredientTime" value="0"/>
+    </item>
+    <item name="GSKdruidicRune">
+      <property name="Extends" value="resourceRockSmall"/>
+      <property name="CustomIconTint" value="128,220,128"/>
     </item>
     <item name="flareFakeFlames">
       <property name="CustomIcon" value="thrownGrenadeContact"/>
