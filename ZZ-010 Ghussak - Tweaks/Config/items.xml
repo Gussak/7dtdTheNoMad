@@ -354,8 +354,8 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     <item name="GSKRewindTime">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
-      <property name="CustomIconTint" value="200,200,100"/>
-      <property name="ItemTypeIcon" value="treasure"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+      <property name="ItemTypeIcon" value="computer"/>
       <property name="DescriptionKey" value="dkGSKRewindTime"/>
       <property class="Action0">
         <requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
@@ -369,6 +369,26 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="1000"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKrewindTimeCoolDown" operation="add" value="3600" help="one whole hour in real time TODO: should be the game time the player uses to determine one whole day in game time"/>
+      </effect_group>
+    </item>
+    <item name="GSKRewindTime">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="128,250,128"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="DescriptionKey" value="dkGSKRewindTime"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
+        <requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="LTE" value="0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKrewindTimeOnceX6"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] You feel a strong Druidic Magic in the air."/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-6000" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="6000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="6000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKrewindTimeCoolDown" operation="add" value="3600" help="one whole hour in real time TODO: should be the game time the player uses to determine one whole day in game time TODO: create a debuff that knockdown and stun the player for some time"/>
       </effect_group>
     </item>
     <item name="GSKSwimUpDownFasterHelper" help="TODO: rm this when engine improves">
