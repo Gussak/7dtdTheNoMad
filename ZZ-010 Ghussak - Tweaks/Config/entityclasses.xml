@@ -54,8 +54,8 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
         <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other"/>
-        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
-        <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,mech"/>
+        <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="5">
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
@@ -182,6 +182,9 @@
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'animal')]">
     <property name="SoundRandomTime" value="60"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]" help="if you cant find them for any reason and to prevent that being a boring task as we should be able to just ask loudly where they are ;)">
+    <property name="NavObject" value="navNPCfriendly"/>
   </append>
   <append xpath="/entity_classes/entity_class[       (starts-with(@name, 'npc') and not(starts-with(@name,'npcHarley'))) or       starts-with(@name, 'survivor')     ]/effect_group[@name='Base Effects']">
     <passive_effect name="HealthMax" operation="base_set" value="75"/>
@@ -705,6 +708,9 @@
     <drop event="Harvest" name="GSKsnakePoison" count="5,15" tag="butcherHarvest"/>
     <drop event="Harvest" name="ammoProjectileSpiderWebPlayer" count="5,15" tag="butcherHarvest"/>
     <drop event="Harvest" name="cobweb" count="5,15" tag="butcherHarvest"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKSpiderQueenSpawnsMiniSpidersOnDeath"/>
+    </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name,'animalSpider')]">
     <property name="AITask-1" value="BreakBlock"/>

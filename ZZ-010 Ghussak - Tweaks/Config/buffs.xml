@@ -595,6 +595,13 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKSpiderQueenSpawnsMiniSpidersOnDeath" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfDied" action="CallGameEvent" event="eventGSKSpawnSpiderMiniFromQueen"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKToggleDebug" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
@@ -11494,7 +11501,7 @@ particle="torch02_firePrefab"
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="set" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="water" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.001"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.000016667" help="1% every 10mins (at update_rate of 1s)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="30">
           <requirement name="InBiome" biome="5" help="desert" compare_type="or"/>
           <requirement name="InBiome" biome="8" help="Wasteland"/>
