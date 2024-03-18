@@ -2706,7 +2706,7 @@ particle="torch02_firePrefab"
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay" help="if the AI improves, buffOrderPatrol will make more sense, but currently they may move so far away that may simply de-spawn. also they may run too much making it difficult to defend them. so staying is much better for the leader player."/>
       </effect_group>
       <effect_group help="requests re-hiring hints almost there">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
@@ -2724,7 +2724,7 @@ particle="torch02_firePrefab"
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay" help="if the AI improves, buffOrderPatrol will make more sense, but currently they may move so far away that may simply de-spawn. also they may run too much making it difficult to defend them. so staying is much better for the leader player."/>
       </effect_group>
       <effect_group help="SELF:RANGED: self put on patrol mode if hired ranged self count reached limit. This is only affected by other ranged NPCs">
         <requirement name="EntityTagCompare" tags="ranged"/>
@@ -2734,7 +2734,7 @@ particle="torch02_firePrefab"
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:RANGED:Force:Patrol"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay" help="if the AI improves, buffOrderPatrol will make more sense, but currently they may move so far away that may simply de-spawn. also they may run too much making it difficult to defend them. so staying is much better for the leader player." help2="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
       </effect_group>
       <effect_group help="SELF:RANGED: add 1 to other npcs hired limit count if self count below limit. This affects other melee NPCs too.">
         <requirement name="EntityTagCompare" tags="ranged"/>
@@ -2754,7 +2754,7 @@ particle="torch02_firePrefab"
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:MELEE:Force:Patrol"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay" help="if the AI improves, buffOrderPatrol will make more sense, but currently they may move so far away that may simply de-spawn. also they may run too much making it difficult to defend them. so staying is much better for the leader player." help2="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following"/>
       </effect_group>
       <effect_group help="SELF:MELEE: the limit for melee NPCs is always the max limit on any charisma perk lvl">
         <requirement name="EntityTagCompare" tags="melee"/>
