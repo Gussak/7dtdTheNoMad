@@ -13,6 +13,13 @@
   - DEBUG:DM: holding shift and pressing numpad_dot(del) to toggle crouch (that's my cfg for mouse on left hand), will crouch instead of ragdoll!
 -->
   <set xpath="//triggered_effect[@trigger='onSelfRangedBurstShot']/@trigger">onSelfRangedBurstShotStart</set>
+  <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
+    <effect_group help="noob free bundles cfg">
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="105904" helpgencode="DoNotModify:run:createBundles.sh"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
+    </effect_group>
+  </append>
   <append xpath="/buffs">
     <buff name="buffHiredNPCnoFallDamage16" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
@@ -12064,6 +12071,7 @@ particle="torch02_firePrefab"
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatWeaponsSchematics" operation="add" value="1">
           <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="1"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatAmmo" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmorHelmet" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperCombatArmor" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRespawnItemsBundleHelperTeleportHelpers" operation="add" value="1"/>
