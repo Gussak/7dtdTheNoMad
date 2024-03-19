@@ -77,23 +77,26 @@ astr=(
 );FUNCprepareBundles "ForgeCrafting" "cntLootChestHeroInsecureT1" "Use this when you want to begin creating and using forges, also has cementmixer." "${astr[@]}"
 
 astr=( #TEMPLATE
-  ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
-  ammoArrowStone 33
   drugGSKwightEssence 3
   gunHandgunT1PistolPartsRepair 33
   gunHandgunT3SMG5 1
   GlowStickGreen       3 #vs wights
   GSKpowerPsyonicAttackLikeAMutant 1
   modGunScopeSmall 1
-  thrownAmmoMolotovCocktail6s 13
-  thrownAmmoStunGrenade 13
-  trapSpikesIronDmg0    33
-  resourceNail 66
   #trapSpikesWoodDmg0    99
   "$strSCHEMATICS_BEGIN_TOKEN" 0
   bookRangersExplodingBolts 1
   thrownDynamiteSchematic 1
 );FUNCprepareBundles "CombatWeapons" "bundleMachineGun" "use this if you are not having a reasonable chance against mobs" "${astr[@]}"
+astr=( #TEMPLATE
+  ammo9mmBulletBall $((666*3)) # this is a good amount to let the player be able to explore a bit and find something useful to help on continue surviving
+  ammoArrowStone 33
+  thrownAmmoMolotovCocktail6s 13
+  thrownAmmoStunGrenade 13
+  trapSpikesIronDmg0    33
+  resourceNail 66
+  "$strSCHEMATICS_BEGIN_TOKEN" 0
+);FUNCprepareBundles "CombatAmmo" "bundleAmmo" "use this if you are not having a reasonable chance against mobs" "${astr[@]}"
 
 strCombatArmorHelp="Use this if you are taking too much damage."
 astrCombatArmorCreateBundleList=()
