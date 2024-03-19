@@ -69,6 +69,7 @@ export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some e
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
 export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
 export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
+export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do
 tail -F "$strFlLog" |while read strLine;do
@@ -84,6 +85,9 @@ tail -F "$strFlLog" |while read strLine;do
 				FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 			fi
 		done
+	elif [[ "$strLine" =~ .*${strChkCrash}.* ]];then
+		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
+		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
 	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
 		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
 		FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
