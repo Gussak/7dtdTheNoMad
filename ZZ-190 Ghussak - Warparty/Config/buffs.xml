@@ -9,8 +9,7 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="LT" value="30"/>
         <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.95"/>
-        <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
-        <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="LT" value="@iNPCAmmoLimit" help="will stay nearby to let player perceive they need to be re-hired"/>
+        <requirement name="CVarCompare" cvar="fNPCAmmoPerc" operation="GTE" value="0.90" help="will stay nearby to let player perceive they need to be re-hired"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderPatrol"/>
       </effect_group>
       <effect_group>
@@ -24,6 +23,9 @@
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="set" value="7" help="this is important to let them ALL be properly teleported near the player">
+          <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="7"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <!--   HELPGOOD: charismatic nature enhances nearby friendly npcs-->
@@ -1824,10 +1826,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following">
-          <requirement name="CVarCompare" cvar="iGSKNPCWarParty" operation="Equals" value="1"/>
+          <requirement name="HasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay">
-          <requirement name="CVarCompare" cvar="iGSKNPCWarParty" operation="Equals" value="0"/>
+          <requirement name="NotHasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="SELF:RANGED: add 1 to other npcs hired limit count if self count below limit. This affects other melee NPCs too.">
@@ -1849,10 +1851,10 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following">
-          <requirement name="CVarCompare" cvar="iGSKNPCWarParty" operation="Equals" value="1"/>
+          <requirement name="HasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay">
-          <requirement name="CVarCompare" cvar="iGSKNPCWarParty" operation="Equals" value="0"/>
+          <requirement name="NotHasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="SELF:MELEE: the limit for melee NPCs is always the max limit on any charisma perk lvl">
