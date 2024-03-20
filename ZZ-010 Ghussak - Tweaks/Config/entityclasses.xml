@@ -164,29 +164,6 @@
     <property name="AITarget-4" value="SetNearestEntityAsTarget" data="class=EntityPlayer,22,20,EntityAnimalStag,0,0,EntityNPC,18,13,EntityAnimalRabbit,8,5" help="TODOA: what these 2 numbers after class name mean?"/>
     <property name="AITarget-5" value=""/>
   </append>
-  <!-- HELPGOOD: mute companion wolf when not in combat, so it's combat sounds become the alert to the player.
-  this emptier set gives error: <set xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundRandom']/@value"></set>
--->
-  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundRandom']"/>
-  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundAlert']"/>
-  <remove xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']/property[@name='SoundSense']"/>
-  <append xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']">
-    <property name="SoundRandom" value="" help="todo: this empty override seems to not work?"/>
-    <property name="Names" value="PetBuster, PetSally, PetFluffy"/>
-  </append>
-  <!-- HELPGOOD: this delay is nice! :) -->
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'survivor')]" help="as they are not meant to accept being hired">
-    <property name="SoundRandomTime" value="900"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]">
-    <property name="SoundRandomTime" value="600"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'animal')]">
-    <property name="SoundRandomTime" value="60"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]" help="if you cant find them for any reason and to prevent that being a boring task as we should be able to just ask loudly where they are ;)">
-    <property name="NavObject" value="navNPCfriendly"/>
-  </append>
   <append xpath="/entity_classes/entity_class[       (starts-with(@name, 'npc') and not(starts-with(@name,'npcHarley'))) or       starts-with(@name, 'survivor')     ]/effect_group[@name='Base Effects']">
     <passive_effect name="HealthMax" operation="base_set" value="75"/>
   </append>
