@@ -1,5 +1,3 @@
-WIP: being split into mini mods (some mini mods may be ready to use).
-
 (A20) The NoMad, unforgiving lands. Explore the world, no fortress building, advance always.  
 .  
 [color=#00ff00]################### OVERHAUL[/color][color=#ff0000](WIP)[/color][color=#00ff00] ###################[/color]  
