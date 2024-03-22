@@ -454,6 +454,7 @@
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LTE" value="1"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="3" target="selfAOE" range="60" help="limit is 2">
@@ -461,12 +462,14 @@
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LTE" value="3"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="4" target="selfAOE" range="60" help="limit is 3">
           <requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="Equals" value="4"/>
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
@@ -475,6 +478,15 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="2" target="selfAOE" range="60" help="force limit 1 at any charisma lvl">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="MeleeNPClimit: melee allows always max (so each player can have at most 3 ranged + 3 melee followers)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCFollowAboveLimit" operation="set" value="4" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="EntityTagCompare" target="other" tags="melee"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
@@ -1821,60 +1833,66 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay). keeping as stay below because patrol is too dificult to deal with."/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderDismiss" help="see buffOrderDismiss above"/>
       </effect_group>
+      <effect_group help="special follow mode considers warparty mode">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="5" help="is buffOrderPatrol"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" help="TODO: see (*AutoStopFollowHint)">
+          <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="SELF:RANGED: self put on patrol mode if hired ranged self count reached limit. This is only affected by other ranged NPCs">
         <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:RANGED:Force:Patrol"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:RANGED:Force:StopFollowing"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following">
-          <requirement name="HasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay">
-          <requirement name="NotHasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source..."/>
       </effect_group>
       <effect_group help="SELF:RANGED: add 1 to other npcs hired limit count if self count below limit. This affects other melee NPCs too.">
         <requirement name="EntityTagCompare" tags="ranged"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="LT" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
+        <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="120" help="120 because the usual would be 60 from player, but in this case, one NPC may be on max North and the other on max South, so 120 is required">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+          <requirement name="EntityTagCompare" target="other" tags="ranged"/>
+          <requirement name="CVarCompare" target="other" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="SELF:MELEE: self put on patrol mode if hired self count reached limit">
+      <effect_group help="SELF:MELEE: self put on patrol mode if hired self count reached limit. only affected by melee NPCs">
         <requirement name="EntityTagCompare" tags="melee"/>
-        <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="GT" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:MELEE:Force:Patrol"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:MELEE:Force:StopFollowing"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderPatrol" help="patrol is better than dismiss so the player wont loose hiring money and will have time to decide who to keep following">
-          <requirement name="HasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay">
-          <requirement name="NotHasBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source..."/>
       </effect_group>
-      <effect_group help="SELF:MELEE: the limit for melee NPCs is always the max limit on any charisma perk lvl">
+      <effect_group help="SELF:MELEE: the limit for melee NPCs is always the max limit on any charisma perk lvl. this only affects other melee NPCs">
         <requirement name="EntityTagCompare" tags="melee"/>
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="LT" value="@iGSKNPCFollowAboveLimit"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="60">
+        <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1" target="selfAOE" range="120" help="120 because the usual would be 60 from player, but in this case, one NPC may be on max North and the other on max South, so 120 is required">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="EntityTagCompare" target="other" tags="melee"/>
-          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="last thing is to update the grace time">
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="GT" value="0"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="subtract" value="3" help="IMPORTANT!!!! KEEP IN SYNC WITH fTransferNPCPDS=.buffLeaderLimitsHiredNPCsAmount_update_rate !!!!!">
           <requirements compare_type="or">
             <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
