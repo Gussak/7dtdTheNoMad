@@ -107,7 +107,11 @@ tail -F "$strFlLog" |while read strLine;do
 			bExecCmd=true
 		fi
 	elif [[ "$strLine" =~ .*${strChkShapesIni}.* ]];then
-		CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingShapes] $strLine"
+		########
+		### IT MAY FREEZE WHILE LOADING THE BLOCKS AFTER THE SHAPES COMPLETED!!!
+		### Loading blocks is slow and there is no workaround :(
+		########
+		CFGFUNCinfo "+[EXEC:ChkIfGameFrozeLoadingBlocks] $strLine"
 		#@RM noneed: start child process, get it's pid, if "block ids" comes, kill child pid, otherwise hint SIGKILL game to user thru yad
 		#function FUNCchkShapesIni() {
 			: ${nIniShapesDelay:=35} #help shapes shall take not more than this seconds to complete (on my pc)
@@ -118,16 +122,16 @@ tail -F "$strFlLog" |while read strLine;do
 			while true;do
 				#echo "while2.PID=$$"
 				((li++))&&:
-				if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Shapes success!";break;fi
-				echo -en "${li}/${nIniShapesDelay}s waiting shapes complete init\r" # (hit 'y' to skip this check).\r"
+				if [[ "$lstrKeyShapesIni" != "`ls -l "$strFlLog"`" ]];then CFGFUNCinfo "Blocks load success!";break;fi
+				echo -en "${li}/${nIniShapesDelay}s waiting blocks complete init\r" # (hit 'y' to skip this check).\r"
 				#if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
 				if((li>nIniShapesDelay));then 
-					strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Shapes? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
+					strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Blocks? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
 					CFGFUNCinfo "$strInfo";
-					if ! pgrep "yad.*TNMMonLog:FrozenShapes" -fa;then
+					if ! pgrep "yad.*TNMMonLog:FrozenBlocks" -fa;then
 						function FUNCyad_FrozenShapes() {
-							if yad --title "TNMMonLog:FrozenShapes" --text "$strInfo" --on-top --centered --no-focus;then
-								xterm -title "TNMMonLog:FrozenShapes" -e wineserver -k
+							if yad --title "TNMMonLog:FrozenBlocks" --text "$strInfo" --on-top --centered --no-focus;then
+								xterm -title "TNMMonLog:FrozenBlocks" -e wineserver -k
 							fi
 						};export -f FUNCyad_FrozenShapes
 						(FUNCyad_FrozenShapes&disown)
