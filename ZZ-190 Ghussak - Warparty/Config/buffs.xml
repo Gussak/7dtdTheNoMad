@@ -9,7 +9,7 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="LT" value="30"/>
         <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.95"/>
-        <requirement name="CVarCompare" cvar="fNPCAmmoPerc" operation="GTE" value="0.90" help="will stay nearby to let player perceive they need to be re-hired"/>
+        <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90" help="if spend too much, will stay nearby to let player perceive they need to be re-hired"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderPatrol"/>
       </effect_group>
       <effect_group>
@@ -1861,13 +1861,13 @@
       </effect_group>
       <effect_group help="requests re-hiring hints almost there">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoPerc" operation="set" value="@iNPCAmmoSpent"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoPerc" operation="divide" value="@iNPCAmmoLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="set" value="@iNPCAmmoSpent"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="divide" value="@iNPCAmmoLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="#@modfolder(0-XNPCCore):Resources/Bugs.unity3d?p_Flies2_X" local_offset="0,0.5,0.3" local_rotation="0,0,0" parent_transform="Origin">
-          <requirement name="CVarCompare" cvar="fNPCAmmoPerc" operation="GTE" value="0.90"/>
+          <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="GTE" value="0.90"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="p_Flies2_X">
-          <requirement name="CVarCompare" cvar="fNPCAmmoPerc" operation="LT" value="0.90"/>
+          <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="requests re-hiring">
