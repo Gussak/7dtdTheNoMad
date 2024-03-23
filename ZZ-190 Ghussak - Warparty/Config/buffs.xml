@@ -444,6 +444,7 @@
       </effect_group>
       <effect_group help="RangedNPClimit: NPC control buff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -1955,8 +1956,13 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="inc count of followers on player">
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="self" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="self" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1" help="is buffOrderFollow"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="player"/>
         </triggered_effect>
