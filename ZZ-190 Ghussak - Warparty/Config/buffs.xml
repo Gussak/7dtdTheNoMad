@@ -1802,19 +1802,22 @@
       </effect_group>
     </buff>
     <buff name="buffNPCstopFollowingTooCrowded">
+      <stack_type value="replace"/>
+      <update_rate value="0.05"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:RANGED:Force:StopFollowing">
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:NPC:RANGED:Force:StopFollowing">
           <requirement name="EntityTagCompare" tags="ranged"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:NPC:MELEE:Force:StopFollowing">
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:NPC:MELEE:Force:StopFollowing">
           <requirement name="EntityTagCompare" tags="melee"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderStay"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source... ISSUE: some models are created in non standard ways (?), so the positioning of this hint may look weird/funny, create specific offset for each 3d model (based on tags or NPC IDs) or update (download) the NPC mod resources with updated models to check if it was fixed"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCHiredCountAboveMaxLimit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderStay"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source... ISSUE: some models are created in non standard ways (?), so the positioning of this hint may look weird/funny, create specific offset for each 3d model (based on tags or NPC IDs) or update (download) the NPC mod resources with updated models to check if it was fixed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCstopFollowingTooCrowded"/>
       </effect_group>
     </buff>
     <buff name="buffNPCincHiredCountEachOtherAndTryDismiss">
