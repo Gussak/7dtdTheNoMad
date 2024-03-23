@@ -160,6 +160,13 @@
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
         <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
         <passive_effect name="BuffResistance" operation="base_add" value="100" tags="buffAbrasionCatch,buffArmBroken,buffArmorShredding,buffArmSprained,buffArmSprainedCHTrigger,buffBurning,buffBurningElement,buffBurningEnvironment,buffBurningEnvironmentHack,buffBurningFlamingArrow,buffBurningMolotov,buffFatiguedTrigger,buffInjuryBleeding,buffInjuryBleedingBarbedWire,buffInjuryBleedingTwo,buffInjuryConcussion,buffInjuryCrippled01,buffInjuryKnockdown01,buffInjuryStunned00,buffInjuryStunned01,buffInjuryStunned01CHTrigger,buffInjuryStunned01Shotgun,buffInjuryStunned02,buffInjuryStunned02Shotgun,buffInjuryStunned03,buffInjuryStunned03Shotgun,buffInjuryUnconscious,buffLaceration,buffLegBroken,buffLegSprainedCHTrigger,buffLegSprainedFallTrigger,BuffResistance,buffShocked,buffStayDownKO" help="protection for all things that cause almost instantaneous damage, lower max HP and make the player slow down. is this 0-100 or a percent like 0.0-1.0? but why there is value 5 and also value -0.04? DidntAdd: buffDrowning01,buffDrowning02,buffInfection01Main,buffInfectionCatch"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops" help="it seems only fall damage can kill player now? so this fix it">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>
