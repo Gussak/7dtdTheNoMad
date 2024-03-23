@@ -30,7 +30,9 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffOrderFollow">
+          <requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="is buffOrderDismiss"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="set" value="7" help="this is important to let them ALL be properly teleported near the player">
           <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="7"/>
         </triggered_effect>
@@ -251,7 +253,7 @@
           <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="warparty">
+      <effect_group help="warparty keep updating/applying on NPCs">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="set" value="1" target="selfAOE" range="60" target_tags="npc" help="init, default ON">
           <requirement name="CVarCompare" target="other" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="Equals" value="0"/>
         </triggered_effect>
@@ -1721,7 +1723,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="INT: sneak mode (this one must be from as far as possible, all of them shall obey from far away and all of them shall have the same values)">
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="1" target="selfAOE" range="60" help="follow player sneak: hold fire">
           <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
           <requirement name="HasBuff" buff="buffNPCModStopAttacking"/>
@@ -1880,11 +1882,11 @@
         <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNPCdismissButWaitIfPossible"/>
       </effect_group>
       <effect_group help="requests re-hiring hints almost there">
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="set" value="@iNPCAmmoSpent"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="divide" value="@iNPCAmmoLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="#@modfolder(0-XNPCCore):Resources/Bugs.unity3d?p_Flies2_X" local_offset="0,0.5,0.3" local_rotation="0,0,0" parent_transform="Origin">
@@ -1945,7 +1947,7 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="inc count of followers on player">
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="add" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
           <requirement name="EntityTagCompare" target="other" tags="player"/>
