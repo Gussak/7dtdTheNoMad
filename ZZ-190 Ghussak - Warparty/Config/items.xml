@@ -328,7 +328,7 @@
       <property name="CustomIconTint" value="00a0ff"/>
       <property name="EconomicValue" value="1"/>
       <property name="SellableToTrader" value="false"/>
-      <effect_group tiered="false">
+      <effect_group tiered="false" help="at player">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPlayerNPCwarPartyAutoOrdersAllowed" operation="set" value="1" help="keeps trying to auto add the buff later forever"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKPlayerNPCwarPartyAutoOrdersAllowed" operation="set" value="2"/>
@@ -336,13 +336,13 @@
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
         </triggered_effect>
       </effect_group>
-      <effect_group tiered="false">
+      <effect_group tiered="false" help="at NPCs">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="set" value="1" target="selfAOE" range="60" target_tags="npc" help="ON">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="set" value="2" target="selfAOE" range="60" target_tags="npc" help="OFF">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="set" value="2" target="selfAOE" range="60" target_tags="npc" help="OFF: they become bodyguards">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
           <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         </triggered_effect>
