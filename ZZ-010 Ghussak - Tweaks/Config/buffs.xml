@@ -8717,6 +8717,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerPrevHP" operation="add" value="-1">
           <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@iGSKplayerPrevHP"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKplayerPrevHP" operation="GTE" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKplayerPrevHP" operation="LT" value="50"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="WIP:TODO:TEMP:HELPER:REMOVELATER: log player stats: sometimes we seem to die for no good reason (usually during bloodmoon?), this tries to help understand what happened...">
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKplayerPrevHP">

@@ -2,6 +2,8 @@
 
 #set -x
 
+if [[ "${1-}" == "--help" ]];then egrep "[#]help" "$0";exit 0;fi
+
 set -Eeu
 
 bUndo=false;if [[ "${1-}" == "--undo" ]];then bUndo=true;fi #help use this to restore modlets files to edit them
