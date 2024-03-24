@@ -278,6 +278,7 @@ astr=(
   drugGSKPsyonicsResist 3
   drugGSKsnakePoisonAntidote 1
   GSKfireFuel 5
+  GSKRewindTime 7
   GSKsimpleBeer        3
   medicalFirstAidBandage 3
   medicalSplint 1
