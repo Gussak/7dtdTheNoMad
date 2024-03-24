@@ -63,7 +63,10 @@ function FUNCsuspendPopup() {
 	CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
 }
 
-export strChkAutoStopOnLoad="`FUNCrawMatchRegex " INF Created player with id="`"
+export strChkAutoStopOnLoadA="`FUNCrawMatchRegex " INF Created player with id="`"
+export strChkAutoStopOnLoadB="`FUNCrawMatchRegex " INF PlayerSpawnedInWorld (reason: LoadedGame, position:"`.*: localplayer" # this grants extra 10s w/o waiting!
+export bAllowPauseOnB=false
+
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
@@ -91,7 +94,9 @@ tail -F "$strFlLog" |while read strLine;do
 	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
 		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
 		FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
-	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoad}.* ]];then
+	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoadA}.* ]];then
+		bAllowPauseOnB=true
+	elif $bAllowPauseOnB && [[ "$strLine" =~ .*${strChkAutoStopOnLoadB}.* ]];then
 		if ! pgrep -fa "${strExecRegex}";then
 			echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
 		else
@@ -101,6 +106,8 @@ tail -F "$strFlLog" |while read strLine;do
 					FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 				fi
 			done
+			
+			bAllowPauseOnB=false
 			
 			CFGFUNCinfo "+[EXEC:AutoStopOnLoadGame] $strLine"
 			FUNCsuspendPopup "the game finished loading and is ready to play"
