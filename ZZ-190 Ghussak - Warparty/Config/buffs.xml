@@ -1837,6 +1837,9 @@
           <requirement name="CVarCompare" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="5" help="is buffOrderPatrol"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="7" help="is buffOrderLoot"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" help="TODO: see (*AutoStopFollowHint)">
           <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         </triggered_effect>
@@ -1887,14 +1890,24 @@
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="LT" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iNPCAmmoSpent" operation="set" value="0"/>
       </effect_group>
-      <effect_group help="requests re-hiring">
+      <effect_group help="requests re-hiring:init">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iNPCDismissToRequireReHiring" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="requests re-hiring:chk">
         <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iNPCDismissToRequireReHiring" operation="set" value="1" compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay). stay because patrol is too dificult to deal with in-game."/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="requests re-hiring:doIt">
+        <requirement name="CVarCompare" cvar=".iNPCDismissToRequireReHiring" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:DismissAmmoLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNPCdismissButWaitIfPossible"/>
       </effect_group>
-      <effect_group help="requests re-hiring hints almost there">
+      <effect_group help="add hint about ammo limit almost reached">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="set" value="@iNPCAmmoSpent"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="divide" value="@iNPCAmmoLimit"/>
@@ -1904,13 +1917,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="p_Flies2_X">
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
-      </effect_group>
-      <effect_group help="requests re-hiring">
-        <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
-        <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
-        <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
-        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay). keeping as stay below because patrol is too dificult to deal with."/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNPCdismissButWaitIfPossible"/>
       </effect_group>
       <effect_group help="SELF:RANGED OR MELEE (limits are counted and set independently for ranged and melee): self put on patrol mode if hired ranged self count reached limit.">
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
