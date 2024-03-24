@@ -8710,7 +8710,21 @@
           <requirement name="!IsBloodMoon"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="log player stats: sometimes we seem to die for no good reason, this tries to help understand what happened...">
+      <effect_group help="track HP value">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerPrevHP" operation="add" value="1">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKplayerPrevHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerPrevHP" operation="add" value="-1">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@iGSKplayerPrevHP"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="WIP:TODO:TEMP:HELPER:REMOVELATER: log player stats: sometimes we seem to die for no good reason (usually during bloodmoon?), this tries to help understand what happened...">
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKplayerPrevHP">
+          <requirement name="IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="$buffStatusRadiation">
+          <requirement name="IsBloodMoon"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STAT:HP:Low LTE 25%">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.25"/>
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.15"/>
