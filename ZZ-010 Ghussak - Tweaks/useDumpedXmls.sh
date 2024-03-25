@@ -2,11 +2,29 @@
 
 #set -x
 
+#help TODO: SUGGEST THEM: a good way to not require this script would be for the 7DTD engine store a md5sum of each modlet xml file, and if any of them changes, or some new one shows up, the whole modding (each modlet loaded in order) for that specific xml file basename, would be reprocessed. Otherwise, the dumped xml files would be reused instead of reprocessing all modlets.
+
 if [[ "${1-}" == "--help" ]];then egrep "[#]help" "$0";exit 0;fi
 
 set -Eeu
 
 bUndo=false;if [[ "${1-}" == "--undo" ]];then bUndo=true;fi #help use this to restore modlets files to edit them
+
+: ${strSuffix:="UsingDumped"} #help
+
+function FUNCexecEcho() {
+	local lbIgnoreError=false;if [[ "$1" == --ignoreerror ]];then lbIgnoreError=true;shift;fi
+	echo
+	echo "EXEC: $@" >&2
+  "$@"&&:;local lnRet=$?
+  if ! $lbIgnoreError && ((lnRet!=0));then
+    echo "ERROR-EXEC: $@; lnRet=$lnRet (hit ctrl+c)" 
+    #trap 'echo "ctrl+c, continuing..."' INT
+    sleep 6000 #cant use `read` as it is non iteractive (will ignore keypresses)
+    #trap -- INT
+  fi
+  return 0
+};export -f FUNCexecEcho
 
 function FUNCuseDumped() {
 	if $bUndo;then return 0;fi
@@ -15,20 +33,22 @@ function FUNCuseDumped() {
 	strGrp="$1";shift
 	strEntry="$1";shift
 	
-	strFlDumped="_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/${strXmlFl}"
+	: ${strNewestSaveGamePath:="_NewestSavegamePath.IgnoreOnBackup"} #help
+	strFlDumped="${strNewestSaveGamePath}/ConfigsDump/${strXmlFl}"
 	
-	strFl="../ZZ-990 Ghussak - DumpedCfgsForQuickLoad.SkipOnRelease/Config/${strXmlFl}"
+	: ${strDumpModPath:="ZZ-990 Ghussak - DumpedCfgsForQuickLoad.SkipOnRelease"} #help
+	strFl="../${strDumpModPath}/Config/${strXmlFl}"
 	
 	strRmRegex="xml.*version.*encoding|[<]${strGrp}[>]|[<][/]${strGrp}[>]"
-	if(($(egrep "${strRmRegex}" "${strFlDumped}" |wc -l) != 3));then
+	if(($(egrep "${strRmRegex}" "${strFlDumped}" |wc -l) != 3));then # validate
 		echo "ERROR: the below should match only 3 lines!"
 		set -x;egrep "${strRmRegex}" "${strFlDumped}";set +x
 		echo "ERROR: the above should match only 3 lines!"
 		exit 1
 	fi
 	
-	trash "$strFl"
-	echo >"$strFl" #trunc
+	FUNCexecEcho trash "$strFl"
+	echo >"$strFl" #trunc/create
 
 	echo '
 	<GhussakTweaks>
@@ -38,8 +58,13 @@ function FUNCuseDumped() {
 		
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
 		' >>"$strFl"
-
-	egrep -v "${strRmRegex}" "${strFlDumped}" >>"$strFl"
+	
+	strFlClean="${strFl}.CleanedDump.xml"
+	FUNCexecEcho cp -vfT "${strFlDumped}" "${strFlClean}"
+	FUNCexecEcho chmod -v u+w "${strFlClean}"
+	FUNCexecEcho xmlstarlet ed -L -d '//comment()' "${strFlClean}"
+	
+	FUNCexecEcho egrep -v "${strRmRegex}" "${strFlClean}" >>"$strFl"
 
 	echo '
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
@@ -57,13 +82,14 @@ function FUNCmv() {
 	strModFolder="$1";shift
 	strFl="$1";shift
 	if $bUndo;then
-		mv -v "${strModFolder}/Config/${strFl}.UsingDumped.DoNotCommit.xml" "${strModFolder}/Config/${strFl}"&&:
+		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFl}.${strSuffix}.xml" "${strModFolder}/Config/${strFl}"
 	else
-		mv -v "${strModFolder}/Config/${strFl}" "${strModFolder}/Config/${strFl}.UsingDumped.DoNotCommit.xml"&&:
+		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFl}" "${strModFolder}/Config/${strFl}.${strSuffix}.xml"
 	fi
 	return 0
 }
 
+# DATA TO PROCESS
 FUNCuseDumped "entitygroups.xml" entitygroups entitygroup
 FUNCmv "../ZZ-030 Ghussak - Patch NPC spawn rate" entitygroups.xml
 
@@ -71,6 +97,7 @@ FUNCuseDumped "items.xml" items item
 FUNCmv "../ZZ-010 Ghussak - Tweaks" items.xml
 FUNCmv "../ZZ-070 Ghussak - Effective and Immersive Weapons Overhaul" items.xml
 
+# undo mode finalizer
 if $bUndo;then
 	echo "NOW: run the game, wait it start, and hit ENTER here. It will prepare the dumped overrides again."
 	read
