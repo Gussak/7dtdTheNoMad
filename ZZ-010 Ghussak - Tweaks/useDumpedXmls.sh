@@ -112,7 +112,7 @@ FUNCmv "../ZZ-070 Ghussak - Effective and Immersive Weapons Overhaul" items.xml
 
 # undo mode finalizer
 if $bUndo;then
-	echo "NOW: run the game, wait it start, and hit ENTER here. It will prepare the dumped overrides again."
+	echo "NOW: run the game, wait it start (wait the player spawn in the world), and hit ENTER here. It will prepare the dumped overrides again."
 	read
 	"$0"
 fi
