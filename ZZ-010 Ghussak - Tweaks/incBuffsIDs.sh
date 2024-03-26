@@ -31,9 +31,10 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-#TODO: is this unnecessary since 20.7b1 ? are buffs being updated on server restart?
 
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
+
+if ! CFGFUNCprompt -q "DEPRECATED: this whole script seems unnecessary since 20dot7b1. buffs appear to be updated on server restart. Continue anyway?";then exit 0;fi
 
 echo "HELP:
   This script is important (for developers) when making tests in a running game (instead of creating a new game) or when releasing an updated mod version for end users.

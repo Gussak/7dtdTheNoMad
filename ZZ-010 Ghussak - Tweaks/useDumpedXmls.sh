@@ -12,6 +12,8 @@ bUndo=false;if [[ "${1-}" == "--undo" ]];then bUndo=true;fi #help use this to re
 
 : ${strSuffix:="UsingDumped"} #help
 
+pwd
+
 function FUNCexecEcho() {
 	local lbIgnoreError=false;if [[ "$1" == --ignoreerror ]];then lbIgnoreError=true;shift;fi
 	echo
@@ -26,18 +28,20 @@ function FUNCexecEcho() {
   return 0
 };export -f FUNCexecEcho
 
-function FUNCuseDumped() {
+function FUNCprepareDumpedCfgToOverrideAll() {
 	if $bUndo;then return 0;fi
 	
 	strXmlFl="$1";shift
 	strGrp="$1";shift
 	strEntry="$1";shift
 	
-	: ${strNewestSaveGamePath:="_NewestSavegamePath.IgnoreOnBackup"} #help
+	: ${strNewestSaveGamePath:="../ZZ-010 Ghussak - Tweaks/_NewestSavegamePath.IgnoreOnBackup"} #help
 	strFlDumped="${strNewestSaveGamePath}/ConfigsDump/${strXmlFl}"
+	FUNCexecEcho ls -l "${strFlDumped}" # to error if not exist
 	
-	: ${strDumpModPath:="ZZ-990 Ghussak - DumpedCfgsForQuickLoad.SkipOnRelease"} #help
-	strFl="../${strDumpModPath}/Config/${strXmlFl}"
+	: ${strDumpModPath:="../ZZ-990 Ghussak - DumpedCfgsForQuickLoad"} #help
+	FUNCexecEcho ls -ld "$strDumpModPath" # to error if not exist
+	strFl="${strDumpModPath}/Config/${strXmlFl}"
 	
 	strRmRegex="xml.*version.*encoding|[<]${strGrp}[>]|[<][/]${strGrp}[>]"
 	if(($(egrep "${strRmRegex}" "${strFlDumped}" |wc -l) != 3));then # validate
@@ -47,6 +51,11 @@ function FUNCuseDumped() {
 		exit 1
 	fi
 	
+	strFlClean="${strFl}.CopiedFromConfigsDumpAndCleanedComments.xml"
+	FUNCexecEcho cp -vfT "${strFlDumped}" "${strFlClean}"
+	FUNCexecEcho chmod -v u+w "${strFlClean}"
+	FUNCexecEcho xmlstarlet ed -L -d '//comment()' "${strFlClean}"
+
 	FUNCexecEcho trash "$strFl"
 	echo >"$strFl" #trunc/create
 
@@ -59,21 +68,21 @@ function FUNCuseDumped() {
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
 		' >>"$strFl"
 	
-	strFlClean="${strFl}.CleanedDump.xml"
-	FUNCexecEcho cp -vfT "${strFlDumped}" "${strFlClean}"
-	FUNCexecEcho chmod -v u+w "${strFlClean}"
-	FUNCexecEcho xmlstarlet ed -L -d '//comment()' "${strFlClean}"
-	
 	FUNCexecEcho egrep -v "${strRmRegex}" "${strFlClean}" >>"$strFl"
-
+	
 	echo '
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
 		</append>
 	</GhussakTweaks>
 	' >>"$strFl"
-
-	chmod -v ugo-w "$strFl"
+	
+	FUNCexecEcho trash "$strFlClean"
+	
+	chmod -v ugo-w "$strFl" # to help on avoiding misediting it
 	ls -l "$strFl"
+	
+	FUNCexecEcho mv -vfT "$strFl" "${strFl}.SkipOnRelease.xml" # to prevent sending to repo
+	FUNCexecEcho ln -vsfT "./$(basename "${strFl}.SkipOnRelease.xml")" "$strFl" # to let engine detect and use it
 	
 	return 0
 }
@@ -90,10 +99,14 @@ function FUNCmv() {
 }
 
 # DATA TO PROCESS
-FUNCuseDumped "entitygroups.xml" entitygroups entitygroup
-FUNCmv "../ZZ-030 Ghussak - Patch NPC spawn rate" entitygroups.xml
+# TODO: detect changes to any xml file prepared at the final override folder modlet and re-apply this script
 
-FUNCuseDumped "items.xml" items item
+FUNCprepareDumpedCfgToOverrideAll "entitygroups.xml" entitygroups entitygroup #prepares the dumped override
+FUNCmv "../ZZ-030 Ghussak - Patch NPC spawn rate" entitygroups.xml #disables the modlet file
+
+# FAILS: FREEZES ON LOAD: FUNCprepareDumpedCfgToOverrideAll "blocks.xml" blocks block
+
+FUNCprepareDumpedCfgToOverrideAll "items.xml" items item
 FUNCmv "../ZZ-010 Ghussak - Tweaks" items.xml
 FUNCmv "../ZZ-070 Ghussak - Effective and Immersive Weapons Overhaul" items.xml
 
