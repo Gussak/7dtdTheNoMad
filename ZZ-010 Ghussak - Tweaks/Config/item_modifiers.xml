@@ -1,6 +1,95 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <!--			HELPGOOD:modifier_tags to generate conflict (require unique): clear;egrep 'modifier_tags="[^"]*"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/item_modifiers.xml  -o |sort -u -->
   <append xpath="/item_modifiers">
+    <item_modifier name="modGhillieSuitHood" installable_tags="head" modifier_tags="thermal,stealth" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelGhillieSuitHood"/>
+      <property name="Material" value="Mplants"/>
+      <property name="DisplayType" value="clothingGhillieHood"/>
+      <property name="DescriptionKey" value="apparelGhillieSuitGroupDesc"/>
+      <property class="UMA">
+        <property name="Mesh" value="ghillie_suit_hat"/>
+        <property name="Overlay0" value="ghillie_suit"/>
+        <property name="Overlay0Tint" value="105,110,83"/>
+        <property name="Layer" value="2"/>
+        <property name="UISlot" value="Headgear"/>
+        <property name="Mask0" value="Head" param1="outer"/>
+        <property name="ShowAltHair" value="true"/>
+      </property>
+      <effect_group tiered="false">
+        <passive_effect name="ModSlots" operation="base_set" value="0"/>
+        <passive_effect name="HypothermalResist" operation="base_add" value="1"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1,3.5"/>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.07">
+          <requirement name="!IsIndoors"/>
+        </passive_effect>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.05">
+          <requirement name="IsIndoors"/>
+        </passive_effect>
+        <display_value name="dLightMultiplier" value="-.07"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGhillieSuitPants" installable_tags="feet" modifier_tags="thermal,stealth" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelGhillieSuitPants"/>
+      <property name="Material" value="Mplants"/>
+      <property name="DisplayType" value="clothingGhillie"/>
+      <property name="DescriptionKey" value="apparelGhillieSuitGroupDesc"/>
+      <property class="UMA">
+        <property name="Mesh" value="ghillie_suit_pants"/>
+        <property name="Overlay0" value="ghillie_suit"/>
+        <property name="Overlay0Tint" value="105,110,83"/>
+        <property name="Layer" value="1"/>
+        <property name="UISlot" value="Pants"/>
+      </property>
+      <effect_group tiered="false">
+        <passive_effect name="ModSlots" operation="base_set" value="1"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="100" tags="EconomicValue"/>
+        <passive_effect name="HypothermalResist" operation="base_add" value="1"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1,3.5"/>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.07">
+          <requirement name="!IsIndoors"/>
+        </passive_effect>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.05">
+          <requirement name="IsIndoors"/>
+        </passive_effect>
+        <display_value name="dLightMultiplier" value="-.07"/>
+        <passive_effect name="NoiseMultiplier" operation="perc_add" value="-.05"/>
+        <display_value name="dNoiseMultiplier" value="-.05"/>
+      </effect_group>
+    </item_modifier>
+    <item_modifier name="modGhillieSuitJacket" installable_tags="chest" modifier_tags="thermal,stealth" blocked_tags="noMods" type="attachment">
+      <property name="Extends" value="modGeneralMaster"/>
+      <property name="CustomIcon" value="apparelGhillieSuitJacket"/>
+      <property name="Material" value="Mplants"/>
+      <property name="DescriptionKey" value="apparelGhillieSuitGroupDesc"/>
+      <property name="DisplayType" value="clothingGhillie"/>
+      <property class="UMA">
+        <property name="Mesh" value="ghillie_suit_shirt"/>
+        <property name="Overlay0" value="ghillie_suit"/>
+        <property name="Overlay0Tint" value="105,110,83"/>
+        <property name="Layer" value="3"/>
+        <property name="UISlot" value="Jacket"/>
+        <property name="Mask0" value="hands" param1="outer"/>
+        <property name="Mask1" value="chest" param1="middle"/>
+      </property>
+      <effect_group tiered="false">
+        <passive_effect name="ModSlots" operation="base_set" value="1"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="100" tags="EconomicValue"/>
+        <passive_effect name="HypothermalResist" operation="base_add" value="1"/>
+        <passive_effect name="HyperthermalResist" operation="base_add" value="1,5"/>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.07">
+          <requirement name="!IsIndoors"/>
+        </passive_effect>
+        <passive_effect name="LightMultiplier" operation="perc_add" value="-.05">
+          <requirement name="IsIndoors"/>
+        </passive_effect>
+        <display_value name="dLightMultiplier" value="-.07"/>
+        <passive_effect name="NoiseMultiplier" operation="perc_add" value="-.05"/>
+        <display_value name="dNoiseMultiplier" value="-.05"/>
+      </effect_group>
+    </item_modifier>
     <item_modifier name="modCowboyBoots" installable_tags="feet" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="apparelCowboyBoots"/>
@@ -19,7 +108,7 @@
         <passive_effect name="HyperthermalResist" operation="base_add" value="3.5,4.5"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modRunningShoesHP" installable_tags="feet" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+    <item_modifier name="modRunningShoesHP" installable_tags="feet" modifier_tags="thermal,movement,speed" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="apparelRunningShoesRegular"/>
       <property name="CustomIconTint" value="86,255,109"/>
@@ -64,7 +153,7 @@
         <passive_effect name="HyperthermalResist" operation="base_add" value="5.5,8.5"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modHazmatMask" installable_tags="head" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+    <item_modifier name="modHazmatMask" installable_tags="head" modifier_tags="thermal,radiation" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="apparelHazmatMask"/>
       <property name="CustomIconTint" value="100,100,100"/>
@@ -81,7 +170,7 @@
         <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modHazmatBoots" installable_tags="armorFeet" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+    <item_modifier name="modHazmatBoots" installable_tags="armorFeet" modifier_tags="thermal,radiation" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="apparelHazmatBoots"/>
       <property name="CustomIconTint" value="100,100,100"/>
@@ -97,7 +186,7 @@
         <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKRadResistWork"/>
       </effect_group>
     </item_modifier>
-    <item_modifier name="modHazmatGloves" installable_tags="armorHands" modifier_tags="thermal" blocked_tags="noMods" type="attachment">
+    <item_modifier name="modHazmatGloves" installable_tags="armorHands" modifier_tags="thermal,radiation" blocked_tags="noMods" type="attachment">
       <property name="Extends" value="modGeneralMaster"/>
       <property name="CustomIcon" value="apparelHazmatGloves"/>
       <property name="CustomIconTint" value="100,100,100"/>
