@@ -253,6 +253,10 @@
           <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCnightAim" target="selfAOE" range="60" target_tags="npc">
+        <requirement name="IsNight"/>
+        <requirement name="!HasBuff" target="other" buff="buffNPCnightAim"/>
+      </triggered_effect>
       <effect_group help="warparty keep updating/applying on NPCs">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="set" value="1" target="selfAOE" range="60" target_tags="npc" help="init, default ON">
           <requirement name="CVarCompare" target="other" cvar="iGSKNPCwarPartyAutoOrdersAllowed" operation="Equals" value="0"/>
@@ -1822,6 +1826,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderStay"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source... ISSUE: some models are created in non standard ways (?), so the positioning of this hint may look weird/funny, create specific offset for each 3d model (based on tags or NPC IDs) or update (download) the NPC mod resources with updated models to check if it was fixed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCstopFollowingTooCrowded"/>
       </effect_group>
@@ -1995,6 +2000,18 @@
         <passive_effect name="RunSpeed" operation="perc_subtract" value="0.75" duration="6"/>
         <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.75" duration="6"/>
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.75" duration="6"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNPCnightAim">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="60"/>
+      <effect_group name="NPC's (friend or foe) night aiming is more difficult TODO: should be related to distance, having a light source in their gun, using NV, having scope installed, weapon barrel length (pistol, smg, rifle) etc">
+        <passive_effect name="SpreadDegreesVertical" operation="base_add" value="2" tags="perkMachineGunner"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_add" value="2" tags="perkMachineGunner"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCnightAim">
+          <requirement name="!IsNight"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffHiredNPCnoFallDamage16" hidden="true" remove_on_death="false">
