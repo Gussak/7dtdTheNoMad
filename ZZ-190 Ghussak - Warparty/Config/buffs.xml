@@ -1791,8 +1791,8 @@
 -->
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint)"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderDismiss"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint)"/>
         <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKNPCDismissedWander" operation="set" value="60" help="to have a chance to move so far away that will despawn and stop helping the player for free, so the player must not be careless"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCDismissedWander" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKNPCDismissedWander" operation="GT" value="0"/>
@@ -1800,6 +1800,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderWander">
           <requirement name="CVarCompare" cvar="CurrentOrder" operation="NotEquals" value="3" help="is buffOrderWander"/>
           <requirement name="CVarCompare" cvar="iGSKNPCDismissedWander" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCdismissButWaitIfPossible" help="got hired again">
+          <requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="is buffOrderDismiss"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -2171,6 +2174,41 @@
   <append xpath="/buffs/buff[@name='buffOrderStay' or name='buffOrderGuardHere']">
     <effect_group>
       <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderDismiss']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderDismiss"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderFollow']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderFollow"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderGuardHere']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderGuardHere"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderLoot']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderLoot"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderPatrol']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderPatrol"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderStay']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderStay"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderWander']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="buffOrderWander"/>
     </effect_group>
   </append>
 </GhussakTweaks>
