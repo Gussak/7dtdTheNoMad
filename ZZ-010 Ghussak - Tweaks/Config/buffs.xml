@@ -28,6 +28,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKSpawnTreasure"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKNPCTreasureAmbusherSpawned" hidden="true" help="only ambushers will have this buff, so can be used as indicator too">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" target_tags="player" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="add" value="1"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKSpawnTreasureAmbush15" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -38,9 +45,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersWave" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersChancePerc" operation="set" value="95"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="set" value="randomInt(3,15)" help="IMPORTANT: use the update_rate on the minimum"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="add" value="-3" help="IMPORTANT: use the update_rate">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnTreasureTmSub" operation="set" value="3" help="IMPORTANT: use the update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnTreasureTmSub" operation="set" value="0.6" help="keep 1/5 of update_rate">
+          <requirement name="CVarCompare" cvar="iGSKAmbushersSpawnedLastWave" operation="Equals" value="0" help="the player may remain in very secure hiding, or in some place where the engine is unable to spawn the raiders, this will make the wave last much longer then."/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="subtract" value="@.iGSKSpawnTreasureTmSub" help="IMPORTANT: use the update_rate">
           <requirement name="!IsBloodMoon"/>
-          <requirement name="!HasBuff" buff="buffGSKEntTrRdRdctIdct_SuspendAmbush" help="The player could still wait a long time before digging again the treasure place tho and throwing zombies on ambush NPCs would work."/>
+          <requirement name="!HasBuff" buff="buffGSKEntTrRdRdctIdct_SuspendAmbush" help="The player could still wait a long time before digging again the treasure place tho and throwing zombies on ambush NPCs would work, this is to prevent that, raiders are smarter than that."/>
           <requirement name="!HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" help="Raiders may get killed by DeusExMachina in rage."/>
         </triggered_effect>
       </effect_group>
@@ -48,50 +59,51 @@
         <requirement name="CVarCompare" cvar="iGSKSpawnTreasureTmOut" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKSpawnRaidersWave"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="set" value="randomInt(1,5)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="subtract" value="@iGSKSpawnRaidersWave">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GT" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnBanditCount" operation="set" value="randomInt(1,5)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnBanditCount" operation="subtract" value="@iGSKSpawnRaidersWave">
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GT" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="set" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="LT" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnBanditCount" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="LT" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKSpawnRaidersChancePerc"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnBanditCount" operation="set" value="0">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnBanditCount" operation="set" value="0">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@iGSKSpawnRaidersChancePerc"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] TreasureHunt: Raider(s) didn't find you this time.">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] TreasureHunt: Watchout! Raider(s) are nearby!">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKSpawnBanditCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKSpawnBanditCount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditsx1">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditsx2">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditsx3">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="Equals" value="3"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditsx4">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="Equals" value="4"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditsx5">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="Equals" value="5"/>
         </triggered_effect>
         <!-- HELPGOOD: a few extra melee raiders -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditMelee">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="75"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditMelee">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="50"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnBanditMelee">
-          <requirement name="CVarCompare" cvar=".iGSKSpawnBanditCount" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="set" value="randomInt(15,60)">
