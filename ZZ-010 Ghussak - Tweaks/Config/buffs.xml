@@ -32,7 +32,9 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" target_tags="player" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" target_tags="player" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="add" value="1">
+          <requirement name="!EntityTagCompare" tags="melee" help="melee raiders are just minor reinforcements, can be ignored"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKSpawnTreasureAmbush15" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
@@ -50,7 +52,7 @@
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="the player have more time to think and prepare for next wave"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnTreasureTmSub" operation="set" value="0.5" help="keep 1/6 of update_rate">
-          <requirement name="CVarCompare" cvar="iGSKAmbushersSpawnedLastWave" operation="Equals" value="0" help="the player may remain in very secure hiding, or in some place where the engine is unable to spawn the raiders, this will make the wave last much longer then."/>
+          <requirement name="CVarCompare" cvar="iGSKAmbushersSpawnedLastWave" operation="LT" value="@iGSKSpawnBanditCount" help="the player may remain in very secure hiding, or in some place where the engine is unable to spawn the raiders, this will make the wave last much longer then."/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="subtract" value="@.iGSKSpawnTreasureTmSub" help="IMPORTANT: use the update_rate">
           <requirement name="!IsBloodMoon"/>
@@ -9301,6 +9303,26 @@
           <requirement name="CVarCompare" target="other" cvar="iGSKRagdollRequestedOnMob" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="ragdoll: player running with injured legs">
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="35">
+          <requirement name="HasBuff" buff="buffLegBroken"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="15">
+          <requirement name="HasBuff" buff="buffLegSprained"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="5" compare_type="or">
+          <requirement name="HasBuff" buff="buffLegSplinted"/>
+          <requirement name="HasBuff" buff="buffLegCast"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollDoIt" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollDoIt" operation="set" value="1">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@.iGSKRunInjureLegRagdollChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+          <requirement name="CVarCompare" cvar=".iGSKRunInjureLegRagdollDoIt" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="ragdoll: player got ragdolled by foe">
         <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
@@ -10754,13 +10776,11 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="10"/>
           <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
         </triggered_effect>
-        <!-- HELPGOOD:TODOA: how to detect if player is running/sprinting?
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
           <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-          <requirement name="CVarCompare" cvar="_sprinting" operation="Equals" value="1"/>
+          <requirement name="EntityHasMovementTag" tags="running"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
         </triggered_effect>
--->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGtmp" operation="Equals" value="1"/>

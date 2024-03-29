@@ -48,11 +48,20 @@
         <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" help="MeleeBuild:">
-        <requirement name="IsAlive" target="other"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" help="MeleeBuild: running">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
-        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="really running"/>
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other"/>
+        <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,mech"/>
+        <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" help="MeleeBuild: sneaking">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
+        <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other"/>
         <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,mech"/>
         <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03"/>
