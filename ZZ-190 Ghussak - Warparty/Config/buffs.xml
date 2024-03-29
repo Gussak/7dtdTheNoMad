@@ -33,6 +33,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffOrderFollow">
           <requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="is buffOrderDismiss"/>
           <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="5" help="is buffOrderPatrol"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1" help="extra check"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="set" value="7" help="this is important to let them ALL be properly teleported near the player">
           <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="7"/>
@@ -1830,8 +1831,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderStay"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source... ISSUE: some models are created in non standard ways (?), so the positioning of this hint may look weird/funny, create specific offset for each 3d model (based on tags or NPC IDs) or update (download) the NPC mod resources with updated models to check if it was fixed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0" help="before rm buffGSKNPCwarpartyAutoOrders, grant to prevent buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCwarpartyAutoOrders"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCstopFollowingTooCrowded"/>
       </effect_group>
     </buff>
