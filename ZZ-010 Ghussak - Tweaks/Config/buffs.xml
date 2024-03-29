@@ -8811,7 +8811,7 @@
       </effect_group>
       <effect_group help="SpawnMiniSpider:countdown. Forest has more spiders.">
         <requirement name="!IsBloodMoon" help="to avoid this that would just be an annoyance"/>
-        <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-2" help="forest spawns spiders faster indoors">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
@@ -8820,7 +8820,7 @@
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="0.30" help="wilderness or not well sheltered"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="other biomes than forest have a slow spawn rate and only if sheltered">
           <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
         </triggered_effect>
@@ -8828,12 +8828,12 @@
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(0,2)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(-1,2)" help="why -1? this means 50% chance to not spawning: -1 0 1 2">
           <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="SpawnMiniSpider:DoIt. many spiders spawning at once will increase the cooldown">
+      <effect_group help="SpawnMiniSpider:DoIt. many spiders spawning at once will increase the cooldown. in 24h = 60min irl, 2m30s irl = 1h game time. so 30min irl = 12h game time">
         <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKSpawnSpiderMiniCount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
