@@ -441,6 +441,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathOverhydrated"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloated"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathChemUse"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathRewindTime"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeath"/>
       </effect_group>
       <effect_group>
@@ -4073,6 +4074,9 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathChemUse">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathChemUse"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRewindTime">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRewindTime"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKNearDeathProtectionCBM" operation="Equals" value="1"/>
@@ -8710,7 +8714,10 @@
         <passive_effect name="WalkSpeed" operation="perc_add" value="0.10" help="just a bit to not make it difficult to move precisely"/>
         <passive_effect name="JumpStrength" operation="perc_add" value="0.10" help="just a bit, this should be about encumbrance tho"/>
       </effect_group>
-      <effect_group help="Rewind time cool down">
+      <effect_group help="Rewind time">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRewindTime" operation="add" value="-0.5" help="10s with update_rate of 1s">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRewindTime" operation="GT" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKrewindTimeCoolDown" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="GT" value="0"/>
         </triggered_effect>
