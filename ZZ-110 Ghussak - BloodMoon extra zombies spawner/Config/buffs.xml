@@ -63,7 +63,9 @@
       </effect_group>
       <effect_group help="update counters based on limits">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
+        <!-- HELPGOOD: no need to stop the counters, also for the flying they will be useful
+				<requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax" />
+-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="keep 1 as the player may have moved away from where it happened">
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0"/>
@@ -112,7 +114,7 @@
           <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="spawn foes">
+      <effect_group help="spawn foes: walkers">
         <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
         <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
@@ -134,6 +136,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombFeral">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="Equals" value="0"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="spawn foes: flying, while the player may be at the top of some high building, flying foes have no problem with that, so they can exist beyond the limit as the player will have to unavoidably deal with them">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
           <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
         </triggered_effect>

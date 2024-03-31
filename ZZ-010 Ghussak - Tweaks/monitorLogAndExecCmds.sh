@@ -64,7 +64,8 @@ function FUNCsuspendPopup() {
 }
 
 export strChkAutoStopOnLoadA="`FUNCrawMatchRegex " INF Created player with id="`"
-export strChkAutoStopOnLoadB="`FUNCrawMatchRegex " INF PlayerSpawnedInWorld (reason: LoadedGame, position:"`.*: localplayer" # this grants extra 10s w/o waiting!
+#export strChkAutoStopOnLoadB="`FUNCrawMatchRegex " INF PlayerSpawnedInWorld (reason: LoadedGame, position:"`.*: localplayer" # this grants extra 10s w/o waiting!
+export strChkAutoStopOnLoadB=" INF PlayerSpawnedInWorld [(]reason: (LoadedGame|NewGame), position:.*: localplayer" # this grants extra 10s w/o waiting!
 export bAllowPauseOnB=false
 
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
