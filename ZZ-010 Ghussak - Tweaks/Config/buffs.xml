@@ -4690,11 +4690,14 @@
           <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="TODO: what is lg (hard) and sm (weak)?">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.25"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painsm">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.5"/>
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.25"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.50"/>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="0">
