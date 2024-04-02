@@ -456,10 +456,12 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKAntiRainBlurVision" hidden="true" remove_on_death="true"/>
     <buff name="buffRainScrEffect" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="2"/>
       <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffRainScrEffect"/>
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffRainScrEffect"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="10">
@@ -477,6 +479,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="90">
           <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.90"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="2">
           <requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="10"/>
         </triggered_effect>
@@ -492,8 +497,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.90" fade="2">
           <requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="90"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iRainBlur"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffRainScrEffect">
+          <requirement name="HasBuff" buff="buffGSKAntiRainBlurVision"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffDrinkRainWater78" hidden="true" remove_on_death="true">
@@ -580,6 +590,7 @@
         <requirement name="CVarCompare" cvar="iGSKDrinkingRain" operation="Equals" value="1" help="while it is raining only. when rain stops, it begins decreasing wetness and drinking rain stops too"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+        <requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
       </effect_group>
       <effect_group>
