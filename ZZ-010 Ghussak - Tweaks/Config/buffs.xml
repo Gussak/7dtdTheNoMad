@@ -8869,6 +8869,17 @@
           <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors, wilderness or not well sheltered"/>
           <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="10"/>
         </triggered_effect>
+        <!--        HELPGOOD: this will let spawns happen in tall grass. stepping on grass may wakeup a spider-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="">
+          <requirement name="HasBuff" buff="buffGSKSteppingOnGrass"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="EntityHasMovementTag" tags="walking"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-3" help="">
+          <requirement name="HasBuff" buff="buffGSKSteppingOnGrass"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="EntityHasMovementTag" tags="running"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(1,4)">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
@@ -10876,6 +10887,10 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKfortGripDebuff" help="max rads is 100.0"/>
       </effect_group>
+    </buff>
+    <buff name="buffGSKSteppingOnGrass" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="5"/>
     </buff>
     <buff name="buffGSKRespec" hidden="false" remove_on_death="true" name_key="ResetStats" description_key="dkbuffGSKRespec" icon="7dtdShockTip" icon_blink="true" icon_color="255,128,128">
       <stack_type value="ignore"/>
