@@ -29,8 +29,6 @@ function FUNCexecEcho() {
 };export -f FUNCexecEcho
 
 function FUNCprepareDumpedCfgToOverrideAll() {
-	if $bUndo;then return 0;fi
-	
 	strXmlFl="$1";shift
 	strGrp="$1";shift
 	strEntry="$1";shift
@@ -41,7 +39,14 @@ function FUNCprepareDumpedCfgToOverrideAll() {
 	
 	: ${strDumpModPath:="../ZZ-990 Ghussak - DumpedCfgsForQuickLoad"} #help
 	FUNCexecEcho ls -ld "$strDumpModPath" # to error if not exist
-	strFl="${strDumpModPath}/Config/${strXmlFl}"
+	strFlFinal="${strDumpModPath}/Config/${strXmlFl}" # this will become just a symlink
+	strFlReal="${strFlFinal}.SkipOnRelease.xml"
+	
+	if $bUndo;then
+		FUNCexecEcho trash "$strFlFinal"
+		FUNCexecEcho trash "$strFlReal"
+		return 0;
+	fi
 	
 	strRmRegex="xml.*version.*encoding|[<]${strGrp}[>]|[<][/]${strGrp}[>]"
 	if(($(egrep "${strRmRegex}" "${strFlDumped}" |wc -l) != 3));then # validate
@@ -51,13 +56,13 @@ function FUNCprepareDumpedCfgToOverrideAll() {
 		exit 1
 	fi
 	
-	strFlClean="${strFl}.CopiedFromConfigsDumpAndCleanedComments.xml"
+	strFlClean="${strFlFinal}.CopiedFromConfigsDumpAndCleanedComments.xml"
 	FUNCexecEcho cp -vfT "${strFlDumped}" "${strFlClean}"
 	FUNCexecEcho chmod -v u+w "${strFlClean}"
 	FUNCexecEcho xmlstarlet ed -L -d '//comment()' "${strFlClean}"
 
-	FUNCexecEcho trash "$strFl"
-	echo >"$strFl" #trunc/create
+	FUNCexecEcho trash "$strFlFinal"
+	echo >"$strFlFinal" #trunc/create
 
 	echo '
 	<GhussakTweaks>
@@ -66,34 +71,34 @@ function FUNCprepareDumpedCfgToOverrideAll() {
 		<append xpath="/'"${strGrp}"'" help="append everthing from computed final dump of a running game">
 		
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
-		' >>"$strFl"
+		' >>"$strFlFinal"
 	
-	FUNCexecEcho egrep -v "${strRmRegex}" "${strFlClean}" >>"$strFl"
+	FUNCexecEcho egrep -v "${strRmRegex}" "${strFlClean}" >>"$strFlFinal"
 	
 	echo '
 		<!-- HELPGOOD:_AUTOGENCODE_CopyLastCfgDump_EntityGroups_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: '"$(basename "$0")"' ===== -->
 		</append>
 	</GhussakTweaks>
-	' >>"$strFl"
+	' >>"$strFlFinal"
 	
 	FUNCexecEcho trash "$strFlClean"
 	
-	chmod -v ugo-w "$strFl" # to help on avoiding misediting it
-	ls -l "$strFl"
+	chmod -v ugo-w "$strFlFinal" # to help on avoiding misediting it
+	ls -l "$strFlFinal"
 	
-	FUNCexecEcho mv -vfT "$strFl" "${strFl}.SkipOnRelease.xml" # to prevent sending to repo
-	FUNCexecEcho ln -vsfT "./$(basename "${strFl}.SkipOnRelease.xml")" "$strFl" # to let engine detect and use it
+	FUNCexecEcho mv -vfT "$strFlFinal" "${strFlReal}" # to prevent sending to repo
+	FUNCexecEcho ln -vsfT "./$(basename "${strFlReal}")" "$strFlFinal" # to let engine detect and use it
 	
 	return 0
 }
 
 function FUNCmv() {
 	strModFolder="$1";shift
-	strFl="$1";shift
+	strFlFinal="$1";shift
 	if $bUndo;then
-		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFl}.${strSuffix}.xml" "${strModFolder}/Config/${strFl}"
+		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFlFinal}.${strSuffix}.xml" "${strModFolder}/Config/${strFlFinal}"
 	else
-		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFl}" "${strModFolder}/Config/${strFl}.${strSuffix}.xml"
+		FUNCexecEcho --ignoreerror mv -v "${strModFolder}/Config/${strFlFinal}" "${strModFolder}/Config/${strFlFinal}.${strSuffix}.xml"
 	fi
 	return 0
 }
