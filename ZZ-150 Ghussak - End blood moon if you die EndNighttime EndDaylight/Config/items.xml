@@ -23,15 +23,17 @@
         <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
         <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
         <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
-        <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GT" value="0"/>
         <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd" help="DIFFERS"/>
         <requirement name="IsNight" help="DIFFERS"/>
         <property name="Class" value="Eat" help="to destroy/consume it"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd" help="DIFFERS"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
@@ -51,15 +53,17 @@
         <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
         <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
         <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
-        <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GT" value="0"/>
         <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd" help="DIFFERS"/>
         <requirement name="!IsNight" help="DIFFERS"/>
         <property name="Class" value="Eat" help="to destroy/consume it"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd" help="DIFFERS"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
