@@ -20,9 +20,11 @@ function FUNCexecEcho() {
 	echo "EXEC: $@" >&2
   "$@"&&:;local lnRet=$?
   if ! $lbIgnoreError && ((lnRet!=0));then
-    echo "ERROR-EXEC: $@; lnRet=$lnRet (hit ctrl+c)" 
+    echo "ERROR-EXEC: $@; lnRet=$lnRet, continue (y/...)? (hit ctrl+c)" 
+    read -t 6000 -n 1 strResp;if [[ "$strResp" == y ]];then return 0;fi
+    exit 1
     #trap 'echo "ctrl+c, continuing..."' INT
-    sleep 6000 #cant use `read` as it is non iteractive (will ignore keypresses)
+    #sleep 6000 #cant use `read` as it is non iteractive (will ignore keypresses)
     #trap -- INT
   fi
   return 0
