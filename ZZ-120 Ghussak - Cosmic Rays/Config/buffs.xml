@@ -149,6 +149,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathProtectionCBM" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LT" value="@iGSKCosmicBloodMoonRageTm"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffRadiation03"/>
       </effect_group>
       <effect_group help="over time buffs to let the player clear mobs in melee or ranged, the ending at 60s (sync with .iGSKCosmicBloodMoonRageTmTot) is meant to let the player run back to a safe location">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
@@ -216,8 +217,17 @@
   <remove xpath="/buffs/buff[@name='buffRadiation03']/effect_group/triggered_effect[@trigger='onSelfBuffStart' and @action='ModifyScreenEffect' and @effect_name='Radiation']"/>
   <set xpath="/buffs/buff[@name='buffRadiation03']/@icon">7dtdCosmicRayBeam</set>
   <set xpath="/buffs/buff[@name='buffRadiation03']/@icon_color">220,128,128</set>
-  <append xpath="/buffs/buff[@name='buffRadiation03']/effect_group" help="prevents cosmic radiation while under effect of cosmic blood moon good buff">
+  <append xpath="/buffs/buff[@name='buffRadiation03']/effect_group" help="prevents cosmic radiation while under effect of cosmic blood moon good buff. also during blood moon it is harmless.">
     <requirement name="!HasBuff" buff="buffGSKCosmicBloodMoon7"/>
+    <requirement name="!IsBloodMoon"/>
+  </append>
+  <append xpath="/buffs/buff[@name='buffRadiation03']" help="this is also important because otherwise the protections above (that dont remove the buff) would let the increase of damage over time still be calculated there!!! as soon that conditions end, the player would receive high damage and die instantly!">
+    <effect_group help="grants bloodmoon and cosmicblood moon make cosmic radiation harmless">
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffRadiation03" compare_type="or">
+        <requirement name="HasBuff" buff="buffGSKCosmicBloodMoon7"/>
+        <requirement name="IsBloodMoon"/>
+      </triggered_effect>
+    </effect_group>
   </append>
   <!-- HELPGOOD: the vanilla initial 10s dmg of 1HP/s is good as indicator to call player attention, this below is bad:
     <set xpath="/buffs/buff[@name='buffRadiation03']/effect_group/passive_effect[@name='HealthChangeOT' and @operation='base_subtract' and @duration='0,10']/@value">0.1,1</set>
