@@ -1818,9 +1818,14 @@
     </buff>
     <buff name="buffNPCstopFollowingTooCrowded">
       <stack_type value="replace"/>
-      <update_rate value="0.05"/>
+      <update_rate value="1"/>
       <duration value="0"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNPCcrowdedStep" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCcrowdedStep" operation="add" value="1" help="this works like seconds count here"/>
+      </effect_group>
+      <effect_group help="log and cfg">
+        <requirement name="CVarCompare" cvar="iGSKNPCcrowdedStep" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:NPC:RANGED:Force:StopFollowing">
           <requirement name="EntityTagCompare" tags="ranged"/>
         </triggered_effect>
@@ -1831,6 +1836,13 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCRandomID"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCSpecialFollowMode" operation="set" value="0" help="before rm buffGSKNPCwarpartyAutoOrders, grant to prevent buffOrderFollow from buffGSKNPCwarpartyAutoOrders"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCwarpartyAutoOrders" help="b4 buffOrderStay to let it prevail"/>
+      </effect_group>
+      <effect_group help="follow before continuing, important to prevent NPC staying far away">
+        <requirement name="CVarCompare" cvar="iGSKNPCcrowdedStep" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderFollow"/>
+      </effect_group>
+      <effect_group help="finalize: stop following and highlight, a few seconds after follow mode to grant it kicks in">
+        <requirement name="CVarCompare" cvar="iGSKNPCcrowdedStep" operation="Equals" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderStay"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint) some other hint to indicate this NPC will not follow the player because there are too many. This one is good tho as will clearly highlight it. It is bad tho as means it becomes a movable free light source... ISSUE: some models are created in non standard ways (?), so the positioning of this hint may look weird/funny, create specific offset for each 3d model (based on tags or NPC IDs) or update (download) the NPC mod resources with updated models to check if it was fixed"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNPCstopFollowingTooCrowded"/>
