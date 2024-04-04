@@ -321,7 +321,7 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Followers Follow"/>
       </effect_group>
     </item>
-    <item name="GSKNPCWarPartyMode">
+    <item name="GSKCFGNPCWarPartyMode">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
       <property name="DescriptionKey" value="dkGSKNPCWarPartyMode"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
@@ -348,10 +348,24 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKCFGNPCMeleeBuildLimitFollowers">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGNPCMeleeBuildLimitFollowers"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="00a0ff"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+      <effect_group tiered="false" help="at player">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="set" value="2"/>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'gun') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]" help="this is meant for a melee build with many hired NPCs using ranged weapons">
     <effect_group tiered="false">
-      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="2"/>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="2">
+        <requirement name="CVarCompare" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="Equals" value="1"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKNPCFollowAllowMany" operation="set" value="1"/>
     </effect_group>
   </append>
