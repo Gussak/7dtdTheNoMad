@@ -37163,6 +37163,16 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   </append>
   <append xpath="/items/item[       @name='meleeToolRepairT0StoneAxe' or       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT1IronKnuckles' or       @name='meleeWpnKnucklesT3SteelKnuckles'       ]">
     <effect_group name="gore harvest" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
+        <requirement name="EntityTagCompare" tags="player" target="self"/>
+        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
+        <requirement name="!IsAlive" target="other"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
+        <requirement name="EntityTagCompare" tags="player" target="self"/>
+        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
+        <requirement name="!IsAlive" target="other"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="self" buff="buffGSKGoreHazard">
         <requirement name="EntityTagCompare" tags="player" target="self"/>
         <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
