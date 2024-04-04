@@ -7,15 +7,21 @@
       <update_rate value="1"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="10"/>
-          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="stand up"/>
+        <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk" operation="set" value="6">
+          <requirement name="!EntityHasMovementTag" tags="running"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk" operation="set" value="18">
+          <requirement name="EntityHasMovementTag" tags="running"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk" operation="divide" value="3">
+          <requirement name="HasBuff" buff="buffImpactBracing"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-          <requirement name="EntityHasMovementTag" tags="running"/>
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@.iGSKStumbleOTOTGtmpChk"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
