@@ -742,7 +742,9 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="0.083"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDrinkingRainAmount" operation="set" value="@fGSKShownWetnessPerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDrinkingRainAmount" operation="divide" value="3" help="player should look at water bar and see it increasing after a few seconds in heavy rain"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="@.iGSKDrinkingRainAmount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="8"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="1"/>
       </effect_group>
