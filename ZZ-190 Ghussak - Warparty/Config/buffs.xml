@@ -5,9 +5,9 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.00"/>
-      <effect_group>
+      <effect_group help="the NPC combat AI seems to shutdown around 30m, so had to lower to 25m :(">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
-        <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="LT" value="30"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="LT" value="25"/>
         <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.75" help="was 0.95 but they may not heal if already at GTE 0.90 I think"/>
         <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90" help="if spend too much, will stay nearby to let player perceive they need to be re-hired"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderPatrol"/>
@@ -15,7 +15,7 @@
       <effect_group>
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="5" help="is buffOrderPatrol"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderFollow">
-          <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="GT" value="30"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCLeaderPseudoDistance" operation="GT" value="25"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffOrderFollow">
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="0.50" help="they may be hit much more before reacting. the forced auto teleport max dist is 60 right? but not if ragdolled right?"/>
@@ -300,23 +300,18 @@
       <effect_group help="NPC pseudo distances set on the NPC, the farer should be on top to be overwritten by nearest ones. compare like GT 30, means that if it is 31, it will be pseudo 60">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="60" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="30" target="selfAOE" range="30" help="used to change from patrol to follow mode">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="25" target="selfAOE" range="25" help="used to change from patrol to follow mode">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="10" target="selfAOE" range="10" help="used by 'buffGSKNPCproperSneaking13'">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCLeaderPseudoDistance" operation="set" value="5" target="selfAOE" range="5" help="used by 'buffGSKNPCproperSneaking13'">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-          <requirement name="EntityTagCompare" target="other" tags="npc"/>
-          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="NPCSNEAK: leader sheltered">
