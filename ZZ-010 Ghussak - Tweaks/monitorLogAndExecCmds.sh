@@ -134,7 +134,7 @@ tail -F "$strFlLog" |while read strLine;do
 				echo -en "${li}/${nIniShapesDelay}s waiting blocks complete init\r" # (hit 'y' to skip this check).\r"
 				#if CFGFUNCprompt -q "ignore/skip this check?";then break;fi
 				if((li>nIniShapesDelay));then 
-					strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Blocks? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !!!"
+					strInfo="[WARN] ${li}/${nIniShapesDelay}s log file have not changed yet, froze on ini Blocks? if so you should 'SIGKILL' the game, but 'wineserver -k' is better. Hitting OK will 'wineserver -k' !\n But you can just wait to see if it loads anyway, and AFTER that click CANCEL."
 					CFGFUNCinfo "$strInfo";
 					if ! pgrep "yad.*TNMMonLog:FrozenBlocks" -fa;then
 						function FUNCyad_FrozenShapes() {
