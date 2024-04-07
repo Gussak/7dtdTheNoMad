@@ -10466,19 +10466,21 @@
     </buff>
     <buff name="buffGSKDbgListToggle">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
+      <duration value="1.0" help="was 0.05 but this happens more than 1 time even activating only once?"/>
       <effect_group help="reset all">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDbgNpcInfo" operation="set" value="0" target="selfAOE" range="60" target_tags="npc"/>
       </effect_group>
       <effect_group help="values loop">
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKDbgListCurrentIndex"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="2" help="sync last index here">
           <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="LT" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDbgListCurrentIndex" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="GT" value="2" help="sync last index here"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKDbgListCurrentIndex"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKDbgListCurrentIndex" operation="Equals" value="1"/>
