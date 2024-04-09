@@ -191,7 +191,10 @@
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <effect_group help="zombie crowd">
       <requirement name="CVarCompare" cvar=".iGSKzombieCrowd" operation="GT" value="0"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwZombWeakCrowd"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwZombWeakCrowd">
+        <requirement name="!IsNight"/>
+        <requirement name="!IsBloodMoon"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="-1"/>
     </effect_group>
   </append>
