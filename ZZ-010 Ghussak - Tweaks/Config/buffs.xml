@@ -214,6 +214,15 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKSpawnTreasureAmbushAlert" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="2" help="remove quickly (but not too fast)"/>
+      <update_rate value="1.5" help="this actually controls for how much time (how many times) the alarm is played"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="alarm1" play_in_head="false" help="this shall play only once"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="StopSound" sound="alarm1" play_in_head="false"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKSpawnTreasureAmbush15" hidden="false" remove_on_death="true" name_key="TreasureAndRaidersAmbush" description_key="dkbuffGSKSpawnTreasure" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -257,6 +266,9 @@
           <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] TreasureHunt: Watchout! Raider(s) are nearby!">
+          <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSpawnTreasureAmbushAlert">
           <requirement name="CVarCompare" cvar="iGSKSpawnBanditCount" operation="GTE" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKSpawnBanditCount"/>
