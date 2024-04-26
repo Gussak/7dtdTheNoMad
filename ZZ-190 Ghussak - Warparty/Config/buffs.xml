@@ -450,6 +450,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNPCPreventDismissSecs" operation="subtract" value="@fTransferNPCPDS" target="self">
           <requirement name="CVarCompare" target="self" cvar="fNPCPreventDismissSecs" operation="GTE" value="@fTransferNPCPDS"/>
         </triggered_effect>
+      </effect_group>
+      <effect_group help="NPC: repair NPC armor">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower for this to work"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fRepairNPCArmor">
           <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
@@ -459,6 +462,7 @@
           <requirement name="EntityTagCompare" target="other" tags="npc"/>
           <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fRepairNPCArmor" operation="subtract" value="0.05" target="self">
           <requirement name="CVarCompare" target="self" cvar="fRepairNPCArmor" operation="GTE" value="0.05"/>
