@@ -889,18 +889,31 @@
     <property name="AITask-7" value="Wander"/>
     <property name="AITask-8" value=""/>
   </append>
-  <append xpath="/entity_classes/entity_class[@name='mechBee']">
+  <append xpath="/entity_classes/entity_class[@name='mechBee']" help="TODO: shoot bolts">
     <effect_group name="Base Effects">
       <passive_effect name="HealthMax" operation="base_set" value="50" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
     </effect_group>
     <property name="DeadBodyHitPoints" value="20" help="faster harvesting"/>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name,'mechSphere')]">
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'mechSphere')]" help="TODO: self explode if near or after hitting the player. mechSphereI grenade, mechSphereII dynamite">
     <effect_group name="Base Effects">
       <passive_effect name="HealthMax" operation="base_set" value="75" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
     </effect_group>
     <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
+    <property name="SizeScale" value="0.25"/>
   </append>
+  <append xpath="/entity_classes/entity_class[@name='mechRobot']">
+    <passive_effect name="RunSpeed" operation="perc_add" value="3.0"/>
+    <property name="MoveSpeedAggro" value="4, 5"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='mechRobotArmy']">
+    <passive_effect name="RunSpeed" operation="perc_add" value="2.0"/>
+    <property name="MoveSpeedAggro" value="2, 3"/>
+    <effect_group help="strong enemy knockdown ragdolls player">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="3"/>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD: todob mechDrone should throw HE grenades every 60s -->
   <append xpath="/entity_classes/entity_class[@name='animalChicken']">
     <property name="SoundAlert" value="Animals/Chicken/chickenpain"/>
     <property name="SoundSense" value="Animals/Chicken/chickenpain"/>
