@@ -895,12 +895,44 @@
     </effect_group>
     <property name="DeadBodyHitPoints" value="20" help="faster harvesting"/>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name,'mechSphere')]" help="TODO: self explode if near or after hitting the player. mechSphereI grenade, mechSphereII dynamite">
+  <append xpath="/entity_classes/entity_class[@name='mechSphereI']" help="TODO: self explode if near or after hitting the player. TODO: use this as base to create the walking landmine robots that the player should be able to craft to seek enemies (as long they ignore NPC followers and friendlies..) !">
     <effect_group name="Base Effects">
       <passive_effect name="HealthMax" operation="base_set" value="75" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
     </effect_group>
     <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
     <property name="SizeScale" value="0.25"/>
+    <!--		HELPGOOD: based on exploding arrow-->
+    <property name="Class" value="EntityZombieCop"/>
+    <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+    <property name="Explosion.ParticleIndex" value="11" help="based on exploding arrow"/>
+    <property name="Explosion.RadiusBlocks" value="3"/>
+    <property name="Explosion.RadiusEntities" value="1.5"/>
+    <property name="Explosion.DamageBonus.stone" value=".3"/>
+    <property name="Explosion.DamageBonus.metal" value=".1"/>
+    <property name="Explosion.DamageBonus.earth" value="0"/>
+    <property name="Explosion.DamageBonus.wood" value=".5"/>
+    <property name="Explosion.DamageBonus.water" value="0"/>
+    <property name="Explosion.BlockDamage" value="2"/>
+    <property name="Explosion.EntityDamage" value="72"/>
+    <!--		HELPGOOD: some more settings-->
+    <property name="Explosion.Duration" value="8"/>
+    <property name="Explosion.BlastPower" value="35"/>
+    <property name="ExplodeDelay" value="0.5"/>
+    <effect_group help="sync with 20% of max HP. self explosion from zombie cop is only triggered when it is in non configurable low HP right? this helps to trigger it TODO: configure in what HP percentage the self destruction will trigger">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="set" value="15">
+        <requirement name="StatCompareCurrent" stat="Health" operation="GT" value="15"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyStats" stat="Health" operation="set" value="15">
+        <requirement name="StatCompareCurrent" stat="Health" operation="GT" value="15"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='mechSphereII']" help="TODO: like sphere1 but destroy blocks like dynamite too">
+    <effect_group name="Base Effects">
+      <passive_effect name="HealthMax" operation="base_set" value="75" help="the hit collider is too small, so whenever you hit it, it will be worth it."/>
+    </effect_group>
+    <property name="DeadBodyHitPoints" value="33" help="faster harvesting"/>
+    <property name="SizeScale" value="0.40"/>
   </append>
   <append xpath="/entity_classes/entity_class[@name='mechRobot']">
     <passive_effect name="RunSpeed" operation="perc_add" value="3.0"/>
