@@ -211,7 +211,7 @@
       </effect_group>
     </buff>
   </append>
-  <append xpath="/buffs" help="Monster Essences">
+  <append xpath="/buffs" help="Monster Essences powers for PLAYER">
     <buff name="buffGSKMonsterMixEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="255,0,0" description_key="dkGSKMonsterEssence">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -264,6 +264,9 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@iGSKEssenceWight" help="the more you use the better it becomes"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-0.33" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKWightEssence">
           <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LTE" value="0"/>
         </triggered_effect>
@@ -275,6 +278,7 @@
         <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.33" help="otherwise it would just keep lowering player HP til minimum"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="@.iGSKEssenceWightAddStam"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="-0.01"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="use player#painsm ? player#death is too loud if play_in_head, keep false. TODO: some other sound? and/or some screen effect?"/>
       </effect_group>
     </buff>
@@ -302,6 +306,9 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@iGSKEssenceVampire"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="-0.33" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKVampireEssence">
           <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LTE" value="0"/>
         </triggered_effect>
@@ -310,6 +317,7 @@
         <requirement name="CVarCompare" cvar=".iGSKPlayerVampireStrikeCount" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-0.05"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutantEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="220,180,64" description_key="dkbuffGSKMutantEssence">
@@ -367,9 +375,18 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@iGSKEssenceMutant"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="-5" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.005" help="sync with udpate_rate">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.005" help="sync with udpate_rate">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning01"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning02"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning03"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantEssence">
           <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LTE" value="0"/>
         </triggered_effect>
