@@ -17,6 +17,22 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </item>
+    <item name="GSKCFGDbgFixCosmicBloodMoonCharges" help="only from creative menu, no recipe for this">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBloodMoonReward" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="set" value="0"/>
+      </effect_group>
+    </item>
     <item name="GSKCosmicBloodMoonUseCharge">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="7dtdCosmicRayBeam"/>
