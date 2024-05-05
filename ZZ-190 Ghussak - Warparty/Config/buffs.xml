@@ -1954,6 +1954,7 @@
         <requirement name="CVarCompare" cvar="iNPCAmmoLimit" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
+        <requirement name="!IsBloodMoon" help="as they wont talk to the player if there are enemies nearby"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iNPCDismissToRequireReHiring" operation="set" value="1" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay). stay because patrol is too dificult to deal with in-game."/>
@@ -1975,7 +1976,7 @@
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="SELF:RANGED OR MELEE (limits are counted and set independently for ranged and melee): self put on patrol mode if hired ranged self count reached limit.">
+      <effect_group help="SELF:RANGED OR MELEE (limits are counted and set independently for ranged and melee): self stop following if hired ranged self count reached limit.">
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
         <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
