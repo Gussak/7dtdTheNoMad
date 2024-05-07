@@ -55,21 +55,29 @@ egrep "[#]help" $0
 
 : ${strEvalCmdSpeakRequest:="echoc --say "}
 
-: ${strChkSelfRunRegex:="$(which bash) .*/$(basename "$0") --RunSingleInstance"} #help single instance check
+#: ${strChkSelfRunRegex:="$(which bash) .*/$(basename "$0") --RunSingleInstance"} #help single instance check
 
 
 ### MAIN
 
-: ${bRunSingleInstance:=false} # do not set by hand
-if ! $bRunSingleInstance;then
-	if(( $(pgrep -fa "$strChkSelfRunRegex" |tee -a /dev/stderr |wc -l) == 0 ));then
-		echo "RUNNING SINGLE INSTANCE:"
-		bRunSingleInstance=true "$0" --RunSingleInstance
-	else
-		read -t 60 -n 1 -p "INFO: already running, exiting soon..."
-	fi
+#: ${bRunSingleInstance:=false} # do not set by hand
+#if ! $bRunSingleInstance;then
+	#if(( $(pgrep -fa "$strChkSelfRunRegex" |tee -a /dev/stderr |wc -l) == 0 ));then
+		#echo "RUNNING SINGLE INSTANCE:"
+		#bRunSingleInstance=true "$0" --RunSingleInstance
+	#else
+		#read -t 60 -n 1 -p "INFO: already running, exiting soon..."
+	#fi
+	#exit 0
+#fi
+strFlSingleInstance="/tmp/$(basename "$0").SingleInstance.PID.tmp"
+nSingleInstancePID="$(cat "$strFlSingleInstance")"&&:
+if ps -p "$nSingleInstancePID";then
+	read -t 60 -n 1 -p "INFO: already running, exiting soon..."
 	exit 0
 fi
+echo $$ >"$strFlSingleInstance"
+ls -l "$strFlSingleInstance"
 
 if [[ -f "$strFlCfg" ]];then
 	echo "loading config file: $strFlCfg"
