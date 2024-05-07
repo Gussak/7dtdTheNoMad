@@ -55,6 +55,22 @@ egrep "[#]help" $0
 
 : ${strEvalCmdSpeakRequest:="echoc --say "}
 
+: ${strChkSelfRunRegex:="$(which bash) .*/$(basename "$0") --RunSingleInstance"} #help single instance check
+
+
+### MAIN
+
+: ${bRunSingleInstance:=false} # do not set by hand
+if ! $bRunSingleInstance;then
+	if(( $(pgrep -fa "$strChkSelfRunRegex" |tee -a /dev/stderr |wc -l) == 0 ));then
+		echo "RUNNING SINGLE INSTANCE:"
+		bRunSingleInstance=true "$0" --RunSingleInstance
+	else
+		read -t 60 -n 1 -p "INFO: already running, exiting soon..."
+	fi
+	exit 0
+fi
+
 if [[ -f "$strFlCfg" ]];then
 	echo "loading config file: $strFlCfg"
 	cat "$strFlCfg"
