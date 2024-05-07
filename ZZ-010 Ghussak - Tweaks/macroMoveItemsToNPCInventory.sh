@@ -33,34 +33,59 @@
 
 egrep "[#]help" $0
 
+: ${strFlCfg:="$HOME/.config/$(basename "$0").cfg"} #help the config file stored as bash code and used here as source file, be careful editing it!
+
 : ${iInvSlotWidth:=39} #help CFG THIS FOR YOUR RESOLUTION! here is 1366x768 btw
+
 : ${posXYnpcInvSortIcon:="331 122"} #help CFG THIS TO THE NPC sort inv icon POSITION ON YOUR RESOLUTION!
 #: ${posXYnpcFirstInvSlot:="127 142"} #he lp CFG THIS TO THE NPC. first inv slot POSITION ON YOUR RESOLUTION! this position never changes.
 : ${posXYnpcLastInvSlot:="439 632"} #help CFG THIS TO THE NPC last inv slot POSITION ON YOUR RESOLUTION!
 
+: ${strFlMonitorRequest_MoveOne:="/tmp/$(basename "$0").MonitorUserRequest_MoveOne.tmp"} #help create this file to let: Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_MoveOne.tmp" #name: 7DTD move one item to NPC inventory
+: ${strFlMonitorRequest_UpdateLastPos:="/tmp/$(basename "$0").MonitorUserRequest_UpdateLastPos.tmp"} #help create this file to let: Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_UpdateLastPos.tmp" #name: 7DTD update NPC last inventory position
+: ${strFlMonitorRequest_UpdateSortIconPos:="/tmp/$(basename "$0").MonitorUserRequest_UpdateSortIconPos.tmp"} #help create this file to let: Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_UpdateSortIconPos.tmp" #name: 7DTD update NPC sort icon position
+: ${strFlMonitorRequest_MoveWholeLine:="/tmp/$(basename "$0").MonitorUserRequest_MoveWholeLine.tmp"} #help create this file to let: Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_MoveWholeLine.tmp" #name: 7DTD move a whole line to NPC inventory (or stop doing it)
+
+: ${nTotSlotsInThePlayerInvForASingleLine:=20} #help
+
+: ${strGameWindowName:="Default - Wine desktop"} #help
+
+: ${fWaitBeforeInitMoving:=3} #help
+: ${fWaitCheckDelay:=0.33} #help in seconds, this is how fast checks will happen, the lower the less you have to wait for commands to happen
+
+: ${strEvalCmdSpeakRequest:="echoc --say "}
+
+if [[ -f "$strFlCfg" ]];then
+	echo "loading config file: $strFlCfg"
+	cat "$strFlCfg"
+	source "$strFlCfg";
+fi
+
 function FUNCmvItemToNPC() { #help xdotool to move item at cursor to npc inventory. 
-  : ${fSleep:="0.5"} #help initial click and mouse left button down hold
+  : ${fSleep1:="0.5"} #help initial click and mouse left button down hold
   : ${fSleep3:="0.25"} #help 
+  
+  echo -e "${FUNCNAME[@]}:$((iFUNCmvItemToNPC_count++))\r"&&:
   
   eval "`xdotool getmouselocation --shell`" # X Y
   
-  xdotool click --window $nWId 1;sleep $fSleep
-  xdotool mousedown --window $nWId 1;sleep $fSleep
+  #set -x
+  xdotool click --window $nWId 1;sleep $fSleep1
+  xdotool mousedown --window $nWId 1;sleep $fSleep1
   xdotool mousemove_relative -- -5 0;sleep 0.1
   xdotool mousemove_relative -- -5 0;sleep 0.1
   xdotool mousemove_relative -- -5 0;sleep 0.1
   
-  xdotool mousemove --window $nWId ${posXYnpcLastInvSlot};sleep $fSleep3
+  xdotool mousemove ${posXYnpcLastInvSlot};sleep $fSleep3
   xdotool mouseup --window $nWId 1;sleep $fSleep3
   xdotool click --window $nWId 1;sleep $fSleep3
   
-  xdotool mousemove --window $nWId ${posXYnpcInvSortIcon};sleep $fSleep3
+  xdotool mousemove ${posXYnpcInvSortIcon};sleep $fSleep3
   xdotool click --window $nWId 1;sleep $fSleep3
   
-  xdotool mousemove --window $nWId $((X + iInvSlotWidth)) $Y #restore initial pos where player placed the mouse + next slot to the right
+  xdotool mousemove $((X + iInvSlotWidth)) $Y #restore initial pos where player placed the mouse + next slot to the right
+  #set +x
 };export -f FUNCmvItemToNPC
-
-: ${fWaitBeforeInitMoving:=3} #help
 
 echo
 echo "TIP for quickly and easily moving items from one npc to another:"
@@ -75,13 +100,56 @@ echo " Please place the mouse on the first column of the line of items in YOUR i
 echo " OR: bind a system key combination to create the request file as suggested, then place the mouse over every item you want to move and hit that key (suggestion Super + F5 F6 F7 F8)"
 echo
 
-: ${strFlMonitorRequest_MoveOne:="/tmp/$(basename "$0").MonitorUserRequest_MoveOne.tmp"} #help create this file to let one item be moved. Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_MoveOne.tmp" #name: 7DTD move item to NPC inventory
-: ${strFlMonitorRequest_UpdateLastPos:="/tmp/$(basename "$0").MonitorUserRequest_UpdateLastPos.tmp"} #help create this file to let one item be moved. Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_UpdateLastPos.tmp" #name: 7DTD update NPC last inventory position
-: ${strFlMonitorRequest_UpdateSortIconPos:="/tmp/$(basename "$0").MonitorUserRequest_UpdateSortIconPos.tmp"} #help create this file to let one item be moved. Tip:Ubuntu:Settings/keyboard/keyboardShortcuts/...customize.../...custom.../+:command: bash -c "echo >/tmp/macroMoveItemsToNPCInventory.sh.MonitorUserRequest_UpdateSortIconPos.tmp" #name: 7DTD update NPC sort icon position
-: ${nTotSlotsInThePlayerInvForASingleLine:=20} #help
-: ${strGameWindowName:="Default - Wine desktop"} #help
-: ${fWaitCheckDelay:=0.33} #help in seconds, this is how fast checks will happen, the lower the less you have to wait for commands to happen
-rm -v "$strFlMonitorRequest_MoveOne" "$strFlMonitorRequest_UpdateLastPos"&&: #cleanuping
+function FUNCwriteCfg() {
+	echo "$1" |tee -a "$strFlCfg"
+	cp -vf "$strFlCfg" "${strFlCfg}.bkp"
+	strCfgData="$(cat "$strFlCfg")"
+	echo "$strCfgData" >"$strFlCfg"
+}
+
+function FUNCchkRequest() { #helpf <request>
+	local lstrReq="$1";shift
+	
+	eval "strFlReq=\${strFlMonitorRequest_${lstrReq}}"
+	#declare -p strFlReq
+	if [[ -f "$strFlReq" ]];then
+		echo
+		echo "`date`: processing request: ${lstrReq}"
+		eval "${strEvalCmdSpeakRequest} \"$( echo "${lstrReq}" |sed 's@[A-Z][a-z]*@& @g' )\""&&:
+		ls -l "$strFlReq"
+		eval "FUNCprocessRequest_${lstrReq}"
+		rm -v "$strFlReq"
+		echo
+	fi
+}
+function FUNCprocessRequest_MoveWholeLine() {
+	if [[ "$strResp" != y ]];then
+		strResp="y"
+		echo "Init: move line"
+	else
+		strResp=""
+		echo "STOP: move line"
+	fi
+}
+function FUNCprocessRequest_MoveOne() {
+	FUNCmvItemToNPC
+}
+function FUNCprocessRequest_UpdateLastPos() {
+	eval "`xdotool getmouselocation --shell`" # X Y
+	posXYnpcLastInvSlot="$X $Y"
+	declare -p posXYnpcLastInvSlot |tee -a "$strFlCfg"
+}
+function FUNCprocessRequest_UpdateSortIconPos() {
+	eval "`xdotool getmouselocation --shell`" # X Y
+	posXYnpcInvSortIcon="$X $Y"
+	declare -p posXYnpcInvSortIcon |tee -a "$strFlCfg"
+}
+
+#cleanuping
+rm -v "$strFlMonitorRequest_MoveOne"&&:
+rm -v "$strFlMonitorRequest_UpdateLastPos"&&:
+rm -v "$strFlMonitorRequest_MoveWholeLine"&&:
+rm -v "$strFlMonitorRequest_UpdateSortIconPos"&&:
 while true;do
 	if [[ -z "${nWId-}" ]] || ! xdotool getwindowpid $nWId 2>&1 >/dev/null;then
 		if ! nWId="$(xdotool search "$strGameWindowName")";then
@@ -93,42 +161,57 @@ while true;do
 	
 	echo -ne "`date`: move a whole line with ${nTotSlotsInThePlayerInvForASingleLine} items (y/...)? (or press bound key for 1 item) \r"
 	read -t ${fWaitCheckDelay} -n 1 strResp
-	if [[ "$strResp" =~ ^[yY]$ ]];then
+	FUNCchkRequest MoveWholeLine
+	#if [[ -f "$strFlMonitorRequest_MoveWholeLine" ]];then
+		#echo
+		#echo "`date`: processing request"
+		#ls -l "$strFlMonitorRequest_MoveWholeLine"
+		#strResp=y
+		#rm -v "$strFlMonitorRequest_MoveWholeLine"
+		#echo
+	#fi
+	if [[ "$strResp" == y ]];then
 		sleep ${fWaitBeforeInitMoving}
+		iFUNCmvItemToNPC_count=0
 		for((i=0;i<nTotSlotsInThePlayerInvForASingleLine;i++));do 
+			FUNCchkRequest MoveWholeLine
+			if [[ "$strResp" != y ]];then break;fi
 			FUNCmvItemToNPC
 		done
 	fi
 	
-	if [[ -f "$strFlMonitorRequest_MoveOne" ]];then
-		echo
-		echo "`date`: processing request"
-		ls -l "$strFlMonitorRequest_MoveOne"
-		FUNCmvItemToNPC
-		rm -v "$strFlMonitorRequest_MoveOne"
-		echo
-	fi
+	FUNCchkRequest MoveOne
+	#if [[ -f "$strFlMonitorRequest_MoveOne" ]];then
+		#echo
+		#echo "`date`: processing request"
+		#ls -l "$strFlMonitorRequest_MoveOne"
+		#FUNCmvItemToNPC
+		#rm -v "$strFlMonitorRequest_MoveOne"
+		#echo
+	#fi
 
-	if [[ -f "$strFlMonitorRequest_UpdateLastPos" ]];then
-		echo
-		echo "`date`: processing request"
-		ls -l "$strFlMonitorRequest_UpdateLastPos"
-		eval "`xdotool getmouselocation --shell`" # X Y
-		posXYnpcLastInvSlot="$X $Y"
-		declare -p posXYnpcLastInvSlot
-		rm -v "$strFlMonitorRequest_UpdateLastPos"
-		echo
-	fi
+	FUNCchkRequest UpdateLastPos
+	#if [[ -f "$strFlMonitorRequest_UpdateLastPos" ]];then
+		#echo
+		#echo "`date`: processing request"
+		#ls -l "$strFlMonitorRequest_UpdateLastPos"
+		#eval "`xdotool getmouselocation --shell`" # X Y
+		#posXYnpcLastInvSlot="$X $Y"
+		#declare -p posXYnpcLastInvSlot |tee -a "$strFlCfg"
+		#rm -v "$strFlMonitorRequest_UpdateLastPos"
+		#echo
+	#fi
 
-	if [[ -f "$strFlMonitorRequest_UpdateSortIconPos" ]];then
-		echo
-		echo "`date`: processing request"
-		ls -l "$strFlMonitorRequest_UpdateSortIconPos"
-		eval "`xdotool getmouselocation --shell`" # X Y
-		posXYnpcInvSortIcon="$X $Y"
-		declare -p posXYnpcInvSortIcon
-		rm -v "$strFlMonitorRequest_UpdateSortIconPos"
-		echo
-	fi
+	FUNCchkRequest UpdateSortIconPos
+	#if [[ -f "$strFlMonitorRequest_UpdateSortIconPos" ]];then
+		#echo
+		#echo "`date`: processing request"
+		#ls -l "$strFlMonitorRequest_UpdateSortIconPos"
+		#eval "`xdotool getmouselocation --shell`" # X Y
+		#posXYnpcInvSortIcon="$X $Y"
+		#declare -p posXYnpcInvSortIcon |tee -a "$strFlCfg"
+		#rm -v "$strFlMonitorRequest_UpdateSortIconPos"
+		#echo
+	#fi
 	
 done
