@@ -194,6 +194,7 @@ while true;do
 			if [[ "$strResp" != y ]];then break;fi
 			FUNCmvItemToNPC
 		done
+		eval "${strEvalCmdSpeakRequest} \"Completed moving whole line!\""&&:
 	fi
 	
 	FUNCchkRequest MoveOne
