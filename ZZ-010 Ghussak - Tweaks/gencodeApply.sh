@@ -93,7 +93,7 @@ declare -p strCallerScript
 if [[ "${1-}" == "--xmlcfg" ]];then #help <<strId> <strValue>> [[<strId> <strValue>] ...] set the value of some constant config cvar at buffs.xml
   shift
   astrIdVal=("$@")
-  strFlToPatch="${strFlGenBuf}"
+  : ${strFlToPatch:="${strFlGenBuf}"} #help for --xmlcfg, this could be used to patch a file outside this folder, like at LIBs or final touches mod
   cat "${strFlToPatch}" >"${strFlToPatch}.GENCODENEWFILE"
   #for strIdVal in "${astrIdVal[@]}";do
   astrSed=()

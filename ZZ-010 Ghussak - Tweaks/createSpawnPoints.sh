@@ -284,7 +284,7 @@ for str in "${astrPrefabsList[@]}";do #astrPrefabsList evals: strNm iX iY iZ iRo
     #fi
     
     if((iTeleportIndexFirst==-1));then iTeleportIndexFirst=$iTeleportIndex;fi
-    strTeleportIndex="`printf %03d $iTeleportIndex`"
+    strTeleportIndex="$iTeleportIndex"
     #strMsg="spawn point index ${strTeleportIndex}"
     #echo '      <!-- '"${strMsg}"' -->'
     echo '
@@ -320,7 +320,9 @@ for str in "${astrPrefabsList[@]}";do #astrPrefabsList evals: strNm iX iY iZ iRo
       <property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
     </action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
     iTeleportMaxIndex=$iTeleportIndex
-    if((iTeleportMaxIndex==iTeleportMaxAllowedIndex));then echo "PROBLEM: not all spawns were made available";break;fi
+    if((iTeleportMaxIndex > iTeleportMaxAllowedIndex));then
+			if ! CFGFUNCprompt -q "PROBLEM: not all spawns were made available, complete it anyway?";then break;fi;
+		fi
     #((iTeleportIndex++))&&:
   #fi
   
