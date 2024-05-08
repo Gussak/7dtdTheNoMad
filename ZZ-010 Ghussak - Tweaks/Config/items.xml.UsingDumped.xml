@@ -34749,6 +34749,33 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </item>
+    <item name="GSKCFGElctrnTeleChangeQuadrantIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleChangeQuadrantIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false" help="Quadrant X standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false" help="Quadrant Z standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="!EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantStart"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleQuadrantStart"/>
+      </effect_group>
+    </item>
     <item name="GSKElctrnTeleportUndergroundFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod. TODO: allow this only on the first game day, to prevent using it on bloodmoons.">
       <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
       <property name="EconomicValue" value="999"/>
@@ -34756,6 +34783,7 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       <property name="DescriptionKey" value="dkGSKElctrnTeleportUndergroundFreeAndSafeCall"/>
       <property name="CustomIconTint" value="80,80,128"/>
       <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
         <requirement name="!IsBloodMoon" help="this is not enough, player may use it just before bloodmoon kicks in.. TODO:ISSUE?: the engine may even not spawn zombs properly if player is that far away underground?"/>
         <property name="Class" value="Eat" help="because 2nd actiom must also consume!"/>
       </property>
