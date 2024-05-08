@@ -80,10 +80,17 @@ for((iIndexX=0;iIndexX<=iDivMapSizeBy;iIndexX++));do
 				<requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
 			</triggered_effect>' >>"${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}"
 		echo '
+      <effect_group>
+				<requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'" help="'"${strHelp}"'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="'"${iX}"'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="'"${iZ}"'"/>
+      </effect_group>' >>"${strFlGenBuf}TeleQuadrantHUD${strGenTmpSuffix}"
+		
+		echo '
 			<action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
 				<property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
 			</action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
-			
+		
 		echo -e "$strHelp" >/dev/stderr
 		
 		iTeleportMaxIndex=$iTeleportIndex
@@ -95,6 +102,7 @@ done
 CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 #CFGFUNCgencodeApply --subTokenId "TeleportQuadrant" "${strFlGenBuf}TeleportQuadrant${strGenTmpSuffix}" "${strFlGenBuf}"
 CFGFUNCgencodeApply --subTokenId "TeleQuadrantLog" "${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --subTokenId "TeleQuadrantHUD" "${strFlGenBuf}TeleQuadrantHUD${strGenTmpSuffix}" "${strFlGenBuf}"
 
 CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
