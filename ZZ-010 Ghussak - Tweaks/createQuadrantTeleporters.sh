@@ -44,25 +44,34 @@ CFGFUNCtrash "${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}"&&:
 #nBiomesH="`echo "$strBiomeFileInfo" |cut -d' ' -f2`";
 #declare -p nBiomesW nBiomesH
 
-iTeleportIndex=55000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKElctrnTeleSpawnBEGIN
+iTeleportIndexBase=55000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKElctrnTeleSpawnBEGIN
+iTeleportIndex=$iTeleportIndexBase
 iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
-iTeleportMaxAllowedIndex=$((iTeleportIndex+iTeleportMaxAllowed))&&: 
+iTeleportMaxAllowedIndex=$((iTeleportIndex + iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
 
 : ${iMapSize:=10240} #help for X and Z
-: ${iDivMapSizeBy:=13} #help for X and Z. (13+1)*(13+1)=196<iTeleportMaxAllowed. could be 10x10, but using the max possible (right?) limit of buff's triggered_effect list iTeleportMaxAllowed
+: ${iDivMapSizeBy:=13} #help for X and Z. could be 10x10, but using the max possible (right?) limit of buff's triggered_effect list iTeleportMaxAllowed
 : ${iMarginMapEdges:=250} #help for X and Z, consider a good distance away from the radiactive borders
-iDistQuadrant=$(( (iMapSize-(iMarginMapEdges*2)) / iDivMapSizeBy ))
+iDistQuadrant=$(( (iMapSize - (iMarginMapEdges * 2)) / iDivMapSizeBy ))
 : ${iTeleAtY:=260} #help just above max placeable block
 bStop=false
-for((iIndexX=0;iIndexX<=iDivMapSizeBy;iIndexX++));do
-	for((iIndexZ=0;iIndexZ<=iDivMapSizeBy;iIndexZ++));do
-		iX=$((iMarginMapEdges + iDistQuadrant*iIndexX - iMapSize/2))
+for((iIndexZ=0; iIndexZ<=iDivMapSizeBy; iIndexZ++));do
+	for((iIndexX=0; iIndexX<=iDivMapSizeBy; iIndexX++));do
+		#iX=$((iMarginMapEdges + (iDistQuadrant * (iIndexX - 1)) - iMapSize/2))
+		#iY=$((iTeleAtY))
+		#iZ=$((iMarginMapEdges + (iDistQuadrant * (iIndexZ - 1)) - iMapSize/2))
+		iX=$((iMarginMapEdges + (iDistQuadrant * iIndexX) - iMapSize/2))
 		iY=$((iTeleAtY))
-		iZ=$((iMarginMapEdges + iDistQuadrant*iIndexZ - iMapSize/2))
+		iZ=$((iMarginMapEdges + (iDistQuadrant * iIndexZ) - iMapSize/2))
 		
 		((iTeleportIndex++))&&:
+		#iIndexCalcChk=$(( ((iIndexZ * iDivMapSizeBy)+1) + (iIndexX+1) ))
+		iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
+		if(( (iTeleportIndex - iTeleportIndexBase) != iIndexCalcChk ));then
+			CFGFUNCerrorExit "$(declare -p iTeleportIndex iIndexX iIndexZ iIndexCalcChk) mismatched";
+		fi
 		
 		strSpawnPos="$iX,$iY,$iZ"
 		
@@ -80,10 +89,17 @@ for((iIndexX=0;iIndexX<=iDivMapSizeBy;iIndexX++));do
 				<requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'"/>
 			</triggered_effect>' >>"${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}"
 		echo '
+      <effect_group>
+				<requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="'"${iTeleportIndex}"'" help="'"${strHelp}"'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="'"${iX}"'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="'"${iZ}"'"/>
+      </effect_group>' >>"${strFlGenBuf}TeleQuadrantHUD${strGenTmpSuffix}"
+		
+		echo '
 			<action_sequence name="eventGSKTeleport'"${strTeleportIndex}"'"><action class="Teleport">
 				<property name="target_position" value="'"${strSpawnPos}"'" help="'"${strHelp}"'"/>
 			</action></action_sequence>' >>"${strFlGenEve}${strGenTmpSuffix}"
-			
+		
 		echo -e "$strHelp" >/dev/stderr
 		
 		iTeleportMaxIndex=$iTeleportIndex
@@ -95,14 +111,17 @@ done
 CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
 #CFGFUNCgencodeApply --subTokenId "TeleportQuadrant" "${strFlGenBuf}TeleportQuadrant${strGenTmpSuffix}" "${strFlGenBuf}"
 CFGFUNCgencodeApply --subTokenId "TeleQuadrantLog" "${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}" "${strFlGenBuf}"
+CFGFUNCgencodeApply --subTokenId "TeleQuadrantHUD" "${strFlGenBuf}TeleQuadrantHUD${strGenTmpSuffix}" "${strFlGenBuf}"
 
 CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlGenEve}"
 
 CFGFUNCgencodeApply --xmlcfg                                                                                      \
+	".iGSKElctrnTeleQuadrantBASE"  "${iTeleportIndexBase}"                                                           \
   ".iGSKElctrnTeleQuadrantFIRST" "${iTeleportIndexFirst}"                                                           \
   ".iGSKElctrnTeleQuadrantLAST"  "${iTeleportMaxIndex}"                                                               \
   ".iGSKElctrnTeleQuadrantMinINDEX"    "0"                      \
-  ".iGSKElctrnTeleQuadrantMaxINDEX"    "$((iDivMapSizeBy+1))"   \
+  ".iGSKElctrnTeleQuadrantMaxINDEX"    "$((iDivMapSizeBy))"     \
+  ".iGSKElctrnTeleQuadrantTotXorZ"    "$((iDivMapSizeBy+1))"     \
   ".iGSKElctrnTeleQuadrantMARGIN"      "${iMarginMapEdges}"                                                               \
   ".iGSKElctrnTeleQuadrantHalfMapSIZE" "$((iMapSize/2))"                                                               \
   ".iGSKElctrnTeleQuadrantDIST"        "${iDistQuadrant}"           
