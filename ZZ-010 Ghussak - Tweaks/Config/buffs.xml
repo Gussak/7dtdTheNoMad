@@ -7470,11 +7470,12 @@
       <display_value value=".iGSKTeleQuadrantCount"/><display_value_key value="{0:0}/10s"/>
       <effect_group><triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="set" value="0"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="add" value="1"/></effect_group>
       <effect_group><requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="10"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantLog"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport"><requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/></triggered_effect><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to protect from fall damage"><requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/></triggered_effect><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1" help="this is to protect from fall damage"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/><!-- HELPGOOD: is consuming energy and damaging tele mod already --></effect_group>
-      <effect_group><requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="13"/><triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="this is a trick/workaround that grantedly protects the player from fall damage ISSUE: if ragdolled player receives fall damage one day, this have to be reviewed."/></effect_group>
+
     </buff>
     <buff name="buffGSKTeleQuadrantCallEvent">
       <stack_type value="ignore"/>
-      <duration value="2.0"/>
+      <duration value="3.0"/>
+      <update_rate value="2.0" help="this trick of duration=3 update_rate=2 and onSelfBuffUpdate, is meant to let other buffs kickin before the player teleports, to try to protect the player from fall damage"/>
       <effect_group>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55001" help="index=55001;Quadrant:0,0;teleQuadrantPos=-4870,260,-4870;iDistQuadrant=749">
@@ -8068,6 +8069,7 @@
         <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="this is a trick/workaround that grantedly protects the player from fall damage ISSUE: if ragdolled player receives fall damage one day, this have to be reviewed."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantCallEvent"/>
       </effect_group>
     </buff>
