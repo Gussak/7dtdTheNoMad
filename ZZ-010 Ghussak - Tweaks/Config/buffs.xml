@@ -7464,13 +7464,36 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleSpawnLog"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeleQuadrantStart" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">&gt;
+    <buff name="buffGSKTeleQuadrantDeny" hidden="false" remove_on_death="true" name_key="TeleToQuadrantDenied" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex">
+      <stack_type value="ignore"/>
+      <duration value="900" help="ISSUE: should be based in 1/4 of one day in game time"/>
+    </buff>
+    <buff name="buffGSKTeleQuadrantStart" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="60.0"/>
-      <display_value value=".iGSKTeleQuadrantCount"/><display_value_key value="{0:0}/10s"/>
-      <effect_group><triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="set" value="0"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="add" value="1"/></effect_group>
-      <effect_group><requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="10"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantLog"/><triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKremoveTeleQuadrantItem" help="TODO: removes 1 or all???"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport"><requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/></triggered_effect><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to protect from fall damage"><requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/></triggered_effect><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1" help="this is to protect from fall damage"/><triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/><!-- HELPGOOD: is consuming energy and damaging tele mod already --></effect_group>
-
+      <display_value value=".iGSKTeleQuadrantCount"/>
+      <display_value_key value="{0:0}/10s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantLog"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKremoveTeleQuadrantItem" help="TODO: removes 1 or all???"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantDeny"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to protect from fall damage">
+          <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1" help="this is to protect from fall damage"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
+        <!-- HELPGOOD: is consuming energy and damaging tele mod already -->
+      </effect_group>
     </buff>
     <buff name="buffGSKTeleQuadrantCallEvent">
       <stack_type value="ignore"/>
