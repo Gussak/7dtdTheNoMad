@@ -31,5 +31,31 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-1"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKtrashLandmine" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
+      <stack_type value="ignore"/>
+      <duration value="12" help="shall happen very rarely"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="standing up"/>
+        <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="6">
+          <requirement name="!EntityHasMovementTag" tags="running"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="18">
+          <requirement name="EntityHasMovementTag" tags="running"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="divide" value="3">
+          <requirement name="HasBuff" buff="buffImpactBracing"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp2" operation="set" value="1">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@.iGSKStumbleOTOTGtmpChk2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGtmp2" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKtrashMine"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] That trash exploded OMG! (crouch to prevent this)"/>
+      </effect_group>
+    </buff>
   </append>
 </GhussakTweaks>
