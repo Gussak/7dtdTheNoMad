@@ -141,8 +141,9 @@ function FUNCchkRequest() { #helpf <request>
 		echo "`date`: processing request: ${lstrReq}"
 		eval "${strEvalCmdSpeakRequest} \"$( echo "${lstrReq}" |sed 's@[A-Z][a-z]*@& @g' )\""&&:
 		ls -l "$strFlReq"
+		rm -v "$strFlReq" #removing before it start is good to let make it easier to issue more commands faster
 		eval "FUNCprocessRequest_${lstrReq}"
-		rm -v "$strFlReq"
+		#rm -v "$strFlReq"
 		echo
 	fi
 }
