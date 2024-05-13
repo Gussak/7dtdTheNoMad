@@ -8724,7 +8724,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="set" value="0">
           <requirement name="CVarCompare" cvar=".iGSKElctrnTeleQuadrantZ" operation="GT" value="@.iGSKElctrnTeleQuadrantMaxINDEX"/>
         </triggered_effect>
-        <!--				HELPGOOD: target point TODOB failing, sync with script codegen createQuadrantTeleporters.sh 
+        <!--				HELPGOOD: sync calc with script codegen createQuadrantTeleporters.sh 
 iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
 -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKElctrnTeleQuadrantZ"/>
@@ -11501,11 +11501,14 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <requirement name="CVarCompare" cvar="iGSKSpawnDeusExTimeout" operation="LTE" value="@.iGSKDeusExTimeoutMarginX2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="1" help="sync with update_rate. this check can be ignored by .iGSKDeusExAllowSpawnFoeOnce=1" compare_type="or">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="70" help="so the player have some chance to survive TODO: could check also how many zombies are nearby 30m day, 15m night, and deny if more than 3"/>
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="70" help="so the player have some chance to survive"/>
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="GT" value="3"/>
           <requirement name="StatCompareCurrent" stat="food" operation="LT" value="50"/>
-          <requirement name="StatCompareCurrent" stat="water" operation="LT" value="95"/>
+          <requirement name="StatCompareCurrent" stat="water" operation="LT" value="85"/>
           <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="0.30" help="some chance to prevent the player being insta killed by surprise"/>
+          <requirement name="!IsIndoors" help="TODO: this works at all?"/>
           <requirement name="HasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF" help="unnecessary?"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GT" value="0.0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnDeusExTimeoutMod" operation="set" value="-1">
           <requirement name="CVarCompare" cvar=".iGSKDeusExAllowSpawnFoeOnce" operation="Equals" value="1"/>
