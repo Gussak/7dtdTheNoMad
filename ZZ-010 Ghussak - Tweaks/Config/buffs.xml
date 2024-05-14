@@ -2618,7 +2618,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKTSBCTmpSub"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKElctrnHeroToggle" hidden="true" remove_on_death="false">
+    <buff name="buffGSKElctrnHeroToggle" hidden="true" remove_on_death="false" help="DO NOT USE! ISSUE: this is not good if the engine lags, it is better to enable with PRIMARY and disable with SECONDARY action">
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
@@ -2641,6 +2641,10 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1.0"/>
+      <effect_group name="indicator">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
+      </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBatteryEnergyMinModActivableCfgRO"/>
         <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="0"/>
@@ -2735,7 +2739,6 @@
       <effect_group name="remove on low energy">
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@fGSKBatteryEnergyMinModActivableCfgRO"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKElctrnHero"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKElctrnHeroMode" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEnergyThornsDischarge" hidden="true" remove_on_death="false">
