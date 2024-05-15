@@ -4365,7 +4365,7 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.20"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.15"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.15"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" compare_type="or" help="vibrant actually helps on darkening the screen. intensity was 0.80 but becomes too dark at night">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
@@ -4387,7 +4387,7 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.40"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.30"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.30"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.15"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.75" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
@@ -4409,7 +4409,7 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.60"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.45"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.45"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.2"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.78" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
@@ -4431,7 +4431,7 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.80"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.60"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.25"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.81" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
@@ -4452,7 +4452,7 @@
         <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.90"/>
         <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.75"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="0.33"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.33"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" compare_type="or">
           <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
           <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
@@ -11236,6 +11236,11 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="HP loss with damage indicator. Use iGSKHPLossWithEffectIndicator everywhere where the dmg is less than 1.0 with: ModifyStats.*Health.*(add.*-0|subtract.*(0\.|@))">
+        <requirement name="CVarCompare" cvar="iGSKHPLossWithEffectIndicator" operation="LT" value="-1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@iGSKHPLossWithEffectIndicator"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="set" value="0.0"/>
+      </effect_group>
       <effect_group help="BloodMoonReward: TODO: use to activate cosmic bloodmoon anytime spends 7">
         <requirement name="IsBloodMoon"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="0.01667" help="+1 per minute"/>
@@ -12117,7 +12122,7 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="0.5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="0.5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="0.5"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-0.33" help="some value near to letting almost no healing happen if feeding only on remaining fat. sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.33" help="some value near to letting almost no healing happen if feeding only on remaining fat. sync with update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-100">
           <requirement name="!HasBuff" buff="buffGSKWightEssence" help="otherwise this would just end almost killing the player by converting HP into stamina, and seems cool having that power affect this too"/>
         </triggered_effect>
