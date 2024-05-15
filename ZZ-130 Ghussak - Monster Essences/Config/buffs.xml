@@ -37,9 +37,16 @@
     </buff>
     <buff name="buffGSKpsyonicAttackLikeAMutant" hidden="false" remove_on_death="true" icon="7dtdMutantRabbit" icon_blink="false" icon_color="0,255,0" description_key="dkGSKpsyonicAttackLikeAMutant">
       <stack_type value="ignore"/>
-      <duration value="15"/>
+      <duration value="0"/>
+      <display_value value=".iGSKpsyKillTime"/>
+      <display_value_format value="time"/>
       <update_rate value="3.0"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKpsyKillTime" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKpsyKillTime" operation="add" value="-3" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKpsyonicAttackLikeAMutant">
+          <requirement name="CVarCompare" cvar=".iGSKpsyKillTime" operation="LTE" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
           <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="40"/>
