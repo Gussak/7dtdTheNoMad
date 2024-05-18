@@ -54,12 +54,23 @@ strRegionRegex=""
 for strCoord in "${astrListCoords[@]}";do
 	echo
 	echo "[bkp chunk]"
+	
 	eval "$strCoord" # x z
-	if((x>0));then xC=$((x/512));else xC=$(((x/512)-1));fi
-	if((z>0));then zC=$((z/512));else zC=$(((z/512)-1));fi
+	
+	xC=$((x/512));
+	zC=$((z/512));
+	if((x<0));then ((xC-=1))&&:;fi
+	if((z<0));then ((zC-=1))&&:;fi
 	strChunk="$xC.$zC"
-	declare -p strCoord x z strChunk
+	
+	#ISSUE: too near the limit of a chunk region may fail to sucessfully backup where NPCs are left to wait. so if xR or zR is < 12 or > 500, this problem may happen, right?
+	xR=$((x%512))
+	zR=$((z%512))
+	
+	declare -p strCoord x z strChunk xR zR
+	
 	ls -l "$strSaveFolder/Region/r.${strChunk}.7rg"&&:
+	
 	if [[ -n "$strRegionRegex" ]];then strRegionRegex+="|";fi
 	strRegionRegex+="$strChunk"
 done
