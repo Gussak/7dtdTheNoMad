@@ -35,6 +35,10 @@ egrep "[#]help" "$0"
 
 trap 'read -n 1' ERR
 
+pwd
+echo "$0"
+cd "$(dirname "$0")"
+
 #help backup only minimal save data: chunks where there are landclaims and bedroll, so your hired NPCs shall be left in a chunk where there is a landclaim. beware tho, it will not backup nearby chunks so better do not leave the NPC in patrol mode?
 #help ISSUE: for now place a symlink to this script at "drive_c/users/$USER/Application Data/7DaysToDie"
 
@@ -73,7 +77,7 @@ for strCoord in "${astrListCoords[@]}";do
 	
 	: ${iMargin:=32} #help safety margin to warn in case of the possibility of not making a good enough backup
 	if(( xR < iMargin || zR < iMargin || xR > (iChunkSize-iMargin) || zR > (iChunkSize-iMargin) ));then
-		echo "[[[ WARNING ]]] landclaims and bedroll near limit of chunk region will probably fail to backup stuff that goes to a connected chunk there, so if it is in the middle of a building and the building center is in the crossing of 4 nearby chunks, only 1/4 of the building will be backuped!! Also too near the limit of a chunk region may fail to sucessfully backup where NPCs are left to wait? so if xR or zR is < $iMargin or > $iChunkSize-$iMargin, these problems may happen."
+		echo "[[[ WARNING ]]] ISSUE: landclaims and bedroll near limit of chunk region will probably fail to backup stuff that goes to a connected chunk there, so if it is in the middle of a building and the building center is in the crossing of 4 nearby chunks, only 1/4 of the building will be backuped!! Also too near the limit of a chunk region may fail to sucessfully backup where NPCs are left to wait? so if xR or zR is < $iMargin or > $iChunkSize-$iMargin, these problems may happen. TODO: calc and backup also all nearby chunks in this case."
 		((iMarginWarning++))&&:
 	fi
 	
@@ -91,7 +95,7 @@ IFS=$'\n' read -d '' -r -a astrListFlToBkp < <(
 		find "${strSaveFolder}/" -type f |sort -u |egrep -v "/(DynamicMeshes|ConfigsDump|Region)/";
 		find "${strSaveFolder}/" -type f |sort -u |egrep    ".*/Region/r[.].*${strRegionRegex}[.]7rg$";
 		echo "./Saves/profiles.sdf";
-		ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4; # the newest files are where the player is TODO: try read this from player files, binary data probably. would be better in case of multiplayer also.
+		ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4; # the newest files are where the player is, this also grants the backup of NPCs activelly following the player TODO: try read this from player files, binary data probably. would be better in case of multiplayer also.
 	) |sort -u
 )&&:
 
