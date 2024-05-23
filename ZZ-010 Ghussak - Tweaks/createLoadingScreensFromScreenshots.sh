@@ -41,7 +41,7 @@ fi
 #TODO create relative symlinks: cd LoadingScreens; ln -sf ../../../Screenshots/*.jpg ./
 #set -x
 #IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
-IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop
+IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop. TODO: recursive search with find least hidden paths?
 for strFl in "${astrFlList[@]}";do
   if [[ -L "$strFl" ]];then continue;fi
   strBN="`basename "$strFl"`"
