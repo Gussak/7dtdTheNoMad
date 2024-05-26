@@ -7492,6 +7492,15 @@
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="set" value="15" help="just to prevent followers staying for any reason just b4 teleporting">
+          <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="15" help="this is to prevent increasing that too much for free"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="15">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="15" help="this is essential because still dieing of fall damage..."/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantLog"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKremoveTeleQuadrantItem" help="TODO: removes 1 or all???"/>
