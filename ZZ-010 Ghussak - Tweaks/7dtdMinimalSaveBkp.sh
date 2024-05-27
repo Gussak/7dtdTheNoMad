@@ -122,6 +122,9 @@ if((iMarginWarning>0));then
 	echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
 fi
 
-echo "press a key to exit (60s)";read -t 60 -n 1&&:
+while read -t 0.01 -n 1;do :;done #clear buffer
+echo "press ctrl+c to exit, or a key to repeat (60s)";read -t 60 -n 1&&:
+
+"$0"
 
 exit 0
