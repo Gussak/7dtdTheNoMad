@@ -33,6 +33,8 @@
 
 egrep "[#]help" "$0"
 
+set -Eeu
+
 trap 'read -n 1' ERR
 
 pwd
@@ -45,93 +47,105 @@ cd "$(dirname "$0")"
 : ${strSaveFolder:="./Saves/East Nikazohi Territory/HolyAir207b1_ab"} #help TODO: make this automatic to newest
 strFlPlayersXml="$strSaveFolder/players.xml" #help
 
-if [[ ! -f "$strFlPlayersXml" ]];then echoc -p "file not found: $strFlPlayersXml";exit 1;fi
+function FUNCbkp() {
+	if [[ ! -f "$strFlPlayersXml" ]];then echoc -p "file not found: $strFlPlayersXml";exit 1;fi
 
-cat "$strFlPlayersXml"
-IFS=$'\n' read -d '' -r -a astrListCoords < <(cat "$strFlPlayersXml" |egrep "lpblock|bedroll" |egrep 'pos=".*"' -o |cut -d= -f 2 |tr '",' '  ' |awk '{print "x=" $1 ";" "z=" $3}')&&:;declare -p astrListCoords
+	cat "$strFlPlayersXml"
+	IFS=$'\n' read -d '' -r -a astrListCoords < <(cat "$strFlPlayersXml" |egrep "lpblock|bedroll" |egrep 'pos=".*"' -o |cut -d= -f 2 |tr '",' '  ' |awk '{print "x=" $1 ";" "z=" $3}')&&:;declare -p astrListCoords
 
-# center of the map chunks x,z:
-# -1,0  0,0
-# -1,-1 0,-1
+	# center of the map chunks x,z:
+	# -1,0  0,0
+	# -1,-1 0,-1
 
-strRegionRegex=""
-iMarginWarning=0
-for strCoord in "${astrListCoords[@]}";do
-	echo
-	echo "[bkp chunk]"
-	
-	eval "$strCoord" # x z
-	
-	: ${iChunkSize:=512} #help I think this is hardcoded and fixed tho
-	xC=$((x/iChunkSize));
-	zC=$((z/iChunkSize));
-	
-	#help remainder xR zR are absolute values to easy calc
-	xR=$((x%iChunkSize))
-	zR=$((z%iChunkSize))
-	
-	if((x<0));then ((xC-=1))&&:; ((xR*=-1))&&:;fi
-	if((z<0));then ((zC-=1))&&:; ((zR*=-1))&&:;fi
-	
-	strChunk="$xC.$zC"
-	
-	: ${iMargin:=32} #help safety margin to warn in case of the possibility of not making a good enough backup
-	if(( xR < iMargin || zR < iMargin || xR > (iChunkSize-iMargin) || zR > (iChunkSize-iMargin) ));then
-		echo "[[[ WARNING ]]] ISSUE: landclaims and bedroll near limit of chunk region will probably fail to backup stuff that goes to a connected chunk there, so if it is in the middle of a building and the building center is in the crossing of 4 nearby chunks, only 1/4 of the building will be backuped!! Also too near the limit of a chunk region may fail to sucessfully backup where NPCs are left to wait? so if xR or zR is < $iMargin or > $iChunkSize-$iMargin, these problems may happen. TODO: calc and backup also all nearby chunks in this case."
-		((iMarginWarning++))&&:
+	strRegionRegex=""
+	iMarginWarning=0
+	for strCoord in "${astrListCoords[@]}";do
+		echo
+		echo "[bkp chunk]"
+		
+		eval "$strCoord" # x z
+		
+		: ${iChunkSize:=512} #help I think this is hardcoded and fixed tho
+		xC=$((x/iChunkSize));
+		zC=$((z/iChunkSize));
+		
+		#help remainder xR zR are absolute values to easy calc
+		xR=$((x%iChunkSize))
+		zR=$((z%iChunkSize))
+		
+		if((x<0));then ((xC-=1))&&:; ((xR*=-1))&&:;fi
+		if((z<0));then ((zC-=1))&&:; ((zR*=-1))&&:;fi
+		
+		strChunk="$xC.$zC"
+		
+		: ${iMargin:=32} #help safety margin to warn in case of the possibility of not making a good enough backup
+		if(( xR < iMargin || zR < iMargin || xR > (iChunkSize-iMargin) || zR > (iChunkSize-iMargin) ));then
+			echo "[[[ WARNING ]]] ISSUE: landclaims and bedroll near limit of chunk region will probably fail to backup stuff that goes to a connected chunk there, so if it is in the middle of a building and the building center is in the crossing of 4 nearby chunks, only 1/4 of the building will be backuped!! Also too near the limit of a chunk region may fail to sucessfully backup where NPCs are left to wait? so if xR or zR is < $iMargin or > $iChunkSize-$iMargin, these problems may happen. TODO: calc and backup also all nearby chunks in this case."
+			((iMarginWarning++))&&:
+		fi
+		
+		declare -p strCoord x z strChunk xR zR
+		
+		ls -l "$strSaveFolder/Region/r.${strChunk}.7rg"&&:
+		
+		if [[ -n "$strRegionRegex" ]];then strRegionRegex+="|";fi
+		strRegionRegex+="$strChunk"
+	done
+	declare -p strRegionRegex
+
+	IFS=$'\n' read -d '' -r -a astrListFlToBkp < <(
+		(
+			find "${strSaveFolder}/" -type f |sort -u |egrep -v "/(DynamicMeshes|ConfigsDump|Region)/";
+			find "${strSaveFolder}/" -type f |sort -u |egrep    ".*/Region/r[.].*${strRegionRegex}[.]7rg$";
+			echo "./Saves/profiles.sdf";
+			ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4; # the newest files are where the player is, this also grants the backup of NPCs activelly following the player TODO: try read this from player files, binary data probably. would be better in case of multiplayer also.
+		) |sort -u
+	)&&:
+
+	#astrListFlToBkp+=("./Saves/profiles.sdf")
+
+	#IFS=$'\n' read -d '' -r -a astrListPlayerNear < <(ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4)&&:;declare -p astrListPlayerNear |tr '[' '\n'
+	#astrListFlToBkp+=("${astrListPlayerNear[@]}")
+
+
+
+	declare -p astrListFlToBkp |tr '[' '\n'
+
+	: ${strFlBkpBN:="../7dtdSaveMinimalBkp"} #help
+
+	trash "${strFlBkpBN}.tar.7z"&&:
+
+	while true;do
+		strKey="$(ls -l "${astrListFlToBkp[@]}")"
+		tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}"
+		
+		echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
+		
+		strKeyNew="$(ls -l "${astrListFlToBkp[@]}")"
+		if [[ "$strKeyNew" == "$strKey" ]];then
+			declare -p strKey; 
+			break; 
+		else
+			colordiff <(echo "$strKey") <(echo "$strKeyNew")&&:
+		fi
+	done
+
+	tar --list -f "${strFlBkpBN}.tar"
+	7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
+
+	trash "${strFlBkpBN}.tar"
+	ls -l "${strFlBkpBN}.tar.7z"
+	7z l "${strFlBkpBN}.tar.7z"
+
+	if((iMarginWarning>0));then
+		echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
 	fi
-	
-	declare -p strCoord x z strChunk xR zR
-	
-	ls -l "$strSaveFolder/Region/r.${strChunk}.7rg"&&:
-	
-	if [[ -n "$strRegionRegex" ]];then strRegionRegex+="|";fi
-	strRegionRegex+="$strChunk"
-done
-declare -p strRegionRegex
-
-IFS=$'\n' read -d '' -r -a astrListFlToBkp < <(
-	(
-		find "${strSaveFolder}/" -type f |sort -u |egrep -v "/(DynamicMeshes|ConfigsDump|Region)/";
-		find "${strSaveFolder}/" -type f |sort -u |egrep    ".*/Region/r[.].*${strRegionRegex}[.]7rg$";
-		echo "./Saves/profiles.sdf";
-		ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4; # the newest files are where the player is, this also grants the backup of NPCs activelly following the player TODO: try read this from player files, binary data probably. would be better in case of multiplayer also.
-	) |sort -u
-)&&:
-
-#astrListFlToBkp+=("./Saves/profiles.sdf")
-
-#IFS=$'\n' read -d '' -r -a astrListPlayerNear < <(ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4)&&:;declare -p astrListPlayerNear |tr '[' '\n'
-#astrListFlToBkp+=("${astrListPlayerNear[@]}")
-
-
-
-declare -p astrListFlToBkp |tr '[' '\n'
-
-trash "7dtdSaveMinimalBkp.tar.7z"&&:
+};export -f FUNCbkp
 
 while true;do
-	strKey="$(ls -l "${astrListFlToBkp[@]}")"
-	tar -cf "7dtdSaveMinimalBkp.tar" "${astrListFlToBkp[@]}"
-	echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
-	strKeyNew="$(ls -l "${astrListFlToBkp[@]}")"
-	if [[ "$strKeyNew" == "$strKey" ]];then declare -p strKey; break; fi
+	FUNCbkp
+	while read -t 0.01 -n 1;do :;done #clear buffer
+	echo "press ctrl+c to exit, ctrl+s to wait, ctrl+q to continue, or a key to repeat bkp now (60s)";read -t 60 -n 1&&:
 done
-
-tar --list -f "7dtdSaveMinimalBkp.tar"
-7z a "7dtdSaveMinimalBkp.tar.7z" "7dtdSaveMinimalBkp.tar"
-
-trash "7dtdSaveMinimalBkp.tar"
-ls -l "7dtdSaveMinimalBkp.tar.7z"
-7z l "7dtdSaveMinimalBkp.tar.7z"
-
-if((iMarginWarning>0));then
-	echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
-fi
-
-while read -t 0.01 -n 1;do :;done #clear buffer
-echo "press ctrl+c to exit, or a key to repeat (60s)";read -t 60 -n 1&&:
-
-"$0"
 
 exit 0
