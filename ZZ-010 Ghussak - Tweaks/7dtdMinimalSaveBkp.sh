@@ -110,7 +110,14 @@ declare -p astrListFlToBkp |tr '[' '\n'
 
 trash "7dtdSaveMinimalBkp.tar.7z"&&:
 
-tar -cf "7dtdSaveMinimalBkp.tar" "${astrListFlToBkp[@]}"
+while true;do
+	strKey="$(ls -l "${astrListFlToBkp[@]}")"
+	tar -cf "7dtdSaveMinimalBkp.tar" "${astrListFlToBkp[@]}"
+	echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
+	strKeyNew="$(ls -l "${astrListFlToBkp[@]}")"
+	if [[ "$strKeyNew" == "$strKey" ]];then declare -p strKey; break; fi
+done
+
 tar --list -f "7dtdSaveMinimalBkp.tar"
 7z a "7dtdSaveMinimalBkp.tar.7z" "7dtdSaveMinimalBkp.tar"
 
