@@ -40,12 +40,10 @@ trap 'read -n 1' ERR
 pwd
 echo "$0"
 cd "$(dirname "$0")"
+pwd
 
 #help backup only minimal save data: chunks where there are landclaims and bedroll, so your hired NPCs shall be left in a chunk where there is a landclaim. beware tho, it will not backup nearby chunks so better do not leave the NPC in patrol mode?
 #help ISSUE: for now place a symlink to this script at "drive_c/users/$USER/Application Data/7DaysToDie"
-
-: ${strSaveFolder:="./Saves/East Nikazohi Territory/HolyAir207b1_ab"} #help TODO: make this automatic to newest
-strFlPlayersXml="$strSaveFolder/players.xml" #help
 
 function FUNCbkp() {
 	if [[ ! -f "$strFlPlayersXml" ]];then echoc -p "file not found: $strFlPlayersXml";exit 1;fi
@@ -141,6 +139,18 @@ function FUNCbkp() {
 		echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
 	fi
 };export -f FUNCbkp
+
+: ${strSaveFolder:="./Saves/East Nikazohi Territory/HolyAir207b1_ab"} #help TODO: make this automatic to newest
+strFlPlayersXml="$strSaveFolder/players.xml" #help
+
+if [[ ! -f "$strFlPlayersXml" ]];then
+	: ${strWorkPath:="../../../../users/${USER}/Application Data/7DaysToDie"} #help relative path to this mod, for Wine on linux (may be cygwin too)
+	cd "$strWorkPath"&&:
+	if [[ ! -f "$strFlPlayersXml" ]];then
+		echo "ERROR: unable to find strFlPlayersXml='$strFlPlayersXml'";read -n 1&&:
+		exit 1
+	fi
+fi
 
 while true;do
 	FUNCbkp
