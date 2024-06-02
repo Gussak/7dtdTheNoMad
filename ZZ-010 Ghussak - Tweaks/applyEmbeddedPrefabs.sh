@@ -57,14 +57,8 @@ strPos=$(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOInam
 pos=($(echo "$strPos" |tr ',' ' '))
 rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@rotation" "$strFlPrefabs"))
 declare -p strPos pos rot #;echo "${pos[x]} ${pos[y]} ${pos[z]}"
-#ex.: <decoration type="model" name="TNM_TeamDeathMatch" position="-97,36,29" rotation="0" />
-#strToEval="$(echo "$strXmlLine" |tr -d '</>\r' |tr -s ' ' |tr ' ' ';' |sed -r -e 's@;decoration;@@' -e 's@position="([0-9-]*),([0-9-]*),([0-9-]*)"@nX=\1;nY=\2;nZ=\3@')"
-#declare -p strToEval
-#CFGFUNCinfo "[strToEval] $strToEval"
-#if ! CFGFUNCprompt -q "code to EVAL above is ok?";then exit;fi
-#eval "${strToEval}"
-#declare -p nX nY nZ
 
+#ex.: <decoration type="model" name="TNM_TeamDeathMatch" position="-97,36,29" rotation="0" />
 ##<property name="POIMarkerSize" value="9, 15, 9#11, 5, 7" />
 #<property name="POIMarkerStart" value="10, 27, 9#17, 2, 2" />
 ##<property name="POIMarkerGroup" value="thenomad,parts" />
@@ -73,7 +67,7 @@ declare -p strPos pos rot #;echo "${pos[x]} ${pos[y]} ${pos[z]}"
 #<property name="POIMarkerPartToSpawn" value="part_TNM_TowerMedieval,part_coffee_stand" />
 #<property name="POIMarkerPartRotations" value="0,0" />
 #<property name="POIMarkerPartSpawnChance" value="1,1" />
-#cat "$strFlPOI" |grep POIMarkerPartToSpawn
+
 function FUNCxmlGetValue() { #only comma separated
 	xmlstarlet sel -t -v "//property[@name='$1']/@value" "$strFlPOI" |tr ',' ' '
 }
@@ -91,11 +85,13 @@ fi
 
 strBkpSuffix="$(date +'%Y_%m_%d-%H_%M_%S_%N').bkp"
 
-if $bAlreadyApplied;then #cleanup
-	sed -i.${strBkpSuffix} 'd/${strToken}.*${strPOIname}/' "$strFlPrefabs"
-	colordiff "$strFlPrefabs".${strBkpSuffix} "$strFlPrefabs"
+if $bAlreadyApplied;then
+	CFGFUNCinfo "cleaning up previously applied based on token: $strToken"
+	sed -i.${strBkpSuffix} "/${strToken}.*${strPOIname}/d" "$strFlPrefabs"
+	colordiff "$strFlPrefabs".${strBkpSuffix} "$strFlPrefabs"&&:
 fi
 
+CFGFUNCinfo "apply"
 for((i=0;i<${#aPartList[@]};i++));do
 	strPart="${aPartList[i]}"
 	
@@ -108,8 +104,9 @@ for((i=0;i<${#aPartList[@]};i++));do
 	
 	strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"${strToken}: placed into ${strPOIname} at ${strPos}\" />"
 	sed -i.${strBkpSuffix} -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
-	#cat "$strFlPrefabs" |grep "${strPOIname}" |tr -d '\r' |sed -r -e 's@.*decoration *type="model" *name="'"${strPOIname}"'".*(\r*)@&'"${strXmlNew}"'@'
 done
+
+CFGFUNCinfo "result"
 cat "$strFlPrefabs" |egrep "${strPOIname}.*${strPos}"
 
 
