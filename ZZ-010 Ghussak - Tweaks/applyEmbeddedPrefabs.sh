@@ -51,7 +51,10 @@ strXmlLine="$(cat "$strFlPrefabs" |grep "$strPOIname")"
 CFGFUNCinfo "[strXmlLine] $strXmlLine"
 
 x=0;y=1;z=2
-pos=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs" |tr ',' ' '));declare -p pos;echo "${pos[x]} ${pos[y]} ${pos[z]}"
+strPos=$(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")
+pos=($(echo "$strPos" |tr ',' ' '))
+rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@rotation" "$strFlPrefabs"))
+declare -p strPos pos rot #;echo "${pos[x]} ${pos[y]} ${pos[z]}"
 #ex.: <decoration type="model" name="TNM_TeamDeathMatch" position="-97,36,29" rotation="0" />
 #strToEval="$(echo "$strXmlLine" |tr -d '</>\r' |tr -s ' ' |tr ' ' ';' |sed -r -e 's@;decoration;@@' -e 's@position="([0-9-]*),([0-9-]*),([0-9-]*)"@nX=\1;nY=\2;nZ=\3@')"
 #declare -p strToEval
@@ -73,19 +76,26 @@ function FUNCxmlGetValue() { #only comma separated
 	xmlstarlet sel -t -v "//property[@name='$1']/@value" "$strFlPOI" |tr ',' ' '
 }
 aPartList=($(FUNCxmlGetValue POIMarkerPartToSpawn));declare -p aPartList
-IFS=$'#\n' read -d '' -r -a aRelPosList < <(xmlstarlet sel -t -v "//property[@name='POIMarkerStart']/@value" "$strFlPOI" |tr -d ' ')&&:;declare -p aRelPosList
-aTypeList=($(FUNCxmlGetValue POIMarkerType))
+IFS=$'#\n' read -d '' -r -a aRelPosList < <(xmlstarlet sel -t -v "//property[@name='POIMarkerStart']/@value" "$strFlPOI" |tr -d ' ')&&:;aTypeList=($(FUNCxmlGetValue POIMarkerType))
 aRotList=($(FUNCxmlGetValue POIMarkerPartRotations))
-aRndChance=($(FUNCxmlGetValue POIMarkerPartSpawnChance))
+aRndChance=($(FUNCxmlGetValue POIMarkerPartSpawnChance)) #TODOA
+declare -p aPartList aRelPosList aTypeList aRotList aRndChance
   
 for((i=0;i<${#aPartList[@]};i++));do
 	strPart="${aPartList[i]}"
 	
 	posRel=($(echo "${aRelPosList[i]}" |tr ',' ' '))
 	posNew[x]=$((pos[x] + posRel[x]))
+	posNew[y]=$((pos[y] + posRel[y]))
+	posNew[z]=$((pos[z] + posRel[z]))
 	
-	rot=$((todob))
+	rotNew=$(( (rot + ${aRotList[i]}) % 4 ))
+	
+	strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"TNMApplyPart: placed into ${strPOIname} at ${strPos}\" />"
+	sed -i.$(date +'%Y_%m_%d-%H_%M_%S_%N').bkp -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
+	#cat "$strFlPrefabs" |grep "${strPOIname}" |tr -d '\r' |sed -r -e 's@.*decoration *type="model" *name="'"${strPOIname}"'".*(\r*)@&'"${strXmlNew}"'@'
 done
+cat "$strFlPrefabs" |egrep "${strPOIname}.*${strPos}"
 
 
 
