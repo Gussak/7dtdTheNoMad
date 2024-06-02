@@ -49,14 +49,15 @@ ls -l "$strFlPrefabs" "$strFlPOI"
 # as may error til above
 source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
-strXmlLine="$(cat "$strFlPrefabs" |grep "$strPOIname")"
-CFGFUNCinfo "[strXmlLine] $strXmlLine"
+#strXmlLine="$(cat "$strFlPrefabs" |grep "$strPOIname")"
+#CFGFUNCinfo "[strXmlLine] $strXmlLine"
 
-x=0;y=1;z=2
-strPos=$(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")
-pos=($(echo "$strPos" |tr ',' ' '))
-rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@rotation" "$strFlPrefabs"))
-declare -p strPos pos rot #;echo "${pos[x]} ${pos[y]} ${pos[z]}"
+#x=0;y=1;z=2
+#IFS=$'\n' read -d '' -r -a aAbsPosList < <(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")&&:
+#strPos=$(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")
+#pos=($(echo "$strPos" |tr ',' ' '))
+#rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@rotation" "$strFlPrefabs"))
+#declare -p strPos pos rot #;echo "${pos[x]} ${pos[y]} ${pos[z]}"
 
 #ex.: <decoration type="model" name="TNM_TeamDeathMatch" position="-97,36,29" rotation="0" />
 ##<property name="POIMarkerSize" value="9, 15, 9#11, 5, 7" />
@@ -72,9 +73,10 @@ function FUNCxmlGetValue() { #only comma separated
 	xmlstarlet sel -t -v "//property[@name='$1']/@value" "$strFlPOI" |tr ',' ' '
 }
 aPartList=($(FUNCxmlGetValue POIMarkerPartToSpawn));declare -p aPartList
-IFS=$'#\n' read -d '' -r -a aRelPosList < <(xmlstarlet sel -t -v "//property[@name='POIMarkerStart']/@value" "$strFlPOI" |tr -d ' ')&&:;aTypeList=($(FUNCxmlGetValue POIMarkerType))
+IFS=$'#\n' read -d '' -r -a aRelPosList < <(xmlstarlet sel -t -v "//property[@name='POIMarkerStart']/@value" "$strFlPOI" |tr -d ' ')&&:
+aTypeList=($(FUNCxmlGetValue POIMarkerType))
 aRotList=($(FUNCxmlGetValue POIMarkerPartRotations))
-aRndChance=($(FUNCxmlGetValue POIMarkerPartSpawnChance)) #TODOA
+aRndChance=($(FUNCxmlGetValue POIMarkerPartSpawnChance))
 declare -p aPartList aRelPosList aTypeList aRotList aRndChance
 
 : ${bAlwaysReApply:=true} #help
@@ -92,22 +94,47 @@ if $bAlreadyApplied;then
 fi
 
 CFGFUNCinfo "apply"
-for((i=0;i<${#aPartList[@]};i++));do
-	strPart="${aPartList[i]}"
-	
-	posRel=($(echo "${aRelPosList[i]}" |tr ',' ' '))
-	posNew[x]=$((pos[x] + posRel[x]))
-	posNew[y]=$((pos[y] + posRel[y]))
-	posNew[z]=$((pos[z] + posRel[z]))
-	
-	rotNew=$(( (rot + ${aRotList[i]}) % 4 ))
-	
-	strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"${strToken}: placed into ${strPOIname} at ${strPos}\" />"
-	sed -i.${strBkpSuffix} -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
-done
 
-CFGFUNCinfo "result"
-cat "$strFlPrefabs" |egrep "${strPOIname}.*${strPos}"
+x=0;y=1;z=2
+IFS=$'\n' read -d '' -r -a aAbsPosList < <(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")&&:
+declare -p aAbsPosList
+#strPos=$(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@position" "$strFlPrefabs")
+#pos=($(echo "$strPos" |tr ',' ' '))
+#rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}']/@rotation" "$strFlPrefabs"))
+RANDOM="1$(date +%N)" #TODO be deterministic
+for((j=0;j<${#aAbsPosList[@]};j++));do
+	strPos="${aAbsPosList[j]}"
+	pos=($(echo "$strPos" |tr ',' ' '))
+	
+	rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}' and @position='${strPos}']/@rotation" "$strFlPrefabs"))
+	
+	CFGFUNCinfo "$strPos pos=(${pos[@]}) @rot"
+	
+	for((i=0;i<${#aPartList[@]};i++));do
+		strPart="${aPartList[i]}"
+		if [[ "${aTypeList[i]}" != "PartSpawn" ]];then CFGFUNCinfo "SKIP:${strPart}:Not:PartSpawn";continue;fi
+		
+		iChancePerc="$(bc <<< "${aRndChance[i]}*100" |cut -d. -f1)"
+		iRnd=$((RANDOM%100))
+		if((iRnd > iChancePerc));then CFGFUNCinfo "SKIP:${strPart}:ChanceFailed: ${iRnd} > ${iChancePerc}";continue;fi
+		
+		posRel=($(echo "${aRelPosList[i]}" |tr ',' ' '))
+		posNew[x]=$((pos[x] + posRel[x]))
+		posNew[y]=$((pos[y] + posRel[y]))
+		posNew[z]=$((pos[z] + posRel[z]))
+		
+		: ${rotFix:=2} #help looking at prefab editor, while the POI looks to south, the part with rotation 0 looks to north, why?
+		rotNew=$(( (rot + ${aRotList[i]} + rotFix) % 4 ))
+		
+		strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"${strToken}: placed into ${strPOIname} at ${strPos}\" />"
+		sed -i.${strBkpSuffix} -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'" position="'"${strPos}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
+		
+		CFGFUNCinfo "$strPOIname $strPos $strPart $rot posRel=(${posRel[@]}) posNew=(${posNew[@]})"
+	done
+	
+	CFGFUNCinfo "result"
+	cat "$strFlPrefabs" |egrep "${strPOIname}.*${strPos}"
+done
 
 
 
