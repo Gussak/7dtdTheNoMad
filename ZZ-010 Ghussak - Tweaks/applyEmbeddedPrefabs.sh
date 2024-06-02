@@ -35,6 +35,8 @@ set -Eeu
 
 egrep "[#]help" "$0"
 
+: ${strToken:="TNMApplyPart"} #help
+
 : ${strWorld:="Nulukoju Valley"} #help
 : ${strFlPrefabs:="../../../../users/${USER}/Application Data/7DaysToDie/GeneratedWorlds/${strWorld}/prefabs.xml"} #help
 : ${strFlPOI:="./Prefabs/POIs/TNM_TeamDeathMatch.xml"} #help
@@ -80,7 +82,20 @@ IFS=$'#\n' read -d '' -r -a aRelPosList < <(xmlstarlet sel -t -v "//property[@na
 aRotList=($(FUNCxmlGetValue POIMarkerPartRotations))
 aRndChance=($(FUNCxmlGetValue POIMarkerPartSpawnChance)) #TODOA
 declare -p aPartList aRelPosList aTypeList aRotList aRndChance
-  
+
+: ${bAlwaysReApply:=true} #help
+bAlreadyApplied=false;if egrep "${strToken}" "$strFlPrefabs";then bAlreadyApplied=true;fi
+if ! ${bAlwaysReApply} && $bAlreadyApplied;then
+	CFGFUNCerrorExit "already applied"
+fi
+
+strBkpSuffix="$(date +'%Y_%m_%d-%H_%M_%S_%N').bkp"
+
+if $bAlreadyApplied;then #cleanup
+	sed -i.${strBkpSuffix} 'd/${strToken}.*${strPOIname}/' "$strFlPrefabs"
+	colordiff "$strFlPrefabs".${strBkpSuffix} "$strFlPrefabs"
+fi
+
 for((i=0;i<${#aPartList[@]};i++));do
 	strPart="${aPartList[i]}"
 	
@@ -91,8 +106,8 @@ for((i=0;i<${#aPartList[@]};i++));do
 	
 	rotNew=$(( (rot + ${aRotList[i]}) % 4 ))
 	
-	strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"TNMApplyPart: placed into ${strPOIname} at ${strPos}\" />"
-	sed -i.$(date +'%Y_%m_%d-%H_%M_%S_%N').bkp -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
+	strXmlNew="<decoration type=\"model\" name=\"${strPart}\" position=\"$(echo "${posNew[@]}" |tr ' ' ',')\" rotation=\"${rotNew}\" help=\"${strToken}: placed into ${strPOIname} at ${strPos}\" />"
+	sed -i.${strBkpSuffix} -r -e 's@.*<decoration type="model" name="'"${strPOIname}"'".*@&\n  '"${strXmlNew}"'@' "$strFlPrefabs"
 	#cat "$strFlPrefabs" |grep "${strPOIname}" |tr -d '\r' |sed -r -e 's@.*decoration *type="model" *name="'"${strPOIname}"'".*(\r*)@&'"${strXmlNew}"'@'
 done
 cat "$strFlPrefabs" |egrep "${strPOIname}.*${strPos}"
