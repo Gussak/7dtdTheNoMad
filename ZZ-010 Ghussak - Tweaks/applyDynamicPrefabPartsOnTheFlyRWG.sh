@@ -108,7 +108,14 @@ for((j=0;j<${#aAbsPosList[@]};j++));do
 	
 	rot=($(xmlstarlet sel -t -v "//decoration[@type='model' and @name='${strPOIname}' and @position='${strPos}']/@rotation" "$strFlPrefabs"))
 	
-	CFGFUNCinfo "$strPos pos=(${pos[@]}) @rot"
+	CFGFUNCinfo "$strPos pos=(${pos[@]}) rot=$rot"
+	
+	: ${bUseRotWorkaround:=true} #help TODO only rotation 0 works because the positioning of the parts would have to also be rotated!
+	if $bUseRotWorkaround && ((rot!=0));then
+		xmlstarlet ed -P -L -u "//decoration[@type='model' and @name='${strPOIname}' and @position='${strPos}']/@rotation" -v "0" "$strFlPrefabs"
+		CFGFUNCinfo "woraround: forced POI rotation to 0"
+		rot=0
+	fi
 	
 	for((i=0;i<${#aPartList[@]};i++));do
 		strPart="${aPartList[i]}"
