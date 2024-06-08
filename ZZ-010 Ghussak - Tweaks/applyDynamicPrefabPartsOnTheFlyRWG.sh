@@ -33,7 +33,10 @@
 
 set -Eeu
 
-egrep "[#]help" "$0"
+if [[ "${1-}" == --help ]];then
+	egrep "[#]help" "$0"
+	exit
+fi
 
 : ${strToken:="TNMApplyPart"} #help
 
