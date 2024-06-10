@@ -237,6 +237,18 @@
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
     <property name="LootDropProb" value="1.00"/>
   </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
+    <effect_group name="Base Effects">
+      <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet">,helmetProtection10</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, about like recon.">
+    <effect_group name="Base Effects">
+      <passive_effect name="PhysicalDamageResist" operation="base_set" value="70"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]/property[@name='Tags' and not(contains(@value,'bandit'))]/@value" help="TODO: could the hirecost property be read instead to add this tag?">,hireable</append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]" help="no easy loot from friendlies">
     <property name="LootDropProb" value="0.05"/>
@@ -302,6 +314,7 @@
     </entity_class>
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'Raider') or starts-with(@name,'npcHarley')]">
+    <!-- HELPGOOD: must be the first to be appended, will remain set for melee raiders -->
     <property name="LootDropEntityClass" value="EntityLootContainerBandit"/>
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'LBow')]">
@@ -344,6 +357,7 @@
     <property name="NavObject" value="radiationSource"/>
   </append>
   <append xpath="/entity_classes/entity_class[@name='npcRocketLTemplate']">
+    <!-- HELPGOOD: to prevent friendlies messing up the terrain -->
     <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCRocketLauncher,ammoNPCRocketFragFriendly"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCRocketLauncher,ammoNPCRocketFragFriendly"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCRocketLauncher,ammoNPCRocketFragFriendly"/>
