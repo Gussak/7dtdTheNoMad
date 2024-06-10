@@ -84,11 +84,13 @@ tail -F "$strFlLog" |while read strLine;do
 		#echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
 	if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
 		CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
+		CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}" # this is important to try to grant the game wont try to write over RO files while they are becoming RW
 		while ! CFGFUNCexec --noErrorExit chmod -R u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
 			if ! CFGFUNCexec --noErrorExit ./updateNewestSavegameSymlink.sh;then
 				FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 			fi
 		done
+		CFGFUNCexec pkill -SIGCONT -fe "${strExecRegex}"
 	elif [[ "$strLine" =~ .*${strChkCrash}.* ]];then
 		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
 		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
