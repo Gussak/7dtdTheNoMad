@@ -242,6 +242,7 @@
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
     <effect_group name="Raider:Melee:Using onSelfAttackedOther instead of onSelfDamagedOther makes it more challenging as armor rating wont protect against these special hits/criticals">
+      <requirement name="!EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       <passive_effect name="HealthMax" operation="base_set" value="225" help="was 75. x3 for melee raider that drops many items"/>
       <passive_effect name="RunSpeed" operation="perc_add" value="1.0" help="melee raider have greater chance to reach and hit their target"/>
@@ -249,9 +250,10 @@
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo" weights=".07,.07,.05,.30,.50,.15"/>
     </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet">,helmetProtection10</append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet ISSUE: ranged inherit from melee? so some ranged are using this instead of below?">,helmetProtection10</append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, about like recon.">
     <effect_group name="Raider:Ranged">
+      <requirement name="EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="70"/>
     </effect_group>
   </append>
