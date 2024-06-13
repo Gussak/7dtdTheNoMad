@@ -241,11 +241,11 @@
     </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
-    <effect_group name="Raider:Melee:Using onSelfAttackedOther instead of onSelfDamagedOther makes it more challenging as armor rating wont protect against these special hits/criticals">
+    <effect_group name="Raider:Melee:Using onSelfAttackedOther instead of onSelfDamagedOther makes it more challenging as armor rating wont protect against these special hits/criticals, and melee must be effective">
       <requirement name="!EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
-      <passive_effect name="HealthMax" operation="base_set" value="225" help="was 75. x3 for melee raider that drops many items"/>
-      <passive_effect name="RunSpeed" operation="perc_add" value="1.0" help="melee raider have greater chance to reach and hit their target"/>
+      <passive_effect name="HealthMax" operation="base_set" value="225" help="was 75, but x3 for melee raider that shall resist enough before dropping many items"/>
+      <passive_effect name="RunSpeed" operation="perc_add" value="2.0" help="melee raider have greater chance to reach and hit their target"/>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="3" help="3 = 75% chance"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo" weights=".07,.07,.05,.30,.50,.15"/>
     </effect_group>
@@ -255,6 +255,9 @@
     <effect_group name="Raider:Ranged">
       <requirement name="EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="70"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo" weights=".07,.07,.05,.30,.50,.15" help="using very low chance and onSelfDamagedOther as is ranged and too many bullets, so even if armor rating is very high preventing most damage to happen, it is still ok">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="5"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
