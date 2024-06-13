@@ -234,13 +234,13 @@
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcArmyPowerArmor')]" help="only the full original power armor can carry the most">
     <property name="LootListAlive" value="traderNPCbigBackpack"/>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
     <property name="LootDropProb" value="1.00"/>
     <effect_group name="Raider:AllWithGoodDrops">
       <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKnpcRaiderSelfWork"/>
     </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
     <effect_group name="Raider:Melee:Using onSelfAttackedOther instead of onSelfDamagedOther makes it more challenging as armor rating wont protect against these special hits/criticals, and melee must be effective">
       <requirement name="!EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
@@ -250,8 +250,8 @@
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo" weights=".07,.07,.05,.30,.50,.15"/>
     </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet ISSUE: ranged inherit from melee? so some ranged are using this instead of below?">,helmetProtection10</append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, about like recon.">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet ISSUE: ranged inherit from melee? so some ranged are using this instead of below?">,helmetProtection10</append>
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, about like recon.">
     <effect_group name="Raider:Ranged">
       <requirement name="EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
       <passive_effect name="PhysicalDamageResist" operation="base_set" value="70"/>
@@ -260,7 +260,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'Raider') or starts-with(@name,'npcHarley') and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]/property[@name='Tags' and not(contains(@value,'bandit'))]/@value" help="TODO: could the hirecost property be read instead to add this tag?">,hireable</append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]" help="no easy loot from friendlies">
     <property name="LootDropProb" value="0.05"/>
