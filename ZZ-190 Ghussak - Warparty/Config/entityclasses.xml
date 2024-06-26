@@ -31,8 +31,16 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="randomInt(0,2)" help="TODO: try this onSelfDied selfAOE.range60?, so NPC followers etc killing the bandit will also let it work.">
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="randomInt(0,2)" help="TODO: try this onSelfDied selfAOE.range60?, so NPC followers etc killing the bandit will also let it work. Btw, with the below onSelfAttackedOther, this onSelfKilledOther will ever happen with .iGSKNPCnpcBanditAmbushTriggered eq 0 ?">
         <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbushTriggered" operation="add" value="1" target="other">
+        <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="randomInt(0,2)" help="this will let it work if the player at least try to damage the bandit">
+        <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="1"/>
       </triggered_effect>
     </effect_group>
   </append>
