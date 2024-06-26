@@ -128,7 +128,7 @@ function FUNCbkp() {
 		fi
 	done
 
-	tar --list -f "${strFlBkpBN}.tar"
+	while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
 	7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
 
 	trash "${strFlBkpBN}.tar"

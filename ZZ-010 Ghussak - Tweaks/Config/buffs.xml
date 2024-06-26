@@ -252,6 +252,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersWave" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnRaidersChancePerc" operation="set" value="95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="set" value="0" help="this allows using the ambushers outside treasure hunt w/o messing it."/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnTreasureTmOut" operation="set" value="randomInt(3,15)" help="IMPORTANT: use the update_rate on the minimum"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnTreasureTmSub" operation="set" value="3" help="IMPORTANT: use the update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnTreasureTmSub" operation="set" value="1" help="keep 1/3 of update_rate">
@@ -11286,6 +11287,12 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="simple bandit ambush">
+        <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwSimpleBanditAmbush"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCnpcBanditAmbush"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="-1"/>
+      </effect_group>
       <effect_group help="Wasteland radiation waves">
         <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Radiation Wave!!!" compare_type="or">
