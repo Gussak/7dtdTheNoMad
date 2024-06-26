@@ -114,12 +114,12 @@ function FUNCbkp() {
 	trash "${strFlBkpBN}.tar.7z"&&:
 
 	while true;do
-		strKey="$(ls -l "${astrListFlToBkp[@]}")"
-		tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}"
+		while ! strKey="$(ls -l "${astrListFlToBkp[@]}")";do echo "retring...";read -t 3 -n 1&&:;done
+		while ! tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}";do echo "retring...";read -t 3 -n 1&&:;done
 		
 		echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
 		
-		strKeyNew="$(ls -l "${astrListFlToBkp[@]}")"
+		while ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";do echo "retring...";read -t 3 -n 1&&:;done
 		if [[ "$strKeyNew" == "$strKey" ]];then
 			declare -p strKey; 
 			break; 
