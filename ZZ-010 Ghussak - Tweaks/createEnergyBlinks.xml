@@ -4,7 +4,7 @@ cat >>"${strFlOut}" <<EOF
       <!-- NO BLINK FOR ${strVar} ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <effect_group name="KEEP ON good condition for ${strVar}">
         <requirement name="CVarCompare" cvar="bGSKEnergy${strVar}" operation="Equals" value="1" />
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@iGSKDmgPerc${strVar}Show" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="@iGSKDmgPerc${strVar}Show" />
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffect${strVar}ON"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEn${strVar}" operation="set" value="@fGSKEn${strVar}CfgRO"/>
       </effect_group>
@@ -19,8 +19,8 @@ cat >>"${strFlOut}" <<EOF
       <!-- BLINK EFFECT FOR ${strVar} ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
       <effect_group name="Blink: Off then go ON for ${strVar} on low energy vs dmg"> 
         <requirement name="CVarCompare" cvar="bGSKEnergy${strVar}" operation="Equals" value="1" />
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@iGSKDmgPerc${strVar}Show" />
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPerc${strVar}Show" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="0" />
 
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffect${strVar}BlinkOffThenGoOn">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfter${strVar}" operation="LTE" value="0" />
@@ -44,7 +44,7 @@ cat >>"${strFlOut}" <<EOF
       
       <effect_group name="Blink: On then go Off for ${strVar} on no energy"> 
         <requirement name="CVarCompare" cvar="bGSKEnergy${strVar}" operation="Equals" value="1" />
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="0" />
 
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffect${strVar}BlinkOnThenGoOff">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfter${strVar}" operation="LTE" value="0" />
@@ -64,7 +64,7 @@ cat >>"${strFlOut}" <<EOF
       
       <effect_group help="blink countdown for ${strVar}">
         <requirement name="CVarCompare" cvar="bGSKEnergy${strVar}" operation="Equals" value="1" />
-        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="@iGSKDmgPerc${strVar}Show" />
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPerc${strVar}Show" />
         <!-- 2nd UPDATE the blink DELAY (must come after being set to a random value, because if but b4 it, fGSKBlinkAfter would never be 0 to be checked on the 3rd step!) -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfter${strVar}" operation="subtract" value="@fGSKNVEnUseUpdRate">
           <requirement name="CVarCompare" cvar="fGSKBlinkAfter${strVar}" operation="GT" value="0" />
