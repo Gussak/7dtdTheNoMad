@@ -33,14 +33,17 @@
       </triggered_effect>
       <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="randomInt(0,2)" target="selfAOE" range="60" target_tags="player" help="this will only work from playerMale and extenders right? from animals wont.. from zombies will it work too? Btw, with the below onSelfAttackedOther, this onSelfKilledOther will ever happen with .iGSKNPCnpcBanditAmbushTriggered eq 0 ? yes, because only the player can inc that. TODO: try this bandit.onSelfDied selfAOE.range60.add.iGSKNPCnpcBanditAmbush? so anyting killing the bandit will also let it work from a call from the dead body. But I think dead corpses stop running scripts before these triggers happen? :(">
         <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="NotHasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbushTriggered" operation="add" value="1" target="other">
         <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="NotHasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="randomInt(0,2)" help="this will let it work if the player at least try to damage the bandit">
         <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="NotHasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="1"/>
         <requirement name="EntityTagCompare" tags="player"/>
       </triggered_effect>
