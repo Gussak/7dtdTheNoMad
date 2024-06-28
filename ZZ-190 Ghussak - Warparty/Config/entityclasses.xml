@@ -52,6 +52,20 @@
     </effect_group>
   </append>
   <append xpath="/entity_classes">
+    <entity_class name="npcHarleyBatFriendlyPA" extends="npcHarleyBat" help="harley had no friendly option">
+      <property name="Tags" value="entity,female,npc,melee,voiceharley,hireable,DRMid"/>
+      <property name="Faction" value="whiteriver"/>
+      <property name="SoundRandomTime" value="600"/>
+      <property name="Faction" value="whiteriver"/>
+      <property name="NavObject" value="navNPCfriendly"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
+      </effect_group>
+      <property name="LootListAlive" value="traderNPCbigBackpack"/>
+      <property name="HireCost" value="750"/>
+      <property name="LootDropProb" value="0.05"/>
+    </entity_class>
     <!-- HELPGOOD: codegen for alt all NPCs with power armor option: kill the npc and spawn this one. TODO: every normal non PA NPC shall add a buff to the player that will request spawn it's equivalent PA NPC. it writes a cvar to the player with a number of the requested PA NPC
 	clear;egrep -o 'name="npc[^"]+"' "0-XNPCCore/Config/entityclasses.xml" "1-NPC."*"/Config/entityclasses.xml" |egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" |egrep -v "TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" |sort -u |sed -r 's@.*"(.*)".*@\1@g' |while read strNm;do echo -en '
 	<entity_class name="'"${strNm}PA"'" extends="'"${strNm}"'">
