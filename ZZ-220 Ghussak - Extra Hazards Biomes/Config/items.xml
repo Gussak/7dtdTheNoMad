@@ -6,6 +6,7 @@
       <property name="DescriptionKey" value="dkbathKit"/>
       <property name="CustomIcon" value="foodHoney"/>
       <property name="CustomIconTint" value="0,255,0"/>
+      <property name="EconomicValue" value="100"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="1000"/>
         <property name="Class" value="OpenBundle"/>
@@ -15,12 +16,12 @@
         <property name="Create_item_count" value="1"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="10000"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="10000" help="TODO: clean -10/s over time til it reaches 0"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="1.0" help="sync with bathtub"/>
       </effect_group>
       <effect_group name="Refreshing against heat" tiered="false">
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
