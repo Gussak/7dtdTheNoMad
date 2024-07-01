@@ -34,8 +34,15 @@
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other"/>
         <requirement name="IsAlive" target="other"/>
-        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other"/>
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="bandit,mech" help="they have some brains"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="50"/>
       </triggered_effect>
     </effect_group>
     <effect_group>
@@ -48,7 +55,7 @@
         <requirement name="IsAlive" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="750" target="other" help="MeleeBuild: running">
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="750" target="other" help="MeleeBuild: running ISSUE: running and attacking with a knife is also causing a lot of damage instead of just ragdoll, from where that is happening?">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="EntityHasMovementTag" tags="running"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="really running"/>
