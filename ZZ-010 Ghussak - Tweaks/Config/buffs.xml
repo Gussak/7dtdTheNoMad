@@ -3734,8 +3734,29 @@
         <triggered_effect trigger="onSelfBuffRemove" action="FadeOutSound" sound="solarpanel_off" play_in_head="true"/>
         <triggered_effect trigger="onSelfLeaveGame" action="StopSound" sound="solarpanel_off" play_in_head="true"/>
       </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="10"/>
+      <effect_group help="the initial calc was 10/s, based on some fuel consumption calc (I think). but... with some progress is more fun.">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="10">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="11">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="12">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="3"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="13">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="4"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="14">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="5"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="set" value="@fGSKBattMaxChargeCurrent">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
         </triggered_effect>
