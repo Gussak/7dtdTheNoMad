@@ -229,7 +229,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbushMode" operation="set" value="1" help="ISSUE/WIP/TEST: in the expectance this will remain valid/readable after/when the npc dies as the buffGSKNPCTreasureAmbusherSpawned seems to not work anymore in a requirement check?"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushMode" operation="set" value="1" help="ISSUE/WIP/TEST: in the expectance this will remain valid/readable after/when the npc dies as the buffGSKNPCTreasureAmbusherSpawned seems to not work anymore in a requirement check?"/>
         <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" target_tags="player" action="ModifyCVar" cvar="iGSKAmbushersSpawnedLastWave" operation="add" value="1">
           <requirement name="!EntityTagCompare" tags="melee" help="melee raiders are just minor reinforcements, can be ignored"/>
         </triggered_effect>
@@ -11324,16 +11324,16 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <update_rate value="1"/>
       <effect_group help="simple bandit ambush">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="add" value="-1">
-          <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="simple bandit ambush. can have many but with a good cooldown">
-        <requirement name="CVarCompare" cvar=".iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwSimpleBanditAmbush"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCnpcBanditAmbush"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCnpcBanditAmbush" operation="add" value="-1" help="it shall be depleted while the never end issue is fixed with iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue. considering that issue, it could just set to 0 instead of add -1, but the issue could be fixed one day."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCnpcBanditAmbush"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbush" operation="add" value="-1" help="it shall be depleted while the never end issue is fixed with iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue. considering that issue, it could just set to 0 instead of add -1, but the issue could be fixed one day."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="set" value="600"/>
       </effect_group>
       <effect_group help="Wasteland radiation waves">
