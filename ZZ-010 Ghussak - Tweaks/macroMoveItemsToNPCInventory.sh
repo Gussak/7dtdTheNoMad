@@ -53,7 +53,7 @@ egrep "[#]help" $0
 : ${fWaitBeforeInitMoving:=3} #help
 : ${fWaitCheckDelay:=0.33} #help in seconds, this is how fast checks will happen, the lower the less you have to wait for commands to happen
 
-: ${strEvalCmdSpeakRequest:="echoc --say "}
+: ${strEvalCmdSpeakRequest:="echoc --say "} # from ScriptEchoColor project
 
 #: ${strChkSelfRunRegex:="$(which bash) .*/$(basename "$0") --RunSingleInstance"} #help single instance check
 

@@ -46,7 +46,7 @@ pwd
 #help ISSUE: for now place a symlink to this script at "drive_c/users/$USER/Application Data/7DaysToDie"
 
 function FUNCbkp() {
-	if [[ ! -f "$strFlPlayersXml" ]];then echoc -p "file not found: $strFlPlayersXml";exit 1;fi
+	if [[ ! -f "$strFlPlayersXml" ]];then echo "PROBLEM: file not found: $strFlPlayersXml" >/dev/stderr;return 1;fi
 
 	cat "$strFlPlayersXml"
 	IFS=$'\n' read -d '' -r -a astrListCoords < <(cat "$strFlPlayersXml" |egrep "lpblock|bedroll" |egrep 'pos=".*"' -o |cut -d= -f 2 |tr '",' '  ' |awk '{print "x=" $1 ";" "z=" $3}')&&:;declare -p astrListCoords
@@ -153,7 +153,7 @@ if [[ ! -f "$strFlPlayersXml" ]];then
 fi
 
 while true;do
-	FUNCbkp
+	FUNCbkp&&:
 	while read -t 0.01 -n 1;do :;done #clear buffer
 	echo "press ctrl+c to exit, ctrl+s to wait, ctrl+q to continue, or a key to repeat bkp now (60s)";read -t 60 -n 1&&:
 done

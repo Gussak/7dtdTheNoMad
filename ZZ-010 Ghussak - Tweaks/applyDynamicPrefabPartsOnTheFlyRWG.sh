@@ -42,7 +42,7 @@ fi
 
 : ${strWorld:="Nulukoju Valley"} #help
 : ${strFlPrefabs:="../../../../users/${USER}/Application Data/7DaysToDie/GeneratedWorlds/${strWorld}/prefabs.xml"} #help
-: ${strFlPOI:="./Prefabs/POIs/TNM_TeamDeathMatch.xml"} #help
+: ${strFlPOI:="./Prefabs/POIs/TNM_TeamDeathMatch.xml"} #help place this somewhere (chose a nice clean big empty position) at prefabs.xml ex.: <decoration type="model" name="TNM_TeamDeathMatch" position="-3091, 42, 953" rotation="0"/>. So, on a running game, you will have to go to the regions folder, wait it save and mark/take note of the last updated ones, usually 2 or 4 files. Move very far away, like 1000 distance. Exit the game to the main menu. Delete those files. Run this script after placing the decoration at prefabs.xml. Enter the game again. Run to the location you was before, so that empty area will have the TNM_TeamDeathMatch prefab. Call 9 other ppl, make 2 teams and have fun! (obs.: it has raiders as sleepers, so better disable them if you just want to play with your friends).
 
 strPOIname="$(basename "$strFlPOI")";
 strPOIname="${strPOIname%.xml}";
