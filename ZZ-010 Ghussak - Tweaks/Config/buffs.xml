@@ -658,6 +658,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathBloated"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathChemUse"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathRewindTime"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeathCriticalHitLvl"/>
         <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKNearDeath"/>
       </effect_group>
       <effect_group>
@@ -4360,6 +4361,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathLowCostTeleportLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathLowCostTeleportLvl"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathCriticalHitLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathCriticalHitLvl"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPsyPowerLvl">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPsyPowerLvl"/>
         </triggered_effect>
@@ -5489,6 +5493,7 @@
       <effect_group>
         <requirements compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathCriticalHitLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
@@ -11341,24 +11346,25 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbush" operation="add" value="-1" help="it shall be depleted while the never end issue is fixed with iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue. considering that issue, it could just set to 0 instead of add -1, but the issue could be fixed one day."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="set" value="randomInt(300,900)"/>
       </effect_group>
-      <effect_group help="Wasteland radiation waves">
+      <effect_group help="Wasteland radiation lethal waves, happens near the endind of the cool down, adds 1 rad per second up to 95">
         <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Radiation Wave!!!" compare_type="or">
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="95"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="85"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="75"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="65"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="55"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="45"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="35"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="25"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="15"/>
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="5"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="LTE" value="0.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Radiation Wave, seek shelter fast!!!" compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="200"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="180"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="160"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="140"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="120"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="100"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="80"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="60"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="40"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="Equals" value="20"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="1" help="max rads is 100">
-          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="LTE" value="95"/>
+          <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="LTE" value="200"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKWastelandRadiationWaveCoolDown" operation="set" value="randomInt(1800,3600)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKWastelandRadiationWaveCoolDown" operation="set" value="randomInt(1800,3600)" help="prepare next">
           <requirement name="CVarCompare" cvar="iGSKWastelandRadiationWaveCoolDown" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKWastelandRadiationWaveCoolDown" operation="add" value="-1"/>
@@ -11498,6 +11504,13 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="set" value="@fGSKNearDeathPsyPowerTimeout"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathPsyPowerLvlTmp" operation="divide" value="60"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="@.iGSKNearDeathPsyPowerLvlTmp"/>
+      </effect_group>
+      <effect_group help="raider critical neardeath">
+        <requirement name="CVarCompare" cvar="fGSKNearDeathCriticalHitTimeout" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathCriticalHitTimeout" operation="add" value="-1" help="total/max 10s, so max lvl by div 2 is 5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathCriticalHitLvlTmp" operation="set" value="@fGSKNearDeathCriticalHitTimeout"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathCriticalHitLvlTmp" operation="divide" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathCriticalHitLvl" operation="set" value="@.iGSKNearDeathCriticalHitLvlTmp"/>
       </effect_group>
       <effect_group help="SpawnMiniSpider:countdown. Forest has more spiders.">
         <requirement name="!IsBloodMoon" help="to avoid this that would just be an annoyance"/>
@@ -12510,6 +12523,7 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         </triggered_effect>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathCriticalHitLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathBloodLossLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="0"/>
@@ -13651,4 +13665,27 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
   </append>
   <!-- HELPGOOD: alternative god mode -->
   <set xpath="//requirement[(@name='HasBuff' or @name='!HasBuff' or @name='NotHasBuff') and @buff='god']/@buff">buffGSKGodMode</set>
+  <append xpath="/buffs">
+    <buff name="buffGSKbulletExplosion" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKcriticalHitNearDeath" hidden="false" icon="7dtdShockTip" icon_color="255,0,0" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKNearDeathCriticalHitLvl"/>
+      <display_value_key value="{0:0}/5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNearDeathCriticalHitTimeout" operation="set" value="12" help="to let the lvl 5 be seeen for 2s">
+          <requirement name="CVarCompare" cvar="fGSKNearDeathCriticalHitTimeout" operation="LT" value="12"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKcriticalHitNearDeath">
+          <requirement name="CVarCompare" cvar="fGSKNearDeathCriticalHitTimeout" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
 </GhussakTweaks>
