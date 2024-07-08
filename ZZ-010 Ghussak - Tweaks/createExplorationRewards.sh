@@ -273,6 +273,7 @@ for((iDataLnIniIndex=0;iDataLnIniIndex<${#astrItemList[@]};iDataLnIniIndex+=iDat
   if [[ "${strShortNameId:0:3}" == "TRW" ]];then strItemType="Throwable";fi
   if [[ "${strShortNameId:0:3}" == "CSM" ]];then strItemType="Consumable";fi
   if [[ "${strShortNameId:0:3}" == "SCH" ]];then strItemType="Schematic";fi
+  if [[ "${strShortNameId:0:3}" == "BOK" ]];then strItemType="Book";fi
   if [[ "${strShortNameId:0:3}" == "ARO" ]];then strItemType="Armor and Outfit";fi
   if [[ "${strShortNameId:0:3}" == "Mod" ]];then strItemType="Item Modification";fi
   if [[ "${strShortNameId:0:3}" == "RSC" ]];then strItemType="Resource";fi

@@ -10,7 +10,7 @@ astrIgnoreList=( #just a part of the name will work too
 )
 
 iDataColumns=5;
-astrItemList=( 
+astrItemList=() 
   #place here mainly the best items of the game that may not be found otherwise as trader's inv is empty for TNM
    #strShortNameId can be empty
    #iSellPriceTier4 is for player lvl1 and tier 4 quality if it has tiers. if 0 will be automatic if possible
@@ -21,7 +21,12 @@ astrItemList=(
   #"item_modifier" modGunScopeMedium       "Scope4x"                  61    ""
   #"item_modifier" modGunScopeLarge        "Scope8x"                  68    ""
   
-  #CODEGEN: xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="gun[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(gun.*T3)(.*)@"item" \2\3 "WT3\3" 0@' |tr -d '\r\0' |sort -u
+  # custom, not present in below codegens
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
+  "item" bathKit "CSMbathKit" 0 ""
+);fi
+  #CODEGEN: xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="gun[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(gun.*T3)(.*)@"item" \2\3 "WT3\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" gunBotT3JunkDrone "WT3JunkDrone" 0 ""
   "item" gunBowT3CompoundBow "WT3CompoundBow" 0 ""
   "item" gunBowT3CompoundCrossbow "WT3CompoundCrossbow" 0 ""
@@ -31,8 +36,9 @@ astrItemList=(
   "item" gunMGT3M60 "WT3M60" 0 ""
   "item" gunRifleT3SniperRifle "WT3SniperRifle" 0 ""
   "item" gunShotgunT3AutoShotgun "WT3AutoShotgun" 0 ""
-
+);fi
   #clear;strTier="T0";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*'$strTier'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oh |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*'$strTier')(.*)@  "item" \2\3 "W'$strTier'\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" meleeToolRepairT0StoneAxe "WT0StoneAxe" 0 ""
   "item" meleeToolRepairT0TazasStoneAxe "WT0TazasStoneAxe" 0 ""
   "item" meleeToolSalvageT0MakeshiftWrench "WT0MakeshiftWrench" 0 ""
@@ -43,8 +49,9 @@ astrItemList=(
   "item" meleeWpnKnucklesT0LeatherKnuckles "WT0LeatherKnuckles" 0 ""
   "item" meleeWpnSledgeT0StoneSledgehammer "WT0StoneSledgehammer" 0 ""
   "item" meleeWpnSpearT0StoneSpear "WT0StoneSpear" 0 ""
-
+);fi
   #clear;strTier="T1";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*'$strTier'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oh |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*'$strTier')(.*)@  "item" \2\3 "W'$strTier'\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" meleeToolAxeT1IronFireaxe "WT1IronFireaxe" 0 ""
   "item" meleeToolFarmT1IronHoe "WT1IronHoe" 0 ""
   "item" meleeToolPickT1IronPickaxe "WT1IronPickaxe" 0 ""
@@ -58,15 +65,17 @@ astrItemList=(
   "item" meleeWpnKnucklesT1IronKnuckles "WT1IronKnuckles" 0 ""
   "item" meleeWpnSledgeT1IronSledgehammer "WT1IronSledgehammer" 0 ""
   "item" meleeWpnSpearT1IronSpear "WT1IronSpear" 0 ""
-  
+);fi
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*T2[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T2)(.*)@"item" \2\3 "WT2\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" meleeToolAxeT2SteelAxe "WT2SteelAxe" 0 ""
   "item" meleeToolPickT2SteelPickaxe "WT2SteelPickaxe" 0 ""
   "item" meleeToolSalvageT2Ratchet "WT2Ratchet" 0 ""
   "item" meleeToolShovelT2SteelShovel "WT2SteelShovel" 0 ""
   "item" meleeWpnBatonT2StunBaton "WT2StunBaton" 0 ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T3)(.*)@"item" \2\3 "WT3\3" 0@' |tr -d '\r\0' |sort -u
+);fi
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="melee[^"]*t3[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic" |sed -r 's@(<item *name=")(melee.*T3)(.*)@"item" \2\3 "WT3\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" meleeToolAxeT3Chainsaw "WT3Chainsaw" 0 ""
   "item" meleeToolPickT3Auger "WT3Auger" 0 ""
   "item" meleeToolRepairT3Nailgun "WT3Nailgun" 0 ""
@@ -77,23 +86,26 @@ astrItemList=(
   "item" meleeWpnKnucklesT3SteelKnuckles "WT3SteelKnuckles" 0 ""
   "item" meleeWpnSledgeT3SteelSledgehammer "WT3SteelSledgehammer" 0 ""
   "item" meleeWpnSpearT3SteelSpear "WT3SteelSpear" 0 ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "ARO\3" 0@' |tr -d '\r\0' |sort -u
+);fi
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorSteel[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorSteel)(.*)@"item" \2\3 "ARO\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" armorSteelBoots "AROBoots" 0 ""
   "item" armorSteelChest "AROChest" 0 ""
   "item" armorSteelGloves "AROGloves" 0 ""
   "item" armorSteelHelmet "AROHelmet" 0 ""
   "item" armorSteelLegs "AROLegs" 0 ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "ARO\3" 0@' |tr -d '\r\0' |sort -u
+);fi
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armorMilitary[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armorMilitary)(.*)@"item" \2\3 "ARO\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" armorMilitaryBoots "AROBoots" 0 ""
   "item" armorMilitaryGloves "AROGloves" 0 ""
   "item" armorMilitaryHelmet "AROHelmet" 0 ""
   "item" armorMilitaryLegs "AROLegs" 0 ""
   "item" armorMilitaryStealthBoots "AROStealthBoots" 0 ""
   "item" armorMilitaryVest "AROVest" 0 ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "AROHelmet\3" 0@' |tr -d '\r\0' |sort -u
+);fi
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="armor[^"]*Helmet[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master|GSK" |sed -r 's@(<item *name=")(armor)(.*)(Helmet)(.*)@"item" \2\3\4\5 "AROHelmet\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" armorFirefightersHelmet "AROHelmetFirefighters" 0 ""
   "item" armorFootballHelmet "AROHelmetFootball" 0 ""
   #"item" armorFootballHelmetZU "AROHelmetFootball" 0 ""
@@ -113,8 +125,9 @@ astrItemList=(
   "item" apparelHazmatJacket "AROHazmatJacket" ${iEndGameValue} ""
   "item" apparelHazmatPants "AROHazmatPants" ${iEndGameValue} ""
   "item" apparelHazmatBoots "AROHazmatBoots" ${iEndGameValue} ""
-
-  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item.*name="resource[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "schematic|Master|GSK" |sed -r 's@(<item *name=")(resource)(.*)@"item" \2\3 "RSC\3" 0@' |sort -u |sed -r -e 's@RSC"@"@' -e 's@.*@& ""@'
+);fi
+  #xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item.*name="resource[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "schematic|Master|GSK" |sed -r 's@(<item *name=")(resource)(.*)@"item" \2\3 "RSC\3" 0 ""@' |sort -u |sed -r -e 's@RSC"@"@' -e 's@.*@& ""@'
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" resourceAcid "RSCAcid" 0 ""
   "item" resourceAirFilter "RSCAirFilter" 0 ""
   "item" resourceAnimalFatBall "RSCAnimalFatBall" 0 ""
@@ -196,8 +209,9 @@ astrItemList=(
   "item" resourceWoodBundle "RSCWoodBundle" 0 ""
   "item" resourceWood "RSCWood" 0 ""
   "item" resourceYuccaFibers "RSCYuccaFibers" 0 ""
-
-  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0@' |sort -u |sed -r -e 's@Mod"@"@' -e 's@.*@& ""@'
+);fi
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item_modifier.*name="mod[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "parts|schematic|Master" |sed -r 's@(<item_modifier *name=")(mod)(.*)@"item_modifier" \2\3 "Mod\3" 0 ""@' |sort -u |sed -r -e 's@Mod"@"@' -e 's@.*@& ""@'
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item_modifier" modArmorAdvancedMuffledConnectors "ModArmorAdvancedMuffledConnectors" 0 ""
   "item_modifier" modArmorBallCap "ModArmorBallCap" 0 ""
   "item_modifier" modArmorBandolier "ModArmorBandolier" 0 ""
@@ -325,8 +339,9 @@ astrItemList=(
   "item" drinkJarYuccaCocktail "CSMJarYuccaCocktail" 0 ""
   "item" drinkJarYuccaJuice "CSMJarYuccaJuice" 0 ""
   "item" drinkYuccaJuiceSmoothie "CSMYuccaJuiceSmoothie" 0 ""
-  
+);fi
   #clear;strRegex="(drug)";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="'"${strRegex}"'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")'"${strRegex}"'(.*)@  "item" \2\3 "DRG\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" drugAntibiotics "DRGAntibiotics" 0 ""
   "item" drugAtomJunkies "DRGAtomJunkies" 0 ""
   "item" drugCovertCats "DRGCovertCats" 0 ""
@@ -351,8 +366,9 @@ astrItemList=(
   "item" drugSteroids "DRGSteroids" 0 ""
   "item" drugSugarButts "DRGSugarButts" 1000 "DRG final price override, good advantage on trading (was EcV100)"
   "item" drugVitamins "DRGVitamins" 0 ""
-  
+);fi
   #clear;strRegex="(medical)";xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="'"${strRegex}"'[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")'"${strRegex}"'(.*)@  "item" \2\3 "MDH\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" medicalAloeCream "MDHAloeCream" 0 ""
   "item" medicalBandage "MDHBandage" 0 ""
   "item" medicalBloodBag "MDHBloodBag" 0 ""
@@ -360,8 +376,10 @@ astrItemList=(
   "item" medicalFirstAidKit "MDHFirstAidKit" 0 ""
   "item" medicalPlasterCast "MDHPlasterCast" 120 "simple x2 splint value"
   "item" medicalSplint "MDHSplint" 0 ""
-  
+);fi
+
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(thrown)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(thrown)(.*)@  "item" \2\3 "TRW\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" thrownAmmoFlare "TRWAmmoFlare" 0 ""
   "item" thrownAmmoMolotovCocktail6s "TRWAmmoMolotovCocktail6s" 0 ""
   "item" thrownAmmoMolotovCocktail "TRWAmmoMolotovCocktail" 0 ""
@@ -373,8 +391,10 @@ astrItemList=(
   "item" thrownGrenade "TRWGrenade" 0 ""
   "item" thrownTimedCharge "TRWTimedCharge" 0 ""
   "item" thrownTimedChargeWeak "TRWTimedChargeWeak" 0 ""
-  
+);fi
+
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="(ammoBundle)[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi "Empty|Admin|Schematic|drugHealInfectedCharacter|drugHealthBar|Parts|(GSK.*essence)|drinkJarGrandpasForgettingElixir" |sed -r 's@(<item *name=")(ammoBundle)(.*)@  "item" \2\3 "AMO\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" ammoBundle44MagnumBulletAP "AMO44MagnumBulletAP" 0 ""
   "item" ammoBundle44MagnumBulletBall "AMO44MagnumBulletBall" 0 ""
   "item" ammoBundle44MagnumBulletHP "AMO44MagnumBulletHP" 0 ""
@@ -401,8 +421,10 @@ astrItemList=(
   "item" ammoBundleShotgunBreachingSlug "AMOShotgunBreachingSlug" 0 ""
   "item" ammoBundleShotgunShell "AMOShotgunShell" 0 ""
   "item" ammoBundleShotgunSlug "AMOShotgunSlug" 0 ""
-  
-  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="[^"]*Schematic"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi '^GSK|WerewolftoHuman|Faction|ZombieW7WalkStyle|IsInfected' |sed -r 's@(<item *name=")(.*)(Schematic)"@  "item" \2\3 "SCH\2" 0@' |tr -d '\r\0' |sort -u
+);fi
+
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="[^"]*Schematic"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi '^GSK|WerewolftoHuman|Faction|ZombieW7WalkStyle|IsInfected' |sed -r 's@(<item *name=")(.*)(Schematic)"@  "item" \2\3 "SCH\2" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "item" ammoGasCanSchematic "SCHammoGasCan" 0 ""
   "item" armorIronSetSchematic "SCHarmorIronSet" 0 ""
   "item" armorLeatherSetSchematic "SCHarmorLeatherSet" 0 ""
@@ -600,8 +622,145 @@ astrItemList=(
   "item" vehicleMotorcycleChassisSchematic "SCHvehicleMotorcycleChassis" 0 ""
   "item" vehicleMotorcycleHandlebarsSchematic "SCHvehicleMotorcycleHandlebars" 0 ""
   "item" workbenchSchematic "SCHworkbench" 0 ""
-  
+);fi
+  #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<item .*name="book[^"]*"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/*.xml -oih |egrep -vi '^GSK|WerewolftoHuman|Faction|ZombieW7WalkStyle|IsInfected' |sed -r 's@(<item *name=")(book)([^"]*)"@  "item" \2\3 "BOK\3" 0 ""@' |tr -d '\r\0' |sort -u
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
+  "item" bookArtOfMiningAvalanche "BOKArtOfMiningAvalanche" 0 ""
+  "item" bookArtOfMiningBlackStrap "BOKArtOfMiningBlackStrap" 0 ""
+  "item" bookArtOfMiningCoffee "BOKArtOfMiningCoffee" 0 ""
+  "item" bookArtOfMiningDiamondTools "BOKArtOfMiningDiamondTools" 0 ""
+  "item" bookArtOfMiningLantern "BOKArtOfMiningLantern" 0 ""
+  "item" bookArtOfMiningLuckyStrike "BOKArtOfMiningLuckyStrike" 0 ""
+  "item" bookArtOfMiningPallets "BOKArtOfMiningPallets" 0 ""
+  "item" bookAutoWeaponsDamage "BOKAutoWeaponsDamage" 0 ""
+  "item" bookAutoWeaponsDrumMag "BOKAutoWeaponsDrumMag" 0 ""
+  "item" bookAutoWeaponsMachineGuns "BOKAutoWeaponsMachineGuns" 0 ""
+  "item" bookAutoWeaponsMaintenance "BOKAutoWeaponsMaintenance" 0 ""
+  "item" bookAutoWeaponsRagdoll "BOKAutoWeaponsRagdoll" 0 ""
+  "item" bookAutoWeaponsRecoil "BOKAutoWeaponsRecoil" 0 ""
+  "item" bookAutoWeaponsUncontrolledBurst "BOKAutoWeaponsUncontrolledBurst" 0 ""
+  "item" bookBarBrawling1BasicMoves "BOKBarBrawling1BasicMoves" 0 ""
+  "item" bookBarBrawling2DropABomb "BOKBarBrawling2DropABomb" 0 ""
+  "item" bookBarBrawling3KillerInstinct "BOKBarBrawling3KillerInstinct" 0 ""
+  "item" bookBarBrawling4FinishingMoves "BOKBarBrawling4FinishingMoves" 0 ""
+  "item" bookBarBrawling5AdrenalineHealing "BOKBarBrawling5AdrenalineHealing" 0 ""
+  "item" bookBarBrawling6RageMode "BOKBarBrawling6RageMode" 0 ""
+  "item" bookBarBrawling7BoozedUp "BOKBarBrawling7BoozedUp" 0 ""
+  "item" bookBatterUpBaseballBats "BOKBatterUpBaseballBats" 0 ""
+  "item" bookBatterUpBigHits "BOKBatterUpBigHits" 0 ""
+  "item" bookBatterUpGear "BOKBatterUpGear" 0 ""
+  "item" bookBatterUpKnockdown "BOKBatterUpKnockdown" 0 ""
+  "item" bookBatterUpMaintenance "BOKBatterUpMaintenance" 0 ""
+  "item" bookBatterUpMetalChain "BOKBatterUpMetalChain" 0 ""
+  "item" bookBatterUpSlowPitch "BOKBatterUpSlowPitch" 0 ""
+  "item" bookEnforcerAPAmmo "BOKEnforcerAPAmmo" 0 ""
+  "item" bookEnforcerApparel "BOKEnforcerApparel" 0 ""
+  "item" bookEnforcerCriminalPursuit "BOKEnforcerCriminalPursuit" 0 ""
+  "item" bookEnforcerDamage "BOKEnforcerDamage" 0 ""
+  "item" bookEnforcerHPAmmo "BOKEnforcerHPAmmo" 0 ""
+  "item" bookEnforcerIntimidation "BOKEnforcerIntimidation" 0 ""
+  "item" bookEnforcerPunks "BOKEnforcerPunks" 0 ""
+  "item" bookFiremansAlmanacAxes "BOKFiremansAlmanacAxes" 0 ""
+  "item" bookFiremansAlmanacEquipment "BOKFiremansAlmanacEquipment" 0 ""
+  "item" bookFiremansAlmanacHarvest "BOKFiremansAlmanacHarvest" 0 ""
+  "item" bookFiremansAlmanacHeat "BOKFiremansAlmanacHeat" 0 ""
+  "item" bookFiremansAlmanacMolotov "BOKFiremansAlmanacMolotov" 0 ""
+  "item" bookFiremansAlmanacPrevention "BOKFiremansAlmanacPrevention" 0 ""
+  "item" bookFiremansAlmanacSpeed "BOKFiremansAlmanacSpeed" 0 ""
+  "item" bookGreatHeistAdrenalineFall "BOKGreatHeistAdrenalineFall" 0 ""
+  "item" bookGreatHeistClaimed "BOKGreatHeistClaimed" 0 ""
+  "item" bookGreatHeistGems "BOKGreatHeistGems" 0 ""
+  "item" bookGreatHeistMotionDetection "BOKGreatHeistMotionDetection" 0 ""
+  "item" bookGreatHeistSafes "BOKGreatHeistSafes" 0 ""
+  "item" bookGreatHeistSprintSneak "BOKGreatHeistSprintSneak" 0 ""
+  "item" bookGreatHeistTimedCharge "BOKGreatHeistTimedCharge" 0 ""
+  "item" bookHuntingJournalBears "BOKHuntingJournalBears" 0 ""
+  "item" bookHuntingJournalCoyotes "BOKHuntingJournalCoyotes" 0 ""
+  "item" bookHuntingJournalDeer "BOKHuntingJournalDeer" 0 ""
+  "item" bookHuntingJournalMountainLions "BOKHuntingJournalMountainLions" 0 ""
+  "item" bookHuntingJournalSelfDefense "BOKHuntingJournalSelfDefense" 0 ""
+  "item" bookHuntingJournalVultures "BOKHuntingJournalVultures" 0 ""
+  "item" bookHuntingJournalWolves "BOKHuntingJournalWolves" 0 ""
+  "item" bookLuckyLooterAmmunition "BOKLuckyLooterAmmunition" 0 ""
+  "item" bookLuckyLooterBooks "BOKLuckyLooterBooks" 0 ""
+  "item" bookLuckyLooterBrass "BOKLuckyLooterBrass" 0 ""
+  "item" bookLuckyLooterDukes "BOKLuckyLooterDukes" 0 ""
+  "item" bookLuckyLooterFood "BOKLuckyLooterFood" 0 ""
+  "item" bookLuckyLooterLead "BOKLuckyLooterLead" 0 ""
+  "item" bookLuckyLooterMedical "BOKLuckyLooterMedical" 0 ""
+  "item" bookNeedleAndThreadDesertWear "BOKNeedleAndThreadDesertWear" 0 ""
+  "item" bookNeedleAndThreadDusters "BOKNeedleAndThreadDusters" 0 ""
+  "item" bookNeedleAndThreadFootwear "BOKNeedleAndThreadFootwear" 0 ""
+  "item" bookNeedleAndThreadLegwear "BOKNeedleAndThreadLegwear" 0 ""
+  "item" bookNeedleAndThreadPockets "BOKNeedleAndThreadPockets" 0 ""
+  "item" bookNeedleAndThreadPufferCoats "BOKNeedleAndThreadPufferCoats" 0 ""
+  "item" bookNeedleAndThreadWinterWear "BOKNeedleAndThreadWinterWear" 0 ""
+  "item" bookNightStalkerArchery "BOKNightStalkerArchery" 0 ""
+  "item" bookNightStalkerBlades "BOKNightStalkerBlades" 0 ""
+  "item" bookNightStalkerSilentNight "BOKNightStalkerSilentNight" 0 ""
+  "item" bookNightStalkerSlumberParty "BOKNightStalkerSlumberParty" 0 ""
+  "item" bookNightStalkerStealthDamage "BOKNightStalkerStealthDamage" 0 ""
+  "item" bookNightStalkerThiefAdrenaline "BOKNightStalkerThiefAdrenaline" 0 ""
+  "item" bookNightStalkerTwilightThief "BOKNightStalkerTwilightThief" 0 ""
+  "item" bookPistolPeteAPAmmo "BOKPistolPeteAPAmmo" 0 ""
+  "item" bookPistolPeteDamage "BOKPistolPeteDamage" 0 ""
+  "item" bookPistolPeteHPAmmo "BOKPistolPeteHPAmmo" 0 ""
+  "item" bookPistolPeteMaintenance "BOKPistolPeteMaintenance" 0 ""
+  "item" bookPistolPeteSteadyHand "BOKPistolPeteSteadyHand" 0 ""
+  "item" bookPistolPeteSwissKnees "BOKPistolPeteSwissKnees" 0 ""
+  "item" bookPistolPeteTakeAim "BOKPistolPeteTakeAim" 0 ""
+  "item" bookRangersAPAmmo "BOKRangersAPAmmo" 0 ""
+  "item" bookRangersArrowRecovery "BOKRangersArrowRecovery" 0 ""
+  "item" bookRangersCripplingShot "BOKRangersCripplingShot" 0 ""
+  "item" bookRangersExplodingBolts "BOKRangersExplodingBolts" 0 ""
+  "item" bookRangersFlamingArrows "BOKRangersFlamingArrows" 0 ""
+  "item" bookRangersForestGuide "BOKRangersForestGuide" 0 ""
+  "item" bookRangersKnockdown "BOKRangersKnockdown" 0 ""
+  "item" bookShotgunMessiahBreachingSlugs "BOKShotgunMessiahBreachingSlugs" 0 ""
+  "item" bookShotgunMessiahDamage "BOKShotgunMessiahDamage" 0 ""
+  "item" bookShotgunMessiahLimbShot "BOKShotgunMessiahLimbShot" 0 ""
+  "item" bookShotgunMessiahMagazine "BOKShotgunMessiahMagazine" 0 ""
+  "item" bookShotgunMessiahMaintenance "BOKShotgunMessiahMaintenance" 0 ""
+  "item" bookShotgunMessiahPartyStarter "BOKShotgunMessiahPartyStarter" 0 ""
+  "item" bookShotgunMessiahSlugs "BOKShotgunMessiahSlugs" 0 ""
+  "item" bookSniperAPAmmo "BOKSniperAPAmmo" 0 ""
+  "item" bookSniperControlledBreathing "BOKSniperControlledBreathing" 0 ""
+  "item" bookSniperCripplingShot "BOKSniperCripplingShot" 0 ""
+  "item" bookSniperDamage "BOKSniperDamage" 0 ""
+  "item" bookSniperHeadShot "BOKSniperHeadShot" 0 ""
+  "item" bookSniperHPAmmo "BOKSniperHPAmmo" 0 ""
+  "item" bookSniperReload "BOKSniperReload" 0 ""
+  "item" bookSpearHunter1Damage "BOKSpearHunter1Damage" 0 ""
+  "item" bookSpearHunter2Maintenance "BOKSpearHunter2Maintenance" 0 ""
+  "item" bookSpearHunter3SteelSpears "BOKSpearHunter3SteelSpears" 0 ""
+  "item" bookSpearHunter4StrongArm "BOKSpearHunter4StrongArm" 0 ""
+  "item" bookSpearHunter5RapidStrike "BOKSpearHunter5RapidStrike" 0 ""
+  "item" bookSpearHunter6PuncturedLung "BOKSpearHunter6PuncturedLung" 0 ""
+  "item" bookSpearHunter7QuickStrike "BOKSpearHunter7QuickStrike" 0 ""
+  "item" bookTechJunkie1Damage "BOKTechJunkie1Damage" 0 ""
+  "item" bookTechJunkie2Maintenance "BOKTechJunkie2Maintenance" 0 ""
+  "item" bookTechJunkie3APAmmo "BOKTechJunkie3APAmmo" 0 ""
+  "item" bookTechJunkie4Shells "BOKTechJunkie4Shells" 0 ""
+  "item" bookTechJunkie5Repulsor "BOKTechJunkie5Repulsor" 0 ""
+  "item" bookTechJunkie6BatonCharge "BOKTechJunkie6BatonCharge" 0 ""
+  "item" bookTechJunkie7Hydraulics "BOKTechJunkie7Hydraulics" 0 ""
+  "item" bookUrbanCombatAdrenalineRush "BOKUrbanCombatAdrenalineRush" 0 ""
+  "item" bookUrbanCombatCigar "BOKUrbanCombatCigar" 0 ""
+  "item" bookUrbanCombatJumping "BOKUrbanCombatJumping" 0 ""
+  "item" bookUrbanCombatLanding "BOKUrbanCombatLanding" 0 ""
+  "item" bookUrbanCombatLandMines "BOKUrbanCombatLandMines" 0 ""
+  "item" bookUrbanCombatRoomClearing "BOKUrbanCombatRoomClearing" 0 ""
+  "item" bookUrbanCombatSneaking "BOKUrbanCombatSneaking" 0 ""
+  "item" bookWasteTreasuresAcid "BOKWasteTreasuresAcid" 0 ""
+  "item" bookWasteTreasuresCloth "BOKWasteTreasuresCloth" 0 ""
+  "item" bookWasteTreasuresCoffins "BOKWasteTreasuresCoffins" 0 ""
+  "item" bookWasteTreasuresDoors "BOKWasteTreasuresDoors" 0 ""
+  "item" bookWasteTreasuresHoney "BOKWasteTreasuresHoney" 0 ""
+  "item" bookWasteTreasuresSinks "BOKWasteTreasuresSinks" 0 ""
+  "item" bookWasteTreasuresWater "BOKWasteTreasuresWater" 0 ""
+);fi
   #clear;xmlstarlet ed -L -d '//comment()' "_NewestSavegamePath.IgnoreOnBackup/ConfigsDump/"*".xml";egrep '<block *name="[^"]*"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/blocks.xml -ioh |sort -u |egrep '"[^"]*"' -o |tr -d '"' |sed -r 's@.*@  "block" & "BLK&" 0 ""@'
+if true;then astrItemList+=( # this trick is just to make it easy to code fold sections in geany
   "block" air "BLKair" 0 ""
   "block" airConditioner "BLKairConditioner" 0 ""
   "block" airConditionVentFan "BLKairConditionVentFan" 0 ""
@@ -3356,5 +3515,4 @@ astrItemList=(
   "block" wroughtIronFenceSheet "BLKwroughtIronFenceSheet" 0 ""
   "block" xRayDisplayLight1 "BLKxRayDisplayLight1" 0 ""
   "block" xRayDisplayLight2 "BLKxRayDisplayLight2" 0 ""
-  
-)
+);fi
