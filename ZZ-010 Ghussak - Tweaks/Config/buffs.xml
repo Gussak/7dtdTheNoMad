@@ -13674,6 +13674,18 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
   <!-- HELPGOOD: alternative god mode -->
   <set xpath="//requirement[(@name='HasBuff' or @name='!HasBuff' or @name='NotHasBuff') and @buff='god']/@buff">buffGSKGodMode</set>
   <append xpath="/buffs">
+    <buff name="buffGSKraiderAmbushInc">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="3" help="the idea is to wait some time to grant this raider is recognized as ambusher if that is the case"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbush" operation="add" value="1" target="selfAOE" range="60" target_tags="player">
+          <requirement name="!HasBuff" buff="buffGSKNPCTreasureAmbusherSpawned" help="to ignore ambushers"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushMode" operation="Equals" value="0" help="to grant ignore ambushers"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKraiderAmbushInc"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKbulletExplosion" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
