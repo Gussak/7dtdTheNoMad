@@ -90,16 +90,21 @@
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <!-- HELPGOOD: codegen for alt all NPCs with power armor option: kill the npc and spawn this one. TODO: every normal non PA NPC shall add a buff to the player that will request spawn it's equivalent PA NPC. it writes a cvar to the player with a number of the requested PA NPC
-	clear;egrep -o 'name="npc[^"]+"' "0-XNPCCore/Config/entityclasses.xml" "1-NPC."*"/Config/entityclasses.xml" |egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" |egrep -v "TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" |sort -u |sed -r 's@.*"(.*)".*@\1@g' |while read strNm;do echo -en '
-	<entity_class name="'"${strNm}PA"'" extends="'"${strNm}"'">
-		<effect_group>
-			<triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
-			<passive_effect name="PhysicalDamageResist" operation="base_set" value="90" />
-		</effect_group>
-		<property name="LootListAlive" value="traderNPCbigBackpack"/>
-		<property name="HireCost" value="750"/>
-		<property name="LootDropProb" value="0.05"/>
-	</entity_class>';done
+	clear;egrep -o 'name="npc[^"]+"' "0-XNPCCore/Config/entityclasses.xml" "1-NPC."*"/Config/entityclasses.xml" |egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" |egrep -v "TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" |sort -u |sed -r 's@.*"(.*)".*@\1@g' |while read strNm;do \
+		nHireCost=750; \
+		if echo "$strNm" |egrep "AK47|SMG|M60|AShotgun|PShotgun|SRifle|HRifle|TRifle|RocketL" -qi;then ((nHireCost+=150))&&:;fi; \
+		if echo "$strNm" |egrep "PipeShotgun|Pistol|PipePistol|PipeRifle" -qi;then ((nHireCost+=75))&&:;fi; \
+		echo -en '
+			<entity_class name="'"${strNm}PA"'" extends="'"${strNm}"'">
+				<effect_group>
+					<triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+					<passive_effect name="PhysicalDamageResist" operation="base_set" value="90" />
+				</effect_group>
+				<property name="LootListAlive" value="traderNPCbigBackpack"/>
+				<property name="HireCost" value="'"${nHireCost}"'"/>
+				<property name="LootDropProb" value="0.05"/>
+			</entity_class>';\
+	done
 -->
     <entity_class name="npcBakerAK47PA" extends="npcBakerAK47">
       <effect_group>
@@ -107,7 +112,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerAShotgunPA" extends="npcBakerAShotgun">
@@ -116,7 +121,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerAxePA" extends="npcBakerAxe">
@@ -152,7 +157,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerEmptyHandPA" extends="npcBakerEmptyHand">
@@ -170,7 +175,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerKnifePA" extends="npcBakerKnife">
@@ -197,7 +202,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerMachetePA" extends="npcBakerMachete">
@@ -224,7 +229,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerPipeRiflePA" extends="npcBakerPipeRifle">
@@ -233,7 +238,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerPipeShotgunPA" extends="npcBakerPipeShotgun">
@@ -242,7 +247,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerPistolPA" extends="npcBakerPistol">
@@ -251,7 +256,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerPShotgunPA" extends="npcBakerPShotgun">
@@ -260,7 +265,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerRocketLPA" extends="npcBakerRocketL">
@@ -269,7 +274,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerSMGPA" extends="npcBakerSMG">
@@ -278,7 +283,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerSpearPA" extends="npcBakerSpear">
@@ -296,7 +301,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerTRiflePA" extends="npcBakerTRifle">
@@ -305,7 +310,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcBakerXBowPA" extends="npcBakerXBow">
@@ -323,7 +328,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyAShotgunPA" extends="npcHarleyAShotgun">
@@ -332,7 +337,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyAxePA" extends="npcHarleyAxe">
@@ -377,7 +382,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyEmptyHandPA" extends="npcHarleyEmptyHand">
@@ -395,7 +400,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyKnifePA" extends="npcHarleyKnife">
@@ -422,7 +427,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyMachetePA" extends="npcHarleyMachete">
@@ -449,7 +454,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyPipeRiflePA" extends="npcHarleyPipeRifle">
@@ -458,7 +463,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyPipeShotgunPA" extends="npcHarleyPipeShotgun">
@@ -467,7 +472,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyPistolPA" extends="npcHarleyPistol">
@@ -476,7 +481,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyPShotgunPA" extends="npcHarleyPShotgun">
@@ -485,7 +490,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyRocketLPA" extends="npcHarleyRocketL">
@@ -494,7 +499,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleySMGPA" extends="npcHarleySMG">
@@ -503,7 +508,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleySpearPA" extends="npcHarleySpear">
@@ -521,7 +526,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyTRiflePA" extends="npcHarleyTRifle">
@@ -530,7 +535,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcHarleyVomitHandPA" extends="npcHarleyVomitHand">
@@ -557,7 +562,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseAShotgunPA" extends="npcNurseAShotgun">
@@ -566,7 +571,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseAxePA" extends="npcNurseAxe">
@@ -602,7 +607,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseEmptyHandPA" extends="npcNurseEmptyHand">
@@ -620,7 +625,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseKnifePA" extends="npcNurseKnife">
@@ -647,7 +652,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseMachetePA" extends="npcNurseMachete">
@@ -674,7 +679,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNursePipeRiflePA" extends="npcNursePipeRifle">
@@ -683,7 +688,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNursePipeShotgunPA" extends="npcNursePipeShotgun">
@@ -692,7 +697,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNursePistolPA" extends="npcNursePistol">
@@ -701,7 +706,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNursePShotgunPA" extends="npcNursePShotgun">
@@ -710,7 +715,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseRocketLPA" extends="npcNurseRocketL">
@@ -719,7 +724,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseSMGPA" extends="npcNurseSMG">
@@ -728,7 +733,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseSpearPA" extends="npcNurseSpear">
@@ -746,7 +751,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseTRiflePA" extends="npcNurseTRifle">
@@ -755,7 +760,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcNurseXBowPA" extends="npcNurseXBow">
@@ -791,7 +796,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzAShotgunPA" extends="npcFemaleAgedKhzAShotgun">
@@ -800,7 +805,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzAxePA" extends="npcFemaleAgedKhzAxe">
@@ -836,7 +841,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzHRiflePA" extends="npcFemaleAgedKhzHRifle">
@@ -845,7 +850,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzKnifePA" extends="npcFemaleAgedKhzKnife">
@@ -872,7 +877,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzMachetePA" extends="npcFemaleAgedKhzMachete">
@@ -899,7 +904,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzPipeRiflePA" extends="npcFemaleAgedKhzPipeRifle">
@@ -908,7 +913,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzPipeShotgunPA" extends="npcFemaleAgedKhzPipeShotgun">
@@ -917,7 +922,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzPistolPA" extends="npcFemaleAgedKhzPistol">
@@ -926,7 +931,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzPShotgunPA" extends="npcFemaleAgedKhzPShotgun">
@@ -935,7 +940,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzRocketLPA" extends="npcFemaleAgedKhzRocketL">
@@ -944,7 +949,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzSMGPA" extends="npcFemaleAgedKhzSMG">
@@ -953,7 +958,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzSpearPA" extends="npcFemaleAgedKhzSpear">
@@ -971,7 +976,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzTRiflePA" extends="npcFemaleAgedKhzTRifle">
@@ -980,7 +985,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleAgedKhzXBowPA" extends="npcFemaleAgedKhzXBow">
@@ -998,7 +1003,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzAShotgunPA" extends="npcFemaleScrubsKhzAShotgun">
@@ -1007,7 +1012,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzAxePA" extends="npcFemaleScrubsKhzAxe">
@@ -1043,7 +1048,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzHRiflePA" extends="npcFemaleScrubsKhzHRifle">
@@ -1052,7 +1057,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzKnifePA" extends="npcFemaleScrubsKhzKnife">
@@ -1079,7 +1084,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzMachetePA" extends="npcFemaleScrubsKhzMachete">
@@ -1106,7 +1111,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzPipeRiflePA" extends="npcFemaleScrubsKhzPipeRifle">
@@ -1115,7 +1120,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzPipeShotgunPA" extends="npcFemaleScrubsKhzPipeShotgun">
@@ -1124,7 +1129,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzPistolPA" extends="npcFemaleScrubsKhzPistol">
@@ -1133,7 +1138,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzPShotgunPA" extends="npcFemaleScrubsKhzPShotgun">
@@ -1142,7 +1147,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzRocketLPA" extends="npcFemaleScrubsKhzRocketL">
@@ -1151,7 +1156,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzSMGPA" extends="npcFemaleScrubsKhzSMG">
@@ -1160,7 +1165,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzSpearPA" extends="npcFemaleScrubsKhzSpear">
@@ -1178,7 +1183,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzTRiflePA" extends="npcFemaleScrubsKhzTRifle">
@@ -1187,7 +1192,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleScrubsKhzXBowPA" extends="npcFemaleScrubsKhzXBow">
@@ -1205,7 +1210,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzAShotgunPA" extends="npcFemaleYoung1KhzAShotgun">
@@ -1214,7 +1219,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzAxePA" extends="npcFemaleYoung1KhzAxe">
@@ -1250,7 +1255,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzHRiflePA" extends="npcFemaleYoung1KhzHRifle">
@@ -1259,7 +1264,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzKnifePA" extends="npcFemaleYoung1KhzKnife">
@@ -1286,7 +1291,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzMachetePA" extends="npcFemaleYoung1KhzMachete">
@@ -1313,7 +1318,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzPipeRiflePA" extends="npcFemaleYoung1KhzPipeRifle">
@@ -1322,7 +1327,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzPipeShotgunPA" extends="npcFemaleYoung1KhzPipeShotgun">
@@ -1331,7 +1336,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzPistolPA" extends="npcFemaleYoung1KhzPistol">
@@ -1340,7 +1345,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzPShotgunPA" extends="npcFemaleYoung1KhzPShotgun">
@@ -1349,7 +1354,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzRocketLPA" extends="npcFemaleYoung1KhzRocketL">
@@ -1358,7 +1363,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzSMGPA" extends="npcFemaleYoung1KhzSMG">
@@ -1367,7 +1372,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzSpearPA" extends="npcFemaleYoung1KhzSpear">
@@ -1385,7 +1390,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzTRiflePA" extends="npcFemaleYoung1KhzTRifle">
@@ -1394,7 +1399,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung1KhzXBowPA" extends="npcFemaleYoung1KhzXBow">
@@ -1412,7 +1417,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzAShotgunPA" extends="npcFemaleYoung2KhzAShotgun">
@@ -1421,7 +1426,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzAxePA" extends="npcFemaleYoung2KhzAxe">
@@ -1457,7 +1462,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzHRiflePA" extends="npcFemaleYoung2KhzHRifle">
@@ -1466,7 +1471,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzKnifePA" extends="npcFemaleYoung2KhzKnife">
@@ -1493,7 +1498,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzMachetePA" extends="npcFemaleYoung2KhzMachete">
@@ -1520,7 +1525,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzPipeRiflePA" extends="npcFemaleYoung2KhzPipeRifle">
@@ -1529,7 +1534,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzPipeShotgunPA" extends="npcFemaleYoung2KhzPipeShotgun">
@@ -1538,7 +1543,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzPistolPA" extends="npcFemaleYoung2KhzPistol">
@@ -1547,7 +1552,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzPShotgunPA" extends="npcFemaleYoung2KhzPShotgun">
@@ -1556,7 +1561,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzRocketLPA" extends="npcFemaleYoung2KhzRocketL">
@@ -1565,7 +1570,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzSMGPA" extends="npcFemaleYoung2KhzSMG">
@@ -1574,7 +1579,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzSpearPA" extends="npcFemaleYoung2KhzSpear">
@@ -1592,7 +1597,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzTRiflePA" extends="npcFemaleYoung2KhzTRifle">
@@ -1601,7 +1606,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung2KhzXBowPA" extends="npcFemaleYoung2KhzXBow">
@@ -1619,7 +1624,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzAShotgunPA" extends="npcFemaleYoung3KhzAShotgun">
@@ -1628,7 +1633,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzAxePA" extends="npcFemaleYoung3KhzAxe">
@@ -1664,7 +1669,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzHRiflePA" extends="npcFemaleYoung3KhzHRifle">
@@ -1673,7 +1678,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzKnifePA" extends="npcFemaleYoung3KhzKnife">
@@ -1700,7 +1705,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzMachetePA" extends="npcFemaleYoung3KhzMachete">
@@ -1727,7 +1732,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzPipeRiflePA" extends="npcFemaleYoung3KhzPipeRifle">
@@ -1736,7 +1741,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzPipeShotgunPA" extends="npcFemaleYoung3KhzPipeShotgun">
@@ -1745,7 +1750,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzPistolPA" extends="npcFemaleYoung3KhzPistol">
@@ -1754,7 +1759,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzPShotgunPA" extends="npcFemaleYoung3KhzPShotgun">
@@ -1763,7 +1768,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzRocketLPA" extends="npcFemaleYoung3KhzRocketL">
@@ -1772,7 +1777,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzSMGPA" extends="npcFemaleYoung3KhzSMG">
@@ -1781,7 +1786,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzSpearPA" extends="npcFemaleYoung3KhzSpear">
@@ -1799,7 +1804,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzTRiflePA" extends="npcFemaleYoung3KhzTRifle">
@@ -1808,7 +1813,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung3KhzXBowPA" extends="npcFemaleYoung3KhzXBow">
@@ -1826,7 +1831,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzAShotgunPA" extends="npcFemaleYoung4KhzAShotgun">
@@ -1835,7 +1840,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzAxePA" extends="npcFemaleYoung4KhzAxe">
@@ -1871,7 +1876,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzHRiflePA" extends="npcFemaleYoung4KhzHRifle">
@@ -1880,7 +1885,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzKnifePA" extends="npcFemaleYoung4KhzKnife">
@@ -1907,7 +1912,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzMachetePA" extends="npcFemaleYoung4KhzMachete">
@@ -1934,7 +1939,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzPipeRiflePA" extends="npcFemaleYoung4KhzPipeRifle">
@@ -1943,7 +1948,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzPipeShotgunPA" extends="npcFemaleYoung4KhzPipeShotgun">
@@ -1952,7 +1957,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzPistolPA" extends="npcFemaleYoung4KhzPistol">
@@ -1961,7 +1966,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzPShotgunPA" extends="npcFemaleYoung4KhzPShotgun">
@@ -1970,7 +1975,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzRocketLPA" extends="npcFemaleYoung4KhzRocketL">
@@ -1979,7 +1984,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzSMGPA" extends="npcFemaleYoung4KhzSMG">
@@ -1988,7 +1993,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzSpearPA" extends="npcFemaleYoung4KhzSpear">
@@ -2006,7 +2011,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzTRiflePA" extends="npcFemaleYoung4KhzTRifle">
@@ -2015,7 +2020,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung4KhzXBowPA" extends="npcFemaleYoung4KhzXBow">
@@ -2033,7 +2038,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzAShotgunPA" extends="npcFemaleYoung5KhzAShotgun">
@@ -2042,7 +2047,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzAxePA" extends="npcFemaleYoung5KhzAxe">
@@ -2078,7 +2083,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzHRiflePA" extends="npcFemaleYoung5KhzHRifle">
@@ -2087,7 +2092,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzKnifePA" extends="npcFemaleYoung5KhzKnife">
@@ -2114,7 +2119,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzMachetePA" extends="npcFemaleYoung5KhzMachete">
@@ -2141,7 +2146,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzPipeRiflePA" extends="npcFemaleYoung5KhzPipeRifle">
@@ -2150,7 +2155,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzPipeShotgunPA" extends="npcFemaleYoung5KhzPipeShotgun">
@@ -2159,7 +2164,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzPistolPA" extends="npcFemaleYoung5KhzPistol">
@@ -2168,7 +2173,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzPShotgunPA" extends="npcFemaleYoung5KhzPShotgun">
@@ -2177,7 +2182,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzRocketLPA" extends="npcFemaleYoung5KhzRocketL">
@@ -2186,7 +2191,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzSMGPA" extends="npcFemaleYoung5KhzSMG">
@@ -2195,7 +2200,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzSpearPA" extends="npcFemaleYoung5KhzSpear">
@@ -2213,7 +2218,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzTRiflePA" extends="npcFemaleYoung5KhzTRifle">
@@ -2222,7 +2227,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcFemaleYoung5KhzXBowPA" extends="npcFemaleYoung5KhzXBow">
@@ -2240,7 +2245,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzAShotgunPA" extends="npcMaleAged2KhzAShotgun">
@@ -2249,7 +2254,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzAxePA" extends="npcMaleAged2KhzAxe">
@@ -2285,7 +2290,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzHRiflePA" extends="npcMaleAged2KhzHRifle">
@@ -2294,7 +2299,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzKnifePA" extends="npcMaleAged2KhzKnife">
@@ -2321,7 +2326,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzMachetePA" extends="npcMaleAged2KhzMachete">
@@ -2348,7 +2353,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzPipeRiflePA" extends="npcMaleAged2KhzPipeRifle">
@@ -2357,7 +2362,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzPipeShotgunPA" extends="npcMaleAged2KhzPipeShotgun">
@@ -2366,7 +2371,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzPistolPA" extends="npcMaleAged2KhzPistol">
@@ -2375,7 +2380,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzPShotgunPA" extends="npcMaleAged2KhzPShotgun">
@@ -2384,7 +2389,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzRocketLPA" extends="npcMaleAged2KhzRocketL">
@@ -2393,7 +2398,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzSMGPA" extends="npcMaleAged2KhzSMG">
@@ -2402,7 +2407,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzSpearPA" extends="npcMaleAged2KhzSpear">
@@ -2420,7 +2425,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzTRiflePA" extends="npcMaleAged2KhzTRifle">
@@ -2429,7 +2434,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAged2KhzXBowPA" extends="npcMaleAged2KhzXBow">
@@ -2447,7 +2452,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzAShotgunPA" extends="npcMaleAgedKhzAShotgun">
@@ -2456,7 +2461,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzAxePA" extends="npcMaleAgedKhzAxe">
@@ -2492,7 +2497,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzHRiflePA" extends="npcMaleAgedKhzHRifle">
@@ -2501,7 +2506,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzKnifePA" extends="npcMaleAgedKhzKnife">
@@ -2528,7 +2533,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzMachetePA" extends="npcMaleAgedKhzMachete">
@@ -2555,7 +2560,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzPipeRiflePA" extends="npcMaleAgedKhzPipeRifle">
@@ -2564,7 +2569,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzPipeShotgunPA" extends="npcMaleAgedKhzPipeShotgun">
@@ -2573,7 +2578,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzPistolPA" extends="npcMaleAgedKhzPistol">
@@ -2582,7 +2587,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzPShotgunPA" extends="npcMaleAgedKhzPShotgun">
@@ -2591,7 +2596,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzRocketLPA" extends="npcMaleAgedKhzRocketL">
@@ -2600,7 +2605,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzSMGPA" extends="npcMaleAgedKhzSMG">
@@ -2609,7 +2614,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzSpearPA" extends="npcMaleAgedKhzSpear">
@@ -2627,7 +2632,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzTRiflePA" extends="npcMaleAgedKhzTRifle">
@@ -2636,7 +2641,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedKhzXBowPA" extends="npcMaleAgedKhzXBow">
@@ -2654,7 +2659,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzAShotgunPA" extends="npcMaleAgedScrubsKhzAShotgun">
@@ -2663,7 +2668,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzAxePA" extends="npcMaleAgedScrubsKhzAxe">
@@ -2699,7 +2704,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzHRiflePA" extends="npcMaleAgedScrubsKhzHRifle">
@@ -2708,7 +2713,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzKnifePA" extends="npcMaleAgedScrubsKhzKnife">
@@ -2735,7 +2740,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzMachetePA" extends="npcMaleAgedScrubsKhzMachete">
@@ -2762,7 +2767,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzPipeRiflePA" extends="npcMaleAgedScrubsKhzPipeRifle">
@@ -2771,7 +2776,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzPipeShotgunPA" extends="npcMaleAgedScrubsKhzPipeShotgun">
@@ -2780,7 +2785,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzPistolPA" extends="npcMaleAgedScrubsKhzPistol">
@@ -2789,7 +2794,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzPShotgunPA" extends="npcMaleAgedScrubsKhzPShotgun">
@@ -2798,7 +2803,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzRocketLPA" extends="npcMaleAgedScrubsKhzRocketL">
@@ -2807,7 +2812,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzSMGPA" extends="npcMaleAgedScrubsKhzSMG">
@@ -2816,7 +2821,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzSpearPA" extends="npcMaleAgedScrubsKhzSpear">
@@ -2834,7 +2839,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzTRiflePA" extends="npcMaleAgedScrubsKhzTRifle">
@@ -2843,7 +2848,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleAgedScrubsKhzXBowPA" extends="npcMaleAgedScrubsKhzXBow">
@@ -2861,7 +2866,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzAShotgunPA" extends="npcMaleCowboyKhzAShotgun">
@@ -2870,7 +2875,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzAxePA" extends="npcMaleCowboyKhzAxe">
@@ -2906,7 +2911,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzHRiflePA" extends="npcMaleCowboyKhzHRifle">
@@ -2915,7 +2920,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzKnifePA" extends="npcMaleCowboyKhzKnife">
@@ -2942,7 +2947,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzMachetePA" extends="npcMaleCowboyKhzMachete">
@@ -2969,7 +2974,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzPipeRiflePA" extends="npcMaleCowboyKhzPipeRifle">
@@ -2978,7 +2983,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzPipeShotgunPA" extends="npcMaleCowboyKhzPipeShotgun">
@@ -2987,7 +2992,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzPistolPA" extends="npcMaleCowboyKhzPistol">
@@ -2996,7 +3001,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzPShotgunPA" extends="npcMaleCowboyKhzPShotgun">
@@ -3005,7 +3010,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzRocketLPA" extends="npcMaleCowboyKhzRocketL">
@@ -3014,7 +3019,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzSMGPA" extends="npcMaleCowboyKhzSMG">
@@ -3023,7 +3028,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzSpearPA" extends="npcMaleCowboyKhzSpear">
@@ -3041,7 +3046,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzTRiflePA" extends="npcMaleCowboyKhzTRifle">
@@ -3050,7 +3055,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleCowboyKhzXBowPA" extends="npcMaleCowboyKhzXBow">
@@ -3068,7 +3073,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzAShotgunPA" extends="npcMaleJKhzAShotgun">
@@ -3077,7 +3082,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzAxePA" extends="npcMaleJKhzAxe">
@@ -3113,7 +3118,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzHRiflePA" extends="npcMaleJKhzHRifle">
@@ -3122,7 +3127,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzKnifePA" extends="npcMaleJKhzKnife">
@@ -3149,7 +3154,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzMachetePA" extends="npcMaleJKhzMachete">
@@ -3176,7 +3181,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzPipeRiflePA" extends="npcMaleJKhzPipeRifle">
@@ -3185,7 +3190,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzPipeShotgunPA" extends="npcMaleJKhzPipeShotgun">
@@ -3194,7 +3199,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzPistolPA" extends="npcMaleJKhzPistol">
@@ -3203,7 +3208,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzPShotgunPA" extends="npcMaleJKhzPShotgun">
@@ -3212,7 +3217,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzRocketLPA" extends="npcMaleJKhzRocketL">
@@ -3221,7 +3226,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzSMGPA" extends="npcMaleJKhzSMG">
@@ -3230,7 +3235,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzSpearPA" extends="npcMaleJKhzSpear">
@@ -3248,7 +3253,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzTRiflePA" extends="npcMaleJKhzTRifle">
@@ -3257,7 +3262,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleJKhzXBowPA" extends="npcMaleJKhzXBow">
@@ -3275,7 +3280,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzAShotgunPA" extends="npcMaleYoung1KhzAShotgun">
@@ -3284,7 +3289,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzAxePA" extends="npcMaleYoung1KhzAxe">
@@ -3320,7 +3325,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzHRiflePA" extends="npcMaleYoung1KhzHRifle">
@@ -3329,7 +3334,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzKnifePA" extends="npcMaleYoung1KhzKnife">
@@ -3356,7 +3361,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzMachetePA" extends="npcMaleYoung1KhzMachete">
@@ -3383,7 +3388,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzPipeRiflePA" extends="npcMaleYoung1KhzPipeRifle">
@@ -3392,7 +3397,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzPipeShotgunPA" extends="npcMaleYoung1KhzPipeShotgun">
@@ -3401,7 +3406,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzPistolPA" extends="npcMaleYoung1KhzPistol">
@@ -3410,7 +3415,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzPShotgunPA" extends="npcMaleYoung1KhzPShotgun">
@@ -3419,7 +3424,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzRocketLPA" extends="npcMaleYoung1KhzRocketL">
@@ -3428,7 +3433,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzSMGPA" extends="npcMaleYoung1KhzSMG">
@@ -3437,7 +3442,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzSpearPA" extends="npcMaleYoung1KhzSpear">
@@ -3455,7 +3460,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzTRiflePA" extends="npcMaleYoung1KhzTRifle">
@@ -3464,7 +3469,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung1KhzXBowPA" extends="npcMaleYoung1KhzXBow">
@@ -3482,7 +3487,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzAShotgunPA" extends="npcMaleYoung2KhzAShotgun">
@@ -3491,7 +3496,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzAxePA" extends="npcMaleYoung2KhzAxe">
@@ -3527,7 +3532,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzHRiflePA" extends="npcMaleYoung2KhzHRifle">
@@ -3536,7 +3541,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzKnifePA" extends="npcMaleYoung2KhzKnife">
@@ -3563,7 +3568,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzMachetePA" extends="npcMaleYoung2KhzMachete">
@@ -3590,7 +3595,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzPipeRiflePA" extends="npcMaleYoung2KhzPipeRifle">
@@ -3599,7 +3604,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzPipeShotgunPA" extends="npcMaleYoung2KhzPipeShotgun">
@@ -3608,7 +3613,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzPistolPA" extends="npcMaleYoung2KhzPistol">
@@ -3617,7 +3622,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzPShotgunPA" extends="npcMaleYoung2KhzPShotgun">
@@ -3626,7 +3631,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzRocketLPA" extends="npcMaleYoung2KhzRocketL">
@@ -3635,7 +3640,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzSMGPA" extends="npcMaleYoung2KhzSMG">
@@ -3644,7 +3649,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzSpearPA" extends="npcMaleYoung2KhzSpear">
@@ -3662,7 +3667,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzTRiflePA" extends="npcMaleYoung2KhzTRifle">
@@ -3671,7 +3676,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung2KhzXBowPA" extends="npcMaleYoung2KhzXBow">
@@ -3689,7 +3694,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzAShotgunPA" extends="npcMaleYoung3KhzAShotgun">
@@ -3698,7 +3703,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzAxePA" extends="npcMaleYoung3KhzAxe">
@@ -3734,7 +3739,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzHRiflePA" extends="npcMaleYoung3KhzHRifle">
@@ -3743,7 +3748,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzKnifePA" extends="npcMaleYoung3KhzKnife">
@@ -3770,7 +3775,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzMachetePA" extends="npcMaleYoung3KhzMachete">
@@ -3797,7 +3802,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzPipeRiflePA" extends="npcMaleYoung3KhzPipeRifle">
@@ -3806,7 +3811,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzPipeShotgunPA" extends="npcMaleYoung3KhzPipeShotgun">
@@ -3815,7 +3820,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzPistolPA" extends="npcMaleYoung3KhzPistol">
@@ -3824,7 +3829,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzPShotgunPA" extends="npcMaleYoung3KhzPShotgun">
@@ -3833,7 +3838,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzRocketLPA" extends="npcMaleYoung3KhzRocketL">
@@ -3842,7 +3847,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzSMGPA" extends="npcMaleYoung3KhzSMG">
@@ -3851,7 +3856,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzSpearPA" extends="npcMaleYoung3KhzSpear">
@@ -3869,7 +3874,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzTRiflePA" extends="npcMaleYoung3KhzTRifle">
@@ -3878,7 +3883,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcMaleYoung3KhzXBowPA" extends="npcMaleYoung3KhzXBow">
@@ -3896,7 +3901,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzAShotgunPA" extends="npcTestFemaleKhzAShotgun">
@@ -3905,7 +3910,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzAxePA" extends="npcTestFemaleKhzAxe">
@@ -3941,7 +3946,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzHRiflePA" extends="npcTestFemaleKhzHRifle">
@@ -3950,7 +3955,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzKnifePA" extends="npcTestFemaleKhzKnife">
@@ -3977,7 +3982,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzMachetePA" extends="npcTestFemaleKhzMachete">
@@ -4004,7 +4009,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzPipeRiflePA" extends="npcTestFemaleKhzPipeRifle">
@@ -4013,7 +4018,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzPipeShotgunPA" extends="npcTestFemaleKhzPipeShotgun">
@@ -4022,7 +4027,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzPistolPA" extends="npcTestFemaleKhzPistol">
@@ -4031,7 +4036,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzPShotgunPA" extends="npcTestFemaleKhzPShotgun">
@@ -4040,7 +4045,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzRocketLPA" extends="npcTestFemaleKhzRocketL">
@@ -4049,7 +4054,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzSMGPA" extends="npcTestFemaleKhzSMG">
@@ -4058,7 +4063,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzSpearPA" extends="npcTestFemaleKhzSpear">
@@ -4076,7 +4081,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzTRiflePA" extends="npcTestFemaleKhzTRifle">
@@ -4085,7 +4090,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestFemaleKhzXBowPA" extends="npcTestFemaleKhzXBow">
@@ -4103,7 +4108,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzAShotgunPA" extends="npcTestMaleKhzAShotgun">
@@ -4112,7 +4117,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzAxePA" extends="npcTestMaleKhzAxe">
@@ -4148,7 +4153,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzHRiflePA" extends="npcTestMaleKhzHRifle">
@@ -4157,7 +4162,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzKnifePA" extends="npcTestMaleKhzKnife">
@@ -4184,7 +4189,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzMachetePA" extends="npcTestMaleKhzMachete">
@@ -4211,7 +4216,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzPipeRiflePA" extends="npcTestMaleKhzPipeRifle">
@@ -4220,7 +4225,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzPipeShotgunPA" extends="npcTestMaleKhzPipeShotgun">
@@ -4229,7 +4234,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzPistolPA" extends="npcTestMaleKhzPistol">
@@ -4238,7 +4243,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzPShotgunPA" extends="npcTestMaleKhzPShotgun">
@@ -4247,7 +4252,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzRocketLPA" extends="npcTestMaleKhzRocketL">
@@ -4256,7 +4261,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzSMGPA" extends="npcTestMaleKhzSMG">
@@ -4265,7 +4270,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzSpearPA" extends="npcTestMaleKhzSpear">
@@ -4283,7 +4288,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzTRiflePA" extends="npcTestMaleKhzTRifle">
@@ -4292,7 +4297,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTestMaleKhzXBowPA" extends="npcTestMaleKhzXBow">
@@ -4337,7 +4342,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderBettyKnifePA" extends="npcRaiderBettyKnife">
@@ -4364,7 +4369,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderBettyTRiflePA" extends="npcRaiderBettyTRifle">
@@ -4373,7 +4378,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGinaAxePA" extends="npcRaiderGinaAxe">
@@ -4409,7 +4414,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGinaKnifePA" extends="npcRaiderGinaKnife">
@@ -4436,7 +4441,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGinaTRiflePA" extends="npcRaiderGinaTRifle">
@@ -4445,7 +4450,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGypsyAxePA" extends="npcRaiderGypsyAxe">
@@ -4481,7 +4486,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGypsyKnifePA" extends="npcRaiderGypsyKnife">
@@ -4508,7 +4513,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderGypsyTRiflePA" extends="npcRaiderGypsyTRifle">
@@ -4517,7 +4522,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderHedyAxePA" extends="npcRaiderHedyAxe">
@@ -4553,7 +4558,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderHedyKnifePA" extends="npcRaiderHedyKnife">
@@ -4580,7 +4585,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderHedyTRiflePA" extends="npcRaiderHedyTRifle">
@@ -4589,7 +4594,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderJayneAxePA" extends="npcRaiderJayneAxe">
@@ -4625,7 +4630,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderJayneKnifePA" extends="npcRaiderJayneKnife">
@@ -4652,7 +4657,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcRaiderJayneTRiflePA" extends="npcRaiderJayneTRifle">
@@ -4661,7 +4666,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcOfficerAK47PA" extends="npcOfficerAK47">
@@ -4670,7 +4675,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcOfficerBatPA" extends="npcOfficerBat">
@@ -4697,7 +4702,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcOfficerKnifePA" extends="npcOfficerKnife">
@@ -4715,7 +4720,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcOfficerMachetePA" extends="npcOfficerMachete">
@@ -4733,7 +4738,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcOfficerTRiflePA" extends="npcOfficerTRifle">
@@ -4742,7 +4747,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1AK47PA" extends="npcSoldier1AK47">
@@ -4751,7 +4756,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1BatPA" extends="npcSoldier1Bat">
@@ -4778,7 +4783,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1KnifePA" extends="npcSoldier1Knife">
@@ -4796,7 +4801,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1MachetePA" extends="npcSoldier1Machete">
@@ -4814,7 +4819,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1SMGPA" extends="npcSoldier1SMG">
@@ -4823,7 +4828,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier1TRiflePA" extends="npcSoldier1TRifle">
@@ -4832,7 +4837,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier2AK47PA" extends="npcSoldier2AK47">
@@ -4841,7 +4846,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier2BatPA" extends="npcSoldier2Bat">
@@ -4868,7 +4873,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier2KnifePA" extends="npcSoldier2Knife">
@@ -4886,7 +4891,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier2MachetePA" extends="npcSoldier2Machete">
@@ -4904,7 +4909,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier2TRiflePA" extends="npcSoldier2TRifle">
@@ -4913,7 +4918,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier3AK47PA" extends="npcSoldier3AK47">
@@ -4922,7 +4927,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier3BatPA" extends="npcSoldier3Bat">
@@ -4949,7 +4954,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier3KnifePA" extends="npcSoldier3Knife">
@@ -4967,7 +4972,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier3MachetePA" extends="npcSoldier3Machete">
@@ -4985,7 +4990,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier3TRiflePA" extends="npcSoldier3TRifle">
@@ -4994,7 +4999,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier4AK47PA" extends="npcSoldier4AK47">
@@ -5003,7 +5008,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier4BatPA" extends="npcSoldier4Bat">
@@ -5030,7 +5035,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier4KnifePA" extends="npcSoldier4Knife">
@@ -5048,7 +5053,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier4MachetePA" extends="npcSoldier4Machete">
@@ -5066,7 +5071,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcSoldier4TRiflePA" extends="npcSoldier4TRifle">
@@ -5075,7 +5080,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcAirForceTRiflePA" extends="npcAirForceTRifle">
@@ -5084,7 +5089,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcCosplayerBowPA" extends="npcCosplayerBow">
@@ -5102,7 +5107,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcTattooGurlTRiflePA" extends="npcTattooGurlTRifle">
@@ -5111,7 +5116,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcWrestlerEmptyHandPA" extends="npcWrestlerEmptyHand">
@@ -5129,7 +5134,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconFemaleClubPA" extends="npcReconFemaleClub">
@@ -5147,7 +5152,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconFemaleRocketLPA" extends="npcReconFemaleRocketL">
@@ -5156,7 +5161,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconFemaleTRiflePA" extends="npcReconFemaleTRifle">
@@ -5165,7 +5170,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconMaleAK47PA" extends="npcReconMaleAK47">
@@ -5174,7 +5179,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconMaleClubPA" extends="npcReconMaleClub">
@@ -5192,7 +5197,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconMaleRocketLPA" extends="npcReconMaleRocketL">
@@ -5201,7 +5206,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcReconMaleTRiflePA" extends="npcReconMaleTRifle">
@@ -5210,7 +5215,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultBossClubPA" extends="npcVaultBossClub">
@@ -5237,7 +5242,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultDoctorBatPA" extends="npcVaultDoctorBat">
@@ -5273,7 +5278,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultResidentFemaleAxePA" extends="npcVaultResidentFemaleAxe">
@@ -5318,7 +5323,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultResidentMaleAxePA" extends="npcVaultResidentMaleAxe">
@@ -5372,7 +5377,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultSecurityFemaleAxePA" extends="npcVaultSecurityFemaleAxe">
@@ -5408,7 +5413,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultSecurityFemaleSMGPA" extends="npcVaultSecurityFemaleSMG">
@@ -5417,7 +5422,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultSecurityMaleAxePA" extends="npcVaultSecurityMaleAxe">
@@ -5453,7 +5458,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="825"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <entity_class name="npcVaultSecurityMaleSMGPA" extends="npcVaultSecurityMaleSMG">
@@ -5462,7 +5467,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
       <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
+      <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
   </append>
