@@ -3768,6 +3768,14 @@
   </append>
   <!-- HELPGOOD: patch for RealRad -->
   <removeattribute xpath="/buffs/buff[@name='buffRadiation01']/@tooltip_key"/>
+  <insertAfter xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='Radiation']/triggered_effect[@buff='buffInternalBleeding']">
+    <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="[TNM] Lethal radiation levels!!! R.I.P.">
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="[TNM] Lethal radiation levels!!! R.I.P.">
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
+    </triggered_effect>
+  </insertAfter>
   <append xpath="/buffs/buff[@name='buffRadiation01']">
     <effect_group>
       <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/>
