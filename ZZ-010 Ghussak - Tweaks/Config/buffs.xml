@@ -13674,6 +13674,22 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
   <!-- HELPGOOD: alternative god mode -->
   <set xpath="//requirement[(@name='HasBuff' or @name='!HasBuff' or @name='NotHasBuff') and @buff='god']/@buff">buffGSKGodMode</set>
   <append xpath="/buffs">
+    <buff name="buffGSKNPCragdollIndicator">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,0,0" parent_transform="Head"/>
+      </effect_group>
+      <effect_group>
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" help="alive and standing up"/>
+          <requirement name="!IsAlive" help="dead"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel" parent_transform="Head"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCragdollIndicator"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKfasterLockpicking">
       <stack_type value="ignore"/>
       <duration value="30"/>
