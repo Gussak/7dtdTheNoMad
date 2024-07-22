@@ -39,18 +39,19 @@ iMaxEntries=120
 strLeaderReq='<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader" />'
 : ${fRange:=2.5} #help was 60, but then the last NPC on the engine stack always win. this way, the nearest will show it's info, but you will need to be near it. As they follow you at most 5m dist, 3m is good, but range 3 ends being like +-3.75, and 2.0 is like +-2.5, so 2.5 is about 3m.
 
+strIndent="				"
+
 # PERCENTS
 astrCVarForPercentsList=(
   ".iGSKPlayerNPCInfoAmmoLeftPerc"
   ".iGSKPlayerNPCInfoArmorDmgPercent"
   ".iGSKPlayerNPCInfoPermanentArmorDmg"
-  ".iGSKPlayerNPCInfoRepairSelfArmor"
+  #".iGSKPlayerNPCInfoRepairSelfArmor"
 )
 for strCVar in "${astrCVarForPercentsList[@]}";do
-  strIndent="      "
   echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="0" target="selfAOE" range="'"${fRange}"'">
-'"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LTE" value="0.0" />
-'"${strIndent}"'  '"${strLeaderReq}"'
+'"${strIndent}"'	<requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LTE" value="0.0" />
+'"${strIndent}"'	'"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
 
   iStep=10
@@ -58,15 +59,15 @@ for strCVar in "${astrCVarForPercentsList[@]}";do
     fMin="`bc <<< "scale=2;$i/100"`"
     fMax="`bc <<< "scale=2;$((i+iStep))/100"`"
     echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="'$((i+(iStep/2)))'" target="selfAOE" range="'"${fRange}"'">
-'"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GT" value="'$fMin'" />
-'"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LT" value="'$fMax'" />
-'"${strIndent}"'  '"${strLeaderReq}"'
+'"${strIndent}"'	<requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GT" value="'$fMin'" />
+'"${strIndent}"'	<requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LT" value="'$fMax'" />
+'"${strIndent}"'	'"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   done
   
   echo "${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVar}"'" operation="set" value="100" target="selfAOE" range="'"${fRange}"'">
-'"${strIndent}"'  <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GTE" value="1.00" />
-'"${strIndent}"'  '"${strLeaderReq}"'
+'"${strIndent}"'	<requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="GTE" value="1.00" />
+'"${strIndent}"'	'"${strLeaderReq}"'
 '"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   
   CFGFUNCgencodeApply --subTokenId "`echo ${strCVar} |tr -d '.'`" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
@@ -80,6 +81,7 @@ astrCVarNoLimitList=(
   "fGSKNPCSelfPreventDismissSecs"            ".iGSKPlayerNPCInfoSelfPreventDismissSecs"               13      15         666
   "iGSKNPCHealingMedicine"                   ".iGSKPlayerNPCInfoHealingMedicine"                       5      11        1235 #todo: xmlstarlet to at items.xml look for iGSKNPCHealingMedicine.*NPCMedkitMaxHealValue
   "iGSKNPCfollowingDenySneakTimer"           ".iGSKPlayerNPCInfoDenySneak"                             3       3          60
+  ".fNPCCalcPercTmp"                         ".iGSKPlayerNPCInfoRepairSelfArmor"                       5       5         500 #was in the 100% list, but it can store more than 100%. fGSKNPCRepairSelfArmor is at .fNPCCalcPercTmp
 )
 #for strCVar in "${astrCVarNoLimitList[@]}";do
 for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
@@ -93,10 +95,10 @@ for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
   
   bBreak=false
   iCountEntries=1
-  echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="0" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
-    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="Equals" value="0" />
-    '"${strLeaderReq}"'
-  </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+  echo ''"${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="0" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
+'"${strIndent}"'	<requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="Equals" value="0" />
+'"${strIndent}"'	'"${strLeaderReq}"'
+'"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
   for((i=iBeginValue;i<=iMaxValue;i+=iStep));do
     iStepNext=$((i+iStep))
     strHelp=""
@@ -108,11 +110,11 @@ for((iC=0;iC<${#astrCVarNoLimitList[@]};iC+=nCols));do
     
     ((iCountEntries++))&&:;if((iCountEntries>iMaxEntries));then CFGFUNCerrorExit "too many entries may break the game (may not work at all)";fi
     
-    echo '  <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="'$i'" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
-    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="GTE" value="'$i'" />
-    <requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="LT" value="'$iStepNext'" '"${strHelp}"'/>
-    '"${strLeaderReq}"'
-  </triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
+    echo ''"${strIndent}"'<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="'"${strCVarPlayer}"'" operation="set" value="'$i'" target="selfAOE" range="'"${fRange}"'" help="entry '$iCountEntries'">
+'"${strIndent}"'	<requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="GTE" value="'$i'" />
+'"${strIndent}"'	<requirement name="CVarCompare" cvar="'"${strCVarNPC}"'" operation="LT" value="'$iStepNext'" '"${strHelp}"'/>
+'"${strIndent}"'	'"${strLeaderReq}"'
+'"${strIndent}"'</triggered_effect>' >>"${strFlGenBuf}${strGenTmpSuffix}"
         
     if $bBreak;then break;fi
   done
