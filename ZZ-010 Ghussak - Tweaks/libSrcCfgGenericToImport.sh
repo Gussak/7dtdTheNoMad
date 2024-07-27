@@ -999,6 +999,7 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
 
   export strFlGenLoc="Config/Localization.txt"
   export strFlGenLoa="Config/loadingscreen.xml"
+  export strFlGenEnt="Config/entityclasses.xml"
   export strFlGenEve="Config/gameevents.xml"
   export strFlGenRec="Config/recipes.xml"
   export strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml" #TODO change everywhere to strFlGenIte
