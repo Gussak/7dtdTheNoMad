@@ -230,33 +230,22 @@
       </property>
       <effect_group name="toggle: itemNPCModMode hunt0/treatcontrol1/fullcontrol2: simplified how it works: only 2 modes: or attack or stop attacking completely (as I couldnt be sure other modes combinations were working)" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="set" value="@varNPCModMode"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="add" value="1" help="WORKAROUND: ISSUE: ForceSkip: does ThreatControl differs from FullControl at all? remove this workaround if does.">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="add" value="1" help="WORKAROUND: ISSUE: ForceSkip: does ThreatControl differs from FullControl at all? remove this workaround if does.">
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="GT" value="2"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="GT" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="CVarLogValue" cvar="varNPCModMode"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="CVarLogValue" cvar="iGSKNPCcombatModeRequest"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="0" help="was addbuff buffNPCModModeChange0">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="1" help="was addbuff buffNPCModModeChange1">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="2" help="was addbuff buffNPCModModeChange2">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="2"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="PlaySound" sound="NPCHuntingMode" play_in_head="true">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="PlaySound" sound="NPCTheatControlMode" play_in_head="true">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="PlaySound" sound="NPCFullControlMode" play_in_head="true">
-          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
@@ -285,17 +274,17 @@
       <!-- HELPGOOD: this sets one new control cvar here, and play sounds from buffs here too -->
       <effect_group name="itemNPCModStop" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0">
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0">
           <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="GT" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCResume" play_in_head="true">
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="PlaySound" sound="NPCResume" play_in_head="true">
           <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCHalt" play_in_head="true">
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="PlaySound" sound="NPCHalt" play_in_head="true">
           <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
       <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player? this ever works at all?">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>

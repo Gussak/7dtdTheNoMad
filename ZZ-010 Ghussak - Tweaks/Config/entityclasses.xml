@@ -16,6 +16,12 @@
   <!-- HELPGOOD: only after death/resurrect. buffGSKDetectRespawn must be b4 buffGSKRespawnNoMadBundlesAllowCrafting -->
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
     <effect_group>
+      <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
+      <requirement name="CVarCompare" cvar=".iGSKSneakWithPlayerAllowed" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfCrouch" action="AddBuff" buff="buffGSKNPCsStartSneak3"/>
+      <triggered_effect trigger="onSelfStand" action="AddBuff" buff="buffGSKNPCsStopSneak3"/>
+    </effect_group>
+    <effect_group>
       <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" target="other" tags="melee" help="can only normally parry melee attacks"/>
