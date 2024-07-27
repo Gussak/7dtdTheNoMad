@@ -2210,25 +2210,21 @@
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="INT: sneak mode (this one must be from as far as possible, all of them shall obey from far away and all of them shall have the same values)">
+      <effect_group help="INT: sneak mode (this one must be from as far as possible, all of them shall obey from far away and all of them shall have the same values): follow player sneak: hold fire, follow player standing: hunting">
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="1" target="selfAOE" range="60" help="follow player sneak: hold fire">
-          <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
-          <requirement name="HasBuff" buff="buffNPCModStopAttacking"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="set" value="0" target="selfAOE" range="60" help="hunting">
+          <requirement name="!HasBuff" buff="buffNPCModFullControlMode"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="2" target="selfAOE" range="60" help="follow player standing: hunting">
-          <requirement name="!HasBuff" buff="buffNPCModFullControlMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="set" value="2" target="selfAOE" range="60" help="fullcontrol">
+          <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrdersSC" operation="set" value="0" target="selfAOE" range="60" help="resume attacking">
           <requirement name="!HasBuff" buff="buffNPCModStopAttacking"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="3" target="selfAOE" range="60" help="Only:FullControl">
-          <requirement name="HasBuff" buff="buffNPCModFullControlMode"/>
-          <requirement name="!HasBuff" buff="buffNPCModStopAttacking"/>
-          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrders" operation="set" value="4" target="selfAOE" range="60" help="Only:Stop">
-          <requirement name="!HasBuff" buff="buffNPCModFullControlMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoOrdersSC" operation="set" value="1" target="selfAOE" range="60" help="stop attacking">
           <requirement name="HasBuff" buff="buffNPCModStopAttacking"/>
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
@@ -2672,6 +2668,9 @@
     <effect_group>
       <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="set" value="1" help="set to 2 to disable melee build mode and allow many ranged NPCs following you, even after you equip a ranged weapon">
         <requirement name="CVarCompare" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="Equals" value="0" help="if not set, set default"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCforceDefendThePlayerIfFoesAreTooNear" operation="set" value="1">
+        <requirement name="CVarCompare" cvar="iGSKNPCforceDefendThePlayerIfFoesAreTooNear" operation="Equals" value="0" help="if not set, set default"/>
       </triggered_effect>
     </effect_group>
   </append>

@@ -228,22 +228,38 @@
         <property name="DamageBlock" value="0"/>
         <property name="Sound_start" value=""/>
       </property>
-      <effect_group name="toggle: itemNPCModMode hunt0/treatcontrol1/fullcontrol2" tiered="false">
+      <effect_group name="toggle: itemNPCModMode hunt0/treatcontrol1/fullcontrol2: simplified how it works: only 2 modes: or attack or stop attacking completely (as I couldnt be sure other modes combinations were working)" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <!-- HELPGOOD: useless, is always true right??
         <requirement name="CVarCompare" cvar="$varNPCModModeChange" operation="Equals" value="0" help="this will always be true right?..."/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar=".varNPCModModeTmp" operation="set" value="@varNPCModMode"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar=".varNPCModModeTmp" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar=".varNPCModModeTmp" operation="set" value="0">
-          <requirement name="CVarCompare" cvar=".varNPCModModeTmp" operation="GT" value="2"/>
+-->
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="set" value="@varNPCModMode"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="add" value="1" help="WORKAROUND: ISSUE: ForceSkip: does ThreatControl differs from FullControl at all? remove this workaround if does.">
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCcombatModeRequest" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="GT" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="CVarLogValue" cvar="varNPCModMode"/>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="CVarLogValue" cvar="iGSKNPCcombatModeRequest"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffNPCModModeChange0">
-          <requirement name="CVarCompare" cvar=".varNPCModModeTmp" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffNPCModModeChange1">
-          <requirement name="CVarCompare" cvar=".varNPCModModeTmp" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffNPCModModeChange2">
-          <requirement name="CVarCompare" cvar=".varNPCModModeTmp" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="2"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$varNPCModModeChange" operation="set" value="0"/>
       </effect_group>
@@ -382,6 +398,18 @@
       <effect_group tiered="false" help="at player">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="set" value="1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKMeleeBuildNPClimiterEnabled" operation="set" value="2"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGNPCForceDefendThePlayerTooNearFoe">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGNPCMeleeBuildLimitFollowers"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="CustomIconTint" value="00a0ff"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+      <effect_group tiered="false" help="at player">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCforceDefendThePlayerIfFoesAreTooNear" operation="set" value="1" help="enabled"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCforceDefendThePlayerIfFoesAreTooNear" operation="set" value="2" help="disabled (because 0 is not set, so will set the default)"/>
       </effect_group>
     </item>
   </append>
