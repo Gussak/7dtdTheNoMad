@@ -24,6 +24,20 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKNPCGivePowerArmorToNPCtrick">
+      <property name="Extends" value="NPCConsumableBase"/>
+      <property name="DescriptionKey" value="dkNPCkits"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property name="CustomIconTint" value="0,180,255"/>
+      <property name="EconomicValue" value="2150"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="0" help="this is the detection of not having buffGSKNPCHiredFollowingPowerArmorUse"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKNPCPlayerGivesPowerArmorToNPCTrick"/>
+      </effect_group>
+    </item>
     <item name="GSKNPCHiredGetsPowerArmor">
       <property name="Extends" value="NPCConsumableBase"/>
       <property name="DescriptionKey" value="dkNPCkits"/>

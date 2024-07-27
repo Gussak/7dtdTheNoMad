@@ -566,12 +566,10 @@
     </buff>
     <buff name="buffGSKNPCPlayerGivesPowerArmorToNPCTrick">
       <stack_type value="ignore"/>
-      <duration value="0.05"/>
-      <!-- HELPGOOD:TODOB
-			todob call this buff from a 2150 coins item GSKNPCGivePowerArmor, document: it will kill your single follower and spawn new one
-			todob get the follower NPC id .iGSKPlayerNPCInfoSpawnID to spawn into .iGSKNPCspawnIDtmp
--->
+      <duration value="1.0"/>
+      <update_rate value="0.75"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCspawnIDtmp" operation="set" value="@.iGSKPlayerNPCInfoSpawnID"/>
         <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_SpawnNPCwithID_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnNPCPA_1" help="npcBakerAxe">
           <requirement name="CVarCompare" cvar=".iGSKNPCspawnIDtmp" operation="Equals" value="1"/>
@@ -1055,9 +1053,10 @@
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_SpawnNPCwithID_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
       </effect_group>
-      <!-- HELPGOOD:TODOB
-			todob kill the single follower that will drop its inventory to let player fill the PA one
--->
+      <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="10" action="ModifyStats" stat="Health" operation="add" value="-32000">
+        <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+        <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+      </triggered_effect>
     </buff>
     <buff name="buffHiredNPChudInfo">
       <duration value="0.05"/>
