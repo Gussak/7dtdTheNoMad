@@ -880,56 +880,6 @@
         <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:TNM:TeleportToHomeOrBackCompleted"/>
       </effect_group>
     </buff>
-    <buff name="buffNPCdmgArmorExplosion" hidden="true" remove_on_death="false">
-      <stack_type value="replace"/>
-      <duration value="0.05"/>
-      <effect_group>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKNPCarmorDmgPercAdd add randomFloat(0.15,0.35)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,350)"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.15,0.35)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=751:      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="add" value="randomFloat(0.15,0.35)"/> -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKHiredNPCSkipHealHPOnce" operation="add" value="1"/>
-      </effect_group>
-    </buff>
-    <buff name="buffHiredNPCdamageArmor103" hidden="true" remove_on_death="false">
-      <stack_type value="replace"/>
-      <duration value="36000"/>
-      <requirements>
-        <requirement name="!EntityTagCompare" tags="player"/>
-      </requirements>
-      <effect_group>
-        <triggered_effect help="FixTinyRandomFloat:was fGSKNPCarmorDmgPercAdd set randomFloat(0.0001,0.0015)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,15)"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="10000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0001,0.0015)">
-          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=775:      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="randomFloat(0.0001,0.0015)"> -->
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercAdd" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercent" operation="add" value="@fGSKNPCarmorDmgPercAdd"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercAdd" operation="set" value="0"/>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCminDmgToLetRepair" operation="set" value="@fGSKNPCPermanentArmorDmg"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCminDmgToLetRepair" operation="add" value="@fTransferNPCRepairArmor"/>
-      </effect_group>
-      <effect_group name="slow repair armor and cause permanent unrepairable damage">
-        <requirement name="CVarCompare" cvar="fGSKNPCRepairSelfArmor" operation="GTE" value="@fTransferNPCRepairArmor"/>
-        <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="@fGSKNPCminDmgToLetRepair"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercent" operation="subtract" value="@fTransferNPCRepairArmor"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKtmp" operation="set" value="@fTransferNPCRepairArmor"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKtmp" operation="divide" value="5"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCPermanentArmorDmg" operation="add" value="@.fGSKtmp"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCRepairSelfArmor" operation="subtract" value="@fTransferNPCRepairArmor"/>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercent" operation="set" value="1.0">
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GT" value="1.0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKNPCarmorDmgPercent" operation="set" value="@fGSKNPCPermanentArmorDmg">
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="LT" value="@fGSKNPCPermanentArmorDmg"/>
-        </triggered_effect>
-        <passive_effect name="PhysicalDamageResist" operation="perc_subtract" value="@fGSKNPCarmorDmgPercent"/>
-      </effect_group>
-    </buff>
   </append>
   <append xpath="/buffs/buff[       @name='buffInjuryAbrasion' or       @name='buffInjuryBleeding' or       @name='buffInjuryConcussion' or       @name='buffInjuryCrippled01' or       @name='buffInjuryKnockdown01' or       @name='buffInjuryKnockdown02' or       @name='buffInjuryStunned00' or       @name='buffInjuryStunned01' or       @name='buffInjuryStunned02' or       @name='buffInjuryStunned03' or       @name='buffInjuryUnconscious'     ]">
     <effect_group>
@@ -13439,69 +13389,6 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         </triggered_effect>
         <triggered_effect trigger="onSelfJump" action="PlaySound" sound="player#powerattack" play_in_head="true"/>
         <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKCheckJumpKick"/>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKNPCsStartSneak3" hidden="true">
-      <stack_type value="ignore"/>
-      <duration value="10"/>
-      <update_rate value="1"/>
-      <effect_group help="init/update">
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="set" value="0" help="phases order below must be inverted"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="add" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="GTE" value="1"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group help="log">
-        <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKNPCsStartSneak3'"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCSneakModePhase"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_crouching"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModMode"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModStopAttacking"/>
-      </effect_group>
-      <effect_group help="finish">
-        <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="GTE" value="4" help="because related buffs from NPC mod have a duration of 3s"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStartSneak3"/>
-      </effect_group>
-      <effect_group help="apply">
-        <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3"/>
-        <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="2" help="fullcontrol"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1" help="halt/stop"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="add" value="1"/>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKNPCsStopSneak3" hidden="true">
-      <stack_type value="ignore"/>
-      <duration value="10"/>
-      <update_rate value="1"/>
-      <effect_group help="init/update">
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="set" value="0" help="phases order below must be inverted"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1">
-          <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="GTE" value="1"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group help="log">
-        <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKNPCsStopSneak3'"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNPCHuntModePhase"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_crouching"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModMode"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="varNPCModStopAttacking"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKNearbyFoeAliveCount3m"/>
-      </effect_group>
-      <effect_group help="finish">
-        <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="GTE" value="4" help="because related buffs from NPC mod have a duration of 3s"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStopSneak3"/>
-      </effect_group>
-      <effect_group help="apply: simplified how it works: only 2 modes: or attack or stop attacking completely (as I couldnt be sure other modes combinations were working)">
-        <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
-        <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="Equals" value="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="0" help="hunting"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0" help="resume"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1"/>
       </effect_group>
     </buff>
   </append>

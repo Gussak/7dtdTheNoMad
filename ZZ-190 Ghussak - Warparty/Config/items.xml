@@ -6,12 +6,30 @@
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property name="CustomIconTint" value="0000ff"/>
     </item>
+    <item name="GSKNPCHiredFixPermanentPowerArmorDmg">
+      <property name="Extends" value="NPCConsumableBase"/>
+      <property name="DescriptionKey" value="dkNPCkits"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property name="CustomIconTint" value="0,180,255"/>
+      <property name="EconomicValue" value="2150"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="1" help="this is the detection of not having buffGSKNPCHiredFollowingPowerArmorUse"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoPermanentArmorDmg" operation="GTE" value="0.25"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" target="selfAOE" range="10" action="ModifyCVar" cvar="fGSKNPCPermanentArmorDmg" operation="set" value="0">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="follow"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
     <item name="GSKNPCHiredGetsPowerArmor">
       <property name="Extends" value="NPCConsumableBase"/>
       <property name="DescriptionKey" value="dkNPCkits"/>
       <property name="CustomIcon" value="armorSteelSetParts"/>
       <property name="CustomIconTint" value="00a0ff"/>
-      <property name="EconomicValue" value="300" help="was 600, to match +- the original NPC with powerarmor price, but now their inventory size changed and only original powerarmor NPC has max inventory size! so now it is only the protection/shield, not the backpack size and strength to carry items."/>
+      <property name="EconomicValue" value="300"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="Equals" value="1" help="you need to have only one follower to use this. It is one power armor per follower. No need to use with the NPC that already comes with power armor. TODO?: The other NPC items are more for the action/fight; we would need to be able to target one NPC to use them w/o losing the item, can it be done?; or we could put the items on their inventory and they would use them on demand, this would be the perfect solution! to ex. heal everyone with a single use is too powerful...; May be divide the healing by the amount of followers? but then it becomes overly complex and inneffective..; It could target the most damaged one but how? feedback with the randomID? overly complex too.."/>
         <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoHasCustomPowerArmor" operation="Equals" value="0" help="this is the detection of not having buffGSKNPCHiredFollowingPowerArmorUse"/>
@@ -247,6 +265,7 @@
         <triggered_effect trigger="onSelfPrimaryActionStart" action="PlaySound" sound="NPCFullControlMode" play_in_head="true">
           <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="2"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="iGSKNPCPersistent_varNPCModMode" operation="set" value="@varNPCModMode"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
       <!-- HELPGOOD: logic copied from NPC mod, it uses buffs to set control cvars
@@ -284,6 +303,7 @@
         <triggered_effect trigger="onSelfSecondaryActionStart" action="PlaySound" sound="NPCHalt" play_in_head="true">
           <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="iGSKNPCPersistent_varNPCModStopAttacking" operation="set" value="@varNPCModStopAttacking"/>
         <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
       <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player? this ever works at all?">
