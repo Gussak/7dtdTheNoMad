@@ -261,6 +261,7 @@
         <triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1">
           <requirement name="CVarCompare" cvar="iGSKNPCcombatModeRequest" operation="Equals" value="2"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$varNPCModModeChange" operation="set" value="0"/>
       </effect_group>
       <!-- HELPGOOD: logic copied from NPC mod, it uses buffs to set control cvars
@@ -305,6 +306,7 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCResume" play_in_head="true"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="0" help="display resume icon"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCAttak1Stop0Next" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
       <effect_group name="itemNPCModStop:stop" tiered="false">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
@@ -315,8 +317,9 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="PlaySound" sound="NPCHalt" play_in_head="true"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1" help="display halt icon"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCAttak1Stop0Next" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKNPCApplyNPCAction"/>
       </effect_group>
-      <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player?">
+      <effect_group name="itemNPCHelp" tiered="false" help="should this make NPCs stop attacking other mobs and try kill the ones attacking the player? this ever works at all?">
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="selfAOE" range="20" buff="buffNPCModAttacking"/>
         <triggered_effect trigger="onSelfPrimaryActionStart" action="ShowToolbeltMessage" message="Call followers' help!"/>

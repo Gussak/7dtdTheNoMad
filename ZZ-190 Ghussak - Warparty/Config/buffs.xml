@@ -2663,6 +2663,46 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKNPCHealingMedicine"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKNPCApplyNPCAction" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <update_rate value="0.05"/>
+      <duration value="0"/>
+      <effect_group name="this was removed from buffNPCModVerifyCurrentActions, why? it make some things stop working...">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModStopAttacking">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModStopAttacking" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModThreatControlMode">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModThreatControlMode">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" cvar="varNPCModMode" operation="Equals" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCApplyNPCAction"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
     <effect_group>
