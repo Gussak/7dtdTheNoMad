@@ -58,7 +58,7 @@
     </effect_group>
   </append>
   <append xpath="/entity_classes">
-    <entity_class name="npcHarleyBatFriendlyPA" extends="npcAdvancedBatTemplate" help="harley had no friendly option">
+    <entity_class name="npcHarleyBatFriendly" extends="npcAdvancedBatTemplate" help="harley had no friendly option">
       <property name="Tags" value="UMA2,entity,female,npc,melee,hireable,DRMid"/>
       <property name="Faction" value="whiteriver"/>
       <property name="SoundRandomTime" value="600" help="only works if remove harleyvoice tag right?"/>
@@ -84,13 +84,16 @@
       <property name="SoundAlert" value="HarleyAlert"/>
       <property name="SoundAttack" value="HarleyAttack"/>
       <property name="SoundSense" value="HarleySense"/>
+      <property name="LootListAlive" value="traderNPCbigBackpack"/>
+      <property name="LootDropProb" value="0.05"/>
+      <property name="HireCost" value="50"/>
+    </entity_class>
+    <entity_class name="npcHarleyBatFriendlyPA" extends="npcHarleyBatFriendly">
+      <property name="HireCost" value="750"/>
       <effect_group>
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
-      <property name="LootListAlive" value="traderNPCbigBackpack"/>
-      <property name="HireCost" value="750"/>
-      <property name="LootDropProb" value="0.05"/>
     </entity_class>
     <!-- HELPGOOD: codegen for alt all NPCs with power armor option: kill the npc and spawn this one. TODO: every normal non PA NPC shall add a buff to the player that will request spawn it's equivalent PA NPC. it writes a cvar to the player with a number of the requested PA NPC
 	clear;egrep -o 'name="npc[^"]+"' "0-XNPCCore/Config/entityclasses.xml" "1-NPC."*"/Config/entityclasses.xml" |egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" |egrep -v "TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" |sort -u |sed -r 's@.*"(.*)".*@\1@g' |while read strNm;do \
