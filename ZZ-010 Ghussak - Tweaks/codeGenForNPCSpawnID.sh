@@ -39,46 +39,40 @@ source ./libSrcCfgGenericToImport.sh --LIBgencodeTrashLast
 
 #clear;
 
-iSpawnIndex=1;
-
 IFS=$'\n' read -d '' -r -a astrList < <(egrep '<entity_class.*name="npc[^"]*(Axe|Bat|Club|EmptyHand|Knife|Machete)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -vi "npcHarley|npcAdvanced|Template|EmptyHand|.*PA$" |sort -u |sed -r -e 's@<entity_class name="(.*)@\1@')&&:;
 
 declare -p astrList
 
+strModFolder="$(ls -d ../*Ghussak*Warparty)"
+declare -p strModFolder
+
 # append the ID cvar to entity
+iSpawnIndex=1;
 for strNPC in "${astrList[@]}";do
- echo "<append help=\"ID=$iSpawnIndex\" xpath=\"/entity_classes/entity_class[@name='$strNPC']\"><effect_group><triggered_effect trigger=\"onSelfFirstSpawn\" action=\"ModifyCVar\" cvar=\"iGSKNPCspawnID\" operation=\"set\" value=\"$iSpawnIndex\"/></effect_group></append>" >>"${strFlGenEnt}${strGenTmpSuffix}"
+ echo "	<append help=\"ID=$iSpawnIndex\" xpath=\"/entity_classes/entity_class[@name='$strNPC']\"><effect_group><triggered_effect trigger=\"onSelfFirstSpawn\" action=\"ModifyCVar\" cvar=\"iGSKNPCspawnID\" operation=\"set\" value=\"$iSpawnIndex\"/></effect_group></append>" >>"${strFlGenEnt}${strGenTmpSuffix}"
  ((iSpawnIndex++))&&:
 done;
-strFlToPatch="$(ls -d ../*Ghussak*Warparty/${strFlGenEnt})";declare -p strFlToPatch
-CFGFUNCgencodeApply "${strFlGenEnt}${strGenTmpSuffix}" "${strFlToPatch}"
+CFGFUNCgencodeApply "${strFlGenEnt}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEnt}"
 
 # inform the player of the NPC spawn ID
-#echo;
-#echo '<!-- HELPGOOD: run the CODEGEN:iGSKNPCspawnID from entityclasses.xml -->';
 for((iID=1;iID<iSpawnIndex;iID++));do
- echo "<triggered_effect trigger=\"onSelfBuffStart\" action=\"ModifyCVar\" cvar=\".iGSKPlayerNPCInfoSpawnID\" operation=\"set\" value=\"$iID\" target=\"selfAOE\" range=\"2.5\"><requirement name=\"CVarCompare\" cvar=\"iGSKNPCspawnID\" operation=\"Equals\" value=\"$iID\" /><requirement name=\"CVarCompare\" target=\"other\" cvar=\"EntityID\" operation=\"Equals\" value=\"@Leader\" /></triggered_effect>" >>"${strFlGenBuf}${strGenTmpSuffix}"
+ echo "				<triggered_effect trigger=\"onSelfBuffStart\" action=\"ModifyCVar\" cvar=\".iGSKPlayerNPCInfoSpawnID\" operation=\"set\" value=\"$iID\" target=\"selfAOE\" range=\"2.5\"><requirement name=\"CVarCompare\" cvar=\"iGSKNPCspawnID\" operation=\"Equals\" value=\"$iID\" /><requirement name=\"CVarCompare\" target=\"other\" cvar=\"EntityID\" operation=\"Equals\" value=\"@Leader\" /></triggered_effect>" >>"${strFlGenBuf}${strGenTmpSuffix}"
 done;
-strFlToPatch="$(ls -d ../*Ghussak*Warparty/${strFlGenBuf})";declare -p strFlToPatch
-CFGFUNCgencodeApply --subTokenId "InfoPlayerNPCspawnID" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlToPatch}"
+CFGFUNCgencodeApply --subTokenId "InfoPlayerNPCspawnID" "${strFlGenBuf}${strGenTmpSuffix}" "${strModFolder}/${strFlGenBuf}"
 
 # create spawners for NPCs with the ID
-#echo;
-#echo '<!-- HELPGOOD: run the CODEGEN:iGSKNPCspawnID from entityclasses.xml -->';
 iID=1;for strNPC in "${astrList[@]}";do
- echo "<action_sequence name=\"eventGSKSpawnNPCPA_${iID}\"><action class=\"SpawnEntity\"><property name=\"entity_names\" value=\"$strNPC\" /><property name=\"spawn_count\" value=\"1\" /><property name=\"safe_spawn\" value=\"true\" /><property name=\"spawn_from_position\" value=\"true\" /><property name=\"min_distance\" value=\"2\" /><property name=\"max_distance\" value=\"3\" /></action></action_sequence>" >>"${strFlGenEve}${strGenTmpSuffix}"
+ echo "	<action_sequence name=\"eventGSKSpawnNPCPA_${iID}\"><action class=\"SpawnEntity\"><property name=\"entity_names\" value=\"$strNPC\" /><property name=\"spawn_count\" value=\"1\" /><property name=\"safe_spawn\" value=\"true\" /><property name=\"spawn_from_position\" value=\"true\" /><property name=\"min_distance\" value=\"2\" /><property name=\"max_distance\" value=\"3\" /></action></action_sequence>" >>"${strFlGenEve}${strGenTmpSuffix}"
  ((iID++))&&:
 done;
-strFlToPatch="$(ls -d ../*Ghussak*Warparty/${strFlGenEve})";declare -p strFlToPatch
-CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strFlToPatch}"
+CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEve}"
 
 # spawn the requested NPC with the ID
 iID=1;for strNPC in "${astrList[@]}";do
- echo "<triggered_effect trigger=\"onSelfBuffUpdate\" action=\"CallGameEvent\" event=\"eventGSKSpawnNPCPA_${iID}\" help=\"${strNPC}\"/>" >>"${strFlGenBuf}${strGenTmpSuffix}"
+ echo "				<triggered_effect trigger=\"onSelfBuffUpdate\" action=\"CallGameEvent\" event=\"eventGSKSpawnNPCPA_${iID}\" help=\"${strNPC}\"><requirement name=\"CVarCompare\" cvar=\".iGSKNPCspawnIDtmp\" operation=\"Equals\" value=\"$iID\"/></triggered_effect>" >>"${strFlGenBuf}${strGenTmpSuffix}"
  ((iID++))&&:
 done
-strFlToPatch="$(ls -d ../*Ghussak*Warparty/${strFlGenBuf})";declare -p strFlToPatch
-CFGFUNCgencodeApply --subTokenId "SpawnNPCwithID" "${strFlGenBuf}${strGenTmpSuffix}" "${strFlToPatch}"
+CFGFUNCgencodeApply --subTokenId "SpawnNPCwithID" "${strFlGenBuf}${strGenTmpSuffix}" "${strModFolder}/${strFlGenBuf}"
 
 CFGFUNCgencodeApply --cleanChkDupTokenFiles
 CFGFUNCwriteTotalScriptTimeOnSuccess
