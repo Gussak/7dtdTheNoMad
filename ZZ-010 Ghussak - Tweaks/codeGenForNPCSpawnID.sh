@@ -62,7 +62,7 @@ CFGFUNCgencodeApply --subTokenId "InfoPlayerNPCspawnID" "${strFlGenBuf}${strGenT
 
 # create spawners for NPCs with the ID
 iID=1;for strNPC in "${astrList[@]}";do
- echo "	<action_sequence name=\"eventGSKSpawnNPCPA_${iID}\"><action class=\"SpawnEntity\"><property name=\"entity_names\" value=\"$strNPC\" /><property name=\"spawn_count\" value=\"1\" /><property name=\"safe_spawn\" value=\"true\" /><property name=\"spawn_from_position\" value=\"true\" /><property name=\"min_distance\" value=\"2\" /><property name=\"max_distance\" value=\"3\" /></action></action_sequence>" >>"${strFlGenEve}${strGenTmpSuffix}"
+ echo "	<action_sequence name=\"eventGSKSpawnNPCPA_${iID}\"><action class=\"SpawnEntity\"><property name=\"entity_names\" value=\"${strNPC}PA\" /><property name=\"spawn_count\" value=\"1\" /><property name=\"safe_spawn\" value=\"true\" /><property name=\"spawn_from_position\" value=\"true\" /><property name=\"min_distance\" value=\"2\" /><property name=\"max_distance\" value=\"3\" /></action></action_sequence>" >>"${strFlGenEve}${strGenTmpSuffix}"
  ((iID++))&&:
 done;
 CFGFUNCgencodeApply "${strFlGenEve}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEve}"

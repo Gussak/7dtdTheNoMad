@@ -1052,11 +1052,11 @@
           <requirement name="CVarCompare" cvar=".iGSKNPCspawnIDtmp" operation="Equals" value="160"/>
         </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_SpawnNPCwithID_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="10" action="ModifyStats" stat="Health" operation="add" value="-32000">
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
       </effect_group>
-      <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="10" action="ModifyStats" stat="Health" operation="add" value="-32000">
-        <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
-        <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
-      </triggered_effect>
     </buff>
     <buff name="buffHiredNPChudInfo">
       <duration value="0.05"/>
@@ -3898,7 +3898,7 @@
     <buff name="buffGSKNPCsStartSneak3" hidden="true">
       <stack_type value="ignore"/>
       <duration value="10"/>
-      <update_rate value="1"/>
+      <update_rate value="0.05"/>
       <effect_group help="init/update">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="set" value="0" help="phases order below must be inverted"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCSneakModePhase" operation="add" value="1">
@@ -3918,7 +3918,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStartSneak3"/>
       </effect_group>
       <effect_group help="apply">
-        <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3" help="this will force it to wait up to the timeout limit"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCSneakModePhase" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="2" help="fullcontrol"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="1" help="halt/stop"/>
@@ -3929,7 +3929,7 @@
     <buff name="buffGSKNPCsStopSneak3" hidden="true">
       <stack_type value="ignore"/>
       <duration value="10"/>
-      <update_rate value="1"/>
+      <update_rate value="0.05"/>
       <effect_group help="init/update">
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="set" value="0" help="phases order below must be inverted"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1">
@@ -3950,7 +3950,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNPCsStopSneak3"/>
       </effect_group>
       <effect_group help="apply: simplified how it works: only 2 modes: or attack or stop attacking completely (as I couldnt be sure other modes combinations were working)">
-        <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3" help="this will force it to wait up to the timeout limit"/>
         <requirement name="CVarCompare" cvar=".iGSKNPCHuntModePhase" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModMode" operation="set" value="@iGSKNPCPersistent_varNPCModMode" help="to restore to the persistent attack mode: hunting/threatcontrol/fullcontrol"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="varNPCModStopAttacking" operation="set" value="@iGSKNPCPersistent_varNPCModStopAttacking" help="halt/resume"/>
