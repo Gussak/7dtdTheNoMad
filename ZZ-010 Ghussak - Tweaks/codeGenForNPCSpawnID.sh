@@ -52,7 +52,29 @@ for strNPC in "${astrList[@]}";do
  echo "	<append help=\"ID=$iSpawnIndex\" xpath=\"/entity_classes/entity_class[@name='$strNPC']\"><effect_group><triggered_effect trigger=\"onSelfFirstSpawn\" action=\"ModifyCVar\" cvar=\"iGSKNPCspawnID\" operation=\"set\" value=\"$iSpawnIndex\"/></effect_group></append>" >>"${strFlGenEnt}${strGenTmpSuffix}"
  ((iSpawnIndex++))&&:
 done;
-CFGFUNCgencodeApply "${strFlGenEnt}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEnt}"
+CFGFUNCgencodeApply --subTokenId "PrepareNPCID" "${strFlGenEnt}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEnt}"
+
+# create power armor NPCs
+egrep -o 'name="npc[^"]+"' "../0-XNPCCore/Config/entityclasses.xml" "../1-NPC."*"/Config/entityclasses.xml" \
+	|egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" \
+	|egrep -v "DummyMatchInfo_TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" \
+	|sort -u |sed -r 's@.*"(.*)".*@\1@g' \
+	|while read strNm;do
+		nHireCost=750;
+		if echo "$strNm" |egrep "AK47|SMG|M60|AShotgun|PShotgun|SRifle|HRifle|TRifle|RocketL" -qi;then ((nHireCost+=150))&&:;fi;
+		if echo "$strNm" |egrep "PipeShotgun|Pistol|PipePistol|PipeRifle" -qi;then ((nHireCost+=75))&&:;fi;
+		echo -en '
+			<entity_class name="'"${strNm}PA"'" extends="'"${strNm}"'">
+				<effect_group>
+					<triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+					<passive_effect name="PhysicalDamageResist" operation="base_set" value="90" />
+				</effect_group>
+				<property name="LootListAlive" value="traderNPCbigBackpack"/>
+				<property name="HireCost" value="'"${nHireCost}"'"/>
+				<property name="LootDropProb" value="0.05"/>
+			</entity_class>' >>"${strFlGenEnt}${strGenTmpSuffix}"
+	done
+CFGFUNCgencodeApply --subTokenId "CreatePowerArmorNPCs" "${strFlGenEnt}${strGenTmpSuffix}" "${strModFolder}/${strFlGenEnt}"
 
 # inform the player of the NPC spawn ID
 for((iID=1;iID<iSpawnIndex;iID++));do

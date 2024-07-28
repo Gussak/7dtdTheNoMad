@@ -24,6 +24,9 @@
   </append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]" help="if you cant find them for any reason and to prevent that being a boring task as we should be able to just ask loudly where they are ;)">
     <property name="NavObject" value="navNPCfriendly"/>
+    <triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffNPCtookDamageFightBack">
+      <requirement name="CVarCompare" cvar="iGSKNPCleaderIsSneaking" operation="Equals" value="0"/>
+    </triggered_effect>
   </append>
   <append xpath="/entity_classes/entity_class[@name='npcAnimalFox']/property[@name='Tags']/@value" help="to let pettable animals be considered in the followers limiter">,melee</append>
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
@@ -95,23 +98,7 @@
         <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
       </effect_group>
     </entity_class>
-    <!-- HELPGOOD: codegen for alt all NPCs with power armor option: kill the npc and spawn this one. TODO: every normal non PA NPC shall add a buff to the player that will request spawn it's equivalent PA NPC. it writes a cvar to the player with a number of the requested PA NPC
-	clear;egrep -o 'name="npc[^"]+"' "0-XNPCCore/Config/entityclasses.xml" "1-NPC."*"/Config/entityclasses.xml" |egrep -v "Ambush|DeusEx|Template|AnimalFox|PowerArmor|\"npc\"" |egrep -v "TheseAreEntitiesThatCausedErrorOnLogDontKnowWhy|npcBanditLeader" |sort -u |sed -r 's@.*"(.*)".*@\1@g' |while read strNm;do \
-		nHireCost=750; \
-		if echo "$strNm" |egrep "AK47|SMG|M60|AShotgun|PShotgun|SRifle|HRifle|TRifle|RocketL" -qi;then ((nHireCost+=150))&&:;fi; \
-		if echo "$strNm" |egrep "PipeShotgun|Pistol|PipePistol|PipeRifle" -qi;then ((nHireCost+=75))&&:;fi; \
-		echo -en '
-			<entity_class name="'"${strNm}PA"'" extends="'"${strNm}"'">
-				<effect_group>
-					<triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
-					<passive_effect name="PhysicalDamageResist" operation="base_set" value="90" />
-				</effect_group>
-				<property name="LootListAlive" value="traderNPCbigBackpack"/>
-				<property name="HireCost" value="'"${nHireCost}"'"/>
-				<property name="LootDropProb" value="0.05"/>
-			</entity_class>';\
-	done
--->
+    <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_CreatePowerArmorNPCs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
     <entity_class name="npcBakerAK47PA" extends="npcBakerAK47">
       <effect_group>
         <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
@@ -5476,8 +5463,9 @@
       <property name="HireCost" value="900"/>
       <property name="LootDropProb" value="0.05"/>
     </entity_class>
+    <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_CreatePowerArmorNPCs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
   </append>
-  <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
+  <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_PrepareNPCID_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
   <append help="ID=1" xpath="/entity_classes/entity_class[@name='npcBakerAxe']">
     <effect_group>
       <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKNPCspawnID" operation="set" value="1"/>
@@ -6278,5 +6266,5 @@
       <triggered_effect trigger="onSelfFirstSpawn" action="ModifyCVar" cvar="iGSKNPCspawnID" operation="set" value="160"/>
     </effect_group>
   </append>
-  <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
+  <!-- HELPGOOD:_AUTOGENCODE_CODEGENFORNPCSPAWNID_PrepareNPCID_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: codeGenForNPCSpawnID.sh ===== -->
 </GhussakTweaks>
