@@ -3540,6 +3540,7 @@
         <requirement name="CVarCompare" cvar="iNPCAmmoSpent" operation="GTE" value="@iNPCAmmoLimit"/>
         <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="0"/>
         <requirement name="!IsBloodMoon" help="as they wont talk to the player if there are enemies nearby"/>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30m" operation="LTE" value="0" help="as they wont talk to the player if there are enemies nearby, and they shouldnt leave in a middle of a fight"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iNPCDismissToRequireReHiring" operation="set" value="1" compare_type="or">
           <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="2" help="buffOrderGuardHere/There(Stay). stay because patrol is too dificult to deal with in-game."/>
@@ -3995,8 +3996,13 @@
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <effect_group help="ragdoll follower if too close">
-      <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="0.5" force="50" target="selfAOE" range="0.65" target_tags="npc" help="the tiny force is also good to push it a bit helping on placing blocks as it moves away">
+      <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="0.5" force="100" target="selfAOE" range="0.65" target_tags="npc" help="the tiny force is also good to push it a bit helping on placing blocks as it moves away">
         <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="0.5" force="200" target="selfAOE" range="0.65" target_tags="npc" help="the tiny force is also good to push it a bit helping on placing blocks as it moves away">
+        <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="0" help="pushes also friendly but non hired or non hirable NPCs that are blocking the path"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
       </triggered_effect>
     </effect_group>
