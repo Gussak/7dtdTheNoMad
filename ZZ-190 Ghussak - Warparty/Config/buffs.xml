@@ -3562,6 +3562,14 @@
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="add hint about NPC armor damage">
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="hotembers" local_offset="0,0,0" local_rotation="0,0,0" parent_transform="Head" help="or p_burning_barrel, forge, ember_pile chemistryStation candleWall_flame candle_flame, 1 to 8, #@modfolder(0-SphereIICore):Resources/PathSmoke.unity3d?P_PathSmoke_X">
+          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="hotembers">
+          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="LT" value="0.75"/>
+        </triggered_effect>
+      </effect_group>
       <effect_group help="SELF:RANGED OR MELEE (limits are counted and set independently for ranged and melee): self stop following if hired ranged self count reached limit.">
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
         <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
