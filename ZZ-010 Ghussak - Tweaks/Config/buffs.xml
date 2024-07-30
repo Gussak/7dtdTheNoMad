@@ -13582,7 +13582,9 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <update_rate value="0.25"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,0,0" parent_transform="Head"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" parent_transform="Head" help="TODO:ISSUE:TemporaryWorkaround: this was meant to know when it will allow a headshot to happen as headshots on NPCs arent detected if they are not in ragdoll mode, but when they start standing up they seem to not be in ragdoll mode anymore anyway, so there is only a breath moment the headshot may kick in while they are fallen">
+          <requirement name="EntityTagCompare" tags="bandit"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirements compare_type="or">
