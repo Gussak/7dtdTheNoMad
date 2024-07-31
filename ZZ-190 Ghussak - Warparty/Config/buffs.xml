@@ -438,6 +438,12 @@
           <requirement name="!EntityTagCompare" target="other" tags="bandit" help="some raiders had this buff on log on death, so better be sure this way to prevent that"/>
           <requirement name="!HasBuff" target="other" buff="buffGSKNPCHiredFollowingHeal"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNPCarmorTooDamagedVisualHint" target="selfAOE" range="60">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+          <requirement name="!EntityTagCompare" target="other" tags="bandit" help="some raiders had this buff on log on death, so better be sure this way to prevent that"/>
+          <requirement name="!HasBuff" target="other" buff="buffNPCarmorTooDamagedVisualHint"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fTransferNPCPDS" operation="set" value="@.buffLeaderLimitsHiredNPCsAmount_update_rate" target="self" help="IMPORTANT!!!! KEEP fTransferNPCPDS IN SYNC WITH 'buffLeaderLimitsHiredNPCsAmount106' update_rate!!!!!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fNPCPreventDismissSecs">
           <requirement name="CVarCompare" cvar=".iGSKDbgNpcInfo" operation="Equals" value="1"/>
@@ -3562,14 +3568,6 @@
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="add hint about NPC armor damage">
-        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="hotembers" local_offset="0,0,0" local_rotation="0,0,0" parent_transform="Head" help="or p_burning_barrel, forge, ember_pile chemistryStation candleWall_flame candle_flame, 1 to 8, #@modfolder(0-SphereIICore):Resources/PathSmoke.unity3d?P_PathSmoke_X">
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="0.75"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="hotembers">
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="LT" value="0.75"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group help="SELF:RANGED OR MELEE (limits are counted and set independently for ranged and melee): self stop following if hired ranged self count reached limit.">
         <requirement name="CVarCompare" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="Equals" value="@iGSKNPCFollowAboveLimit"/>
         <requirement name="CVarCompare" cvar="iGSKNPCSpecialFollowMode" operation="Equals" value="1"/>
@@ -3637,6 +3635,24 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="_buffPlayerHiredNPCInc"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNPCarmorTooDamagedVisualHint">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group help="ISSUE: the only particle that seems to work everywhere is p_burning_barrel? but it emits light :(">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" local_rotation="0,0,0" parent_transform="Head" help="or hotembers(fail) p_burning_barrel(ok:offset:0,-1,0) forge ember_pile chemistryStation(fail) candleWall_flame candle_flame(fail), I saw just this too: 1 to 8">
+          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="0.75"/>
+          <requirement name="CVarCompare" cvar="fGSKNPCRepairSelfArmor" operation="LT" value="0.10"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCleaderIsSneaking" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel">
+          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="LT" value="0.75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel">
+          <requirement name="CVarCompare" cvar="iGSKNPCleaderIsSneaking" operation="Equals" value="1"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKPlayerTooManyHiredNPCsSlowDown" hidden="true">
@@ -3981,7 +3997,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCHuntModePhase" operation="add" value="1"/>
       </effect_group>
     </buff>
-    <buff name="buffNPCtookDamageFightBack" help="TODO:ISSUE: not working?">
+    <buff name="buffNPCtookDamageFightBack">
       <stack_type value="duration"/>
       <duration value="5"/>
       <update_rate value="1"/>
