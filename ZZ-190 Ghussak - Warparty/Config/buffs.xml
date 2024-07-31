@@ -1938,6 +1938,10 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fNPCCalcPercTmp" operation="set" value="@fGSKNPCRepairSelfArmor"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fNPCCalcPercTmp" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoRepairSelfArmor" operation="set" value="0" target="selfAOE" range="2.5" help="TODOB: fix the script code generator to this:">
+          <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="LT" value="5"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
         <!-- HELPGOOD:_AUTOGENCODE_CREATEHIREDNPCHUDINFO_iGSKPlayerNPCInfoRepairSelfArmor_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createHiredNPChudInfo.sh ===== -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoRepairSelfArmor" operation="set" value="0" target="selfAOE" range="2.5" help="entry 1">
           <requirement name="CVarCompare" cvar=".fNPCCalcPercTmp" operation="Equals" value="0"/>
@@ -3641,7 +3645,7 @@
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="3"/>
-      <effect_group help="ISSUE: the only particle that seems to work everywhere is p_burning_barrel? but it emits light :(">
+      <effect_group help="ISSUE: the only particle that seems to work everywhere is p_burning_barrel? but it emits light :(. TODO: some particle that do not cause trouble while sneaking, so the sneaking requirement can be removed.">
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" local_rotation="0,0,0" parent_transform="Head" help="or hotembers(fail) p_burning_barrel(ok:offset:0,-1,0) forge ember_pile chemistryStation(fail) candleWall_flame candle_flame(fail), I saw just this too: 1 to 8">
           <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="0.75"/>
           <requirement name="CVarCompare" cvar="fGSKNPCRepairSelfArmor" operation="LT" value="0.10"/>
