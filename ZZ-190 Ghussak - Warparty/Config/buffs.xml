@@ -3646,16 +3646,22 @@
       <duration value="0"/>
       <update_rate value="3"/>
       <effect_group help="ISSUE: the only particle that seems to work everywhere is p_burning_barrel? but it emits light :(. TODO: some particle that do not cause trouble while sneaking, so the sneaking requirement can be removed.">
-        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" local_rotation="0,0,0" parent_transform="Head" help="or hotembers(fail) p_burning_barrel(ok:offset:0,-1,0) forge ember_pile chemistryStation(fail) candleWall_flame candle_flame(fail), I saw just this too: 1 to 8">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVisualHintArmorDmg" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVisualHintArmorDmg" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="fGSKNPCPermanentArmorDmg" operation="GTE" value="0.50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVisualHintArmorDmg" operation="set" value="1">
           <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="GTE" value="0.75"/>
-          <requirement name="CVarCompare" cvar="fGSKNPCRepairSelfArmor" operation="LT" value="0.10"/>
-          <requirement name="CVarCompare" cvar="iGSKNPCleaderIsSneaking" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="fGSKNPCRepairSelfArmor" operation="LT" value="0.25"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel">
-          <requirement name="CVarCompare" cvar="fGSKNPCarmorDmgPercent" operation="LT" value="0.75"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVisualHintArmorDmg" operation="set" value="0" help="override off if player is sneaking">
           <requirement name="CVarCompare" cvar="iGSKNPCleaderIsSneaking" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" local_rotation="0,0,0" parent_transform="Head" help="or hotembers(fail) p_burning_barrel(ok:offset:0,-1,0) forge ember_pile chemistryStation(fail) candleWall_flame candle_flame(fail), I saw just this too: 1 to 8">
+          <requirement name="CVarCompare" cvar=".iGSKVisualHintArmorDmg" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_burning_barrel">
+          <requirement name="CVarCompare" cvar=".iGSKVisualHintArmorDmg" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
