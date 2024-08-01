@@ -149,6 +149,7 @@ FUNCmv "../ZZ-030 Ghussak - Patch NPC spawn rate" entitygroups.xml #disables the
 FUNCprepareDumpedCfgToOverrideAll "items.xml" items item
 FUNCmv "../ZZ-010 Ghussak - Tweaks" items.xml
 FUNCmv "../ZZ-070 Ghussak - Effective and Immersive Weapons Overhaul" items.xml
+# it seems ok to place here only the slow patchers to be temporarily disabled, other patchers (that will patch redundantly probably) doesnt seem to cause problem TODO: confirm that is not causing problems somehow
 
 # undo mode finalizer
 if $bUndo;then

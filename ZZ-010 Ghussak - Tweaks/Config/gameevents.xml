@@ -4243,13 +4243,31 @@
         <property name="max_time" value="-360"/>
       </action>
     </action_sequence>
-    <action_sequence name="eventGSKbulletExplosion" help="">
+    <action_sequence name="eventGSKbulletExplosion" help="used mainly from tuff raider bullets">
       <action class="Explode">
-        <property name="blast_power" value="25"/>
+        <property name="blast_power" value="500" help="impulse over player ragdoll?"/>
         <property name="block_damage" value="25"/>
-        <property name="block_radius" value="1"/>
-        <property name="entity_damage" value="15"/>
-        <property name="entity_radius" value="1"/>
+        <property name="block_radius" value="2"/>
+        <property name="entity_damage" value="25"/>
+        <property name="entity_radius" value="2"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKSpawnLandMine">
+      <property name="allow_user_trigger" value="true"/>
+      <action class="SpawnEntity">
+        <property name="phase" value="10"/>
+        <property name="entity_names" value="entPseudoCrateLandMine"/>
+        <property name="spawn_count" value="3"/>
+        <property name="min_distance" value="2"/>
+        <property name="max_distance" value="3"/>
+        <property name="safe_spawn" value="false"/>
+        <property name="add_to_group" value="landmines"/>
+      </action>
+      <action class="PrimeEntity">
+        <property name="phase" value="20"/>
+        <property name="target_group" value="landmines"/>
+        <property name="min_override_time" value="1"/>
+        <property name="min_override_time" value="3"/>
       </action>
     </action_sequence>
   </append>

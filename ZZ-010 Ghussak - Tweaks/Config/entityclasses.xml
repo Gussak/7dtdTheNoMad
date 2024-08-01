@@ -247,40 +247,6 @@
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcArmyPowerArmor')]" help="only the full original power armor can carry the most">
     <property name="LootListAlive" value="traderNPCbigBackpack"/>
   </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
-    <property name="LootDropProb" value="1.00"/>
-    <effect_group name="Raider:AllWithGoodDrops">
-      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKnpcRaiderSelfWork"/>
-    </effect_group>
-  </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="criticals">
-    <effect_group name="Raider:Criticals" help="high skilled raiders do criticals more easily">
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo,buffShocked,buffBurningElement,buffGSKSnakePoison,buffGSKbulletExplosion,buffGSKcriticalHitNearDeath,buffGSKbulletRadiation" weights=".07,.07,.05,.30,.50,.15,.05,.01,.03,.05,.05,.02" help="onSelfAttackedOther because these raiders are meant to always be a challenge. using very low chance as is ranged and too many bullets. onSelfDamagedOther wont work well if armor rating is very high that prevents most damage to happen">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="100" help="keep like this, will be tweaked below. this is to grant a critical high chance for melee"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]" help="bandits that carry good stuff shall not be easy. Melee shall be even stronger, like power armor NPCs.">
-    <effect_group name="Raider:Melee:Using onSelfAttackedOther instead of onSelfDamagedOther makes it more challenging as armor rating wont protect against these special hits/criticals, and melee must be effective">
-      <requirement name="!EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
-      <passive_effect name="PhysicalDamageResist" operation="base_set" value="90"/>
-      <passive_effect name="HealthMax" operation="base_set" value="225" help="was 75, but x3 for melee raider that shall resist enough before dropping many items"/>
-      <passive_effect name="RunSpeed" operation="perc_add" value="2.0" help="melee raider have greater chance to reach and hit their target"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="3" help="3 = 75% chance"/>
-    </effect_group>
-  </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'Club') or    contains(@name,'Knife') or    contains(@name,'Bat') or    contains(@name,'Axe') or    contains(@name,'Machete')   )  ]/property[@name='Tags']/@value" help="melee bandits shall have best helmet ISSUE: ranged inherit from melee? so some ranged are using this instead of below? ISSUE: headshot helmet mod may not work properly with some raiders. Most raiders only seem to detect headshots while in ragdoll mode. Could it be a 3d model issue?">,helmetProtection10</append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL') or    contains(@name,'SRifle') or    contains(@name,'Bow')   )  ]" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, about like recon.">
-    <effect_group name="Raider:Ranged" help="high skilled raiders do criticals more easily">
-      <requirement name="EntityTagCompare" tags="ranged" help="this is required because ranged inherit from melee template right?"/>
-      <passive_effect name="PhysicalDamageResist" operation="base_set" value="70"/>
-    </effect_group>
-  </append>
-  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'DPistol')   )]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">50</set>
-  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'SRifle')   )]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">75</set>
-  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'Bow')   )]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">88</set>
-  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'RocketL')   )]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value" help="is slow and NPCs sometimes have totally bad aim with it">95</set>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
   <append xpath="/entity_classes/entity_class[starts-with(@name, 'npc')]/property[@name='Tags' and not(contains(@value,'bandit'))]/@value" help="TODO: could the hirecost property be read instead to add this tag?">,hireable</append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'survivor')]" help="no easy loot from friendlies">
     <property name="LootDropProb" value="0.05"/>
@@ -1328,4 +1294,42 @@
   </append>
   <remove xpath="/entity_classes/entity_class[@name='mechRobotArmy']/property[@name='ReplaceMaterial0']" help="This is to let DeusExFriend look like the nice powerful one :)"/>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'EntityLootContainer')]/property[@name='HideInSpawnMenu']/@value" help="if the player already has access to the spawn menu, there is no point in preventing spawning loot bags to workaround bugs and glitches and during mod development">false</set>
+  <append xpath="/entity_classes">
+    <entity_class name="entPseudoCrateLandMine">
+      <property name="ModelType" value="Custom"/>
+      <property name="Prefab" value="Backpack"/>
+      <property name="Parent" value="Backpack"/>
+      <property name="IsEnemyEntity" value="true"/>
+      <property name="TimeStayAfterDeath" value="0"/>
+      <property name="Faction" value="none"/>
+      <property name="HideInSpawnMenu" value="false"/>
+      <property name="Mesh" value="#Other/Items?Weapons/Explosive/trapMineAirFilter_01Prefab.prefab"/>
+      <property name="Tags" value="entity"/>
+      <property name="WalkType" value="7"/>
+      <property name="Mass" value="160"/>
+      <property name="PainResistPerHit" value="1"/>
+      <property name="MoveSpeedAggro" value="0.3, 1.35"/>
+      <property name="HandItem" value="meleeHandZombieBurning"/>
+      <property name="HandItemCrawler" value="meleeHandZombieBurningCrawler"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="125"/>
+      </effect_group>
+      <property name="LootDropProb" value="0.05"/>
+      <property name="Class" value="EntityZombieCop"/>
+      <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+      <property name="Explosion.ParticleIndex" value="10"/>
+      <property name="Explosion.Duration" value="8"/>
+      <property name="Explosion.BlastPower" value="35"/>
+      <property name="Explosion.DamageBonus.stone" value=".1"/>
+      <property name="Explosion.DamageBonus.metal" value="0"/>
+      <property name="Explosion.DamageBonus.earth" value="0"/>
+      <property name="Explosion.DamageBonus.water" value="0"/>
+      <property name="Explosion.DamageBonus.wood" value="6"/>
+      <property name="Explosion.RadiusBlocks" value="5"/>
+      <property name="Explosion.RadiusEntities" value="6"/>
+      <property name="Explosion.BlockDamage" value="1000"/>
+      <property name="Explosion.EntityDamage" value="100"/>
+      <property name="Explosion.Buff" value="buffBurningMolotov"/>
+    </entity_class>
+  </append>
 </GhussakTweaks>
