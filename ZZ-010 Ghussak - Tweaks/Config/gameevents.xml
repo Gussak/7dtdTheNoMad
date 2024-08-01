@@ -3644,9 +3644,20 @@
     </action_sequence>
     <action_sequence name="eventGSKSpwSimpleBanditAmbush" help="TODO: use all possible NPCs for each weapon type. create a egrep for each or for all with sed also.">
       <action class="SpawnEntity">
+        <property name="phase" value="50"/>
+        <!--	HELPGOOD: CODEGEN: 
+				egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -v "Ambush|PA" |egrep "XBow|LBow" -i |sort -u |sed -r -e 's@<entity_class name="(.*)@\1Ambush@' |tr '\n' ','
+-->
+        <property name="entity_names" value="npcHarleyLBowAmbush,npcHarleyXBowAmbush"/>
+        <property name="spawn_count" value="1"/>
+        <property name="safe_spawn" value="true"/>
+        <property name="spawn_from_position" value="true"/>
+        <property name="min_distance" value="20"/>
+        <property name="max_distance" value="25"/>
+      </action>
+      <action class="SpawnEntity">
         <property name="phase" value="40"/>
-        <!--
-				HELPGOOD: CODEGEN: 
+        <!--	HELPGOOD: CODEGEN: 
 				egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -v "Ambush|PA" |egrep "SRifle" -i |sort -u |sed -r -e 's@<entity_class name="(.*)@\1Ambush@' |tr '\n' ','
 -->
         <property name="entity_names" value="npcHarleySRifleAmbush"/>
@@ -3658,8 +3669,7 @@
       </action>
       <action class="SpawnEntity">
         <property name="phase" value="30"/>
-        <!--
-				HELPGOOD: CODEGEN: 
+        <!--	HELPGOOD: CODEGEN: 
 				egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -v "Ambush|PA" |egrep "SMG" -i |sort -u |sed -r -e 's@<entity_class name="(.*)@\1Ambush@' |tr '\n' ','
 -->
         <property name="entity_names" value="npcHarleySMGAmbush,RaiderBeatzSMGAmbush,RaiderBettySMGAmbush,RaiderGinaSMGAmbush,RaiderGypsySMGAmbush,RaiderHedySMGAmbush,RaiderJayneSMGAmbush,RaiderPestSMGAmbush"/>
@@ -3671,8 +3681,7 @@
       </action>
       <action class="SpawnEntity">
         <property name="phase" value="20"/>
-        <!--
-				HELPGOOD: CODEGEN: 
+        <!--	HELPGOOD: CODEGEN: 
 				egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -v "Ambush|PA" |egrep "DPistol" -i |sort -u |sed -r -e 's@<entity_class name="(.*)@\1Ambush@' |tr '\n' ','
 -->
         <property name="entity_names" value="npcHarleyDPistolAmbush,RaiderBeatzDPistolAmbush,RaiderBettyDPistolAmbush,RaiderGinaDPistolAmbush,RaiderGypsyDPistolAmbush,RaiderHedyDPistolAmbush,RaiderJayneDPistolAmbush,RaiderMercDPistolAmbush,RaiderMotoDPistolAmbush,RaiderPestDPistolAmbush"/>
@@ -3684,8 +3693,7 @@
       </action>
       <action class="SpawnEntity">
         <property name="phase" value="10"/>
-        <!--
-				HELPGOOD: CODEGEN: 
+        <!--	HELPGOOD: CODEGEN: 
 				egrep '<entity_class.*name="(raider|npcHarley)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -v "Ambush|PA" |egrep "Axe|Bat|Club|Knife|Machete" -i |sort -u |sed -r -e 's@<entity_class name="(.*)@\1Ambush@' |tr '\n' ','
 -->
         <property name="entity_names" value="npcHarleyAxeAmbush,npcHarleyBatAmbush,npcHarleyClubAmbush,npcHarleyKnifeAmbush,npcHarleyMacheteAmbush,RaiderBeatzBatAmbush,RaiderBeatzClubAmbush,RaiderBettyAxeAmbush,RaiderBettyBatAmbush,RaiderBettyClubAmbush,RaiderBettyKnifeAmbush,RaiderBettyMacheteAmbush,RaiderGinaAxeAmbush,RaiderGinaBatAmbush,RaiderGinaClubAmbush,RaiderGinaKnifeAmbush,RaiderGinaMacheteAmbush,RaiderGypsyAxeAmbush,RaiderGypsyBatAmbush,RaiderGypsyClubAmbush,RaiderGypsyKnifeAmbush,RaiderGypsyMacheteAmbush,RaiderHedyAxeAmbush,RaiderHedyBatAmbush,RaiderHedyClubAmbush,RaiderHedyKnifeAmbush,RaiderHedyMacheteAmbush,RaiderJayneAxeAmbush,RaiderJayneBatAmbush,RaiderJayneClubAmbush,RaiderJayneKnifeAmbush,RaiderJayneMacheteAmbush,RaiderMercClubAmbush,RaiderMercKnifeAmbush,RaiderMercMacheteAmbush,RaiderMotoAxeAmbush,RaiderMotoBatAmbush,RaiderPestAxeAmbush,RaiderPestBatAmbush,RaiderPestClubAmbush,RaiderPestKnifeAmbush,RaiderPestMacheteAmbush,RaiderSluggerAxeAmbush,RaiderSluggerBatAmbush"/>
@@ -4256,18 +4264,18 @@
       <property name="allow_user_trigger" value="true"/>
       <action class="SpawnEntity">
         <property name="phase" value="10"/>
-        <property name="entity_names" value="entPseudoCrateLandMine"/>
-        <property name="spawn_count" value="3"/>
-        <property name="min_distance" value="2"/>
-        <property name="max_distance" value="3"/>
+        <property name="entity_names" value="entLandMineFire,entLandMineFrag"/>
+        <property name="spawn_count" value="1"/>
+        <property name="min_distance" value="1"/>
+        <property name="max_distance" value="2"/>
         <property name="safe_spawn" value="false"/>
         <property name="add_to_group" value="landmines"/>
       </action>
       <action class="PrimeEntity">
         <property name="phase" value="20"/>
         <property name="target_group" value="landmines"/>
-        <property name="min_override_time" value="1"/>
-        <property name="min_override_time" value="3"/>
+        <property name="min_override_time" value="0.25"/>
+        <property name="max_override_time" value="6"/>
       </action>
     </action_sequence>
   </append>

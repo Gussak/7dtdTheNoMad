@@ -1295,7 +1295,9 @@
   <remove xpath="/entity_classes/entity_class[@name='mechRobotArmy']/property[@name='ReplaceMaterial0']" help="This is to let DeusExFriend look like the nice powerful one :)"/>
   <set xpath="/entity_classes/entity_class[starts-with(@name,'EntityLootContainer')]/property[@name='HideInSpawnMenu']/@value" help="if the player already has access to the spawn menu, there is no point in preventing spawning loot bags to workaround bugs and glitches and during mod development">false</set>
   <append xpath="/entity_classes">
-    <entity_class name="entPseudoCrateLandMine">
+    <entity_class name="entLandMineFire">
+      <property name="Class" value="EntityZombieCop"/>
+      <property name="SoundExplodeWarn" value="charge_beep"/>
       <property name="ModelType" value="Custom"/>
       <property name="Prefab" value="Backpack"/>
       <property name="Parent" value="Backpack"/>
@@ -1303,20 +1305,19 @@
       <property name="TimeStayAfterDeath" value="0"/>
       <property name="Faction" value="none"/>
       <property name="HideInSpawnMenu" value="false"/>
-      <property name="Mesh" value="#Other/Items?Weapons/Explosive/trapMineAirFilter_01Prefab.prefab"/>
-      <property name="Tags" value="entity"/>
-      <property name="WalkType" value="7"/>
-      <property name="Mass" value="160"/>
-      <property name="PainResistPerHit" value="1"/>
-      <property name="MoveSpeedAggro" value="0.3, 1.35"/>
-      <property name="HandItem" value="meleeHandZombieBurning"/>
-      <property name="HandItemCrawler" value="meleeHandZombieBurningCrawler"/>
-      <effect_group name="Base Effects">
-        <passive_effect name="HealthMax" operation="base_set" value="125"/>
-      </effect_group>
-      <property name="LootDropProb" value="0.05"/>
-      <property name="Class" value="EntityZombieCop"/>
-      <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+      <!-- HELPGOOD: 
+			this one shows only the top middle falling the remainder into the ground, the hit check seems to be the center of the 3d model
+			<property name="Mesh" value="#Entities/LootContainers?tier4LootChestPrefab.prefab" />
+			<property name="SizeScale" value="0.25" />
+			
+			this wont work!
+			<property name="Mesh" value="#Other/Items?Weapons/Explosive/trapMineAirFilter_01Prefab.prefab" />
+			<property name="SizeScale" value="2.0" />
+			
+			the grenade falls somewhat thru the ground too but is more coherent at least
+-->
+      <property name="Mesh" value="#Other/Items?Weapons/Ranged/Grenade/GrenadePrefab.prefab"/>
+      <property name="SizeScale" value="3.0"/>
       <property name="Explosion.ParticleIndex" value="10"/>
       <property name="Explosion.Duration" value="8"/>
       <property name="Explosion.BlastPower" value="35"/>
@@ -1330,6 +1331,22 @@
       <property name="Explosion.BlockDamage" value="1000"/>
       <property name="Explosion.EntityDamage" value="100"/>
       <property name="Explosion.Buff" value="buffBurningMolotov"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="125"/>
+      </effect_group>
+      <property name="Tags" value="entity"/>
+      <property name="WalkType" value="7"/>
+      <property name="Mass" value="160"/>
+      <property name="PainResistPerHit" value="1"/>
+      <property name="MoveSpeedAggro" value="0.3, 1.35"/>
+      <property name="HandItem" value="meleeHandZombieBurning"/>
+      <property name="HandItemCrawler" value="meleeHandZombieBurningCrawler"/>
+      <property name="LootDropProb" value="0"/>
+    </entity_class>
+    <entity_class name="entLandMineFrag" extends="entLandMineFire">
+      <property name="Explosion.ParticleIndex" value="11"/>
+      <property name="Explosion.BlastPower" value="500"/>
+      <property name="Explosion.Buff" value=""/>
     </entity_class>
   </append>
 </GhussakTweaks>
