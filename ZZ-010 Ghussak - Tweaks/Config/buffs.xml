@@ -808,6 +808,14 @@
         <requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
       </effect_group>
+      <effect_group help="Rad Hint: normal value BIG font">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="33"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="Rad Hint: max int, as large as possible. auto makes the font TINY, the idea is to make the text auto become tiny and do not call attention using that automatic non configurable UI feature!">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="33"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="4294967295"/>
+      </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fPreviousWetness"/>
