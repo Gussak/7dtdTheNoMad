@@ -5,10 +5,12 @@
     <property name="MaxViewAngle" value="360" help="ISSUE:WORKAROUND: after they get shot many times they may still not attack, trying to prevent that"/>
     <property name="SightRange" value="180"/>
   </append>
-  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="bandits shall always drop something, they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods)">
-    <property name="LootDropProb" value="1.00"/>
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and not(contains(@name,'Ambush'))]" help="bandits shall always drop something (least ambush ones that are meant just as extra challenge), they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.  only npcHarley is set as bandit, that is confusing..., must be set after 'npc' (pre-patching npcHarley to RaiderHarley may mess other devs mods? but would be the ideal...)">
+    <property name="LootDropProb" value="1.00" help="Raider:AllWithGoodDrops"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="ISSUE: npcHarley should be RaiderHarley, that is confusing...">
     <effect_group name="Raider:AllWithGoodDrops">
-      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKnpcRaiderSelfWork"/>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKnpcRaiderSelfHealing"/>
     </effect_group>
   </append>
   <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley'))]" help="criticals">
