@@ -44,13 +44,21 @@
   <set xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'RocketL')   )]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value" help="is slow and NPCs sometimes have totally bad aim with it">95</set>
   <append xpath="/entity_classes/entity_class[(starts-with(@name, 'Raider') or starts-with(@name,'npcHarley')) and (    contains(@name,'AK47') or    contains(@name,'SMG') or    contains(@name,'DPistol') or    contains(@name,'TRifle') or    contains(@name,'PipeMG') or    contains(@name,'M60') or    contains(@name,'RocketL')   )  ]/property[@name='Tags']/@value" help="despite ranged, they move near the player and dont take cover, so their armor and helmet shall be good too, like recon">,helmetProtection7</append>
   <append xpath="/entity_classes/entity_class[@name='npcLBowTemplate']">
-    <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCLBow,ammoNPCArrowExploding"/>
+    <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCLBow,ammoNPCArrowExploding" help="was ammoNPCArrowIron"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCLBow,ammoNPCArrowExploding"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCLBow,ammoNPCArrowExploding"/>
+    <effect_group name="UseRangedWeaponType">
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="RocketLUser" help="this enables a trick that let the player talk to the NPC when it hides the weapon"/>
+    </effect_group>
+    <property name="RightHandJointName" value="RocketL"/>
   </append>
   <append xpath="/entity_classes/entity_class[@name='npcXBowTemplate']">
-    <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCXBow,ammoNPCCrossbowBoltExploding"/>
+    <property name="ItemsOnEnterGame.GameModeSurvival" value="gunNPCXBow,ammoNPCCrossbowBoltExploding" help="was ammoNPCCrossbowBoltIron"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunNPCXBow,ammoNPCCrossbowBoltExploding"/>
     <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunNPCXBow,ammoNPCCrossbowBoltExploding"/>
+    <effect_group name="UseRangedWeaponType">
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="RocketLUser"/>
+    </effect_group>
+    <property name="RightHandJointName" value="RocketL"/>
   </append>
 </GhussakTweaks>
