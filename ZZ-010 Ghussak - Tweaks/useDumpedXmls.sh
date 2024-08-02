@@ -35,6 +35,8 @@
 
 #help TODO: SUGGEST THEM: a good way to not require this script probably would be for the 7DTD engine store a md5sum of each modlet xml file, and if any of them changes, or some new one shows up, the whole modding (each modlet loaded in order) for that specific xml file basename, would be reprocessed. Otherwise, the dumped xml files would be reused instead of reprocessing all modlets.
 
+#TODO: put this somewhere to check if related files got changed and alert the necessity to use --undo here: find -iname "items.xml" -not -iregex ".*DISABLED.*" |while read strNm;do md5sum "$strNm";done
+
 source ./libSrcCfgGenericToImport.sh #place exported arrays above this include
 
 if [[ "${1-}" == "--help" ]];then egrep "[#]help" "$0";exit 0;fi
