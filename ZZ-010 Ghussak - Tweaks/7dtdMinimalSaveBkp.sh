@@ -121,17 +121,23 @@ function FUNCbkp() {
 		
 		while ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";do echo "retring...";read -t 3 -n 1&&:;done
 		if [[ "$strKeyNew" == "$strKey" ]];then
+			if ! tar --list -f "${strFlBkpBN}.tar";then echo "tar failed, retrying...";continue;fi
 			declare -p strKey; 
 			break; 
 		else
 			colordiff <(echo "$strKey") <(echo "$strKeyNew")&&:
 		fi
 	done
-
-	while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
+	
+	trash "${strFlBkpBN}.tar" "${strFlBkpBN}.jpg"&&:
+	if nWId="$(xdotool search "Default - Wine desktop")";then
+		import -window "$nWId" "${strFlBkpBN}.jpg"&&: #accepts webp tho
+	fi
+	
+	#while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
 	7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
-
 	trash "${strFlBkpBN}.tar"
+	
 	ls -l "${strFlBkpBN}.tar.7z"
 	7z l "${strFlBkpBN}.tar.7z"
 
