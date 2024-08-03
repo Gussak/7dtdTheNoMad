@@ -114,29 +114,39 @@ function FUNCbkp() {
 	trash "${strFlBkpBN}.tar.7z"&&:
 
 	while true;do
-		while ! strKey="$(ls -l "${astrListFlToBkp[@]}")";do echo "retring...";read -t 3 -n 1&&:;done
-		while ! tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}";do echo "retring...";read -t 3 -n 1&&:;done
+		echo "`date` preparing minimal save bkp in 3s"
+		read -t 3 -n 1&&:
+		
+		if ! strKey="$(ls -l "${astrListFlToBkp[@]}")";then echo "preparing key failed, retring...";continue;fi
+		
+		rm -v "${strFlBkpBN}.tar"&&:
+		if ! tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}";then echo "tar failed, retring...";continue;fi
+		
+		if ! tar --list -f "${strFlBkpBN}.tar";then echo "tar list failed, retrying...";continue;fi
+		
+		############ check if nothing changed below #####
 		
 		echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
 		
-		while ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";do echo "retring...";read -t 3 -n 1&&:;done
+		if ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";then echo "checking key failed, retring...";continue;fi
 		if [[ "$strKeyNew" == "$strKey" ]];then
-			if ! tar --list -f "${strFlBkpBN}.tar";then echo "tar failed, retrying...";continue;fi
 			declare -p strKey; 
 			break; 
 		else
+			echo "some file(s) changed, retrying..."
 			colordiff <(echo "$strKey") <(echo "$strKeyNew")&&:
 		fi
 	done
 	
-	trash "${strFlBkpBN}.tar" "${strFlBkpBN}.jpg"&&:
+	# screenshot 
+	trash "${strFlBkpBN}.jpg"&&:
 	if nWId="$(xdotool search "Default - Wine desktop")";then
 		import -window "$nWId" "${strFlBkpBN}.jpg"&&: #accepts webp tho
 	fi
 	
 	#while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
 	7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
-	trash "${strFlBkpBN}.tar"
+	trash "${strFlBkpBN}.tar" #cleanup
 	
 	ls -l "${strFlBkpBN}.tar.7z"
 	7z l "${strFlBkpBN}.tar.7z"
