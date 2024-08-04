@@ -11325,6 +11325,13 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <effect_group help="hazmat suit override protection">
+        <requirement name="HasBuff" buff="buffRadSuit"/>
+        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.75" help="minimal good condition is required, based on the repair amount of related item"/>
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKClearRad" operation="set" value="@$buffStatusRadiation" help="max rads is 100.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.iGSKClearRad" help="could just set to 0 tho"/>
+      </effect_group>
       <effect_group help="simple bandit ambush">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
