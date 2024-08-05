@@ -31,28 +31,67 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-trash -v Prefabs
+set -Eeu
+
+set -x
+trash Prefabs ./Prefabs.SkipOnRelease&&:
+read -p PressAKey
 
 mkdir -v ./Prefabs.SkipOnRelease
+read -p PressAKey
+
 cp -vr ../../Data/Prefabs/* ./Prefabs.SkipOnRelease
+read -p PressAKey
+
 ln -vsf ./Prefabs.SkipOnRelease ./Prefabs
+read -p PressAKey
+set +x
+
+#########
+
+cd Prefabs
 
 echo "total files: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |wc -l)"
 
 echo "total files without zombie matches: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
+
+echo "removing from patch files that wont be patched"
+read -p PressAKey
+IFS=$'#\n' read -d '' -r -a astrList < <(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep :0)&&:
+nCountNotMatched=0
+nCountNotMatchedFound=0
+nCountNotMatchedNotFound=0
+for strFl in "${astrList[@]}";do
+	if trash "${strFl%.xml:0}"*;then
+		((nCountNotMatchedFound++))&&:
+		echo -ne "${nCountNotMatchedFound}:trashed ok: ${strFl}                   \r"
+	else
+		ls -l "${strFl%.xml:0}"*&&:
+		((nCountNotMatchedNotFound++))&&:
+		echo "${nCountNotMatchedNotFound}:TODO: failed to trash, why?: ${strFl}               "
+	fi
+	((nCountNotMatched++))&&:
+done
+declare -p nCountNotMatchedNotFound nCountNotMatchedFound nCountNotMatched
+
 nCount=$(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
 echo "total files with zombie matches: $nCount"
+read -p PressAKey
 
-find ./Prefabs/ -iname "*.xml" |\
-	while read strFl;do
-		sed -i.bkp 's@S_-Group_Generic_Zombie@S_-Group_NPC_Bandits_AmbushRanged@g' "$strFl";
-		echo -n .;
-	done
+IFS=$'#\n' read -d '' -r -a astrList < <(find ./ -iname "*.xml")&&:
+nCountPatched=0
+for strFl in "${astrList[@]}";do
+	sed -i.bkp 's@S_-Group_Generic_Zombie@S_-Group_NPC_Bandits_AmbushRanged@g' "$strFl";
+	echo -n .;
+	((nCountPatched++))&&:
+done
+echo
 
-echo "total files without raider matches: $(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
+#echo "total files without raider matches: $(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
 nCountNew=$(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
 echo "total files with raider matches: $nCountNew"
 
-if((nCount != nCountNew));then echo "something went wrong...";fi
-
+declare -p nCountNew nCountNew nCountPatched
+if((nCount != nCountNew));then echo "WARNING: something went wrong...";fi
+if((nCount != nCountPatched));then echo "WARNING: something went wrong...";fi
 
