@@ -809,12 +809,12 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
       </effect_group>
       <effect_group help="Rad Hint: normal value BIG font">
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="33"/>
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="@iGSKRadHintFrom"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="0"/>
       </effect_group>
       <effect_group help="Rad Hint: max int, as large as possible. auto makes the font TINY, the idea is to make the text auto become tiny and do not call attention using that automatic non configurable UI feature!">
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="33"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="4294967295"/>
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="@iGSKRadHintFrom"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="8888888888" help="max integer is 4294967295 tho, but many large 8 makes the line less confusing"/>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
@@ -4879,12 +4879,17 @@
           <requirement name="HasBuff" buff="buffRadSuitBoots"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="multiply" value="@fGSKHazmatSuitIntegrity">
-          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="1.0"/>
+          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="0.75"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.5" help="hazmatsuit in perfect condition provides 100 percent protection">
-          <requirement name="HasBuff" buff="buffRadSuit"/>
-          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="Equals" value="1.0"/>
-        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="HasBuff" buff="buffRadSuit"/>
+        <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="GTE" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResHSItmp" operation="set" value="@fGSKHazmatSuitIntegrity"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResHSItmp" operation="divide" value="2.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@.fGSKRadResHSItmp"/>
+      </effect_group>
+      <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@fGSKRadResChemDiv"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="set" value="@_sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="divide" value="2.0"/>
@@ -11323,13 +11328,15 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
       <stack_type value="replace"/>
       <duration value="0"/>
       <update_rate value="1"/>
+      <!-- HELPGOOD: this is bad... it requires no chem to clear radiation, no bath etc... this is just plain wrong...
       <effect_group help="hazmat suit override protection">
-        <requirement name="HasBuff" buff="buffRadSuit"/>
-        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.75" help="minimal good condition is required, based on the repair amount of related item"/>
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKClearRad" operation="set" value="@$buffStatusRadiation" help="max rads is 100.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.iGSKClearRad" help="could just set to 0 tho"/>
+				<requirement name="HasBuff" buff="buffRadSuit" />
+				<requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.75" help="minimal good condition is required, based on the repair amount of related item"/>
+				<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKClearRad" operation="set" value="@$buffStatusRadiation" help="max rads is 100.0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.iGSKClearRad" help="could just set to 0 tho"/>
       </effect_group>
+-->
       <effect_group help="simple bandit ambush">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
