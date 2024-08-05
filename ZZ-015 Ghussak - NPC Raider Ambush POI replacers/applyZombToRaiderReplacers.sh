@@ -40,7 +40,8 @@ ln -vsf ./Prefabs.SkipOnRelease ./Prefabs
 echo "total files: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |wc -l)"
 
 echo "total files without zombie matches: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
-echo "total files with zombie matches: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)"
+nCount=$(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
+echo "total files with zombie matches: $nCount"
 
 find ./Prefabs/ -iname "*.xml" |\
 	while read strFl;do
@@ -49,5 +50,9 @@ find ./Prefabs/ -iname "*.xml" |\
 	done
 
 echo "total files without raider matches: $(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
-echo "total files with raider matches: $(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)"
+nCountNew=$(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
+echo "total files with raider matches: $nCountNew"
+
+if((nCount != nCountNew));then echo "something went wrong...";fi
+
 
