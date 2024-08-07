@@ -34,17 +34,14 @@
 set -Eeu
 
 set -x
+read -p "press a key to: trash old patch"
 trash Prefabs ./Prefabs.SkipOnRelease&&:
-read -p PressAKey
-
 mkdir -v ./Prefabs.SkipOnRelease
-read -p PressAKey
 
+read -p "press a key to: copy all perfabs here"
 cp -vr ../../Data/Prefabs/* ./Prefabs.SkipOnRelease
-read -p PressAKey
-
 ln -vsf ./Prefabs.SkipOnRelease ./Prefabs
-read -p PressAKey
+
 set +x
 
 #########
@@ -55,8 +52,7 @@ echo "total files: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c
 
 echo "total files without zombie matches: $(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
 
-echo "removing from patch files that wont be patched"
-read -p PressAKey
+read -p "press a key to: remove from patch files prefabs that wont be patched"
 IFS=$'#\n' read -d '' -r -a astrList < <(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep :0)&&:
 nCountNotMatched=0
 nCountNotMatchedFound=0
@@ -76,22 +72,23 @@ declare -p nCountNotMatchedNotFound nCountNotMatchedFound nCountNotMatched
 
 nCount=$(egrep "S_-Group_Generic_Zombie" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
 echo "total files with zombie matches: $nCount"
-read -p PressAKey
 
+read -p "press a key to: apply the patch on remaining files"
 IFS=$'#\n' read -d '' -r -a astrList < <(find ./ -iname "*.xml")&&:
 nCountPatched=0
+: ${strGroupID:="S_-Group_NPC_Bandits_All"} #help all bandits "S_-Group_NPC_Bandits_All" is better than "S_-Group_NPC_Bandits_AmbushRanged", as it spawns NPCs that drop things, but also can be melee or even rocket laucher one, and most importantly, each will call a delayed spawn of an ambush raiders team, increasing the challenge
 for strFl in "${astrList[@]}";do
-	sed -i.bkp 's@S_-Group_Generic_Zombie@S_-Group_NPC_Bandits_AmbushRanged@g' "$strFl";
+	sed -i.bkp 's@S_-Group_Generic_Zombie@'"${strGroupID}"'@g' "$strFl";
 	echo -n .;
 	((nCountPatched++))&&:
 done
 echo
 
-#echo "total files without raider matches: $(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
-nCountNew=$(egrep "S_-Group_NPC_Bandits_AmbushRanged" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
+#echo "total files without raider matches: $(egrep "${strGroupID}" -iRnIa --include="*.xml" -c |grep :0 |wc -l)"
+nCountNew=$(egrep "${strGroupID}" -iRnIa --include="*.xml" -c |grep -v :0 |wc -l)
 echo "total files with raider matches: $nCountNew"
 
-declare -p nCountNew nCountNew nCountPatched
-if((nCount != nCountNew));then echo "WARNING: something went wrong...";fi
-if((nCount != nCountPatched));then echo "WARNING: something went wrong...";fi
+declare -p nCount nCountNew nCountPatched
+if((nCount != nCountNew));then echo "WARNING: something went wrong... ln:$LINENO";fi
+if((nCount != nCountPatched));then echo "WARNING: something went wrong... ln:$LINENO";fi
 
