@@ -4,8 +4,8 @@
   <setattribute xpath="/windows/window[@name='HUDRightStatBars']" name="pos">0,160</setattribute>
   <append xpath="/windows" help="this is a helper hint about radiation level, for some reason I keep ignoring it even with the strong screen effect...">
     <window name="HUDGSKRadiationHint">
-      <rect name="hud" pos="-225,515" rows="1" cols="1" width="450" side="right">
-        <label depth="0" pos="0,25" name="RadHint" width="450" height="450" pivot="center" justify="center" text="RAD:{cvar($buffStatusRadiation:0)}% {cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}" font_size="100" color="255,255,128,80" controller="HUDStatBar" tooltip_key="xuiGSKRadHint" help="\n seems to make no difference, put a space and let it auto break the line"/>
+      <rect name="hud" pos="-225,515" rows="1" cols="1" width="150" side="right">
+        <label depth="0" pos="0,25" name="RadHint" width="450" height="150" pivot="center" justify="center" text="RAD:{cvar($buffStatusRadiation:0)}% {cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}" font_size="100" color="255,255,128,80" controller="HUDStatBar" tooltip_key="xuiGSKRadHint" help="linebreak '\n' seems to make no difference, put a space and let it auto break the line. the repeated dummies are intended to auto shrink the font when they have big numbers."/>
       </rect>
     </window>
   </append>
@@ -45,6 +45,26 @@
   <set xpath="/windows/window[@name='windowLooting' or @name='windowVehicleStorage']/     panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnMoveFillAndSmart']/@pos">174, -22</set>
   <setattribute xpath="//button[@name='btnMoveAll']" name="defaultcolor">[red]</setattribute>
   <setattribute xpath="//button[@name='btnMoveFillAndSmart']" name="defaultcolor">255,255,0,255</setattribute>
+  <!--
+HELPGOOD:
+
+  just a failed test to let more items be stored, it ends just bugging out, item's icons wont scale to the new inv size
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cols">24</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@rows">20</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cell_width">35</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cell_height">35</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/item_stack/@name">3</set>
+  
+  no paging happens even after inv is full
+	<append xpath="/windows/window[@name='windowVehicleStorage']">
+				<panel depth="100" pos="540,0" width="104" height="43" disableautobackground="true" visible="{paging_visible}">
+					<pager name="pager" pos="4,-6" />
+				</panel>
+</append>
+
+storage stops working when looting or from NPC invs
+<set xpath="/windows/window[@name='windowLooting']/@controller">VehicleContainer</set>
+-->
   <!-- HELPGOOD: show blockages clearly. patch for HUD Improved - 100 - AGF-A20HUDPlus1.4.1 -->
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/sprite[@name='background' and @type='sliced']/@color" help="must be the filled background that shows the blockage">200,250,0,255</set>
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/filledsprite[@name='background' and @color='110,110,110,128']/@color" help="must be opaque to not let yellow pass thru">0,0,0,255</set>
