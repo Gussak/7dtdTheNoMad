@@ -11341,6 +11341,11 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="LTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="30"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbush" operation="GT" value="2" help="this prevents accumulating too many for a long time, while not becoming heavy on CPU"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="simple bandit ambush. can have many but with a good cooldown">
         <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbush" operation="GT" value="0"/>
