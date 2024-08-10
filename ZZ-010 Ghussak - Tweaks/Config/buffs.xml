@@ -11341,10 +11341,11 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="set" value="30">
-          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="LTE" value="2"/>
-          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="set" value="0" help="was 30, but the player may go inside a sheltered area in less than that time..">
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30m" operation="LTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbush" operation="GT" value="2" help="this prevents accumulating too many for a long time, while not becoming heavy on CPU"/>
+          <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="simple bandit ambush. can have many but with a good cooldown">
@@ -11993,6 +11994,13 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         </triggered_effect>
       </effect_group>
       <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="set" value="10" help="if it is lagging or low FPS, NPCs, zombies etc may take a long time to answer">
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="add" value="-1" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveTotal30m" operation="set" value="@.iGSKNearbyFoeAliveCount30m"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCNearbyFoeAliveCount30m" operation="set" value="@.iGSKNearbyFoeAliveTotal30m" target="selfAOE" range="60" target_tags="npc">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
