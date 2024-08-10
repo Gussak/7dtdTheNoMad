@@ -503,37 +503,72 @@
   <set xpath="/blocks/block[@name='oreCoalBoulder']/drop[@event='Harvest' and @name='resourceCoal']/@count">250</set>
   <set xpath="/blocks/block[@name='oreShaleBoulder']/drop[@event='Harvest' and @name='resourceOilShale']/@count">250</set>
   <append xpath="/blocks" help="for prefabs">
-    <block name="terrSuperStrong" help="max possible hp but not indestructible">
-      <property name="Extends" value="terrConcrete"/>
+    <block name="terrSuperStrong" help="max possible hp but not indestructible. obs.: based on terrConcrete">
+      <property name="Material" value="McrystalSuperStrong"/>
       <property name="CreativeMode" value="Dev"/>
       <property name="CustomIcon" value="terrStone"/>
+      <property name="Texture" value="1"/>
+      <drop event="Destroy" count="0"/>
+      <drop event="Fall" name="terrSuperStrong" count="1" prob="0.25" stick_chance="1"/>
+      <property name="TintColor" value="128,128,255" help="doesnt work?"/>
       <!-- HELPGOOD: but dont use
 			<property name="Mesh" value="transparent" help="the whole terrain then becomes not textured! :O"/>
 -->
-      <property name="Texture" value="1"/>
-      <property name="TintColor" value="128,128,255" help="doesnt work?"/>
-      <property name="MaxDamage" value="60000" help="prefab editor gun damage, TODO: tho should just up that gun dmg to 65535?"/>
+      <property name="Shape" value="Terrain"/>
+      <property name="Mesh" value="terrain"/>
+      <property name="TerrainIndex" value="6"/>
+      <property name="ImposterExclude" value="true"/>
+      <property name="Map.Color" value="204,177,131"/>
+      <property name="Group" value="Building"/>
+      <drop event="Harvest" name="resourceRockSmall" count="27" tag="oreWoodHarvest"/>
+      <property name="CanMobsSpawnOn" value="true"/>
+      <property name="EconomicValue" value="45"/>
+      <property name="EconomicBundleSize" value="20"/>
+      <property name="FilterTags" value="MC_outdoor,SC_terrain"/>
+      <property name="SortOrder1" value="d0k0"/>
+      <property name="SortOrder2" value="0050"/>
+      <property name="DisplayType" value="blockTerrainHardened"/>
+      <property name="DescriptionKey" value="terrainBlockGroupDesc"/>
+      <property name="MovementFactor" value="1.50"/>
     </block>
     <block name="superStrongShapes" shapes="All">
+      <property name="Texture" value="552" help="txName_GraniteBlack"/>
+      <drop event="Destroy" count="0"/>
+      <drop event="Fall" name="superStrongShapes" count="1" prob="0.25" stick_chance="1"/>
+      <property name="Material" value="McrystalSuperStrong"/>
       <property name="Group" value="Building,advBuilding"/>
-      <property name="DescriptionKey" value="steelBlockGroupDesc"/>
       <property name="CreativeMode" value="Dev"/>
       <property name="DisplayType" value="blockHardened"/>
-      <property name="Material" value="Mconcrete_shapes"/>
-      <property name="Texture" value="356"/>
       <property name="UiBackgroundTexture" value="8"/>
-      <drop event="Harvest" name="resourceScrapIron" count="15" tag="allHarvest"/>
-      <drop event="Destroy" count="0"/>
-      <drop event="Fall" name="terrSuperStrong" count="1" prob="0.25" stick_chance="1"/>
-      <property class="RepairItems">
-        <property name="resourceForgedSteel" value="120"/>
-      </property>
       <property name="FilterTags" value="MC_Shapes"/>
-      <property name="SortOrder1" value="0009"/>
-      <property name="EconomicValue" value="160"/>
-      <property name="CustomUpgradeSound" value="place_block_metal"/>
-      <property name="MaxDamage" value="60000" help="prefab editor gun damage, TODO: tho should just up that gun dmg to 65535?"/>
     </block>
+    <!--
+		HELPGOOD:PROBLEM/LIMITATION INFO:
+		
+		ISSUE:this crashes, or more tweaks are needed elsewhere, or the engine is not ready to accept transparent mesh to any shape? So, every shape wanted needs to be explicitly created here
+		<block name="superStrongCrystalShapes" shapes="All">
+			<property name="LightOpacity" value="1" />
+			<property name="Mesh" value="transparent" />
+			
+		ISSUE:the engine cant handle this, unable to place blocks, they wont even show up
+		<block name="crystalPole1m">
+			<property name="Texture" value="285" help="transparent business glass"/>
+			<drop event="Destroy" count="0" />
+			<drop event="Fall" name="superStrongCrystalShapes" count="1" prob="0.25" stick_chance="1" />
+			<property name="Material" value="McrystalSuperStrong" />
+			<property name="Group" value="Building,advBuilding" />
+			<property name="CreativeMode" value="Dev" />
+			<property name="DisplayType" value="blockHardened" />
+			<property name="UiBackgroundTexture" value="8" />
+			<property name="FilterTags" value="MC_Shapes" />
+			<property name="Shape" value="New" />
+			<property name="Model" value="Pole1m" />
+		</block>
+		<block name="crystalPyramid">
+			<property name="Extends" value="crystalPole1m" />
+			<property name="Model" value="pyramid" />
+		</block>
+-->
   </append>
   <!-- HELPGOOD: keep last! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
   <!-- HELPGOOD:slow to patch? not good anyways..
