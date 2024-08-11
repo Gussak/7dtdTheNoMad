@@ -46,10 +46,13 @@
           <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="faster end the blood moon extra effect if the player was sheltered during blood moon">
         <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
           <requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="15"/>
