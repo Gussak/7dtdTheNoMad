@@ -1,0 +1,298 @@
+<GhussakTweaks>
+	<append xpath="/buffs">
+		
+		<buff name="buffGSKGodModeMinimum" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,250,180" help="minimum help to player. put here only stuff that do not heal nor feed etc, things that do not prevent spending resources after the god mode ends">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+			<update_rate value="0.33"/>
+      <display_value_key value="buffGodModeNameShort" /> <display_value value="xxx" />
+			<effect_group>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="100" help="this let player move and fight"/>
+				
+				<passive_effect name="CarryCapacity" operation="base_set" value="160"/>
+				
+				<passive_effect name="ElementalDamageResist" operation="base_add" value="200" />
+				<passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical" />
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="200" />
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical" />
+				
+				<passive_effect name="PlayerExpGain" operation="perc_add" value="-1.00" help="this prevent player abuse the god mode"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation" help="the player may try to heal radiation, this copes with it">
+					<requirement name="CVarCompare" cvar="fGSKRadiationBkpGodModeMin" operation="GT" value="@$buffStatusRadiation" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="@fGSKRadiationBkpGodModeMin" help="prevents increasing the radiation">
+					<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadiationBkpGodModeMin" />
+				</triggered_effect>
+<!--
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="@fGSKRadiationBkpGodModeMin">
+					<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadiationBkpGodModeMin" />
+				</triggered_effect>
+-->
+				
+			</effect_group>
+		</buff>
+		
+		<buff name="buffGSKGodModeForEnterGameDuringBloodMoon" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after entering the game during a blood moon and being instantly received by many zombies surrouding.">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+			<display_value value=".iGSKGodModeEGDBM"/><display_value_key value="{0:0}s"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="set" value="150"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon">
+					<requirement name="CVarCompare" cvar=".iGSKGodModeEGDBM" operation="LTE" value="0" />
+				</triggered_effect>
+				
+        <passive_effect name="RunSpeed"  operation="perc_add" value="3.00" help="do not increase walkspeed to let player decide if wanna run"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="3.00"/>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
+					<requirement name="!HasBuff" buff="buffGSKGodModeMinimum" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeMinimum"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForEnterGameDuringBloodMoon'"/>
+			</effect_group>
+		</buff>
+		
+		<buff name="buffGSKDetectEnterGame">
+			<stack_type value="ignore" />
+			<duration value="0.15" help="to happen only one update as fast as possible. keep like this so other buffs can be added from here by using onSelfBuffUpdate thru append modlet patch too" />
+			<update_rate value="0.10" />
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="60" help="prevent swarming the player just after join">
+					<requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LT" value="60"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
+					<requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" />
+				</triggered_effect>
+				
+<!-- HELPGOOD: mmm...
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right? TODO: could instead just kill all zombies, but prevent dropping loot then">
+					<requirement name="IsBloodMoon"/>
+				</triggered_effect>
+-->
+			</effect_group>
+		</buff>
+		
+		<buff name="buffGSKDetectRespawn">
+			<stack_type value="ignore" />
+			<duration value="0.15" help="to happen only one update as fast as possible. keep like this so other buffs can be added from here by using onSelfBuffUpdate thru append modlet patch too" />
+			<update_rate value="0.10" />
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnFreeBundlesLimit" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
+			</effect_group>
+		</buff>
+		
+		<buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations. Only place CVARs config here! Even if they are used by other mods, the point is them all shall depend on the base lib. Setup only many cvars has no problem.">
+			<stack_type value="ignore"/>
+			<duration value="0.05" />
+			<effect_group id="GSKConfigConstants" help="do not change the id as is used by scripts etc!!! TODO: most of these pseudo constants dont need to be saved. so add a dot in front of their names and update everywhere">
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRadHintFrom" operation="set" value="10">
+					<requirement name="CVarCompare" cvar="iGSKRadHintFrom" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportEnergy" operation="set" value="420" helpgencode="DoNotModify:run:createTeleportRanges.sh"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60" />
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200" />
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200" />
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKStarvingHPBlockageLimit" operation="set" value="25"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExAllowSpawnFriendly" operation="set" value="1">
+					<requirement name="CVarCompare" cvar="iGSKDeusExAllowSpawnFriendly" operation="Equals" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="20" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="30" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKpowerCostWight" operation="set" value="21"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="35" help="todo: make a cfg item">
+					<requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightAddStam" operation="set" value="10"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="set" value="@iGSKEssenceWightMinStam"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="add" value="@.iGSKEssenceWightAddStam"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinHP" operation="set" value="5" help="todo: make a cfg item">
+					<requirement name="CVarCompare" cvar="iGSKEssenceWightMinHP" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="default is ON">
+					<requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="6" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount106"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
+					<requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
+					<requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25" />
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP" />
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100" />
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndexMax" operation="set" value="6" helpgencode="DoNotModify:run:createTeleportRanges.sh" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportBaseDist" operation="set" value="7" helpgencode="DoNotModify:run:createTeleportRanges.sh"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyDistIndexMax" operation="set" value="6" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleportBaseToSkyDist" operation="set" value="2000"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnLAST" operation="set" value="50162" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMin" operation="set" value="0.15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMinx100" operation="set" value="15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMax" operation="set" value="0.42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMaxx100" operation="set" value="42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTTUnderFreeDelay" operation="set" value="11"/>
+
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSlowFallConsumeEnergy" operation="set" value="15"/>
+
+			</effect_group>
+				
+			<effect_group help="TELEPORT: all below are teleport sections up to integer limit 65535">
+				<!-- HELPGOOD: all nearby directions are below .iGSKElctrnTeleSpecialBEGIN value -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionBEGIN" operation="set" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleNearDirectionBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionEND" operation="set" value="9999"/>
+				
+				<!-- HELPGOOD: special tele destinations, shall have no clashes with createTeleportRanges.sh max value too. can be sorted now -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBEGIN" operation="set" value="10000"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSpecialBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBackpack" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBackpack"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBeacon" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBeacon"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBedroll" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBedroll"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialLandClaim" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialLandClaim"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialZero" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialZero"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialEND" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialEND"/>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundBEGIN" operation="set" value="30000"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundIndexMin" operation="set" value="30001"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundIndexMax" operation="set" value="30127" helpgencode="DoNotModify:run:rwgImprovePOIs.sh"/>
+				<!-- HELPGOOD: PLACE NEW SECTIONS ABOVE HERE -->
+				
+				<!-- HELPGOOD: ALL SKY SECTIONS MUST BE BELOW HERE!-->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyBEGIN" operation="set" value="40000"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSkyBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyLastSpawn"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAbove" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAbove"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAboveButLower" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAboveButLower"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyEND" operation="set" value="@.iGSKTTStmp"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyEND"/>
+				
+				<!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKElctrnTeleSpawnBEGIN -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnBEGIN" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnRANDOM" operation="set" value="@.iGSKElctrnTeleSpawnBEGIN"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnRANDOM"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnEND" operation="set" value="59999"/>
+				<triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnEND"/>
+				<!-- HELPGOOD: LIMIT is 65535? -->
+			</effect_group>
+				
+			<effect_group help="CONDITIONAL CONFIGS: where value 0 means invalid and the user may use a cfg tool in-game.  or other reasons">
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1" help="after used, it will become 2 and be disabled forever">
+					<requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="0"/>
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="666" help="can be configured in-game using special items. but.. the increasing cost based on how many of each kind was opened and the increasing xp loss also based on it makes it uninteresting to open too many. So that high value may feel like endless. Was 9, 13, 33.">
+					<requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="must set this on 1st spawn only"/>
+				</triggered_effect>
+
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
+					<requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
+				</triggered_effect>
+
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKAllowMiasmaIndicator" operation="set" value="2" help="1 off, 2 on">
+					<requirement name="CVarCompare" cvar=".iGSKAllowMiasmaIndicator" operation="Equals" value="0" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
+					<requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="0" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
+					<requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="0" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="3" help="1 off, 2 on, 3 on and automatic values based on player level">
+					<requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="0" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMin" operation="set" value="2">
+					<requirement name="CVarCompare" cvar="iGSKBMFoeAliveMin" operation="Equals" value="0" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
+					<requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-15">
+					<requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GTE" value="0" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2" help="2on 1off">
+					<requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="0" />
+				</triggered_effect>
+				
+			</effect_group>
+			
+<!-- no buffs..., only set cvars here
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
+			</effect_group>
+-->
+		</buff>
+		
+    <buff name="buffGSKPermanentGenericCheck21" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
+      <stack_type value="replace" />
+      <duration value="0" />
+      <update_rate value="1" />
+		</buff>
+		
+	</append>
+</GhussakTweaks>
