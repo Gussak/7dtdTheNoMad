@@ -1,8 +1,6 @@
 <GhussakTweaks>
 	<append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
 		<effect_group help="CFG slow down common zombies in day light">
-			<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20"/>
-			<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate of buffGSKLegArmShot and .fGSKLimbShotDebuff to last 400s"/>
 		</effect_group>
 	</append>
 
@@ -11,6 +9,11 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="10"/>
+      
+      <effect_group help="init">
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKLimbShotDebuff" operation="set" value="0.20" help="sync with the constant values at entityclasses.xml for .iGSKShot... add ..."/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKShotLowerDebuffVal" operation="set" value="-0.005" help="sync with update_rate and .fGSKLimbShotDebuff to last 400s"/>
+      </effect_group>
       
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKShotLeftUpperArm" operation="GT" value="0" />

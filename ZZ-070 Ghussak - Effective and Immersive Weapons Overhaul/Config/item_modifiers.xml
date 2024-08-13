@@ -1,0 +1,59 @@
+<configs>
+  <!-- where to set these "descriptions"? -->
+  
+  <!-- the idea is to make item mods compatible and coherent, by following their description and coded effects, not to change how they behave outside of their description scope -->
+  
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeSerratedBlade']">
+    <!-- "highly increases the initial bleeding on every strike" -->
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWBleedAmountAdd" operation="set" value="6"/>
+    </effect_group>
+  </append>
+
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBarbedWire']">
+    <!-- "highly increases the initial bleeding on every strike" -->
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionRayHit"   action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceBleed"    operation="set" value="50"/>
+      <triggered_effect trigger="onSelfPrimaryActionRayHit"   action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWBleedAmountAdd" operation="set" value="3"/>
+      
+      <!-- power attack -->
+      <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceBleed"    operation="set" value="95"/> 
+      <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWBleedAmountAdd" operation="set" value="6"/> 
+    </effect_group>
+  </append>
+
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubMetalChain']">
+    <!-- "highly increases the knockdown chance" -->
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionRayHit"   action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="65"/>
+      <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceKnockdown" operation="set" value="95"/>
+    </effect_group>
+  </append>
+
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeWeightedHead']">
+    <!-- "highly increases the stun chance of melee weapons" -->
+    <effect_group tiered="false">
+<!-- should be these two, but the triggers are ignored for this mod...
+      <triggered_effect trigger="onSelfPrimaryActionRayHit"   action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceStun" operation="set" value="65"/>
+      <triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceStun" operation="set" value="95"/>
+-->
+      <triggered_effect trigger="onSelfAttackedOther"         action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceStun" operation="set" value="75"/>
+    </effect_group>
+  </append>
+
+  <append xpath="/item_modifiers/item_modifier[@name='modGunCrippleEm']">
+    <!-- "highly increases the stun chance of guns" Exception: the original effect description is only about legs but lasts for 300s! This one will increase the scope of this item's mod, as stun is broader than cripple, but stun lasts much less! -->
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWChanceStun" operation="set" value="75"/>
+    </effect_group>
+  </append>
+
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']">
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffBurningElement">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="95"/> <!-- this is melee, must be effective -->
+      </triggered_effect>
+    </effect_group>
+  </append>
+
+</configs>
