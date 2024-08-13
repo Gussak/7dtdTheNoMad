@@ -4,13 +4,9 @@
   it wont read the cvar from the NPC :( :( :( :( :( :( :( :( :( :( :( :(
   <set xpath="/windows/window[@name='windowTargetBar']/window/rect/label[@text='{name}:{currentwithmax}']/@text">{name}: {currentwithmax}, HiredAmmo:{cvar(iNPCAmmoSpent)}/{cvar(iNPCAmmoLimit)}</set>
 -->
-        
 <!--
   <append xpath="/windows/window[@name='HUDLeftStatBars']/rect[@pos='9,145']/rect[@pos='76,-103']">
 -->
-
-
-
 
   <!-- HELPGOOD: this moves the ammo, scrap results etc up enough to fit the hud below it -->
   <setattribute xpath="/windows/window[@name='HUDRightStatBars']" name="pos">0,160</setattribute>
@@ -27,124 +23,36 @@
 <!--HELPGOOD: The NoMAD HUD-->
   <append xpath="/windows" help="The NoMAD HUD: devices status, tactical info, biometric scanner (TODO: unfortunately no bar graphs possible to show cvar values?)">
     <window name="HUDGSKElctrnEnergy">
-<!--
-      <rect name="hud" pos="-200,125" rows="1" cols="1" width="450" side="right">
--->
-      <rect name="hud" pos="-225,115" rows="1" cols="1" width="450" side="right">
+
+    <rect name="hud" pos="-225,115" rows="1" cols="1" width="450" side="right">
         <sprite depth="1" name="border" color="0,128,255,128" type="sliced" fillcenter="false" />
         
         <sprite depth="2" name="windowIcon" width="460" height="173" pos="-235,55" sprite="7dtdGskElctrnHud4" color="[iconColor]" foregroundlayer="false" help="width is rectWidth+10, pos is rectPos-10 (btw rect pos x is already negative)"/>
         
-<!--
-        <filledsprite depth="14" name="BarBattMax" color="[Navy]" width="450" height="75" type="filled" fill="1.0" 
-          pos="75,-75" pivot="center" justify="center"/>
--->
-        
-<!--
-    <label depth="15" pos="0,30" name="NVBattery" width="45" height="42" pivot="bottom" justify="center" text="NV={cvar(iGSKNightVisionRemainingSeconds)}" font_size="15" color="[green]" controller="HUDStatBar" tooltip_key="xuiNVBattery"/>
--->
-<!--
-    <label depth="15" pos="0,30" name="NVBattery" width="45" height="42" pivot="center" justify="center" 
-      text="NV={cvar(iGSKNightVisionRemainingSeconds)}" font_size="15" 
-      color="{cvar(iGSKNightVisionRemainingSeconds) > 0 ? '[green]' : '[red]'}" 
-      controller="HUDStatBar" tooltip_key="xuiNVBattery"/>
--->
-<!--
-    <label depth="15" pos="0,30" name="NVBattery" width="75" height="42" pivot="center" justify="center" 
-      text="{Round(cvar(iGSKNightVisionRemainingSeconds),2}" font_size="19" color="[red]" controller="HUDStatBar" tooltip_key="xuiNVBattery">
-      <requirement name="CVarCompare" cvar="iGSKNightVisionRemainingSeconds" operation="LTE" value="0" />	
-    </label>
-    <label depth="15" pos="0,15" name="NVBattery" width="75" height="42" pivot="center" justify="center" 
-      text="${Round(cvar(iGSKNightVisionRemainingSeconds),0}" font_size="19" color="[green]" controller="HUDStatBar" tooltip_key="xuiNVBattery">
-      <requirement name="CVarCompare" cvar="iGSKNightVisionRemainingSeconds" operation="GT" value="0" />	
-    </label>
-    <label depth="15" pos="0,0" name="NVBattery" width="75" height="42" pivot="center" justify="center" 
-      text="${Round({cvar(iGSKNightVisionRemainingSeconds)},0}" font_size="19" color="{cvar(iGSKNVGood) ? '[green]' : '[red]'}" controller="HUDStatBar" tooltip_key="xuiNVBattery"/>
-    <label depth="15" pos="0,0" name="NVBattery" width="75" height="42" pivot="center" justify="center" 
-      text="NV={cvar(iGSKNightVisionRemainingSeconds)}" font_size="19" color="{${cvar(iGSKNVGood)} ? '[green]' : '[red]'}" controller="HUDStatBar" tooltip_key="xuiNVBattery"/>
-    <label depth="15" pos="0,-15" name="NVBattery" width="75" height="42" pivot="center" justify="center" 
-      text="NV={cvar(iGSKNightVisionRemainingSeconds)}" font_size="19" color="{{cvar(iGSKNVGood)} ? '[green]' : '[red]'}" controller="HUDStatBar" tooltip_key="xuiNVBattery"/>
--->
-
-
-<!--
-    <filledsprite depth="14" pos="175,50" name="ElctrnHeroModeBg" color="[Navy]" width="50" height="100" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
-    <label depth="15" pos="175,50" name="DebugVisualIndicator" width="50" height="100" pivot="center" justify="center" 
-      text="{cvar(iGSKDrinkingRainDebug)}" font_size="100" color="[green]" controller="HUDStatBar" tooltip_key="xuiBigVisualIndicatorSimulatedOnlyForDebug"/>
--->
-    
-<!--
-    <filledsprite depth="14" pos="0,25" name="ElctrnHeroModeBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
-<!--
-    <label depth="15" pos="0,0" name="ElctrnHeroMode" width="450" height="42" pivot="center" justify="center" 
-      text="Hm:{cvar(iGSKElctrnHeroMode)},Rd:{cvar(.iGSKPercToShortWORKING2)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiElctrnHeroMode"/>
--->
     <label depth="3" pos="0,25" name="ElctrnHeroMode" width="450" height="42" pivot="center" justify="center" 
       text="HL!{cvar(bGSKEnergyHL)},WL!{cvar(bGSKEnergyWL)},NV!{cvar(bGSKEnergyNV)},TT!{cvar(bGSKEnergyTT)},TS!{cvar(bGSKEnergyTS)},TA:{cvar(bGSKEnergyTA)},TH:{cvar(bGSKEnergyTH)}/!{cvar(iGSKElctrnHeroMode)}!,TR:{cvar(bGSKEnergyTR)},TP:{cvar(bGSKEnergyTP)},TB:{cvar(bGSKEnergyTB)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiGSKEnergyEnabledModes"/>
 
-<!--
-    <filledsprite depth="14" pos="0,0" name="ElctrnHeroLvlBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
     <label depth="3" pos="0,0" name="ElctrnHeroLvl" width="450" height="42" pivot="center" justify="center" 
       text="CFG({cvar(.fGSKCFGTMPval1:0.00)},{cvar(.fGSKCFGTMPval2:0.00)}),TP(DI:{cvar(iGSKElctrnTeleportDistIndex:0)},UD:{cvar(iGSKElctrnTeleportMixUpDown:0)},SI:{cvar(iGSKElctrnTeleSkyDistIndex:0)},B:{cvar(iGSKTeleportedToSpawnPointBiomeId:0)}),XL:{cvar(.fGSKExpDebtPercx100:0)}%,{cvar(.fGSKExpDebtTmRemain:0)}h,MP:{cvar(iGSKMeleeParryChance:0)}%,MO:{cvar(fGSKPoisonedMeleePiercing:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiGSKEnergyLvls"/>
 
-<!--
-    <filledsprite depth="14" pos="0,-25" name="LightsDamageConditionsBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
-<!--
-    <label depth="15" pos="0,-25" name="LightsDamageConditions" width="450" height="42" pivot="center" justify="center" 
-      text="HL:{cvar(fGSKDmgPercHL)},WL:{cvar(fGSKDmgPercWL)},NV:{cvar(fGSKDmgPercNV)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiLightsDamageConditions"/>
--->
-<!--
-    <label depth="15" pos="0,-25" name="LightsDamageConditions" width="450" height="42" pivot="center" justify="center" 
-      text="HL:{cvar(iGSKDmgPercRoundHL)}%,WL:{cvar(iGSKDmgPercRoundWL)}%,NV:{cvar(iGSKDmgPercRoundNV)}%" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiLightsDamageConditions"/>
--->
     <label depth="3" pos="0,-25" name="LightsDamageConditions" width="450" height="42" pivot="center" justify="center" 
       text="Dmg%HL:{cvar(iGSKDmgPercHLShow:0)},WL:{cvar(iGSKDmgPercWLShow:0)},NV:{cvar(iGSKDmgPercNVShow:0)},TT:{cvar(iGSKDmgPercTTShow:0)},TS:{cvar(iGSKDmgPercTSShow:0)},TA:{cvar(iGSKDmgPercTAShow:0)},TH:{cvar(iGSKDmgPercTHShow:0)},TR:{cvar(iGSKDmgPercTRShow:0)},TP:{cvar(iGSKDmgPercTPShow:0)},TB:{cvar(iGSKDmgPercTBShow:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiEnergyWiringDamageConditions"/>
-<!--
-    <filledsprite depth="14" pos="0,-50" name="NVBatteryBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
+
     <label depth="3" pos="0,-50" name="NVBattery" width="450" height="42" pivot="center" justify="center" 
       text="Battery:{cvar(iGSKBatteryChargePercShow:0)}%,({cvar(iGSKBatteryCharges:0.00)}/{cvar(fGSKBattMaxChargeCurrent:0)}),FF:{cvar(fGSKFireFuel:0)}/{cvar(fGSKFireFuelMax:0)},DC:{cvar(.fGSKDmgColdProtx100:0)},DH:{cvar(.fGSKDmgHeatProtx100:0)},GM:{cvar(iGSKMiasmaBlockPercExtra:0.0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiNVBatteryEnergy"/>
-    <!--
-      color="0,0,255,200" wont work :(
-      
-      black_half_alpha
-      style="hover" hoverscale="2.0" :(
-    -->
-<!--
-    <filledsprite depth="14" pos="0,-75" name="NVBattBarBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
+
     <label depth="3" pos="0,-75" name="NVBattBar" width="450" height="42" pivot="center" justify="center" 
       text="DR:{cvar(iGSKDrinkRainAllowed:0)}/{cvar(iGSKDrinkingRain:0)},NR:{cvar(iPreventDrinkRainDelay:0)},IB:{cvar(fGSKinfectionCounterBkp:0)},IC:{cvar(fGSKinfectionCureCounterBkp:0)},NPD:{cvar(fNPCPreventDismissSecs:0)},NRA:{cvar(fRepairNPCArmor:0.00)},HM:{cvar(fGSKMiasmaDirty:0)},RR:{cvar(fGSKRadResPerc:0.00)},HS:{cvar(fGSKHazmatSuitIntegrity:0.00)}" 
       font_size="21" color="[green]" controller="HUDStatBar" 
       tooltip_key="xuiHiddenStats"/>
-    <!-- HELP:TemporarilyRemovedWontFit: ND:{cvar(iGSKNearDeath:0.0)},HW:{cvar(iGSKNDHWTime:0)},GH:{cvar(bGSKAllowGoreHarvest:0)},WB:{cvar(fGSKWaterPercBkp:0.00)} -->
+    <!-- HELPGOOD:TemporarilyRemovedWontFit:notSoUseful:AlreadyInBuffs: ND:{cvar(iGSKNearDeath:0.0)},HW:{cvar(iGSKNDHWTime:0)},GH:{cvar(bGSKAllowGoreHarvest:0)},WB:{cvar(fGSKWaterPercBkp:0.00)} -->
       
-<!--
-    <filledsprite depth="14" pos="0,-100" name="NVBattBarBg" color="[Navy]" width="450" height="23" type="filled" fill="1.0" 
-      pivot="center" justify="center"/>
--->
     <label depth="3" pos="0,-100" name="NVBattBar" width="450" height="42" pivot="center" justify="center" 
       text="SD:{cvar(_shaded:0.00)},UW:{cvar(_underwater:0)},WT:{cvar(_wetness:0.00)},SW:{cvar(fGSKShownWetnessPerc:0.00)},SH:{cvar(_sheltered:0.00)},CT:{cvar(_coretemp:0)},BR:{cvar(_biomeradiation:0.0)},BL:{cvar(fGSKBloodLossShow:0)},HC:{cvar(iGSKHitpointsBlockageChemUseShow:0)}" 
       font_size="21" color="[green]" controller="HUDStatBar" 
       tooltip_key="xuiHiddenStats2"/>
       
-<!--
-      text="Energy:{cvar(iGSKBatCh1)}{cvar(iGSKBatCh2)}{cvar(iGSKBatCh3)}{cvar(iGSKBatCh4)}{cvar(iGSKBatCh5)}{cvar(iGSKBatCh6)}{cvar(iGSKBatCh7)}{cvar(iGSKBatCh8)}{cvar(iGSKBatCh9)}{cvar(iGSKBatCh10)},WB:{cvar(fGSKWaterPercBkp:0.00)},NR:{cvar(iPreventDrinkRainDelay:0)},SD:{cvar(_shaded:0.0)},UW:{cvar(_underwater:0.0)},SH:{cvar(_sheltered:0.0)}" 
--->
-<!--
-    <filledsprite depth="16" name="BarBattMax" color="110,110,110,128" width="77" height="12" type="filled" fill="{cvar(iGSKBattMaxCharge)}" />
--->
-
-    <!--HELP:    not working, fill cant be cvar? :( 
+    <!--HELPGOOD:    not working, fill cant be cvar? :( 
     <filledsprite depth="14" name="BarBattMax" color="[red]"   width="77" height="5" type="filled" fill="1.0" 
       pos="-1,-29" pivot="center" justify="center"/>
     <filledsprite depth="15" name="BarBatt"    color="[green]" width="75" height="3" type="filled" fill="{cvar(fGSKBatteryChargePerc)}" 
@@ -159,87 +67,10 @@
   more visible stats
 -->
   
-<!--
-  vanilla
--->
-<!--
-  <set xpath="/windows/window/rect[@side='right']/rect[@controller='HUDStatBar']/filledsprite[@name='background' and @color='110,110,110,128']/@color">50,50,50,255</set>
-  <set xpath="/windows/window/rect[@side='right']/rect[@controller='HUDStatBar']/sprite[
-      @depth='2' and 
-      @name='background' and 
-      @color='0,0,0,140' and
-      @type='sliced'
-    ]/@color">0,0,0,255</set>
--->
-
-<!--
-RILES HudPlus  
--->
-<!--
-  <set xpath="/windows/window/rect[@side='right']/rect[@controller='CharacterFrameWindow']/rect[@controller='HUDStatBar']/filledsprite[@name='background' and @color='110,110,110,128']/@color">50,50,50,255</set>
-  <set xpath="/windows/window/rect[@side='right']/rect[@controller='CharacterFrameWindow']/rect[@controller='HUDStatBar']/sprite[
-      @depth='2' and 
-      @name='background' and 
-      @color='0,0,0,140' and
-      @type='sliced'
-    ]/@color">0,0,0,255</set>
--->
-  
-<!--
-  all
-  PROBLEM: THESE BELOW FAIL TO APPLY! :(
--->
-<!--
-  <set xpath="/windows/window//filledsprite[@name='background' and @color='110,110,110,128']/@color">0,0,0,255</set>
-  <set xpath="//filledsprite[@name='background' and @color='110,110,110,128']/@color">0,0,0,255</set>
-  
-  <set xpath="/windows/window//sprite[
-      @depth='2' and 
-      @name='background' and 
-      @color='0,0,0,140' and
-      @type='sliced'
-    ]/@color">0,0,0,255</set>
-  <set xpath="//sprite[
-      @depth='2' and 
-      @name='background' and 
-      @color='0,0,0,140' and
-      @type='sliced'
-    ]/@color">0,0,0,255</set>
--->
-  
-<!--
-  <set xpath="/windows/window/rect/rect/rect/filledsprite[@name='background' and @color='110,110,110,128']/@color">110,110,110,200</set>
-  <set xpath="/windows/window/rect/rect/rect/rect/filledsprite[@name='background' and @color='110,110,110,128']/@color">110,110,110,200</set>
--->
-
-
-
-
 <!--HELPGOOD: inventories improvements-->
-  <!-- HELPGOOD: unfortunately the default "value" field seems to be ignored, therefore is not loaded when starting the game that also wont save any adjustments we make while in-game playing it. value_min="60" also makes no difference and color is also ignored. value_min also limits the minimum value_increment right? -->
-  <remove xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']/combobox[@name='cbxLockedSlots']" help="to be overwritten by the below patch that adapts it to 160 slots and improves many other things as much as possible"/>
-  <append xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']">
-    <filledsprite depth="9" name="CfgHintLockInv" color="255,255,180,255" pos="-120,-6" width="240" height="32" type="filled" fill="0.625" help="This is meant to be a hint as that cfg is not saved when you exit the game. 20slots(oneLine)=0.125*160 so 20=0.125, 40=0.250, 60=0.375, 80=0.500, 100=0.625, 120=0.750, 140=0.875, 160=1.000. The default hint is at 100(0.625) locked slots."/>
-    <combobox depth="10" name="cbxLockedSlots" pos="-150,-7" width="300" height="30" tooltip_key="xuiStashLockedSlots" type="ComboBoxInt" value_min="0" value_max="160" value="80" value_wrap="false" value_increment="20" color="[green]" />
-  </append>
-  
   <setattribute xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnSort']" name="defaultcolor">255,180,180,128</setattribute>
-<!--
-  <append xpath="/windows/window[@name='windowBackpack']">
-    <label depth="3" name="TextContent" pos="400,-6" width="30" height="30" text="[{daycolor|always}]{day|always}" font_size="28" color="[white]" justify="center" help="trying to call more attention to bloodmoon day"/>	
-  </append>
--->
-<!--
-    <label depth="50" name="TextContent" pos="-90,-6" width="30" height="30" text="[{daycolor|always}]{day|always}" font_size="28" color="[white]" justify="center" />
-    <label depth="51" name="TextContent" pos="-90,-6" width="30" height="30" text="{day|always}" font_size="28" color="0,255,0,128" justify="center" help="this is to try to help perceive it is a bloodmoon day by playing with colors"/>
--->
+
   <remove xpath="/windows/window[@name='windowBackpack']/sprite[@name='spriteDesign1001']" help="cleans the view"/>
-  <!-- HELPGOOD: just sync vehicle with above backpack code -->
-  <remove xpath="/windows/window[@name='windowVehicleStorage']/panel[@name='header']/rect[@controller='ContainerStandardControls']/combobox[@name='cbxLockedSlots']"/>
-  <append xpath="/windows/window[@name='windowVehicleStorage']/panel[@name='header']/rect[@controller='ContainerStandardControls']">
-    <filledsprite depth="9" name="CfgHintLockInv" color="255,255,180,255" pos="-210,-6" width="240" height="32" type="filled" fill="0.625"/>
-    <combobox depth="10" name="cbxLockedSlots" pos="-240,-7" width="300" height="30" tooltip_key="xuiStashLockedSlots" type="ComboBoxInt" value_min="0" value_max="160" value="80" value_wrap="false" value_increment="20" color="[green]" />
-  </append>
   <remove xpath="/windows/window[@name='windowVehicleStorage']//sprite[@name='spriteDesign1003']" help="cleans the view"/>
 <!--
     <filledsprite depth="11" name="AlertStashNeedsCfg2" color="255,255,180,255" pos="-120,-22" width="240" height="2" type="filled" fill="0.625" help="20(one line)=0.125*160 so 20=0.125, 40=0.250, 60=0.375, 80=0.500, 100=0.625, 120=0.750, 140=0.875, 160=1.000,"/>
