@@ -3,11 +3,7 @@
     <buff name="buffGSKStumbleOnThingsOnTheGround" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
       <duration value="6" help="player takes 3s to get up so 6s is like a cooldown safety to let player move away"/>
-      <update_rate value="1"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="0"/>
-      </effect_group>
-        
+      <update_rate value="7"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="stand up"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
@@ -33,21 +29,22 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You stumble in something on the ground (crouch to prevent this)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="0"/>
       </effect_group>
     </buff>
     
     <buff name="buffGSKtrashLandmine" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
-      <duration value="12" help="shall happen very rarely"/>
-      <update_rate value="1"/>
+      <duration value="12" help="grace time, also shall happen rarely"/>
+      <update_rate value="13"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="standing up"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
         
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="30" help="was 6">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="6" help="was 6">
           <requirement name="!EntityHasMovementTag" tags="running" />
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="90" help="was 18">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk2" operation="set" value="18" help="was 18">
           <requirement name="EntityHasMovementTag" tags="running" />
         </triggered_effect>
         
@@ -55,7 +52,6 @@
           <requirement name="HasBuff" buff="buffImpactBracing" />
         </triggered_effect>
         
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp2" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp2" operation="set" value="1">
           <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@.iGSKStumbleOTOTGtmpChk2"/>
         </triggered_effect>
@@ -67,6 +63,7 @@
         <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGtmp2" operation="Equals" value="1" />
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKtrashMine"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] That trash exploded... OMG! (crouch to prevent this)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp2" operation="set" value="0"/>
       </effect_group>
     </buff>
     
