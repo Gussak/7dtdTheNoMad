@@ -5,16 +5,16 @@
 		<property name="SightRange" value="180" />
 	</append>
 	
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and not(contains(@name,'Ambush'))]" help="bandits shall always drop something (least ambush ones that are meant just as extra challenge), they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and not(contains(@name,'Ambush'))]" help="bandits shall always drop something (least ambush ones that are meant just as extra challenge), they are somehow rare and provide a good challenge TODO: but would be better if only drops stuff when a player kills it, not by another NPC.">
     <property name="LootDropProb" value="1.00" help="Raider:AllWithGoodDrops"/>
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider')]">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley'))]">
     <effect_group name="Raider:AllWithGoodDrops">
 			<triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKnpcRaiderSelfHealing" />
 		</effect_group>
   </append>
   
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider')]" help="criticals">
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley'))]" help="criticals">
 		<effect_group name="Raider:Criticals" help="high skilled raiders do criticals more easily">
 			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" fireOneBuff="true" buff="buffArmSprainedCHTrigger,buffLegSprainedCHTrigger,buffLaceration,buffAbrasionCatch,buffInjuryStunned01CHTrigger,buffInjuryBleedingTwo,buffShocked,buffBurningElement,buffGSKSnakePoison,buffGSKbulletExplosion,buffGSKcriticalHitNearDeath,buffGSKbulletRadiation" weights=".07,.07,.05,.30,.50,.15,.05,.01,.03,.05,.05,.02" help="onSelfAttackedOther because these raiders are meant to always be a challenge. using very low chance as is ranged and too many bullets. onSelfDamagedOther wont work well if armor rating is very high that prevents most damage to happen">
 				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="100" help="keep like this, will be tweaked below. this is to grant a critical high chance for melee"/>
@@ -22,7 +22,7 @@
 		</effect_group>
   </append>  
   
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'Club') or
 			contains(@name,'Knife') or
 			contains(@name,'Bat') or
@@ -43,7 +43,7 @@
 		</effect_group>
 		
   </append>
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'Club') or
 			contains(@name,'Knife') or
 			contains(@name,'Bat') or
@@ -52,7 +52,7 @@
 		)
 	]/property[@name='Tags']/@value" help="melee bandits shall have best helmet ISSUE: ranged inherit from melee? so some ranged are using this instead of below? ISSUE: headshot helmet mod may not work properly with some raiders. Most raiders only seem to detect headshots while in ragdoll mode. Could it be a 3d model issue?">,helmetProtection10</append>
 	
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'AK47') or
 			contains(@name,'SMG') or
 			contains(@name,'DPistol') or
@@ -71,20 +71,20 @@
   </append>
   
 <!--  HELPGOOD: based on firerate mainly -->
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'DPistol')
 		)]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">50</set>
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'SRifle')
 		)]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">75</set>
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'Bow')
 		)]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value">88</set>
-  <set xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <set xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'RocketL')
 		)]/effect_group[@name='Raider:Criticals']/triggered_effect[@trigger='onSelfAttackedOther']/requirement[@name='RandomRoll']/@value" help="is slow and NPCs sometimes have totally bad aim with it">95</set>
 	
-  <append xpath="/entity_classes/entity_class[starts-with(@name, 'npcRaider') and (
+  <append xpath="/entity_classes/entity_class[(starts-with(@name, 'npcRaider') or starts-with(@name, 'npcHarley')) and (
 			contains(@name,'AK47') or
 			contains(@name,'SMG') or
 			contains(@name,'DPistol') or

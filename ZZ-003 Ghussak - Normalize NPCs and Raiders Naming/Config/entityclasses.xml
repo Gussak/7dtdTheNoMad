@@ -30,7 +30,7 @@
 
 <!--
 	HELPGOOD:CODEGEN:
-	clear;egrep -iRIah -\-include="*.xml" "<entity_class.*npc" * |egrep 'name="[^"]*"' -oi |tr -d '"' |cut -d= -f2 |egrep -vi "Template|npcHarley|npcTrader|LootContainer|npcRaider|npcMech|BackpackNPC" |sed -r "s!npc(.*)!<set xpath=\"/entity_classes/entity_class[@name='npc\1']/@name\">npcHirable\1</set>!"
+	clear;clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep -iRIah -\-include="*.xml" "<entity_class.*npc" * |egrep 'name="[^"]*"' -oi |tr -d '"' |cut -d= -f2 |egrep -vi "Template|npcHarley|npcTrader|LootContainer|npcRaider|npcMech|BackpackNPC")&&:;for strNm in "${astrList[@]}";do echo "$strNm" |sed -r "s!npc(.*)!<set xpath=\"/entity_classes/entity_class[@name='npc\1']/@name\">npcHirable\1</set>!";done; for strNm in "${astrList[@]}";do echo "$strNm" |sed -r "s!npc(.*)! \"npc\1\" \"npcHirable\1\"!";done   #the 2nd just creates an array/table. This other unnecessarily complex was to directly create a sed command: |sed -r "s!npc(.*)! -e 's@npc\1@npcHirable\1@' \\\\!"
 -->
 	<set xpath="/entity_classes/entity_class[@name='npcSurvivorRanged']/@name">npcHirableSurvivorRanged</set>
 	<set xpath="/entity_classes/entity_class[@name='npcNurseEmptyHand']/@name">npcHirableNurseEmptyHand</set>
