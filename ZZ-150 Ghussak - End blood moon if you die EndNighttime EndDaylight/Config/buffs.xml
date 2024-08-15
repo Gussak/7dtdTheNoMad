@@ -1,0 +1,113 @@
+<GhussakTweaks>
+	<append xpath="/buffs">
+    <buff name="buffGSKendBloodMoon1" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_color="255,255,0" icon_blink="true">
+      <stack_type value="ignore" />
+      <duration value="0" />
+      <update_rate value="0.05"/>
+			<effect_group>
+				<requirement name="IsBloodMoon"/>
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKendBloodMoon1'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="!IsBloodMoon"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:'buffGSKendBloodMoon1'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The blood moon is gone." />
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKendBloodMoon1"/>
+			</effect_group>
+    </buff>
+    
+    <buff name="buffGSKmakeDayLightEnd" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_color="255,255,0" icon_blink="true" description_key="dkGSKwaitTimePass">
+      <stack_type value="ignore" />
+      <duration value="0" />
+      <update_rate value="0.05"/>
+			<effect_group>
+				<requirement name="!IsNight"/>
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKmakeDayLightEnd'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="IsNight"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:'buffGSKmakeDayLightEnd'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKmakeDayLightEnd"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKdenyMakeNightEnd"/>
+			</effect_group>
+    </buff>
+    <buff name="buffGSKdenyMakeNightEnd" hidden="false" remove_on_death="false" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
+      <stack_type value="ignore" />
+      <duration value="0" />
+      <update_rate value="3"/>
+			<effect_group>
+				<requirement name="!IsNight"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeNightEnd"/>
+			</effect_group>
+    </buff>
+    
+    <buff name="buffGSKmakeNightEnd" hidden="false" remove_on_death="false" icon="7dtdShockTip" icon_color="255,255,0" icon_blink="true" description_key="dkGSKwaitTimePass">
+      <stack_type value="ignore" />
+      <duration value="0" />
+      <update_rate value="0.05"/>
+			<effect_group>
+				<requirement name="IsNight"/>
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKmakeNightEnd'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKadvanceTimeOnce"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="!IsNight"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:END:'buffGSKmakeNightEnd'"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKmakeNightEnd"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+			</effect_group>
+    </buff>
+    <buff name="buffGSKdenyMakeDayLightEnd" hidden="false" remove_on_death="false" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
+      <stack_type value="ignore" />
+      <duration value="0" />
+      <update_rate value="3"/>
+			<effect_group>
+				<requirement name="IsNight"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKdenyMakeDayLightEnd"/>
+			</effect_group>
+    </buff>
+    
+    <buff name="buffGSKtimePassDebuff" hidden="false" remove_on_death="true" description_key="dkGSKwaitTimePass" help="no icon to show only on the detailed list">
+      <stack_type value="ignore" />
+      <duration value="9" />
+      <update_rate value="5" help="to update only once just after ragdoll ends"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+				
+				<triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.25,0.37)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,370)"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="means near death level 2 to 4 if it was 0;FixTinyRandomFloat: was randomFloat(0.25,0.37)"/> <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=0:<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.25,0.37)" help="means near death level 2 to 4 if it was 0"/> -->
+				
+				<triggered_effect help="FixTinyRandomFloat:was iGSKNearDeathFrostbyteLvl add randomFloat(2.5,5.0)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(2500,5000)"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/><triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="this will be harder in snow biome, make a campfire;FixTinyRandomFloat: was randomFloat(2.5,5.0)"/> <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=0:<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(2.5,5.0)" help="this will be harder in snow biome, make a campfire"/> -->
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0" help="so the player wont use it from inventory by mistake messing the game time unintentionally"/>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKtimePassDebuff"/>
+    	</effect_group>
+    </buff>
+	</append>
+	
+	<append xpath="/buffs/buff[@name='buffGSKDetectRespawn']">
+      <effect_group help="end blood moon if player dies (respawns)">
+        <requirement name="IsBloodMoon"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKendBloodMoon1">
+					<requirement name="CVarCompare" cvar="iGSKEndBloodMoonAllowed" operation="Equals" value="1" />
+        </triggered_effect>
+      </effect_group>
+	</append>
+	
+	<append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
+      <effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEndBloodMoonAllowed" operation="set" value="1"/>
+      </effect_group>
+	</append>
+	
+	<append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+      <effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="add" value="-1">
+					<requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GT" value="0"/>
+				</triggered_effect>
+      </effect_group>
+	</append>
+	
+</GhussakTweaks>
