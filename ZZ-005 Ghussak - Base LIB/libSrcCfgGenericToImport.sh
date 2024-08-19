@@ -63,9 +63,9 @@ function CFGFUNCcleanEchoPRIVATE() {
 function CFGFUNCbiomeData() { #helpf <lstrXYZ>
   local lstrXYZ="$1"
   if [[ -n "${astrPosVsBiomeColor[${lstrXYZ}]-}" ]];then      # faster
-    eval "`./getBiomeData.sh -t ${astrPosVsBiomeColor["${lstrXYZ}"]}`" # iBiome strBiome strColorAtBiomeFile
+    eval "`${strCFGBaseLIBFolder}/getBiomeData.sh -t ${astrPosVsBiomeColor["${lstrXYZ}"]}`" # iBiome strBiome strColorAtBiomeFile
   else      # much slower
-    eval "`./getBiomeData.sh "${lstrXYZ}"`" # strColorAtBiomeFile strBiome iBiome
+    eval "`${strCFGBaseLIBFolder}/getBiomeData.sh "${lstrXYZ}"`" # strColorAtBiomeFile strBiome iBiome
   fi
   #declare -p iBiome strBiome strColorAtBiomeFile
   echo "iBiome=$iBiome;strBiome='$strBiome';strColorAtBiomeFile='$strColorAtBiomeFile'" #OUTPUT
@@ -98,7 +98,7 @@ function CFGFUNCerrorChk() {
 
 function CFGFUNCgencodeApply() {
   local lSECONDS=$SECONDS
-  ./gencodeApply.sh "$@"
+  CFGFUNCexec "${strCFGBaseLIBFolder}/gencodeApply.sh" "$@"
   SECONDS=$lSECONDS
 };export -f CFGFUNCgencodeApply
 
@@ -847,17 +847,24 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${bCFGDryRun:=false} #help just show what would be done
   export bCFGDryRun
   
-  mkdir -vp _log _tmp
+  mkdir -vp _log _tmp #this will end up being created at the folder of the script importing this lib
   
-  export strCFGScriptLog="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
-  export strCFGScriptLogLastLink="`pwd`/`dirname "${0}"`/_log/`basename "${0}"`.Last.log"
-  ln -sfT "${strCFGScriptLog}" "${strCFGScriptLogLastLink}"
+  export strCFGScriptLog="`pwd`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.log"
+  export strCFGScriptLogLastLink="`pwd`/_log/`basename "${0}"`.Last.log"
+  #set -x;
+  ln -vsfT "${strCFGScriptLog}" "${strCFGScriptLogLastLink}";
+  #set +x
+  #declare -p strCFGScriptLog strCFGScriptLogLastLink
   
-  export strCFGErrorLog="`pwd `/`dirname "${0}"`/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.Errors.log"
-  export strCFGErrorLogLastLink="`pwd `/`dirname "${0}"`/_log/`basename "${0}"`.Errors.Last.log"
-  ln -sfT "${strCFGErrorLog}" "${strCFGErrorLogLastLink}"
+  export strCFGErrorLog="`pwd `/_log/`basename "${0}"`.`date +"${strCFGDtFmt}"`.Errors.log"
+  export strCFGErrorLogLastLink="`pwd `/_log/`basename "${0}"`.Errors.Last.log"
+  #set -x;
+  ln -vsfT "${strCFGErrorLog}" "${strCFGErrorLogLastLink}";
+  #set +x
+  #declare -p strCFGErrorLog strCFGErrorLogLastLink
+  #exit 1
   
-  export strCFGFlTotalRunTimeSrc="`pwd `/`dirname "${0}"`/_tmp/CFGTotalScriptsRunTimes.sh"
+  export strCFGFlTotalRunTimeSrc="`pwd `/_tmp/CFGTotalScriptsRunTimes.sh"
   #declare -p strCFGScriptLog
   declare -A astrCFGTotalRunTimeList=()
   if [[ -f "$strCFGFlTotalRunTimeSrc" ]];then
@@ -871,8 +878,14 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGGameFolder
   export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
   
+  : ${strCFGBaseLIBFolder:="$(find ../ -type d -iname "*Ghussak - Base LIB*"&&:)"} #help
+  
+  : ${strCFGAppDataFolder:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/"}&&: #help
+  : ${strCFG7dtdAppDataFolder:="${strCFGAppDataFolder}/7DaysToDie/"}&&: #help
+  : ${strCFGScreenshotsFolder:="${strCFG7dtdAppDataFolder}/Screenshots"}&&: #help
+  
   #help setting WINEPREFIX manually may help if you are using cygwin
-  : ${strCFGGeneratedWorldsFolder:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGGeneratedWorldsFolder:="${strCFG7dtdAppDataFolder}/GeneratedWorlds/"}&&: #help you will need to set this if on windows cygwin
   export strCFGGeneratedWorldsFolder
   export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
   
@@ -891,7 +904,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   
-  : ${strCFGSavesPathIgnorable:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/7DaysToDie/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGSavesPathIgnorable:="${strCFG7dtdAppDataFolder}/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
   #: ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #he lp
   : ${strCFGNewestSavePathIgnorable:="`CFGFUNCgetNewestSavegamePath`"}&&: #help
   : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}/ConfigsDump/"}&&: #help
@@ -911,7 +924,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   : ${strModNameShortForIDs:="TNM"}
   export strModNameShortForIDs
   
-  #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh
+  #help Linux help: all variables shown on this help beginning like `: ${strSomeVar:="SomeValue"} #help` can be "safely" set (if you know what you are doing) before running the scripts like: strSomeVar="AnotherValue" ./incBuffsIDs.sh (TODO: that script deprecated, update info here)
   
   : ${bCFGVerbose:=false} #help enable this to show detailed messages. Anyway everything will be in the install log.
   export bCFGVerbose

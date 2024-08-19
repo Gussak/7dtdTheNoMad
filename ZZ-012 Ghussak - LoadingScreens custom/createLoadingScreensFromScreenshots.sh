@@ -38,10 +38,14 @@ if CFGFUNCprompt -q "write (paint) the screenshot filename on the image data of 
   bAnnotate=true
 fi
 
-#TODO create relative symlinks: cd LoadingScreens; ln -sf ../../../Screenshots/*.jpg ./
+if [[ ! -f "${strFlGenLoa}" ]];then
+	cp -v "${strFlGenLoa}.template.xml" "${strFlGenLoa}"
+fi
+
+#TODO create relative symlinks: cd LoadingScreens; ln -vsf ../../../Screenshots/*.jpg ./
 #set -x
 #IFS=$'\n' read -d '' -r -a astrFlList < <(cd LoadingScreens;realpath ScreenShotTest*.jpg;cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&:
-IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGGameFolder}/Screenshots/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop. TODO: recursive search with find least hidden paths?
+IFS=$'\n' read -d '' -r -a astrFlList < <(cd "${strCFGScreenshotsFolder}/";realpath *.jpg)&&: #todo add .tga too but convert will need flip flop. TODO: recursive search with find least hidden paths?
 for strFl in "${astrFlList[@]}";do
   if [[ -L "$strFl" ]];then continue;fi
   strBN="`basename "$strFl"`"
@@ -49,8 +53,8 @@ for strFl in "${astrFlList[@]}";do
   if $bAnnotate;then
     CFGFUNCexec convert "$strFl" -gravity SouthEast -pointsize 17 -fill white -annotate +0+0 "LoadingScreens/$strBN" "jpeg:LoadingScreens/$strBN"
   else
-    if ! ln -sf "$strFl" "LoadingScreens/$strBN";then #better to save space if it works
-      CFGFUNCexec cp -f "$strFl" "LoadingScreens/$strBN"
+    if ! ln -vsf "$strFl" "LoadingScreens/$strBN";then #better to save space if it works
+      CFGFUNCexec cp -vf "$strFl" "LoadingScreens/$strBN"
     fi
   fi
   echo '      <tex file="@modfolder:LoadingScreens/'"$strBN"'" />' >>"${strFlGenLoa}${strGenTmpSuffix}"
