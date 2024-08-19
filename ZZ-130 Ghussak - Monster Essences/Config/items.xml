@@ -1,5 +1,29 @@
 <GhussakTweaks>
 	<append xpath="/items">
+		
+    <item name="drugGSKPsyonicsResist">
+      <property name="Extends" value="resourceTestosteroneExtract" />
+      <property name="DescriptionKey" value="PsyonicsResistanceDesc" />
+      <property name="CustomIcon" value="7dtdPsyShield" />
+      <property name="CustomIconTint" value="180,180,180" />
+      <property name="Group" value="Resources,Chemicals,CFChemicals" />
+      <property name="CraftingIngredientTime" value="2" />
+      <property name="Stacknumber" value="10"/>
+      <property name="EconomicValue" value="50" />
+      <property name="Meshfile" value="#Other/Items?Misc/parcelPrefab.prefab" />
+      <property class="Action0">
+        <property name="Class" value="Eat" />
+        <property name="Delay" value="0.5" />
+        <property name="Use_time" value="0.5" />
+        <property name="Sound_start" value="nightvision_toggle" />
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork28"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3" />
+        <triggered_effect help="FixTinyRandomFloat:was iGSKPsyonicChemUseCount add randomFloat(0.5,6.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,6500)"/>        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,6.5)"/> <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=40651:        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="randomFloat(0.5,6.5)"/> -->
+      </effect_group>
+    </item>
+		
     <item name="drugGSKwightEssence">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow" />
       <property name="CustomIcon" value="resourceTestosteroneExtract"/>
