@@ -1,0 +1,3 @@
+# fix/update mesh files paths, this will show them with the wrong values
+egrep -iRnIa 'mesh.*[#].*[?]' * --include="*.xml" -c |grep -v :0
+egrep -iRnIa 'mesh.*[#].*[?]' * --include="*.xml" |sed -r -e 's!(property.*mesh.*)#!\1@:!i' -e 's!(property.*mesh.*)[?]!\1/!i'
