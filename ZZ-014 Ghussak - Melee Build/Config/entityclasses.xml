@@ -1,0 +1,104 @@
+<GhussakTweaks>
+	<append xpath="/entity_classes/entity_class[@name='playerMale']">
+    <effect_group>
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+<!--
+        <requirement name="IsAlive" target="other" help="this prevents explosion damage being parried"/>
+-->
+        <requirement name="HoldingItemHasTags" target="other" tags="melee" help="can only normally parry melee attacks" />
+      </triggered_effect>
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild: just a overall small chance against ranged attacks, but not too little so it can be fun and somewhat useful">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" target="other" tags="ranged" />
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="33"/>
+      </triggered_effect>
+<!--
+      <triggered_effect trigger="onOtherAttackedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="1" help="MeleeBuild:">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="IsAlive" target="other" help="this prevents explosion damage being parried"/>
+        <requirement name="HoldingItemHasTags" target="other" tags="melee" help="can only parry melee attacks" />
+      </triggered_effect>
+-->
+<!--
+      <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar=".iGSKMeleeParryOnce" operation="add" value="randomInt(0,1)" help="MeleeBuild: just a overall small chance against ranged attacks">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" target="other" tags="ranged" />
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="33"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKMeleeParryChance"/>
+<!- -
+        <requirement name="IsAlive" target="other" help="this prevents explosion damage being parried"/>
+- ->
+      </triggered_effect>
+-->
+            
+      <triggered_effect trigger="onSelfJump" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      <triggered_effect trigger="onSelfCrouch" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      <triggered_effect trigger="onSelfStand" action="ModifyCVar" cvar=".iGSKDodgeOnce" operation="add" value="1" help="MeleeBuild:"/>
+      
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other" />
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Health" operation="add" value="-1000" target="other" help="MeleeBuild: always critical if enemy in ragdoll mode">
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1" target="other" />
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="bandit,mech" help="they have some brains"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="50"/>
+      </triggered_effect>
+      
+<!--
+      <triggered_effect trigger="onSelfAttackedOther" action="LogMessage" message="GSK:DBG:TMP:EntClass:buffGSKMarkedForJumpKick"/>
+-->
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKMarkedForJumpKick" target="other" help="MeleeBuild:">
+<!--
+        <requirement name="CVarCompare" cvar=".iGSKDbgTmpIndex" operation="Equals" value="1"/>
+-->
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit,mech"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+<!--
+      <triggered_effect trigger="onSelfAttackedOther" action="LogMessage" message="GSK:DBG:TMP:EntClass:buffGSKCheckJumpKick"/>
+-->
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffGSKCheckJumpKick" help="MeleeBuild:">
+<!--
+        <requirement name="CVarCompare" cvar=".iGSKDbgTmpIndex" operation="Equals" value="1"/>
+-->
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      
+<!--
+      <triggered_effect trigger="onSelfAttackedOther" action="LogMessage" message="GSK:DBG:TMP:EntClass:ragdoll"/>
+-->
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="750" target="other" help="MeleeBuild: running ISSUE?: running and attacking with a knife is also causing a lot of damage instead of just ragdoll, it happens from the -1000 to ragdolled foes melee build (less chance now vs bandits and mechs)">
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="EntityHasMovementTag" tags="running" />
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="really running"/>
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other" />
+        <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,mech"/>
+        <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="Ragdoll" duration="9" force="5" target="other" help="MeleeBuild: sneaking">
+<!--
+        <requirement name="CVarCompare" cvar=".iGSKDbgTmpIndex" operation="Equals" value="4"/>
+        <requirement name="StatCompareCurrent" stat="Health" operation="GT" value="0" target="other"  help="was just IsAlive other"/>
+-->
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other" />
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="improved melee sneak attacks"/>
+        <requirement name="IsAlive" target="other"/>
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" target="other" />
+        <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,mech"/>
+        <requirement name="!EntityTagCompare" target="other" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03" />
+      </triggered_effect>
+            
+      
+    </effect_group>
+	</append>
+</GhussakTweaks>
