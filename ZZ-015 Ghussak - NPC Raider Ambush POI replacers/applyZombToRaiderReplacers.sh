@@ -48,7 +48,7 @@ set +x
 
 cd Prefabs
 
-: ${strGroupOldID:="S_-Group_Generic_Zombie"} #help what kind of zombies to replace
+: ${strGroupOldID:="(S_-Group_Generic_Zombie|GroupGenericZombie)"} #help what kind of zombies to replace (this is a regex)
 
 echo "total files: $(egrep "${strGroupOldID}" -iRnIa --include="*.xml" -c |wc -l)"
 
@@ -80,7 +80,7 @@ IFS=$'#\n' read -d '' -r -a astrList < <(find ./ -iname "*.xml")&&:
 nCountPatched=0
 : ${strGroupNewID:="S_-Group_NPC_Bandits_All"} #help all bandits "S_-Group_NPC_Bandits_All" is better than "S_-Group_NPC_Bandits_AmbushRanged", as it spawns NPCs that drop things, but also can be melee or even rocket laucher one, and most importantly, each will call a delayed spawn of an ambush raiders team, increasing the challenge
 for strFl in "${astrList[@]}";do
-	sed -i.bkp "s@${strGroupOldID}@${strGroupNewID}@g" "$strFl";
+	sed -i.bkp -r -e "s@${strGroupOldID}@${strGroupNewID}@g" "$strFl";
 	echo -n .;
 	((nCountPatched++))&&:
 done
