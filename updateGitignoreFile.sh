@@ -9,10 +9,12 @@ ZZ-010 Ghussak - Tweaks/_NewestSavegamePath.IgnoreOnBackup
 ZZ-012 Ghussak - LoadingScreens custom/Config/loadingscreen.xml
 ZZ-012 Ghussak - LoadingScreens custom/LoadingScreens/*.jpg
 ZZ-012 Ghussak - LoadingScreens custom/LoadingScreens/*.tga
+ZZ-015 Ghussak - NPC Raider Ambush POI replacers/Prefabs
 ZZ-015 Ghussak - NPC Raider Ambush POI replacers/Prefabs.SkipOnRelease
 */_tmp/*
 */_log/*
 *.OLD
+*.xcf
 ' >.gitignore
 chmod ugo-w .gitignore
 
