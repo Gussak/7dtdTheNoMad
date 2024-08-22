@@ -1,6 +1,15 @@
 #!/bin/bash
+
+function FUNCdropcaches() {
+	set -x;
+	sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1; #OBS.: this seems to suffice, no need for this whole script
+	set +x 
+}
+
 strGameLog="$WINEPREFIX/drive_c/Program Files (x86)/7 Days To Die/_Logs_.AppData.LocalLow.The Fun Pimps/Player.log"
 strRun="C:/Games/7 Days To Die/7DaysToDie.exe"
+
+FUNCdropcaches
 while true;do
 	nTmBefore="$(date +"%s")"
 	
@@ -27,7 +36,7 @@ while true;do
 	done
 	
 	date;
-	set -x;sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1;set +x #OBS.: this seems to suffice, no need for this whole script
+	FUNCdropcaches
 	echo "waiting a bit before restarting to let it work by chance (10s) press Enter to run now"
 	read -t 10
 done
