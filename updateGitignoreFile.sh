@@ -5,7 +5,7 @@ echo "INFO: this file is to go to git, do not try to edit .gitignore directly th
 chmod u+w .gitignore
 echo '
 ZZ-010 Ghussak - Tweaks/prepare7dtdTNMforReleaseV22.sh
-ZZ-010 Ghussak - Tweaks/_NewestSavegamePath.IgnoreOnBackup
+*.IgnoreOnBackup
 ZZ-012 Ghussak - LoadingScreens custom/Config/loadingscreen.xml
 ZZ-012 Ghussak - LoadingScreens custom/LoadingScreens/*.jpg
 ZZ-012 Ghussak - LoadingScreens custom/LoadingScreens/*.tga

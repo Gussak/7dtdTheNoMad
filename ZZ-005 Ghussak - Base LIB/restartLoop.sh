@@ -4,15 +4,16 @@ export strRLGameLog="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pi
 export strRLRun="C:/Games/7 Days To Die/7DaysToDie.exe"
 
 function FUNCRLDropcaches() {
+	: ${bUseDropCaches:=false} #help
 	set -x;
-	sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1;
+	if $bUseDropCaches;then sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1;fi
 	set +x 
 };export -f FUNCRLDropcaches
 
 function FUNCRLRun() {
 	WINEwrapperRunNowAlways=true wine64 "$strRLRun";
-	echo "Exited, hit Enter (60s)";
-	read #read -t 60
+	echo "Exited, hit Enter (600s)";
+	read -t 600 #to have some time to read/copy the log
 };export -f FUNCRLRun
 
 function FUNCRLRunLoop() {
@@ -43,6 +44,7 @@ function FUNCRLRunLoop() {
 			if ! pgrep -fa "^${strRLRun}" >/dev/null;then
 				echo "stopped running, user exit? hit Enter to run again"
 				read
+				break
 			fi
 		done
 		
