@@ -142,9 +142,32 @@
   <append xpath="/entity_classes/entity_class[@name='animalRabbit' or @name='zombieMutated' or @name='animalZombieVultureRadiated']">
     <effect_group><triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKMutantRabbits"/></effect_group>
 <!--
-    <property name="ParticleOnSpawn" value="ParticleEffects/RadiatedParticlesOnMesh" param1="SetShapeToMesh0" local_rotation="-90,0,0"/>
--->
-    <property name="ParticleOnSpawn" value="ParticleEffects/RadiatedParticlesOnMesh" param1="SetShapeToMesh0" help="ISSUE: this particle here will error on log, but only once! so not a problem... But if from a buff it will flood the log with repeated errors."/>
+		HELPGOOD:
+		(clear;cd ..;egrep -\-color -iRhI -\-include=*.xml "AttachParticleEffectToEntity" *) |egrep 'particle="[^"]*"' -oi|sort -u
+particle="p_bleeding"
+particle="p_burning_barrel"
+particle="p_candle_firstperson"
+particle="p_electric_shock"
+particle="p_fire_arrow_flaming_cloth"
+particle="p_fire_flaming_arrow"
+particle="p_gunfire_pistol"
+particle="p_impact_metal_on_organic"
+particle="p_nozzlesmokeuzi"
+particle="p_onFire"
+particle="p_sparks_fuse"
+particle="p_torch_wall"
+particle="p_twitch_smokePuff"
+particle="p_twitch_zombie_fire_left"
+particle="p_twitch_zombie_fire_right"
+particle="p_twitch_zombie_radiation_left"
+particle="p_twitch_zombie_radiation_right"
+particle="p_twitch_zombie_shock_left"
+particle="p_twitch_zombie_shock_right"
+particle="RadiatedParticlesOnMesh"
+particle="torch02_firePrefab"
+    -->
+    <property name="ParticleOnSpawn" value="torch02_firePrefab" param1="SetShapeToMesh0" help="ISSUE: find some light weight particle that looks like radiation again as RadiatedParticlesOnMesh was removed from vanilla"/>
+    
   </append>
   <append xpath="/entity_classes/entity_class[@name='animalRabbit']">
     <drop event="Harvest" name="drugGSKAntiRadiation" count="7,28" tag="butcherHarvest"/>
