@@ -10,7 +10,7 @@
 				<requirement name="CVarCompare" cvar=".iGSKpreventDestroying" operation="Equals" value="287436" help="just to prevent destroying it" />
       </property>
     </item>
-    <item name="GSKRewindTimeToMorning">
+    <item name="GSKRewindTimeWork">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow" />
       <property name="CustomIcon" value="7dtdShockTip" />
       <property name="CustomIconTint" value="128,250,128"/>
@@ -18,10 +18,11 @@
       <property name="DescriptionKey" value="dkGSKRewindTime"/>
       <property class="Action0">
 				<requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
+				<requirement name="TimeOfDay" operation="GT" value="1200"/>
 				<requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="LTE" value="0" />
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKrewindTimeToMoring"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKrewindTimeToNoon"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathRewindTime" operation="set" value="5"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] You feel a strong Druidic Magic in the air."/>
 
