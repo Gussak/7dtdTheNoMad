@@ -4,7 +4,7 @@ export strRLGameLog="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pi
 export strRLRun="C:/Games/7 Days To Die/7DaysToDie.exe"
 
 function FUNCRLDropcaches() {
-	: ${bUseDropCaches:=false} #help
+	: ${bUseDropCaches:=true} #help seems to only work after a few restarts, if using drop caches.
 	set -x;
 	if $bUseDropCaches;then sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1;fi
 	set +x 
