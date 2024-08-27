@@ -1,5 +1,153 @@
 <configs>
   <append xpath="/recipes">
+<!--
+	HELPGOOD:CODEGEN:
+	clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep -oi 'recipe name="gun[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/recipes.xml |egrep -vi "parts|pipe" |cut -d'"' -f2); \
+	for strNm in "${astrList[@]}";do
+		strParts=""
+		for strChk in gunHandgunT1Pistol gunHandgunT2Magnum44 gunHandgunT3DesertVulture gunHandgunT3SMG5;do
+			if [[ $strNm == $strChk ]];then strParts=gunHandgunT1PistolParts;break;fi
+		done
+		for strChk in gunShotgunT1DoubleBarrel gunShotgunT2PumpShotgun gunShotgunT3AutoShotgun;do
+			if [[ $strNm == $strChk ]];then strParts=gunShotgunT1DoubleBarrelParts;break;fi
+		done
+		for strChk in gunRifleT1HuntingRifle gunRifleT2LeverActionRifle gunRifleT3SniperRifle;do
+			if [[ $strNm == $strChk ]];then strParts=gunRifleT1HuntingRifleParts;break;fi
+		done
+		for strChk in gunMGT1AK47 gunMGT2TacticalAR gunMGT3M60;do
+			if [[ $strNm == $strChk ]];then strParts=gunMGT1AK47Parts;break;fi
+		done
+		for strChk in gunBowT1WoodenBow gunBowT3CompoundBow gunBowT1IronCrossbow gunBowT3CompoundCrossbow;do
+			if [[ $strNm == $strChk ]];then strParts=gunBowT1WoodenBowParts;break;fi
+		done
+		for strChk in gunBotT1JunkSledge gunBotT2JunkTurret gunBotT3JunkDrone;do
+			if [[ $strNm == $strChk ]];then strParts=gunBotRoboticsParts;break;fi
+		done
+		if [[ $strNm == gunExplosivesT3RocketLauncher ]];then strParts=gunExplosivesT3RocketLauncherParts;break;fi
+		if [[ -z "$strParts" ]];then read -p "ERROR:$strNm";fi
+		echo '
+		<recipe name="'"${strNm}"'" count="1" tags="perkMachineGunner">
+			<ingredient name="'"${strNm}"'" count="1" />
+			<ingredient name="'"${strParts}"'" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="'"${strParts}"'" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>'
+	done
+-->
+		<recipe name="gunHandgunT1Pistol" count="1" tags="perkMachineGunner">
+			<ingredient name="gunHandgunT1Pistol" count="1" />
+			<ingredient name="gunHandgunT1PistolParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunHandgunT1PistolParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunHandgunT2Magnum44" count="1" tags="perkMachineGunner">
+			<ingredient name="gunHandgunT2Magnum44" count="1" />
+			<ingredient name="gunHandgunT1PistolParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunHandgunT1PistolParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunHandgunT3DesertVulture" count="1" tags="perkMachineGunner">
+			<ingredient name="gunHandgunT3DesertVulture" count="1" />
+			<ingredient name="gunHandgunT1PistolParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunHandgunT1PistolParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunHandgunT3SMG5" count="1" tags="perkMachineGunner">
+			<ingredient name="gunHandgunT3SMG5" count="1" />
+			<ingredient name="gunHandgunT1PistolParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunHandgunT1PistolParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunShotgunT1DoubleBarrel" count="1" tags="perkMachineGunner">
+			<ingredient name="gunShotgunT1DoubleBarrel" count="1" />
+			<ingredient name="gunShotgunT1DoubleBarrelParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunShotgunT1DoubleBarrelParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunShotgunT2PumpShotgun" count="1" tags="perkMachineGunner">
+			<ingredient name="gunShotgunT2PumpShotgun" count="1" />
+			<ingredient name="gunShotgunT1DoubleBarrelParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunShotgunT1DoubleBarrelParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunShotgunT3AutoShotgun" count="1" tags="perkMachineGunner">
+			<ingredient name="gunShotgunT3AutoShotgun" count="1" />
+			<ingredient name="gunShotgunT1DoubleBarrelParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunShotgunT1DoubleBarrelParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunRifleT1HuntingRifle" count="1" tags="perkMachineGunner">
+			<ingredient name="gunRifleT1HuntingRifle" count="1" />
+			<ingredient name="gunRifleT1HuntingRifleParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunRifleT1HuntingRifleParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunRifleT2LeverActionRifle" count="1" tags="perkMachineGunner">
+			<ingredient name="gunRifleT2LeverActionRifle" count="1" />
+			<ingredient name="gunRifleT1HuntingRifleParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunRifleT1HuntingRifleParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunRifleT3SniperRifle" count="1" tags="perkMachineGunner">
+			<ingredient name="gunRifleT3SniperRifle" count="1" />
+			<ingredient name="gunRifleT1HuntingRifleParts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunRifleT1HuntingRifleParts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
 		<recipe name="gunMGT1AK47" count="1" tags="perkMachineGunner">
 			<ingredient name="gunMGT1AK47" count="1" />
 			<ingredient name="gunMGT1AK47Parts" count="1" />
@@ -10,5 +158,28 @@
 				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
 			</effect_group>
 		</recipe>
+
+		<recipe name="gunMGT2TacticalAR" count="1" tags="perkMachineGunner">
+			<ingredient name="gunMGT2TacticalAR" count="1" />
+			<ingredient name="gunMGT1AK47Parts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunMGT1AK47Parts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+
+		<recipe name="gunMGT3M60" count="1" tags="perkMachineGunner">
+			<ingredient name="gunMGT3M60" count="1" />
+			<ingredient name="gunMGT1AK47Parts" count="1" />
+			<ingredient name="resourceRepairKit" count="1" />
+			<ingredient name="resourceLegendaryParts" count="0" />
+			<effect_group>
+				<passive_effect name="CraftingIngredientCount" level="2,6" operation="base_add" value="1,5" tags="gunMGT1AK47Parts" />
+				<passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts" />
+			</effect_group>
+		</recipe>
+		
   </append>
 </configs>
