@@ -834,7 +834,11 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
   set -Eeu
   
-  if [[ -z "${WINEPREFIX-}" ]];then echo "WARNING: WINEPREFIX is not set (this is ok if on cygwin)" >&2;export WINEPREFIX="";fi #setting empty prevents errors if used w/o '-}'
+  if [[ -z "${WINEPREFIX-}" ]];then
+		echo "WARNING: WINEPREFIX is not set (this could be ok if on cygwin, not tested there tho..)" >&2
+		read -p "Hit Enter"
+		export WINEPREFIX="";
+	fi #setting empty prevents errors if used w/o '-}'
   
   : ${bCFGInteractive:=true} #help running like this will accept all prompts: bInteractive=false ./installSpecificFilesIntoGameFolder.sh
   export bCFGInteractive
@@ -904,7 +908,8 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   trap 'echo " (CFG)TRAP: Ctrl+c pressed..." >&2;exit' INT
   trap 'CFGFUNCerrorChk' EXIT
   
-  : ${strCFGSavesPathIgnorable:="${strCFG7dtdAppDataFolder}/Saves/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
+  : ${strCFGSavesPath:="${strCFG7dtdAppDataFolder}/Saves"} #help
+  : ${strCFGSavesPathIgnorable:="${strCFGSavesPath}/${strCFGGeneratedWorldTNM}/"}&&: #help you will need to set this if on windows cygwin
   #: ${strCFGNewestSavePathIgnorable:="${strCFGSavesPathIgnorable}/`ls -1tr "$strCFGSavesPathIgnorable" |tail -n 1`/"}&&: #he lp
   : ${strCFGNewestSavePathIgnorable:="`CFGFUNCgetNewestSavegamePath`"}&&: #help
   : ${strCFGNewestSavePathConfigsDumpIgnorable:="${strCFGNewestSavePathIgnorable}/ConfigsDump/"}&&: #help
