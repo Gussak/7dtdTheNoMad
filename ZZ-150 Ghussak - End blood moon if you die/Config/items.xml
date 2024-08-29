@@ -1,111 +1,105 @@
+<?xml version="1.0"?>
 <GhussakTweaks>
-	<append xpath="/items">
+  <append xpath="/items">
     <item name="GSKRewindTime">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
-      <property name="CustomIcon" value="7dtdShockTip" />
+      <property name="CustomIcon" value="7dtdShockTip"/>
       <property class="Action0">
-				<requirement name="CVarCompare" cvar=".iGSKpreventDestroying" operation="Equals" value="287436" help="just to prevent destroying it" />
+        <requirement name="CVarCompare" cvar=".iGSKpreventDestroying" operation="Equals" value="287436" help="just to prevent destroying it"/>
       </property>
       <property class="Action1">
-				<requirement name="CVarCompare" cvar=".iGSKpreventDestroying" operation="Equals" value="287436" help="just to prevent destroying it" />
+        <requirement name="CVarCompare" cvar=".iGSKpreventDestroying" operation="Equals" value="287436" help="just to prevent destroying it"/>
       </property>
     </item>
     <item name="GSKRewindTimeWork">
-      <property name="Extends" value="GSKBaseActivatorConsumableSlow" />
-      <property name="CustomIcon" value="7dtdShockTip" />
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
       <property name="CustomIconTint" value="128,250,128"/>
-      <property name="ItemTypeIcon" value="computer" />
+      <property name="ItemTypeIcon" value="computer"/>
       <property name="DescriptionKey" value="dkGSKRewindTime"/>
       <property class="Action0">
-				<requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
-				<requirement name="TimeOfDay" operation="GT" value="1200"/>
-				<requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="LTE" value="0" />
+        <requirement name="!IsBloodMoon" help="TODO: should also not make night become day, nor day become night, how to test what game time it is now?"/>
+        <requirement name="TimeOfDay" operation="GT" value="1200"/>
+        <requirement name="CVarCompare" cvar="iGSKrewindTimeCoolDown" operation="LTE" value="0"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKrewindTimeToNoon"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathRewindTime" operation="set" value="5"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] You feel a strong Druidic Magic in the air."/>
-
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="GiveExp" exp="-6000" help="this could work but does not actually work tho, so using the fGSKExpDebt workaround"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="6000"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebtMaxAllTime" operation="add" value="6000"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CVarLogValue" cvar="fGSKExpDebt"/>
-        
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKrewindTimeCoolDown" operation="add" value="3600" help="one whole hour in real time TODO: should be the game time the player uses to determine one whole day in game time"/>
       </effect_group>
     </item>
-
-		<item name="GSKCfgEndBloodMoon">
-			<property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast" />
-			<property name="DescriptionKey" value="dkGSKCfgEndBloodMoon" />
-			<effect_group tiered="false">
-				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoonAllowed" operation="set" value="1"/>
-				<triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoonAllowed" operation="set" value="0"/>
-			</effect_group>
-		</item>
-		
-		<item name="GSKwaitTheNightEnd" help="TODO: requirements and effect_groups are not extended? so a base item wouldnt help here, have to dup all logic :(">
-			<property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
-			<property name="CustomIcon" value="foodCropMushrooms"/>
-			<property name="CustomIconTint" value="128,180,250" help="DIFFERS"/>
-			<property name="DescriptionKey" value="dkGSKwaitTimePass" />
+    <item name="GSKCfgEndBloodMoon">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCfgEndBloodMoon"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoonAllowed" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKEndBloodMoonAllowed" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKwaitTheNightEnd" help="TODO: requirements and effect_groups are not extended? so a base item wouldnt help here, have to dup all logic :(">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
+      <property name="CustomIcon" value="foodCropMushrooms"/>
+      <property name="CustomIconTint" value="128,180,250" help="DIFFERS"/>
+      <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
       <property class="Action0">
-				<requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd"  help="DIFFERS"/>
-				<requirement name="IsNight"  help="DIFFERS"/>
-			</property>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd" help="DIFFERS"/>
+        <requirement name="IsNight" help="DIFFERS"/>
+      </property>
       <property class="Action1">
-				<requirement name="!IsBloodMoon"/>
-				<requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
-				<requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
-				<!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
+        <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
         <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GT" value="0"/>
-				<requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd" help="DIFFERS"/>
-				<requirement name="IsNight" help="DIFFERS"/>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeNightEnd" help="DIFFERS"/>
+        <requirement name="IsNight" help="DIFFERS"/>
         <property name="Class" value="Eat" help="to destroy/consume it"/>
-			</property>
-			<effect_group tiered="false">
-				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
-					<requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
-					<requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
-				</triggered_effect>
-				
-				<triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd" help="DIFFERS"/>
-				<triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
-			</effect_group>
-		</item>
-		<item name="GSKwaitTheDayLightEnd">
-			<property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
-			<property name="CustomIcon" value="foodCropMushrooms"/>
-			<property name="CustomIconTint" value="128,128,220" help="DIFFERS"/>
-			<property name="DescriptionKey" value="dkGSKwaitTimePass" />
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeNightEnd" help="DIFFERS"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
+      </effect_group>
+    </item>
+    <item name="GSKwaitTheDayLightEnd">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow" help="to avoid player using by mistake from inventory slot"/>
+      <property name="CustomIcon" value="foodCropMushrooms"/>
+      <property name="CustomIconTint" value="128,128,220" help="DIFFERS"/>
+      <property name="DescriptionKey" value="dkGSKwaitTimePass"/>
       <property class="Action0">
-				<requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd"  help="DIFFERS"/>
-				<requirement name="!IsNight"  help="DIFFERS"/>
-			</property>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd" help="DIFFERS"/>
+        <requirement name="!IsNight" help="DIFFERS"/>
+      </property>
       <property class="Action1">
-				<requirement name="!IsBloodMoon"/>
-				<requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
-				<requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
-				<!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveTotal30m" operation="Equals" value="0"/>
+        <!--				HELPGOOD:TODO: require player to not be in combat using onCombatEntered?-->
         <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="GT" value="0"/>
-				<requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd"  help="DIFFERS"/>
-				<requirement name="!IsNight"  help="DIFFERS"/>
+        <requirement name="!HasBuff" buff="buffGSKdenyMakeDayLightEnd" help="DIFFERS"/>
+        <requirement name="!IsNight" help="DIFFERS"/>
         <property name="Class" value="Eat" help="to destroy/consume it"/>
-			</property>
-			<effect_group tiered="false">
-				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
-					<requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
-					<requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
-				</triggered_effect>
-				
-				<triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd" help="DIFFERS"/>
-				<triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
-			</effect_group>
-		</item>
-		
-	</append>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKAllowLetTimePass" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKAllowLetTimePass" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKmakeDayLightEnd" help="DIFFERS"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKtimePassDebuff"/>
+      </effect_group>
+    </item>
+  </append>
 </GhussakTweaks>

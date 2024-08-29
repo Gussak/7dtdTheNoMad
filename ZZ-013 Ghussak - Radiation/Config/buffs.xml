@@ -1,242 +1,185 @@
+<?xml version="1.0"?>
 <GhussakTweaks>
-	<append xpath="/buffs">
-		
+  <append xpath="/buffs">
     <buff name="buffGSKRadResist">
-      <stack_type value="ignore" />
-      <duration value="0.05" />
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResChemDiv" operation="set" value="0.50">
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="Equals" value="0"/>
         </triggered_effect>
-        
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistDur" operation="add" value="150"/> <!-- like 1h in game time -->
-        
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistDur" operation="add" value="150"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResChemDiv" operation="add" value="0.01">
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600" />
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600"/>
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResChemDiv" operation="set" value="0.90">
-          <requirement name="CVarCompare" cvar="fGSKRadResChemDiv" operation="GT" value="0.90" />
+          <requirement name="CVarCompare" cvar="fGSKRadResChemDiv" operation="GT" value="0.90"/>
         </triggered_effect>
-          
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistDur" operation="set" value="600">
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600" />
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="GT" value="600"/>
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRadResistWork34"/>
-<!--
-          <requirement name="!HasBuff" buff="buffGSKRadResistWork34" />
-        </triggered_effect>
--->
       </effect_group>
     </buff>
     <buff name="buffGSKRadResistWork34" icon="7dtdRadShield" name_key="RadiationResistance" description_key="RadiationResistanceDesc" remove_on_death="false">
-      <stack_type value="ignore" />
-      <display_value value="fGSKRadResistDur"/><display_value_key value="{0:0}s"/>
-<!--
-      <stack_type value="duration" />
-      <duration value="150" /> <!- - like 1h in game time - ->
--->
-      <duration value="0" />
+      <stack_type value="ignore"/>
+      <display_value value="fGSKRadResistDur"/>
+      <display_value_key value="{0:0}s"/>
+      <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKHazmatSuitIntegrity" operation="set" value="1.0" help="lazy easy init as minimum is 0.01">
-          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="Equals" value="0"/>
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.1">
-          <requirement name="HasBuff" buff="buffRadSuitMask" />
+          <requirement name="HasBuff" buff="buffRadSuitMask"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.1">
-          <requirement name="HasBuff" buff="buffRadSuitGloves" />
+          <requirement name="HasBuff" buff="buffRadSuitGloves"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.1">
-          <requirement name="HasBuff" buff="buffRadSuitChest" />
+          <requirement name="HasBuff" buff="buffRadSuitChest"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.1">
-          <requirement name="HasBuff" buff="buffRadSuitLegs" />
+          <requirement name="HasBuff" buff="buffRadSuitLegs"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.1">
-          <requirement name="HasBuff" buff="buffRadSuitBoots" />
+          <requirement name="HasBuff" buff="buffRadSuitBoots"/>
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="multiply" value="@fGSKHazmatSuitIntegrity">
-          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="0.75" />
+          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="0.75"/>
         </triggered_effect>
       </effect_group>
-        
       <effect_group>
-				<requirement name="HasBuff" buff="buffRadSuit" />
-				<requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="GTE" value="0.75" />
+        <requirement name="HasBuff" buff="buffRadSuit"/>
+        <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="GTE" value="0.75"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResHSItmp" operation="set" value="@fGSKHazmatSuitIntegrity"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResHSItmp" operation="divide" value="2.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@.fGSKRadResHSItmp"/>
-<!--
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="0.5" help="hazmatsuit in perfect condition provides 100 percent protection">
-          <requirement name="HasBuff" buff="buffRadSuit" />
-          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="Equals" value="1.0" />
-        </triggered_effect>
--->
       </effect_group>
-					
       <effect_group>
-<!--
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResSuit" operation="set" value="@fGSKRadResPerc"/>
--->
-<!--
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResSuit" operation="set" value="0.95">
-          <requirement name="HasBuff" buff="buffRadSuit" />
-        </triggered_effect>
--->
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@fGSKRadResChemDiv"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="set" value="@_sheltered"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKRadResSheltered" operation="divide" value="2.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="add" value="@.fGSKRadResSheltered"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="set" value="0.90" help="this happens having 4 or less hazmatsuit parts and using radres chem many times">
-          <requirement name="!HasBuff" buff="buffRadSuit" />
-          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.90" />
+          <requirement name="!HasBuff" buff="buffRadSuit"/>
+          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0.90"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResPerc" operation="set" value="1.0">
-          <requirement name="HasBuff" buff="buffRadSuit" />
-          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="1.0" />
+          <requirement name="HasBuff" buff="buffRadSuit"/>
+          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="1.0"/>
         </triggered_effect>
       </effect_group>
-      
       <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0" />
-<!--
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadResistAtVal" operation="set" value="@$buffStatusRadiation"/>
--->
+        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistAtVal" operation="set" value="@$buffStatusRadiation">
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="@fGSKRadResistAtVal" />
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="@fGSKRadResistAtVal"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistAtVal" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKRadResistAtVal" operation="LTE" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKRadResistAtVal" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0" />
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadResistAtVal" />
-        
+        <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadResistAtVal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadMult" operation="set" value="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadMult" operation="subtract" value="@fGSKRadResPerc"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistDiff" operation="set" value="@$buffStatusRadiation"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistDiff" operation="subtract" value="@fGSKRadResistAtVal"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistDiff" operation="multiply" value="@fGSKRadMult"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistAtVal" operation="add" value="@fGSKRadResistDiff"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="@fGSKRadResistAtVal"/>
       </effect_group>
-      
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistDur" operation="subtract" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResistDur" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LT" value="0" />          
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadResChemDiv" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0" />          
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadResistWork34">
-          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="LTE" value="0" />
-          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKRadResPerc" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="fGSKRadResistDur" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
-      
     </buff>
-		
-		
     <buff name="buffGSKRadLowerSlow23" icon="7dtdLowerRadiation" icon_color="128,128,180" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
-      <stack_type value="effect" />
-      <display_value value="fGSKRadRmDur"/><display_value_key value="{0:0}s"/>
-<!--
-      <display_value_format value="time" />
--->
-      <duration value="0" />
+      <stack_type value="effect"/>
+      <display_value value="fGSKRadRmDur"/>
+      <display_value_key value="{0:0}s"/>
+      <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
-<!--
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadRmDur" operation="set" value="300"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadRmDur" operation="add" value="300"/>
--->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="0.10" help="6 per min is 30 in 300s"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0" />
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadLowerSlow23">
-          <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="LTE" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKRadRmDur" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadRmDur" operation="subtract" value="1"/>
       </effect_group>
     </buff>
-
     <buff name="buffGSKRadRemover33" icon="7dtdLowerRadiation" description_key="buffGSKRadRemoverDesc" hidden="false" remove_on_death="false">
-      <stack_type value="effect" />
-      <display_value value="fGSKRadRmVal"/><display_value_key value="-{0:0}%"/>
-      <duration value="0" />
+      <stack_type value="effect"/>
+      <display_value value="fGSKRadRmVal"/>
+      <display_value_key value="-{0:0}%"/>
+      <duration value="0"/>
       <update_rate value="1"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="1" />
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadRmVal" operation="subtract" value="1"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="1" />
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="0.05"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadRmVal" operation="subtract" value="0.05" help="each 1% extra rad rm will last 20s if player has no rads"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0" />
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadRemover33">
-          <requirement name="CVarCompare" cvar="fGSKRadRmVal" operation="LTE" value="0" />
+          <requirement name="CVarCompare" cvar="fGSKRadRmVal" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
     </buff>
-		
-		
     <buff name="buffGSKRadiationAura">
-      <stack_type value="ignore" />
-      <duration value="0" />
+      <stack_type value="ignore"/>
+      <duration value="0"/>
       <update_rate value="2.5"/>
       <effect_group>
         <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(1.50,2.50)" target="selfAOE" range="7.5" target_tags="player" compare_type="or" help="nearby, player must hurry">
-<!--
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other" />
--->
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
-          <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/> <!-- HELPGOOD: wasteland -->
+          <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
+          <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.50,1.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1000)"/>        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious;FixTinyRandomFloat: was randomFloat(0.50,1.00)"> <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9164:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious"> -->
-<!--
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other" />
--->
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.50,1.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious;FixTinyRandomFloat: was randomFloat(0.50,1.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9164:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.50,1.00)" target="selfAOE" range="15" target_tags="player" compare_type="or" help="not too far, player must be cautious"> -->
           <requirement name="!IsBloodMoon" help="because during bloodmoon they all know where the player is all the time and it would require hazmat in all biomes to survive"/>
-          <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/> <!-- HELPGOOD: wasteland -->
+          <requirement name="InBiome" biome="8" help="because you should only stay in wasteland with hazmat suit"/>
+          <!-- HELPGOOD: wasteland -->
         </triggered_effect>
-        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.10,0.20)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,200)"/>        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak;FixTinyRandomFloat: was randomFloat(0.10,0.20)"> <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9171:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.20)" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak"> -->
-<!--
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other" />
--->
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.10,0.20)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,200)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak;FixTinyRandomFloat: was randomFloat(0.10,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=9171:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(0.10,0.20)" target="selfAOE" range="30" target_tags="player" help="just a hint distance for the region. Anywhere and anytime also as this is weak"> -->
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHealMonster" operation="set" value="randomInt(15,50)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iGSKHealMonster" target="selfAOE" range="12" target_tags="zombie" help="todo: is this working? the game must be running for some time before this kicks in?">
           <requirement name="!HasBuff" buff="buffRadiatedRegenBlock" target="other" help="if other regen is blocked, wont be regenerated by this zombie"/>
           <requirement name="!HasBuff" buff="buffRadiatedRegenBlock" help="if self regen is blocked wont regen others."/>
         </triggered_effect>
       </effect_group>
-      
       <effect_group help="timeout control">
         <requirement name="CVarCompare" cvar=".iGSKRadiationAuraTimeout" operation="LTE" value="0"/>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="set" value="15" help="must be mult of updrate">
           <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
         </triggered_effect>
@@ -254,31 +197,30 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
-    
     <buff name="buffGSKRadiationScrEffOff" hidden="true" help="this will make screen radiation bearable making everything visible for a short time. buffRadiation01 has update_rate 3s. The effects there have 2s fade in. this buff must work just after that (after 2s) and complement it (1s) before the next loop there.">
-      <stack_type value="replace" />
-      <duration value="10" />
-      <update_rate value="2.0" />
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="2.0"/>
       <effect_group>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.025" fade="1.0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.0" fade="1.0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationScrEffOff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.025" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.0" fade="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationScrEffOff"/>
       </effect_group>
     </buff>
     <buff name="buffGSKHazardousWRadiation40" icon_blink="true" icon="ui_game_symbol_radiation" icon_color="200,200,128" description_key="buffGSKHazardousWRadiationDesc" name_key="RadiationHazard">
       <damage_type value="Radiation"/>
-      <stack_type value="ignore" />
-      <duration value="0" />
-      <update_rate value="1" />
-      <display_value value="iGSKNearDeathRadiationLvl"/><display_value_key value="{0:0.0}/5"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="iGSKNearDeathRadiationLvl"/>
+      <display_value_key value="{0:0.0}/5"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWRadiation40" />
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWRadiation40" />
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWRadiation40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWRadiation40"/>
       </effect_group>
-        
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="0">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="20"/>
@@ -302,9 +244,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="5">
           <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="92"/>
         </triggered_effect>
-        
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWRadiation40">
-          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="20" />
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="20"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -314,52 +255,37 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="add" value="@.fGSKRadiationMessDNAtmp"/>
       </effect_group>
     </buff>
-    
     <buff name="buffGSKRadExplosionA" hidden="true" remove_on_death="true">
-      <stack_type value="ignore" />
+      <stack_type value="ignore"/>
       <duration value="0.05"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(2.5,15)"/>
-<!--
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(10,15)" target="selfAOE" range="8" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(5,10)" target="selfAOE" range="15" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(2.5,5)" target="selfAOE" range="30" target_tags="player"/>
--->
       </effect_group>
     </buff>
     <buff name="buffGSKRadExplosionB" hidden="true" remove_on_death="true">
-      <stack_type value="ignore" />
+      <stack_type value="ignore"/>
       <duration value="0.05"/>
       <requirements>
         <requirement name="EntityTagCompare" tags="player"/>
       </requirements>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(15,30)"/>
-<!--
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(20,30)" target="selfAOE" range="8" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(10,20)" target="selfAOE" range="15" target_tags="player"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomFloat(5,10)" target="selfAOE" range="30" target_tags="player"/>
--->
       </effect_group>
     </buff>
-    
-	</append>
-	
+  </append>
   <!-- HELPGOOD: patch for RealRad -->
   <removeattribute xpath="/buffs/buff[@name='buffRadiation01']/@tooltip_key"/>
-  
   <insertAfter xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='Radiation']/triggered_effect[@buff='buffInternalBleeding']">
-		<triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="[TNM] Lethal radiation levels!!! R.I.P.">
-			<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
-		</triggered_effect>
-		<triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="[TNM] Lethal radiation levels!!! R.I.P." >
-			<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
-		</triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="[TNM] Lethal radiation levels!!! R.I.P.">
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="[TNM] Lethal radiation levels!!! R.I.P.">
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="100"/>
+    </triggered_effect>
   </insertAfter>
-		
   <append xpath="/buffs/buff[@name='buffRadiation01']">
     <effect_group>
       <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/>
@@ -373,23 +299,14 @@
     </effect_group>
     <effect_group>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0" compare_type="or">
-        <requirement name="HasBuff" buff="buffGSKGodMode" /><requirement name="HasBuff" buff="god" />
+        <requirement name="HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="HasBuff" buff="god"/>
       </triggered_effect>
     </effect_group>
   </append>
-  <set xpath="/buffs/buff[@name='buffRadiation01']/effect_group/triggered_effect[
-      @trigger='onSelfBuffUpdate'  and
-      @action='ModifyCVar'         and
-      @cvar='$buffStatusRadiation' and
-      @operation='subtract'        and
-      @value='randomfloat(.015,.05)'
-    ]/@value">randomfloat(.0015,.0050)</set>
-  <!-- HELP: patch for RealRad, these visualeffects have no side effects and end up working like a kind of nightvision, so just disable them. Also this way the player may not take action promptly making it more challenging. -->
+  <set xpath="/buffs/buff[@name='buffRadiation01']/effect_group/triggered_effect[       @trigger='onSelfBuffUpdate'  and       @action='ModifyCVar'         and       @cvar='$buffStatusRadiation' and       @operation='subtract'        and       @value='randomfloat(.015,.05)'     ]/@value">randomfloat(.0015,.0050)</set>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='ModifyScreenEffect' and @effect_name='Radiation' and @intensity='0.025']"/>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='ModifyScreenEffect' and @effect_name='Radiation' and @intensity='0.055']"/>
-<!--
-  <set    xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='ModifyScreenEffect' and @effect_name='Radiation' and @fade='2']/@fade">1.5</set>
--->
   <append xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='ScreenRadiation']">
     <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadiationScrEffOff"/>
   </append>
@@ -398,8 +315,6 @@
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group/passive_effect[@name='FoodMaxBlockage' and @operation='base_add' and @value='@$buffStatusRadiation']"/>
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group/passive_effect[@name='WaterMaxBlockage' and @operation='base_add' and @value='@$buffStatusRadiation']"/>
   <append xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='Radiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='PlaySound' and @sound='player#vomit']">
-    <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/> <!-- is good this way because the misma also makes the player actually vomit a bit, so avoids getting confusing. TODO: a buff that makes actually vomit food and water -1 up to -3 if with high rads -->
+    <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/>
   </append>
-  	
 </GhussakTweaks>
- 

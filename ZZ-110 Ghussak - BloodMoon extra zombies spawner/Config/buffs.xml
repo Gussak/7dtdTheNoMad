@@ -1,230 +1,205 @@
+<?xml version="1.0"?>
 <GhussakTweaks>
-	<append xpath="/buffs">
-		
-		<buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
-			<stack_type value="replace" />
-			<duration value="0.05" />
-			<effect_group>
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="add" value="1" target="selfAOE" range="60">
-					<requirement name="EntityTagCompare" target="other" tags="player"/>
-				</triggered_effect>
-			</effect_group>
-		</buff>
-		
-		<buff name="buffGSKBloodMoonStuff15" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false" help="tweaked vanilla low difficulty gamestages to be more challenging, so this buff doesnt make much difference now but may still be interesting">
-			<stack_type value="replace" />
-			<display_value value=".iGSKBMFoeAliveCount"/><display_value_key value="{0:0}"/>
-			<duration value="0" />
-			<update_rate value="10" help="count 6 is 1min"/>
-			<effect_group help="init">
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(3,40)" help="min is the smallest counter limit value"/>
-			</effect_group>
-
-			<effect_group help="cfg auto values">
-				<requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="3" help="on and automatic values"/>
-				
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="@$LastPlayerLevel"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="divide" value="3"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="@iGSKBMFoeAliveMin">
-					<requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="LT" value="@iGSKBMFoeAliveMin"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
-					<requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="GT" value="16"/>
-				</triggered_effect>
-				
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="@$LastPlayerLevel"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="add" value="-15" help="below there is a limit fixer"/>
-			</effect_group>
-
-			<effect_group help="player must not be sheltered or spawns wont work. TODO if there is a workaround to let spawns work, remove this effect_group">
-				<requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
-				<requirement name="IsBloodMoon" help="only increases during bloodmoon!"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="1"/>
-			</effect_group>
-			
-			<effect_group help="hold spawnings control">
-				<requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-1" help="fix if needed">
-					<requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GT" value="-1"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(20,40)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
-					<requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
-				</triggered_effect>
-			</effect_group>
-			
-			<effect_group help="faster end the blood moon extra effect if the player was sheltered during blood moon">
-				<requirement name="!IsBloodMoon"/>
-				<requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
-					<requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="15"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
-					<requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="10"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
-					<requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="5"/>
-				</triggered_effect>
-			</effect_group>
-			
-			<effect_group help="update counters based on limits">
-				<requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0" />
-<!-- HELPGOOD: no need to stop the counters, also for the flying they will be useful
+  <append xpath="/buffs">
+    <buff name="buffGSKNPCBloodMoonAskFoeIsAlive">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="add" value="1" target="selfAOE" range="60">
+          <requirement name="EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKBloodMoonStuff15" hidden="false" icon="7dtdBloodMoonBuffed" description_key="dkGSKAllowExtraBloodMoonSpawns" remove_on_death="false" help="tweaked vanilla low difficulty gamestages to be more challenging, so this buff doesnt make much difference now but may still be interesting">
+      <stack_type value="replace"/>
+      <display_value value=".iGSKBMFoeAliveCount"/>
+      <display_value_key value="{0:0}"/>
+      <duration value="0"/>
+      <update_rate value="10" help="count 6 is 1min"/>
+      <effect_group help="init">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(3,40)" help="min is the smallest counter limit value"/>
+      </effect_group>
+      <effect_group help="cfg auto values">
+        <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="3" help="on and automatic values"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="@$LastPlayerLevel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="divide" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="@iGSKBMFoeAliveMin">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="LT" value="@iGSKBMFoeAliveMin"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="GT" value="16"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="@$LastPlayerLevel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="add" value="-15" help="below there is a limit fixer"/>
+      </effect_group>
+      <effect_group help="player must not be sheltered or spawns wont work. TODO if there is a workaround to let spawns work, remove this effect_group">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0"/>
+        <requirement name="IsBloodMoon" help="only increases during bloodmoon!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="1"/>
+      </effect_group>
+      <effect_group help="hold spawnings control">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-1" help="fix if needed">
+          <requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GT" value="-1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="randomInt(20,40)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="LTE" value="@iGSKCfgBMCountOnHoldLimit" help="where -15 is like 15*10=150=2.5mins=1gameHourIn24perDayMode"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="faster end the blood moon extra effect if the player was sheltered during blood moon">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="@$LastPlayerLevel" operation="LTE" value="5"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="update counters based on limits">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <!-- HELPGOOD: no need to stop the counters, also for the flying they will be useful
 				<requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax" />
 -->
-				
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="keep 1 as the player may have moved away from where it happened">
-					<requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="add" value="-1"/>
-				
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(0,10)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(9,11)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="-1"/>
-				
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(0,3)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(2,4)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="add" value="-1"/>
-				
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(0,7)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(6,8)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="add" value="-1"/>
-
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(10,14)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
-				
-				<!-- HELPGOOD: the non rad nor special zombies are meant just to spawn nearer to the player while avoiding increasing the spawned count too much -->
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(10,14)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="add" value="-1"/>
-
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(10,14)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
-
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(10,14)">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="LTE" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="add" value="-1"/>
-			</effect_group>
-			
-			<effect_group help="lure foes">
-				<requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0" />
-				<triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s" play_in_head="true">
-					<requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0" />
-				</triggered_effect>
-			</effect_group>
-			
-			<effect_group help="spawn foes: walkers">
-				<requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0" />
-				<requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax" />
-				<requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
-				
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadCommon">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadStrong">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombWeak">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombFeral">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="Equals" value="0" />
-				</triggered_effect>
-			</effect_group>
-			<effect_group help="spawn foes: flying, while the player may be at the top of some high building, flying foes have no problem with that, so they can exist beyond the limit as the player will have to unavoidably deal with them">
-				<requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0" />
-				
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0" />
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0" />
-					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="50"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
-					<requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0" />
-					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
-				</triggered_effect>
-			</effect_group>
-			
-			<effect_group help="count foes">
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="set" value="0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCBloodMoonAskFoeIsAlive" target="selfAOE" range="60" compare_type="or">
-					<requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
-					<requirement name="EntityTagCompare" target="other" tags="zombie"/>
-					<requirement name="EntityTagCompare" target="other" tags="bandit"/>
-				</triggered_effect>
-			</effect_group>
-			
-			<effect_group help="rm buff">
-				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
-					<requirement name="!IsBloodMoon"/>
-					<requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="LTE" value="0"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
-					<requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="1" help="off"/>
-				</triggered_effect>
-			</effect_group>
-		</buff>
-		
-		<buff name="buffGSKExtraBloodMoonCheck1" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
-			<stack_type value="replace" />
-			<duration value="0" />
-			<update_rate value="1" />
-			<effect_group help="bloodmoon stuff">
-				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
-					<requirement name="IsBloodMoon"/>
-					<requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="2" help="on"/>
-					<requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15" />
-				</triggered_effect>
-				
-				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
-					<requirement name="!IsBloodMoon"/>
-					<requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="2" help="on"/>
-					<requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15" />
-					<requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0" help="this is in case the server crashes or during a restart of the game"/>
-				</triggered_effect>
-			</effect_group>
-		</buff>
-		
-	</append>
-	
-	<append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
-			<effect_group help="zombie crowd">
-				<requirement name="CVarCompare" cvar=".iGSKzombieCrowd" operation="GT" value="0" />
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwZombWeakCrowd">
-					<requirement name="!IsNight" help="the crowd should happen in daylight when they move slowly (from the other minimod)"/>
-					<requirement name="!IsBloodMoon" help="ISSUE:TODO: there should have a way to check if it is a bloodmoon day, to prevent zombie crowd during that WHOLE day!!! :("/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKzombieCrowd"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="-1"/>
-			</effect_group>
-	</append>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="set" value="1" help="keep 1 as the player may have moved away from where it happened">
+          <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMLureZombiesPseudoSound" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(0,10)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="set" value="randomInt(9,11)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombSpecial" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(0,3)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="set" value="randomInt(2,4)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(0,7)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="set" value="randomInt(6,8)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFlying" operation="add" value="-1"/>
+        <!-- HELPGOOD: the non rad nor special zombies are meant just to spawn nearer to the player while avoiding increasing the spawned count too much -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombWeak" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombStrong" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(0,12)" help="this is just a random begin for it"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="set" value="randomInt(10,14)">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMCountToSpawnZombFeral" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group help="lure foes">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="sndBloodMoonExtraZombiesLurePseudoSound15s" play_in_head="true">
+          <requirement name="CVarCompare" cvar=".iGSKBMLureZombiesPseudoSound" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="spawn foes: walkers">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKBMFoeAliveCount" operation="LT" value="@iGSKBMFoeAliveMax"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" help="without this, they may just not spawn at all? TODO: find a way to grant them spawning even if sheltered"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombSpecial">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombSpecial" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadCommon">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadCommon" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombRadStrong">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombRadStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombWeak">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombWeak" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombStrong">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombStrong" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombFeral">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFeral" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="spawn foes: flying, while the player may be at the top of some high building, flying foes have no problem with that, so they can exist beyond the limit as the player will have to unavoidably deal with them">
+        <requirement name="CVarCompare" cvar=".iGSKBMCountToHold" operation="GTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwBMZombVulture">
+          <requirement name="CVarCompare" cvar=".iGSKBMCountToSpawnZombFlying" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="count foes">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBMFoeAliveCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCBloodMoonAskFoeIsAlive" target="selfAOE" range="60" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="rm buff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
+          <requirement name="!IsBloodMoon"/>
+          <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBloodMoonStuff15">
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="1" help="off"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKExtraBloodMoonCheck1" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group help="bloodmoon stuff">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
+          <requirement name="IsBloodMoon"/>
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="2" help="on"/>
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBloodMoonStuff15">
+          <requirement name="!IsBloodMoon"/>
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="GTE" value="2" help="on"/>
+          <requirement name="!HasBuff" buff="buffGSKBloodMoonStuff15"/>
+          <requirement name="CVarCompare" cvar="iGSKBMKeepRunningToLetSpawnsWork" operation="GT" value="0" help="this is in case the server crashes or during a restart of the game"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="zombie crowd">
+      <requirement name="CVarCompare" cvar=".iGSKzombieCrowd" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpwZombWeakCrowd">
+        <requirement name="!IsNight" help="the crowd should happen in daylight when they move slowly (from the other minimod)"/>
+        <requirement name="!IsBloodMoon" help="ISSUE:TODO: there should have a way to check if it is a bloodmoon day, to prevent zombie crowd during that WHOLE day!!! :("/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKzombieCrowd"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="-1"/>
+    </effect_group>
+  </append>
 </GhussakTweaks>

@@ -95,12 +95,12 @@ tail -F "$strFlLog" |while read strLine;do
 		done
 		CFGFUNCexec pkill -SIGCONT -fe "${strExecRegex}"
 	elif [[ "$strLine" =~ .*${strChkButtonSpawn}.* ]];then
-		CFGFUNCinfo "skipping spawn button"
-		nWID="$(xdotool search "Default - Wine desktop")";
-		strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";
-		eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;
-		xdotool mousemove -w $nWID $nX $nY;
-		xdotool click --window $nWID 1
+		CFGFUNCinfo "skipping spawn button" # the ;\ below is just to help test on terminal, becomes one line to fix.
+		nWID="$(xdotool search "Default - Wine desktop")";\
+		strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
+		eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;\
+		xdotool mousemove -w $nWID $nX $nY;\
+		xdotool click --repeat 3 --delay 200 --window $nWID 1
 	elif [[ "$strLine" =~ .*${strChkCrash}.* ]];then
 		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
 		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
