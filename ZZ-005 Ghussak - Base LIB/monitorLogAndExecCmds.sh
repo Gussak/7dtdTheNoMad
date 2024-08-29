@@ -73,7 +73,9 @@ export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
 export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
-export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
+#export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
+export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
+
 export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do

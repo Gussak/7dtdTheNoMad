@@ -4,7 +4,7 @@ echo "INFO: this file is to go to git, do not try to edit .gitignore directly th
 
 chmod u+w .gitignore
 echo '
-*Ghussak - Tweaks/prepare7dtdTNMforReleaseV22.sh
+*/prepare7dtdTNMforReleaseV22.sh
 *Ghussak - Tweaks.ArtWorkOnly
 *.IgnoreOnBackup
 *Ghussak - LoadingScreens custom/Config/loadingscreen.xml

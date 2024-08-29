@@ -42,7 +42,7 @@
 
 source ./libSrcCfgGenericToImport.sh #place exported arrays above this include
 
-if ! CFGFUNCprompt -q "this script is probably unnecessary now, run it anyway?";then exit 0;fi
+if ! CFGFUNCprompt -q "this script is probably unnecessary now, check the load times for items.xml and entitygroups.xml at least, run it anyway?";then exit 0;fi
 
 if [[ "${1-}" == "--help" ]];then egrep "[#]help" "$0";exit 0;fi
 
@@ -75,7 +75,7 @@ function FUNCprepareDumpedCfgToOverrideAll() {
 	strGrp="$1";shift
 	strEntry="$1";shift
 	
-	: ${strNewestSaveGamePath:="../ZZ-010 Ghussak - Tweaks/_NewestSavegamePath.IgnoreOnBackup"} #help
+	: ${strNewestSaveGamePath:="../"*"Ghussak"*"Base LIB/_NewestSavegamePath.IgnoreOnBackup"} #help
 	strFlDumped="${strNewestSaveGamePath}/ConfigsDump/${strXmlFl}"
 	FUNCexecEcho ls -l "${strFlDumped}" # to error if not exist
 	
@@ -177,7 +177,7 @@ FUNCmv "../ZZ-030 Ghussak - Patch NPC spawn rate" entitygroups.xml #disables the
 # FAILS: FREEZES ON LOAD: FUNCprepareDumpedCfgToOverrideAll "blocks.xml" blocks block
 
 FUNCprepareDumpedCfgToOverrideAll "items.xml" items item
-FUNCmv "../ZZ-010 Ghussak - Tweaks" items.xml
+#TODO:REVIEW: FUNCmv "../ZZ-010 Ghussak - Tweaks" items.xml
 FUNCmv "../ZZ-070 Ghussak - Effective and Immersive Weapons Overhaul" items.xml
 # it seems ok to place here only the slow patchers to be temporarily disabled, other patchers (that will patch redundantly probably) doesnt seem to cause problem TODO: confirm that is not causing problems somehow
 

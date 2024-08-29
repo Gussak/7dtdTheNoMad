@@ -1012,7 +1012,7 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   strCFGLIBONLYSelfCmdLine="`ps --no-headers -o cmd $$`" #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   
   #export bCFGVerboseOutput=false
-  # IMPORTANT: these are common params to all scripts sourcing this lib. They can be run with these options below ex.: createBundles.sh --help
+  # IMPORTANT: these are common params to all scripts sourcing this lib. They can be run with these options below ex.: createBundles\.sh --help
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--help";then CFGFUNCshowHelp;fi #help this happens if the caller script is sourcing this lib, so is the same pid for both codes
   if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--helpfunc";then CFGFUNCshowHelp --func;fi #help show function's help info for developers.    
   #if echo "$strCFGLIBONLYSelfCmdLine" |egrep -w "\--verbose";then bCFGVerboseOutput=true;fi #help some times this extra log will be useful
