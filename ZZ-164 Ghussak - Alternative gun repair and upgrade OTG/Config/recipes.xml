@@ -280,5 +280,12 @@
         <passive_effect name="CraftingIngredientCount" level="6" operation="base_add" value="1" tags="resourceLegendaryParts"/>
       </effect_group>
     </recipe>
+    <!--HELPGOOD: NO. Old idea, too cheap?
+    This is about crafting top tier items by mixing many lower tier ones.
+    So, spending a lot more resources, it is possible to craft top tier items, as long you have at least unlocked the hability to create them, or found many of the required items. rationale: each item may contain a top tier part, disassembling it makes it possible to reassemble in a single top tier item.
+    TODO:ISSUE: each item creator should also have proper perk requirement like this for stun baton: <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="Equals" value="0" />
+    CODEGEN:
+		clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep -\-include="recipes.xml" '<recipe.*name="(gun|melee)[^"]*\>' -oiRhIa _NewestSavegamePath.IgnoreOnBackup/* |egrep -vi "parts|resource|repair|player" |sed -r 's@<recipe name="@@g' |egrep -o "^[^ ]*" |tr -d '"' |sort -u);for strNm in "${astrList[@]}";do echo "$strNm" |sed -r 's@.*@<recipe name="&Tier6Bundle" count="1" craft_time="3"><ingredient name="&" count="6" /></recipe>@';done;echo;for strNm in "${astrList[@]}";do echo "$strNm" |sed -r 's@.*@<item name="&Tier6Bundle"><property name="Extends" value="GSKTRBaseBundle" /><property name="CustomIcon" value="&" /><property class="Action0"><property name="Create_item" value="&" /><property name="Create_item_count" value="6" /></property></item>@';done
+-->
   </append>
 </configs>
