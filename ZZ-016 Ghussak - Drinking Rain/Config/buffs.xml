@@ -1,0 +1,205 @@
+<GhussakTweaks>
+	<append xpath="/buffs">
+		<buff name="buffGSKAntiRainBlurVision" hidden="true" remove_on_death="true"/>
+		<buff name="buffRainScrEffect" hidden="true" remove_on_death="true">
+			<stack_type value="ignore"/>
+			<duration value="2"/>
+			<effect_group>
+				<requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision" />
+				
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffRainScrEffect"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffRainScrEffect"/>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="10">
+					<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="25">
+					<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.25" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="50">
+					<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.50" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="75">
+					<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.75" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iRainBlur" operation="set" value="90">
+					<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.90" />
+				</triggered_effect>
+			</effect_group>
+				
+			<effect_group>
+				<requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision" />
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="2">
+					<requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="10" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.25" fade="2">
+					<requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="25" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.50" fade="2">
+					<requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="50" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.75" fade="2">
+					<requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="75" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.90" fade="2">
+					<requirement name="CVarCompare" cvar="iRainBlur" operation="Equals" value="90" />
+				</triggered_effect>
+			</effect_group>
+				
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="2" />
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iRainBlur"/>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffRainScrEffect">
+					<requirement name="HasBuff" buff="buffGSKAntiRainBlurVision" />
+				</triggered_effect>
+			</effect_group>
+		</buff>
+		<buff name="buffDrinkRainWater78" hidden="true" remove_on_death="true">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+			<update_rate value="1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffDrinkRainWater78'"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffDrinkRainWater78'"/>
+			</effect_group>
+			
+			<effect_group help="this is the wetness the player is really tracking">
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="@$WetTempModifierDisplay"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="0">
+					<requirement name="CVarCompare" cvar="$WetTempModifierActive" operation="LT" value="1" /> <!-- HELPGOOD: keep in sync with buffElementWet -->
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="divide" value="100"/>
+			</effect_group>
+			
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iPreventDrinkRainDelay" operation="set" value="60">
+					<requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="0.12345678912"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="0"/>
+			</effect_group>
+			
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="0"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0" />
+				<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0.01" />
+				<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="@fPreviousWetness" />
+				<requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" />
+				<requirement name="CVarCompare" cvar="iPreventDrinkRainDelay" operation="LTE" value="0" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="1"/>
+			</effect_group>
+			
+			<effect_group help="muffled noises by rain, unfortunately this only works if the player is in rain thru the _wetness value">
+				<requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRainMuffleNoises" operation="set" value="@_wetness"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRainMuffleNoises" operation="multiply" value="0.5"/>
+				<passive_effect name="NoiseMultiplier" operation="perc_subtract" value="@.iGSKRainMuffleNoises"/>
+			</effect_group>
+			
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="set" value="0">
+					<requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="0" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRainingTime" operation="add" value="1">
+					<requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1" />
+				</triggered_effect>
+			</effect_group>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="0" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You may drink rain, but dangerous w/o a purifier." compare_type="or">
+					<requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="60" />
+					<requirement name="CVarCompare" cvar="iGSKRainingTime" operation="Equals" value="180" />
+				</triggered_effect>
+			</effect_group>
+				
+			<effect_group>
+				<requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1" />
+				<requirement name="CVarCompare" cvar="iGSKDrinkRainAllowed" operation="Equals" value="1" />
+				<!-- HELP: if _wetness is lowering, player is not in rain anymore.
+							based on filtering capacity per second would be: 100/600s=0.1666 (100% in 10mins), 0.083 20mins
+							but should be based on wetness as is more fun (water column pressure on filter)
+				-->
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDrinkingRainAmount" operation="set" value="@fGSKShownWetnessPerc"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKDrinkingRainAmount" operation="divide" value="3" help="player should look at water bar and see it increasing after a few seconds in heavy rain"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Water" operation="add" value="@.iGSKDrinkingRainAmount"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="8"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="1"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="!HasBuff" buff="buffGSKmodArmorWaterPurifier" />
+				<requirement name="CVarCompare" cvar="iGSKDrinkingRain" operation="Equals" value="1"/>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDysenteryCatchDrink">
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="Equals" value="13" help="yes, just 1% chance"/>
+	<!--
+					<requirement name="InBiome" biome="3" help="PineForest"/>
+	-->
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="infectionCounter" operation="add" value="1" help="this will remain quiet until it reaches the minimum">
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="13"/>
+	<!--
+					<requirement name="InBiome" biome="3" help="PineForest"/>
+	-->
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInfectionMain">
+					<requirement name="CVarCompare" cvar="infectionCounter" operation="GTE" value="25" help="based on buffInfectionCatch 1st hit catch infection value"/>
+					<requirement name="!HasBuff" buff="buffInfectionMain" />
+				</triggered_effect>
+				
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="0.1" help="max rads is 100.0">
+					<requirement name="InBiome" biome="8" /> <!-- HELPGOOD: wasteland -->
+				</triggered_effect>
+			</effect_group>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="iGSKDrinkingRain" operation="Equals" value="1" help="while it is raining only. when rain stops, it begins decreasing wetness and drinking rain stops too"/>
+				<requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10" />
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+				<requirement name="!HasBuff" buff="buffGSKAntiRainBlurVision" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRainScrEffect"/>
+			</effect_group>
+
+			<effect_group help="Rad Hint: normal value BIG font">
+				<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="@iGSKRadHintFrom" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="0"/>
+			</effect_group>
+			<effect_group help="Rad Hint: max int, as large as possible. auto makes the font TINY, the idea is to make the text auto become tiny and do not call attention using that automatic non configurable UI feature!">
+				<requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="@iGSKRadHintFrom" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="8888888888" help="max integer is 4294967295 tho, but many large 8 makes the line less confusing"/>
+			</effect_group>
+			
+			<effect_group>
+				<requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fPreviousWetness"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_wetness"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKShownWetnessPerc"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKDrinkingRain"/>
+			</effect_group>
+
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fPreviousWetness" operation="set" value="@fGSKShownWetnessPerc"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iPreventDrinkRainDelay" operation="subtract" value="1">
+					<requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" />
+					<requirement name="CVarCompare" cvar="iPreventDrinkRainDelay" operation="GT" value="0" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="add" value="-1" help="this is like the inverse action: you would take time to fill a bottle, but this way you fill a bottle instantly but needs to wait before filling another. the final result is equivalent TODO primary starts collecting water iGSKcollectingWaterML, secondary allows creating the water bottle after 350ml if it is still raining, only fills the bottle if it is raining on the player, inc more or less based on rain % ">
+					<requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0" />
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="subtract" value="@_wetness">
+					<requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1" />
+					<requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0" />
+				</triggered_effect>
+			</effect_group>
+		</buff>  
+  
+  <buff name="buffGSKmodArmorWaterPurifier" hidden="true" remove_on_death="false"><stack_type value="ignore"/><duration value="0"/></buff>
+		
+  </append>
+  
+</GhussakTweaks>
+ 
