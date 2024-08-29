@@ -100,6 +100,7 @@ tail -F "$strFlLog" |while read strLine;do
 		strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
 		eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;\
 		for((i=0;i<5;i++));do # so while you are using the PC it will try to continue anyway
+			echo -n .
 			xdotool mousemove -w $nWID $nX $nY;
 			xdotool click --repeat 3 --window $nWID 1
 			#xdotool click --repeat 3 --delay 200 --window $nWID 1
