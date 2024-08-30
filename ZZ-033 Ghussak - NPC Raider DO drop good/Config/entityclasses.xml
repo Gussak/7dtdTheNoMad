@@ -52,11 +52,15 @@
   <append xpath="/entity_classes/entity_class[contains(@name, 'Rocket')]">
     <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRocket"/>
   </append>
+  <set xpath="/entity_classes/entity_class[@name='npcBanditPipePistolTemplate']/property[@name='LootDropEntityClass']/@value" help="fix tipo TODO pullrequest to repo">EntityNPCLootContainerPipePistol</set>
   <!--
   HELPGOOD:CODEGEN: 
   This fixes friendly npcs and raiders in case they are not already. It is 'append' to grant wont miss with 'set'.
-  clear;egrep -iRohI -\-include="*.xml" 'EntityNPCLootContainer[^"]*' * |sort -u |sed -r -e 's@EntityNPCLootContainer@@' |while read strNm;do echo -ne "\t<append xpath=\"/entity_classes/entity_class[contains(@name, '$strNm')]\">\n\t\t<property name=\"LootDropEntityClass\" value=\"EntityNPCLootContainer${strNm}\"/>\n\t</append>\n";done
+  clear;egrep -iRohI -\-include="*.xml" 'EntityNPCLootContainer[a-zA-Z0-9_]+' * |sort -u |sed -r -e 's@EntityNPCLootContainer@@' |grep -v "PipePisol" |while read strNm;do echo -ne "\t<append xpath=\"/entity_classes/entity_class[contains(@name, '$strNm')]\">\n\t\t<property name=\"LootDropEntityClass\" value=\"EntityNPCLootContainer${strNm}\"/>\n\t</append>\n";declare -p strNm >&2;done 2>/dev/null
 -->
+  <append xpath="/entity_classes/entity_class[contains(@name, 'AK47')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerAK47"/>
+  </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'AShotgun')]">
     <property name="LootDropEntityClass" value="EntityNPCLootContainerAShotgun"/>
   </append>
@@ -93,9 +97,6 @@
   <append xpath="/entity_classes/entity_class[contains(@name, 'PipeMG')]">
     <property name="LootDropEntityClass" value="EntityNPCLootContainerPipeMG"/>
   </append>
-  <append xpath="/entity_classes/entity_class[contains(@name, 'PipePisol')]">
-    <property name="LootDropEntityClass" value="EntityNPCLootContainerPipePisol"/>
-  </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'PipePistol')]">
     <property name="LootDropEntityClass" value="EntityNPCLootContainerPipePistol"/>
   </append>
@@ -128,9 +129,6 @@
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'TRifle')]">
     <property name="LootDropEntityClass" value="EntityNPCLootContainerTRifle"/>
-  </append>
-  <append xpath="/entity_classes/entity_class[contains(@name, '@@' |while read strNm;do echo -ne')]">
-    <property name="LootDropEntityClass" value="EntityNPCLootContainer@@' |while read strNm;do echo -ne"/>
   </append>
   <append xpath="/entity_classes/entity_class[contains(@name, 'XBow')]">
     <property name="LootDropEntityClass" value="EntityNPCLootContainerXBow"/>
