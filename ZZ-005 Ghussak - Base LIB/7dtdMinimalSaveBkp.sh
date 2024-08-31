@@ -119,7 +119,7 @@ function FUNCbkp() {
 
 	declare -p astrListFlToBkp |tr '[' '\n'
 
-	: ${strFlBkpBN:="${strCFGAppDataFolder}/7dtdSaveMinimalBkp"} #help
+	: ${strFlBkpBN:="${strCFGAppDataFolder}/7dtdSaveMinimalBkpA22"} #help
 
 	trash "${strFlBkpBN}.tar.7z"&&:
 
