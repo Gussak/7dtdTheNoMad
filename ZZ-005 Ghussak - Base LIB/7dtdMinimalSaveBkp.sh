@@ -39,10 +39,10 @@ set -Eeu
 
 trap 'read -n 1' ERR
 
-pwd
-echo "$0"
-cd "$(dirname "$0")"
-pwd
+#pwd
+#echo "$0"
+#cd "$(dirname "$0")"
+#pwd
 
 #help backup only minimal save data: chunks where there are landclaims and bedroll, so your hired NPCs shall be left in a chunk where there is a landclaim. beware tho, it will not backup nearby chunks so better do not leave the NPC in patrol mode?
 
@@ -103,6 +103,13 @@ function FUNCbkp() {
 		) |sort -u
 	)&&:
 
+	#fix the list
+	astrListFlToBkpTmp=()
+	for strFlToFix in "${astrListFlToBkp[@]}";do
+		astrListFlToBkpTmp+=("$(echo "$strFlToFix" |sed -r -e 's@/+@/@g' -e 's@.*/Application Data/7DaysToDie/Saves@./7DaysToDie/Saves@')")
+	done
+	astrListFlToBkp=("${astrListFlToBkpTmp[@]}")
+
 	#astrListFlToBkp+=("./Saves/profiles.sdf")
 
 	#IFS=$'\n' read -d '' -r -a astrListPlayerNear < <(ls "${strSaveFolder}/Region/r."*".7rg" -1t |head -n 4)&&:;declare -p astrListPlayerNear |tr '[' '\n'
@@ -119,6 +126,8 @@ function FUNCbkp() {
 	while true;do
 		echo "`date` preparing minimal save bkp in 3s"
 		read -t 3 -n 1&&:
+		
+		pwd
 		
 		if ! strKey="$(ls -l "${astrListFlToBkp[@]}")";then echo "preparing key failed, retring...";continue;fi
 		
@@ -161,17 +170,18 @@ function FUNCbkp() {
 
 : ${strSaveFolder:="$(realpath _NewestSavegamePath.IgnoreOnBackup)"} #help TODO: make this automatic to newest
 strFlPlayersXml="$strSaveFolder/players.xml" #help
+if [[ ! -f "$strFlPlayersXml" ]];then
+	echo "ERROR: unable to find strFlPlayersXml='$strFlPlayersXml'";read -n 1&&:
+	exit 1
+fi
 
 ./updateNewestSavegameSymlink.sh
 
-if [[ ! -f "$strFlPlayersXml" ]];then
-	: ${strWorkPath:="${strCFG7dtdAppDataFolder}"} #help relative path to this mod, for Wine on linux (may be cygwin too)
-	cd "$strWorkPath"&&:
-	if [[ ! -f "$strFlPlayersXml" ]];then
-		echo "ERROR: unable to find strFlPlayersXml='$strFlPlayersXml'";read -n 1&&:
-		exit 1
-	fi
-fi
+#: ${strWorkPath:="${strCFG7dtdAppDataFolder}"} #help relative path to this mod, for Wine on linux (may be cygwin too)
+: ${strWorkPath:="${strCFGAppDataFolder}"} #help relative path to this mod, for Wine on linux (may be cygwin too)
+cd "$strWorkPath"
+pwd
+ls -ld *
 
 while true;do
 	FUNCbkp&&:
