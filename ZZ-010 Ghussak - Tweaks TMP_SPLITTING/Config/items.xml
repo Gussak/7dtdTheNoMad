@@ -40963,95 +40963,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <display_value name="dExRadius" value="6"/>
       </effect_group>
     </item>
-    <item name="resourceAnimalFatBall" help="simple x10 animal fat, and the craft time considers the consume usage time for 1 animal fat">
-      <property name="HoldType" value="31"/>
-      <property name="DisplayType" value="foodRaw"/>
-      <property name="DescriptionKey" value="resourceAnimalFatDesc"/>
-      <property name="CustomIcon" value="resourceAnimalFat"/>
-      <property name="CustomIconTint" value="200,128,128"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
-      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="MresourceAnimalFat"/>
-      <property name="FuelValue" value="20"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="EconomicValue" value="20"/>
-      <property name="CraftingIngredientTime" value="15"/>
-      <property name="Group" value="Food/Cooking,CFFood/Cooking"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="1"/>
-        <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_eating"/>
-      </property>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="50"/>
-        <!-- HELPGOOD: this may confuse the player in making decisions and may end up killing the player.. so using simpler alternative below
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="20" />
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-50" />
-        <display_value name="foodHealthAmount" value="-50" help="TODO: this is tricky... the above add 20 seems to lower the displayed to -30 what may confuse the player in the end..."/>
--->
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-30"/>
-        <display_value name="foodHealthAmount" value="-30"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="-10"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="25.0"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="10" help="this will create a debuff that will quickly be removed just to call attention: eating so much fat at once is not healthy anyway"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-      </effect_group>
-    </item>
-    <item name="foodCharredMeatBall">
-      <property name="Tags" value="food"/>
-      <property name="HoldType" value="31"/>
-      <property name="CustomIcon" value="foodCharredMeat"/>
-      <property name="CustomIconTint" value="200,128,128"/>
-      <property name="DisplayType" value="foodWaterNegative"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
-      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="Morganic"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="EconomicValue" value="20"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="2.1"/>
-        <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_eating"/>
-      </property>
-      <property name="Group" value="Food/Cooking,CFFood/Cooking"/>
-      <effect_group tiered="false" name="Food Tier 0/1">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="25"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="water" operation="add" value="-25"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
-        <display_value name="$waterAmountAdd" value="-25"/>
-      </effect_group>
-    </item>
-    <item name="foodGrilledMeatBall">
-      <property name="Tags" value="food"/>
-      <property name="HoldType" value="31"/>
-      <property name="CustomIcon" value="foodGrilledMeat"/>
-      <property name="CustomIconTint" value="200,128,128"/>
-      <property name="DisplayType" value="food"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
-      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="Morganic"/>
-      <property name="Stacknumber" value="10"/>
-      <property name="EconomicValue" value="24"/>
-      <property name="UnlockedBy" value="perkMasterChef,foodGrilledMeatSchematic"/>
-      <property class="Action0">
-        <property name="Class" value="Eat"/>
-        <property name="Delay" value="2.1"/>
-        <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_eating"/>
-      </property>
-      <property name="Group" value="Food/Cooking,CFFood/Cooking"/>
-      <effect_group tiered="false" name="Food Tier 1">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="25"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="50"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
-      </effect_group>
-    </item>
     <item name="bundleRandomGunFromNPC">
       <property name="Extends" value="GSKTRBaseBundle"/>
       <property name="CustomIcon" value="mineCandyTin"/>
@@ -41754,43 +41665,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   </append>
   <append xpath="/items/item[@name='thrownAmmoFlare']">
     <property name="CreativeMode" value="Player"/>
-  </append>
-  <append xpath="/items/item[@name='resourceAnimalFat']">
-    <effect_group tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="2.5"/>
-    </effect_group>
-  </append>
-  <append xpath="/items">
-    <item name="vehicleGSKNPChelperPlaceable">
-      <property name="CustomIcon" value="vehicleBicyclePlaceable"/>
-      <property name="CustomIconTint" value="64,64,250"/>
-      <property name="CreativeMode" value="Player"/>
-      <property name="Tags" value="vehicle,vengine,vfuel,vlight,vseat,canHaveCosmetic"/>
-      <property name="DescriptionKey" value="dkvehicleNPCHelper"/>
-      <property name="HoldType" value="7"/>
-      <property name="HoldingItemHidden" value="true"/>
-      <property name="Meshfile" value="@:Entities/Vehicles/bicycle_Prefab.prefab"/>
-      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
-      <property name="Material" value="Mmetal"/>
-      <property name="Weight" value="0"/>
-      <property name="Stacknumber" value="1"/>
-      <property name="EconomicValue" value="1"/>
-      <property name="SellableToTrader" value="false"/>
-      <property name="Group" value="Science"/>
-      <property name="NavObject" value="" help="eraser ISSUE: erasure fails, icon is still shown"/>
-      <property class="Action1">
-        <property name="Class" value="SpawnVehicle"/>
-        <property name="Vehicle" value="vehicleBicycle"/>
-      </property>
-      <effect_group tiered="false">
-        <passive_effect name="ModSlots" operation="base_set" value="0"/>
-        <passive_effect name="ModPowerBonus" operation="base_add" value="1" tags="EconomicValue"/>
-        <passive_effect name="DegradationMax" operation="base_set" value="3000"/>
-        <passive_effect name="VehicleVelocityMaxPer" operation="perc_subtract" value="0.90"/>
-        <passive_effect name="VehicleVelocityMaxTurboPer" operation="perc_subtract" value="0.90"/>
-        <passive_effect name="VehicleCarryCapacity" operation="perc_subtract" value="0.99"/>
-      </effect_group>
-    </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'meleeHandAnimalSpider')]" help="this way it grants the ranged attack to them all at least">
     <property class="Action1">
