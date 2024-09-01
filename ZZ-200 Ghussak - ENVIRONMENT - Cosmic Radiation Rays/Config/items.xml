@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="GSKCosmicRayBeamDigger">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="7dtdCosmicRayBeam"/>
+      <property name="DescriptionKey" value="dkGSKCosmicRayBeamDigger"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCcosmicRayDigger" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCcosmicRayDigger" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="[TNM] Mutant Essence prevents Cosmic Digging...">
+          <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCcosmicRayDigger"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCcosmicRayDigger"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGDbgFixCosmicBloodMoonCharges" help="only from creative menu, no recipe for this">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBloodMoonReward" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKCosmicBloodMoonUseCharge">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdCosmicRayBeam"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="DescriptionKey" value="dkGSKCosmicBloodMoonUseCharge"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Stacknumber" value="25"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKCosmicBloodMoonCoolDown" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBloodMoonReward" operation="GTE" value="7"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCosmicBloodMoon7"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKBloodMoonReward" operation="add" value="-7"/>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>
