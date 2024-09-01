@@ -10,7 +10,7 @@
       <requirement name="!HasBuff" buff="buffGSKHazardousWElementHotHook40"/>
     </triggered_effect>
   </append>
-  <append xpath="/buffs">
+  <append xpath="/buffs" help="TODOB: add at buffGSKPermanentGenericCheck21 the code that makes these buffs work">
     <buff name="buffGSKHazardousWBloodLoss53" icon_blink="true" icon="7dtdGskBloodLoss" description_key="buffGSKHazardousWBloodLossDesc">
       <damage_type value="BloodLoss"/>
       <stack_type value="ignore"/>
@@ -294,177 +294,6 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKHazardousWElementColdHook40" icon="7dtdGskHazardSnow" icon_blink="true" hidden="false" remove_on_death="true" name_key="HypothermyHazard" description_key="buffGSKHazardousWElementColdHookDESC">
-      <damage_type value="Cold"/>
-      <stack_type value="ignore"/>
-      <duration value="0"/>
-      <update_rate value="1"/>
-      <display_value value="iGSKNearDeathFreezingLvl" help="create a buff to indicate iGSKNearDeathFrostbyteLvl lvl"/>
-      <display_value_key value="{0:0.0}/5"/>
-      <requirements>
-        <requirement name="EntityTagCompare" tags="player"/>
-      </requirements>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementColdHook40"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementColdHook40"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementColdHook40">
-          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LTE" value="-30"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-30"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LTE" value="-20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-20"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group help="frostbyte is rare but may happen suddenly with a big value">
-        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="99"/>
-        <!--        HELPGOOD: by temperature-->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.10)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.15)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.20)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.30)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.40)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-40"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.50)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-50"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.60)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-60"/>
-        </triggered_effect>
-        <!--        HELPGOOD: extra by wetness-->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.50)">
-          <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,1.0)">
-          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-30"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6" help="from lvl 5 300s to lvl 1 60s is 240s/6=40s to recover. Heating, recovering from cold you need to be warm.">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="30"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHWHeatingTmSub" operation="set" value="@fGSKFireHeatingMult"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHWHeatingTmSub" operation="multiply" value="10"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKHWHeatingTmSub"/>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKHazardousWElementHotHook40" icon="7dtdGskHazardDesert" icon_blink="true" hidden="false" remove_on_death="true" name_key="OverheatHazard" description_key="buffGSKHazardousWElementHotHookDESC">
-      <damage_type value="Heat"/>
-      <stack_type value="ignore"/>
-      <duration value="0"/>
-      <update_rate value="1"/>
-      <display_value value="iGSKNearDeathDryHotLvl"/>
-      <display_value_key value="{0:0.0}/5"/>
-      <requirements>
-        <requirement name="EntityTagCompare" tags="player"/>
-      </requirements>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementHotHook40"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementHotHook40"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementHotHook40">
-          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="20"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="30"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group help="sweating adds dirty">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)" help="was 10to30, but it is per second, was too much.., miasma became a greater hazard than heat itself...">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="30"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
-        <!-- HELPGOOD: this would actually cause a flu...
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="5">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10" />
-        </triggered_effect>
--->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4" help="from lvl 5 300s to lvl 1 60s is 240s/4=60s to recover. Cooling, recovering from warm, you CANNOT be too cold or you may get a flu.">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2" help="Bonus for perfect temperature">
-          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-1"/>
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="1"/>
-        </triggered_effect>
-        <!-- HELPGOOD:
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
-          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
-          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30" />
-        </triggered_effect>
--->
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="_wetness" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="set" value="@_wetness"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="multiply" value="3.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKWetVsHeat"/>
-      </effect_group>
-    </buff>
     <buff name="buffGSKHazardousWeather58" icon="7dtdGskHazardWeather" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWeatherDesc" name_key="HazardousWeatherAndEnvironment">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -715,5 +544,308 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="10"/>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffGSKHazardousWElementColdHook40" icon="7dtdGskHazardSnow" icon_blink="true" hidden="false" remove_on_death="true" name_key="HypothermyHazard" description_key="buffGSKHazardousWElementColdHookDESC">
+      <damage_type value="Cold"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="iGSKNearDeathFreezingLvl" help="create a buff to indicate iGSKNearDeathFrostbyteLvl lvl"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementColdHook40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementColdHook40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementColdHook40">
+          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LTE" value="-30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-30"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LTE" value="-20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-20"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="frostbyte is rare but may happen suddenly with a big value">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="99"/>
+        <!--        HELPGOOD: by temperature-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.10)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.15)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.20)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.30)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.40)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.50)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.60)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-60"/>
+        </triggered_effect>
+        <!--        HELPGOOD: extra by wetness-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,0.50)">
+          <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GTE" value="0.10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="add" value="randomFloat(0,1.0)">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6" help="from lvl 5 300s to lvl 1 60s is 240s/6=40s to recover. Heating, recovering from cold you need to be warm.">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="30"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHWHeatingTmSub" operation="set" value="@fGSKFireHeatingMult"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHWHeatingTmSub" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKHWHeatingTmSub"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHazardousWElementHotHook40" icon="7dtdGskHazardDesert" icon_blink="true" hidden="false" remove_on_death="true" name_key="OverheatHazard" description_key="buffGSKHazardousWElementHotHookDESC">
+      <damage_type value="Heat"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="iGSKNearDeathDryHotLvl"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:buffGSKHazardousWElementHotHook40"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKHazardousWElementHotHook40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardousWElementHotHook40">
+          <requirement name="CVarCompare" cvar="iGSKNDHWTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="20"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="30"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="sweating adds dirty">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)" help="was 10to30, but it is per second, was too much.., miasma became a greater hazard than heat itself...">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(1.5,3)">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="30"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0"/>
+        <!-- HELPGOOD: this would actually cause a flu...
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="6">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-30" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="5">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-20" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="-10" />
+        </triggered_effect>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="4" help="from lvl 5 300s to lvl 1 60s is 240s/4=60s to recover. Cooling, recovering from warm, you CANNOT be too cold or you may get a flu.">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-10"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="2" help="Bonus for perfect temperature">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="-1"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="1"/>
+        </triggered_effect>
+        <!-- HELPGOOD:
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="10" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="20" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="0.333">
+          <requirement name="CVarCompare" cvar="fGSKFireHeatingMult" operation="Equals" value="0" />
+          <requirement name="CVarCompare" cvar="_coretemp" operation="LT" value="30" />
+        </triggered_effect>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_wetness" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="set" value="@_wetness"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="multiply" value="3.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKWetVsHeat"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="FAT: rm screff. place b4 adding on next group">
+      <requirement name="CVarCompare" cvar=".iGSKFatClearScrEff" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="2.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0" fade="2.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="2.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFatClearScrEff" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="FAT: extra fat helps on avoiding death by starvation too">
+      <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LTE" value="0.04" help="the inverse check at buffStatusHungry03(starvation) to add buffStatusHungry02 that will end removing buffStatusHungry03"/>
+      <requirement name="CVarCompare" cvar="fGSKFatStaminaBlockage" operation="GTE" value="0.1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFatStaminaBlockage" operation="add" value="-0.10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="food" operation="add" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKStarvingSideEffectsApplyNow" operation="set" value="1"/>
+    </effect_group>
+    <effect_group help="STARVING:without fat:countDown">
+      <requirement name="CVarCompare" cvar=".bGSKStarvingSideEffectsApplyNow" operation="Equals" value="0"/>
+      <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
+      <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LT" value="0.01"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingSideEffectsCountdown" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar="iGSKStarvingSideEffectsCountdown" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="STARVING:without fat:activate bad effects">
+      <requirement name="CVarCompare" cvar=".bGSKStarvingSideEffectsApplyNow" operation="Equals" value="0"/>
+      <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
+      <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LT" value="0.01" help="must be less than buffStatusHungry03 trigger value 0.02"/>
+      <requirement name="CVarCompare" cvar="iGSKStarvingSideEffectsCountdown" operation="Equals" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKStarvingSideEffectsApplyNow" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingSideEffectsCountdown" operation="set" value="60"/>
+    </effect_group>
+    <effect_group help="STARVING:bad effects (with or without fat)">
+      <requirement name="CVarCompare" cvar=".bGSKStarvingSideEffectsApplyNow" operation="Equals" value="1"/>
+      <!-- HELPGOOD:GOOD EFFECTS: -->
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="0.05" help="starving will help cure the body by eliminating weak cells faster (weak and sick cells will die first in a starving body)">
+        <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0"/>
+      </triggered_effect>
+      <!-- HELPGOOD:BAD EFFECTS: it is not free food, there is side effects. the ND values, if you are taking care it wont cause trouble, but if you are on the limit it will be a problem, these are only meant to worsen an existing problem, not to create it out of thin air. The screen effects will all be fixed by the ND main buff if they every happen. -->
+      <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKStarvingDebuffTime">
+        <requirement name="CVarCompare" cvar="fGSKStarvingDebuffTime" operation="GTE" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="set" value="60"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="water" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.000016667" help="1% every 10mins (at update_rate of 1s)"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="30">
+        <requirement name="InBiome" biome="5" help="desert" compare_type="or"/>
+        <requirement name="InBiome" biome="8" help="Wasteland"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingTime" operation="add" value="30">
+        <requirement name="InBiome" biome="1" help="snow" compare_type="or"/>
+        <requirement name="InBiome" biome="8" help="Wasteland"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="300" help="pine forest strong miasma will be worse in a starving person">
+        <requirement name="InBiome" biome="3" help="PineForest"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="1" help="max rads is 100.0. Starving will make the body weaker vs radiation.">
+        <requirement name="InBiome" biome="8" help="Wasteland"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKStarvFallDown" operation="set" value="1">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="5"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+        <requirement name="CVarCompare" cvar=".iGSKStarvFallDown" operation="GTE" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Starving.. weak legs.. fall down..">
+        <requirement name="CVarCompare" cvar=".iGSKStarvFallDown" operation="GTE" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKStarvFallDown" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="0.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.10" fade="0.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="0.5"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.33" help="some value near to letting almost no healing happen if feeding only on remaining fat. sync with update_rate"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-100">
+        <requirement name="!HasBuff" buff="buffGSKWightEssence" help="otherwise this would just end almost killing the player by converting HP into stamina, and seems cool having that power affect this too"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="Player$Hungry" play_in_head="true"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFatClearScrEff" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="120" help="sync with 2x this starvation check delay iGSKStarvingSideEffectsCountdown, but this may happen more often depending on fat consumption rate (to counter starvation)"/>
+      <triggered_effect help="FixTinyRandomFloat:was fGSKStarvingHPBlockage add randomFloat(0.33,1.0)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(330,1000)"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,1.0)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=15824:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingHPBlockage" operation="add" value="randomFloat(0.33,1.0)"> -->
+        <requirement name="CVarCompare" cvar="fGSKStarvingHPBlockage" operation="LT" value="@.fGSKStarvingHPBlockageLimit"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.01">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="0.01"/>
+        <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-0.01">
+        <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="GTE" value="0.01"/>
+        <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="-0.01">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="GTE" value="0.01"/>
+        <requirement name="HasBuff" buff="buffStatusHungry03" help="starving w/o fat. kicks in with Food LTE 0.02"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingFatigueCountdown" operation="set" value="randomInt(20,30)" compare_type="or" help="this is about the many times .bGSKStarvingSideEffectsApplyNow happens, so may take a long time">
+        <requirement name="HasBuff" buff="buffDrugVitamins"/>
+        <requirement name="CVarCompare" cvar="iGSKStarvingFatigueCountdown" operation="Equals" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffFatigued">
+        <requirement name="!HasBuff" buff="buffDrugVitamins"/>
+        <requirement name="CVarCompare" cvar="iGSKStarvingFatigueCountdown" operation="Equals" value="1" help="trigger on 1 because 0 is default (1st iteration) and restart counter hint"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingFatigueCountdown" operation="add" value="-1">
+        <requirement name="!HasBuff" buff="buffDrugVitamins"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKStarvingSideEffectsApplyNow" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Starving consumes your body fat and makes you tired."/>
+    </effect_group>
+    <effect_group help="STARVING:bad passive effects (with or without fat)">
+      <requirement name="CVarCompare" cvar="fGSKStarvingDebuffTime" operation="GTE" value="1"/>
+      <passive_effect name="CraftingTime" operation="perc_add" value="0.5" help="slower crafting if starving"/>
+      <passive_effect name="RunSpeed" operation="perc_subtract" value="0.15"/>
+      <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.15"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="add" value="-1" help="sync with update_rate"/>
+    </effect_group>
+    <effect_group help="FEEDING: not starving anymore, not using fat">
+      <!--        HELPGOOD:
+        buffStatusHungry03 is LTE 02%. GT 0.04 there adds buffStatusHungry02 that removes buffStatusHungry03
+        buffStatusHungry02 is LTE 25%
+        buffStatusHungry01 is LTE 50% 
+-->
+      <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GT" value="0.07" help="must be more than GT 0.04 to compensate the food add 1 from fat"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingFatigueCountdown" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKStarvingSideEffectsCountdown" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKStarvingDebuffTime" operation="set" value="0"/>
+    </effect_group>
   </append>
 </GhussakTweaks>
