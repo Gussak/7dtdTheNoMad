@@ -2,13 +2,15 @@
 <GhussakTweaks>
   <append xpath="/gameevents">
     <action_sequence name="eventGSKCosmicRayStrike" help="WORKAROUND: Sometimes, when a huge ground is collapting and the game is lagging, the 2nd explosion from eventGSKElctrnTele may kill the player even w/o a car (that reflects damage) nearby. This is an attempt to try to avoid that, but you lose the explosion that kills enemies this way. This is better than the problem at least.">
+      <property name="allow_user_trigger" value="true"/>
+      <property name="action_type" value="Game"/>
       <action class="Teleport">
         <property name="phase" value="10"/>
         <property name="target_position" value="0,-1,0"/>
         <property name="offset_type" value="Relative"/>
       </action>
-      <action class="Explode" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
-        <property name="phase" value="10"/>
+      <action class="ExplodeTarget" help="MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport">
+        <property name="phase" value="20"/>
         <property name="blast_power" value="500"/>
         <property name="block_damage" value="32000"/>
         <property name="block_radius" value="1"/>
