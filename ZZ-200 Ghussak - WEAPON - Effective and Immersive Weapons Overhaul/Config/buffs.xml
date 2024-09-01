@@ -1,0 +1,934 @@
+<?xml version="1.0"?>
+<configs>
+  <append xpath="/buffs">
+    <buff name="buffGSKEWToggleDebug" hidden="true" remove_on_death="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWCfgLog" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWCfgLog" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWCfgLog"/>
+      </effect_group>
+    </buff>
+    <buff name="buffEWConfig" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWCfgBleedParticles" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWCfgUseBulletsEffects" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWCfgLog" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWCfgInitialized" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWConfig">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWConfig"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEffectiveWeaponsCheckB4Add" hidden="true" help="this is intended for guns that hit several times in a very short time">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
+          <requirement name="NotHasBuff" buff="buffEWConfig"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWAddCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWAddCount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iEWAddCount" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iEWCfgInitialized" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="bEWCfgUseBulletsEffects" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iEWAddCount" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="Leader" operation="Equals" value="0" help="protects hired NPCs"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEffectiveWeapons"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWAddCount" operation="subtract" value="1"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEffectiveWeaponsCheckB4Add">
+          <requirement name="CVarCompare" cvar="iEWCfgInitialized" operation="Equals" value="1"/>
+          <requirements compare_type="or">
+            <requirement name="CVarCompare" cvar="bEWCfgUseBulletsEffects" operation="Equals" value="0"/>
+            <requirement name="CVarCompare" cvar="iEWAddCount" operation="Equals" value="0"/>
+          </requirements>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEffectiveWeapons" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
+          <requirement name="NotHasBuff" buff="buffEWConfig"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWOneEffectPerLoop" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWIndex" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceBleed">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceBleedLethal">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="animalSpiderHaveNoRagdoll. TODO: spiders seems to not have ragdoll error: NullReferenceException at EModelBase.FrameUpdateRagdoll () at EModelBase.Update (). comment this group when spiders get ragdoll">
+        <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStun" operation="set" value="@iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="iEWChanceStun" operation="LT" value="@iEWChanceKnockdown"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStunHarder" operation="set" value="@iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="iEWChanceStunHarder" operation="LT" value="@iEWChanceKnockdown"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceKnockdown" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWAutoCalcChanceStun" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iEWChanceStun" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStun" operation="set" value="@iEWChanceKnockdown">
+          <requirement name="CVarCompare" cvar="bEWAutoCalcChanceStun" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStun" operation="divide" value="2">
+          <requirement name="CVarCompare" cvar="bEWAutoCalcChanceStun" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceStun">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bEWAutoCalcChanceStunHarder" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iEWChanceStunHarder" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStunHarder" operation="set" value="@iEWChanceStun">
+          <requirement name="CVarCompare" cvar="bEWAutoCalcChanceStunHarder" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWChanceStunHarder" operation="divide" value="2">
+          <requirement name="CVarCompare" cvar="bEWAutoCalcChanceStunHarder" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWChanceStunHarder">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="Leader" operation="Equals" value="0" help="protects hired NPCs"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="EW:buffEffectiveWeapons">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWIndex">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWPelletHitCount">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="3">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@iEWChanceKnockdown"/>
+          <requirements compare_type="or">
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LTE" value="0"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="15"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="10"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="5"/>
+          </requirements>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="bEWOneEffectPerLoop" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWBleedAdd">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="2"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@iEWChanceBleed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="bEWOneEffectPerLoop" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWLethalBleeding">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="3"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@iEWChanceBleedLethal"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="bEWOneEffectPerLoop" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWInjuryStunnedAdd">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="4"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@iEWChanceStun"/>
+          <requirements compare_type="or">
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LTE" value="0"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="20"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="15"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="10"/>
+            <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="Equals" value="5"/>
+          </requirements>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="bEWOneEffectPerLoop" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWEndEffectsValue" operation="set" value="5"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="LT" value="@iEWEndEffectsValue"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWPelletHitCount" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="GTE" value="@iEWEndEffectsValue"/>
+          <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="GTE" value="@iEWEndEffectsValue"/>
+          <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEffectiveWeapons">
+          <requirement name="CVarCompare" cvar="iEWIndex" operation="GTE" value="@iEWEndEffectsValue"/>
+          <requirement name="CVarCompare" cvar="iEWPelletHitCount" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEffectiveWeapons">
+          <requirement name="CVarCompare" cvar="Leader" operation="GT" value="0" help="protects hired NPCs"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEffectiveWeapons"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWLethalBleeding" hidden="true">
+      <damage_type value="bloodloss"/>
+      <stack_type value="ignore"/>
+      <duration value="600"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWLethalBleeding">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <passive_effect name="HealthChangeOT" operation="base_subtract" value="1,10,15,15" duration="0,30,60,600"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWLethalBleeding"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWLethalBleeding:REMOVED">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWBleedParticleFast">
+          <requirement name="CVarCompare" cvar="bEWCfgBleedParticles" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffEWBleedParticleFast"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWBleedParticleSlow" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="2.0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWBleedParticleSlow">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_impact_metal_on_organic"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_impact_metal_on_organic" local_offset="0,.50,0" parent_transform="Hips"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_impact_metal_on_organic"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWBleedParticleSlow"/>
+      </effect_group>
+    </buff>
+    <buff name="buffEWBleedParticleFast" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.25"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWBleedParticleFast">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="p_impact_metal_on_organic"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_impact_metal_on_organic" local_offset="0,.50,0" parent_transform="Hips"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_impact_metal_on_organic"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWBleedParticleFast"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWInjuryStunnedAdd" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.25"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWInjuryStunnedAdd">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWInjuryStunnedHarder">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@iEWChanceStunHarder"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWInjuryStunned">
+          <requirement name="NotHasBuff" buff="buffEWInjuryStunnedHarder"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWInjuryStunnedAdd">
+          <requirements compare_type="or">
+            <requirement name="HasBuff" buff="buffEWInjuryStunned"/>
+            <requirement name="HasBuff" buff="buffEWInjuryStunnedHarder"/>
+          </requirements>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWInjuryStunned" hidden="true">
+      <damage_type value="stun"/>
+      <stack_type value="replace"/>
+      <duration value="20"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWInjuryStunned">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.8,.2" duration="0,20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.8,.2" duration="0,20"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.8,.2" duration="0,20"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.8,.2" duration="0,20"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" value="-.5,0" duration="0,20"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWInjuryStunned">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWInjuryStunned:REMOVED">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWInjuryStunnedHarder" hidden="true">
+      <damage_type value="stun"/>
+      <stack_type value="replace"/>
+      <duration value="60"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWInjuryStunnedHarder">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.9,0.75,.2" duration="0,30,60"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.9,0.75,.2" duration="0,30,60"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.9,0.75,.2" duration="0,30,60"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.9,0.75,.2" duration="0,30,60"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" value="-.75,0" duration="0,60"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWInjuryStunnedHarder:REMOVED">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWInjuryStunGrenade" hidden="true">
+      <damage_type value="stun"/>
+      <stack_type value="replace"/>
+      <duration value="600"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.95,0.75,.2" duration="0,300,600"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75,0" duration="0,30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWInjuryStunGrenade">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWBleedAdd" hidden="true">
+      <damage_type value="bloodloss"/>
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWBleed">
+          <requirement name="NotHasBuff" buff="buffEWBleed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWBleedAdd">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="2"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationAdd" operation="set" value="25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDurationAdd">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedAmountAdd" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iEWBleedAmountAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedAmountAdd">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationTMP" operation="set" value="@iEWBleedDuration"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationTMP" operation="multiply" value="@iEWBleedAmount"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDurationTMP">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationAddTMP" operation="set" value="@iEWBleedDurationAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationAddTMP" operation="multiply" value="@iEWBleedAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDurationAddTMP">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationTMP" operation="add" value="@iEWBleedDurationAddTMP"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDurationTMP">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedAmount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="@iEWBleedAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedAmount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDurationTMP" operation="divide" value="@iEWBleedAmount"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDurationTMP">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedDuration" operation="set" value="@iEWBleedDurationTMP"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWBleedDuration">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWBleedAmountAdd" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffEWBleed" hidden="true">
+      <damage_type value="bloodloss"/>
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBleedAmount" help="per second. this works better than ModifyStats Health for zombies as their buffs are not grantedly calculated in the specified time right?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1" help="a small chance to lower bleeding">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+          <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="GT" value="1" help="keep a very weak bleeding tho til it timeout"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="LTE" value="0" help="quickly (not intantly) stop bleeding if it timeouts"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedDuration" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="zombies wont die of slow bleeding">
+        <requirement name="EntityTagCompare" tags="zombie"/>
+        <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="3"/>
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedAmount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBleedDuration" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest"/>
+      </effect_group>
+      <effect_group help="finalize">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWBleed">
+          <requirement name="CVarCompare" cvar="iEWBleedDuration" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iEWBleedAmount" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWBleed"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWBleedParticleSlow">
+          <requirement name="CVarCompare" cvar="bEWCfgBleedParticles" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffEWBleedParticleSlow"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWBleed">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWBleed:REMOVED">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWBleedAmount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWBleedDuration">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffIsOnFire']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtraBurningAdd"/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWExtraBurningAdd" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="!EntityTagCompare" tags="player,trader,burnt" compare_type="or"/>
+        <requirement name="NotHasBuff" buff="buffEWExtraBurning"/>
+        <requirement name="NotHasBuff" buff="buffEWZombieRevigoratingRest"/>
+        <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
+          <requirement name="NotHasBuff" buff="buffEWConfig"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtraBurningCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtraBurning"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEWTrySetNearbyEntitiesOnFire" hidden="true">
+      <damage_type value="heat"/>
+      <stack_type value="replace"/>
+      <update_rate value="1.0"/>
+      <duration value="0"/>
+      <effect_group help="try to set a nearby/touched entity on fire too so it may spread">
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="1.25" action="AddBuff" buff="buffEWExtraBurningAdd">
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWExtraBurning" hidden="true">
+      <damage_type value="heat"/>
+      <stack_type value="replace"/>
+      <update_rate value="1.0"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWExtraBurning">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
+      </effect_group>
+      <effect_group help="while buffIsOnFire is active, let it act alone. buffEWExtraBurning kicks in only after buffIsOnFire ends">
+        <requirement name="NotHasBuff" buff="buffIsOnFire" help="so, do all these things only after buffIsOnFire ends"/>
+        <!-- HELPGOOD: damage starts in 1 to let it vanish or grow slower taking more time to kill the foe -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="1" help="grants init, MUST BE BEFORE inc iEWExtraBurningCount">
+          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="Equals" value="0" help="means it was not set yet"/>
+          <requirement name="CVarCompare" cvar="iEWExtraBurningCount" operation="Equals" value="0" help="means the buff was just added or re-added"/>
+          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="Equals" value="0" help="means iEWBurnAmount was not lowered to 0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWExtraBurningCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWExtraBurningCount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <!--HELPGOOD: it will try to increse OR decrease iEWBurnAmount ONCE per loop -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWToggleBurnAddCount" operation="add" value="1" help="a counter to let a toggle work"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bEWToggleBurnAdd" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bEWToggleBurnAdd" operation="set" value="0" help="0 is false, means subtract">
+          <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWToggleBurnAddCount" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iEWToggleBurnAddCount" operation="GTE" value="2"/>
+        </triggered_effect>
+        <!--HELPGOOD: increse OR decreate iEWBurnAmount -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="bEWToggleBurnAdd" operation="Equals" value="1"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="bEWToggleBurnAdd" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="GT" value="0"/>
+        </triggered_effect>
+        <!--HELPGOOD: extinguish fire if not burning for a few seconds, rare condition -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iEWBurnAmount" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWBurnZeroCount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+          <requirement name="CVarCompare" cvar="iEWBurnZeroCount" operation="GTE" value="7" help="requires 7 retries failing to burn to extinguish the fire"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iEWBurnAmount">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <passive_effect name="HealthChangeOT" operation="base_subtract" value="@iEWBurnAmount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,-.2,0" parent_transform="LOD0" shape_mesh="true"/>
+      </effect_group>
+      <effect_group help="zombies wont die of extra burning">
+        <requirement name="EntityTagCompare" tags="zombie"/>
+        <!-- HELPGOOD: this would be only for slow burning
+				<requirement name="CVarCompare" cvar="iEWBurnAmount" operation="LTE" value="5"/>
+-->
+        <requirement name="StatCompareCurrent" stat="health" operation="LTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnAmount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBurnZeroCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iEWBecomeBurntZombieAfterFullRest" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWZombieRevigoratingRest" help="TODO: alternatively should kill and instantly de-spawn the zombie and spawn a knocked down burn zombie with low HP (just above the exploding trigger) exactly where this zombie died, but how to place it at previous zombie position? May be, just set the zombie skin to the burnt skin and add to it the burn zombie power."/>
+        <!--      HELPGOOD: list materials: egrep '\.mat$' "../../"* -\-include="*.manifest" -iRIh |egrep '[^/]*burnt[^/]*\.mat$' -i 
+Zombies/Materials/HD_Burnt_Zombie_Radiated.mat
+Zombies/Materials/HD_Burnt_Zombie.mat
+Zombies/Materials/HD_Burnt_Zombie_Feral.mat
+Zombies/Materials/Burnt_Zombie_.mat
+	how to change texture/material/skin from buffs.xml? this only works from entityclasses.xml:
+				<property name="ReplaceMaterial0" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+				<property name="ReplaceMaterial1" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+				<property name="ReplaceMaterial2" value="#Entities/Zombies?Zombies/Materials/HD_Burnt_Zombie.mat" help="it may not map correctly to every mesh tho I guess"/>
+				-->
+      </effect_group>
+      <!--HELPGOOD: will continue slow burning until extinguished (only player can access buffExtinguishFire on self?) -->
+      <effect_group help="finalize">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning" compare_type="or">
+          <requirement name="HasBuff" buff="buffEWZombieRevigoratingRest"/>
+          <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffEWExtraBurning"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="_wetness">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="EW:buffEWExtraBurning:REMOVED">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,-.2,0" parent_transform="LOD0" shape_mesh="true" help="TODO:ISSUE:FAILS: this keeps the corpse burning">
+          <requirement name="!IsAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_onFire">
+          <requirement name="IsAlive"/>
+        </triggered_effect>
+        <!-- HELPGOOD: TODO: there is nothing for npcs being in rain right? NPCs dont have onSelfWaterSubmerge ? -->
+        <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffEWExtraBurning"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+          <requirement name="!EntityTagCompare" tags="bandit"/>
+          <requirement name="EntityTagCompare" tags="npc"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="25"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+          <requirement name="EntityTagCompare" tags="bandit"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtraBurning">
+          <requirement name="!EntityTagCompare" has_all_tags="false" tags="bandit,npc" help="others than bandits and npcs will have just a small chance"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="3"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffEWBurningStrike" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningElement">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWZombieRevigoratingRest" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtExplKORandomTime" operation="set" value="randomInt(66,666)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWExtExplKO" help="while knocked down, it will regenerate slowly til it rises again"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iEWtmpHpRegenRest" operation="set" value="randomFloat(1.0,5.0)" help="sync with update_rate for between min,max"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@.iEWtmpHpRegenRest"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95"/>
+        <requirement name="CVarCompare" cvar="iEWBecomeBurntZombieAfterFullRest" operation="Equals" value="1"/>
+        <!--				HELPGOOD:TODO: instead should just spawn a burnt zombie where this one is with the same stats-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_burning_barrel" local_offset="0,-1,0" parent_transform="Hips"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEWTrySetNearbyEntitiesOnFire"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWBurningStrike"/>
+        <!-- HELPGOOD:
+				<triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_torch_wall" local_offset="0,0.3,0" parent_transform="Head" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="p_onFire" local_offset="0,0,0" parent_transform="LOD0" shape_mesh="true" />
+-->
+      </effect_group>
+      <effect_group>
+        <!--        HELPGOOD:TODO: how to force end ragdoll when zombie reaches good hp regen? these wont end the ragdoll mode, it just breaks the cvar coherency to WYSIWYG :(
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdoll" operation="set" value="0">
+					<requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95" />
+        </triggered_effect>
+        <triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="ragdoll" operation="set" value="0">
+					<requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.33" />
+				</triggered_effect>
+				-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWZombieRevigoratingRest">
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWExtExplKOAdd" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffEWConfig">
+          <requirement name="NotHasBuff" buff="buffEWConfig"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffEWExtExplKOAdd">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWExtExplKORandomTime">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="WORKAROUND ragdoll missing for animalspider? TODO: remove this when spiders have ragdoll working see items.xml too TODO: this worked?">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bEWAllowKO" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bEWAllowKO" operation="set" value="1">
+          <requirement name="!EntityTagCompare" tags="animalSpider01"/>
+          <requirement name="!EntityTagCompare" tags="animalSpider02"/>
+          <requirement name="!EntityTagCompare" tags="animalSpider03"/>
+          <requirement name="IsAlive" help="trying to prevent disappearing animal corpses glitch"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtExplKOAdd">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWInjuryStunGrenade">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffEWExtExplKO">
+          <requirement name="CVarCompare" cvar=".bEWAllowKO" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffEWExtExplKOAdd">
+          <requirement name="CVarCompare" cvar="ragdoll" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffEWExtExplKO" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0.1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iEWExtExplKORandomTime">
+          <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="3" help="iLim=38,iStep=3,iCount=1">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="3"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="6" help="iLim=38,iStep=3,iCount=2">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="3"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="6"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" help="iLim=38,iStep=3,iCount=3">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="6"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="9"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="12" help="iLim=38,iStep=3,iCount=4">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="9"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="12"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="15" help="iLim=38,iStep=3,iCount=5">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="12"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="15"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="18" help="iLim=38,iStep=3,iCount=6">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="15"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="18"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="21" help="iLim=38,iStep=3,iCount=7">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="18"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="21"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="24" help="iLim=38,iStep=3,iCount=8">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="21"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="24"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="27" help="iLim=38,iStep=3,iCount=9">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="24"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="27"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="30" help="iLim=38,iStep=3,iCount=10">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="27"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="30"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="33" help="iLim=38,iStep=3,iCount=11">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="30"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="33"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="36" help="iLim=38,iStep=3,iCount=12">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="33"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="36"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="46" help="iLim=98,iStep=10,iCount=13">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="36"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="46"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="56" help="iLim=98,iStep=10,iCount=14">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="46"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="56"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="66" help="iLim=98,iStep=10,iCount=15">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="56"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="66"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="76" help="iLim=98,iStep=10,iCount=16">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="66"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="76"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="86" help="iLim=98,iStep=10,iCount=17">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="76"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="86"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="96" help="iLim=98,iStep=10,iCount=18">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="86"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="96"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="111" help="iLim=218,iStep=15,iCount=19">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="96"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="111"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="126" help="iLim=218,iStep=15,iCount=20">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="111"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="126"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="141" help="iLim=218,iStep=15,iCount=21">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="126"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="141"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="156" help="iLim=218,iStep=15,iCount=22">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="141"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="156"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="171" help="iLim=218,iStep=15,iCount=23">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="156"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="171"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="186" help="iLim=218,iStep=15,iCount=24">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="171"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="186"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="201" help="iLim=218,iStep=15,iCount=25">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="186"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="201"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="216" help="iLim=218,iStep=15,iCount=26">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="201"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="216"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="236" help="iLim=398,iStep=20,iCount=27">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="216"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="236"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="256" help="iLim=398,iStep=20,iCount=28">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="236"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="256"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="276" help="iLim=398,iStep=20,iCount=29">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="256"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="276"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="296" help="iLim=398,iStep=20,iCount=30">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="276"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="296"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="316" help="iLim=398,iStep=20,iCount=31">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="296"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="316"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="336" help="iLim=398,iStep=20,iCount=32">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="316"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="336"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="356" help="iLim=398,iStep=20,iCount=33">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="336"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="356"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="376" help="iLim=398,iStep=20,iCount=34">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="356"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="376"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="396" help="iLim=398,iStep=20,iCount=35">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="376"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="396"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="426" help="iLim=638,iStep=30,iCount=36">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="396"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="426"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="456" help="iLim=638,iStep=30,iCount=37">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="426"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="456"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="486" help="iLim=638,iStep=30,iCount=38">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="456"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="486"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="516" help="iLim=638,iStep=30,iCount=39">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="486"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="516"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="546" help="iLim=638,iStep=30,iCount=40">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="516"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="546"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="576" help="iLim=638,iStep=30,iCount=41">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="546"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="576"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="606" help="iLim=638,iStep=30,iCount=42">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="576"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="606"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="636" help="iLim=638,iStep=30,iCount=43">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="606"/>
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="LTE" value="636"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="666" help="iLim=638,iStep=30,iCount=44">
+          <requirement name="CVarCompare" cvar="iEWExtExplKORandomTime" operation="GT" value="666"/>
+        </triggered_effect>
+        <!-- HELPGOOD:CODEGEN:createKO.sh -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iEWExtExplKORandomTime" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffIsOnFire']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="EW:buffIsOnFire">
+        <requirement name="CVarCompare" cvar="iEWCfgLog" operation="GTE" value="1"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+</configs>

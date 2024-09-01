@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/entity_classes/entity_class[@name='playerMale']/effect_group/triggered_effect[(@trigger='onSelfEnteredGame' or @trigger='onSelfRespawn') and @action='AddBuff' and @target='self']/@buff">,buffGSKExtraBloodMoonCheck1</append>
+  <!-- HELPGOOD:  
+  zombie crowd: killing stronger zombies will spawn weaker zombie crowds. CONFIGURES THE ZOMBIES
+-->
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieBiker') or    starts-with(@name,'zombieMaleHazmat') or    starts-with(@name,'zombieMiner') or    starts-with(@name,'zombieSkateboarder') or    starts-with(@name,'zombieSoldier') or    starts-with(@name,'zombieUtilityWorker') or        starts-with(@name,'zombieSpider') or    starts-with(@name,'zombieSteveCrawler')   ]/property[@name='Tags']/@value" help="zombie crowd: armored (at least helmeted) or minor special">,crowdSpawnerLow</append>
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieFatHawaiian') or    starts-with(@name,'zombieFemaleFat') or    starts-with(@name,'zombieLumberjack')   ]/property[@name='Tags']/@value" help="zombie crowd: strong ones">,crowdSpawnerMedium</append>
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieWight') or    starts-with(@name,'zombieMutated') or    starts-with(@name,'zombieDemolition') or    starts-with(@name,'zombieFatCop') or    starts-with(@name,'zombieScreamer')   ]/property[@name='Tags']/@value" help="zombie crowd: extra special">,crowdSpawnerHigh</append>
+  <!-- HELPGOOD:  
+	=========================================================================================================
+	ISSUE: worked once??? how??? why stopped working?: Seems to work only if the player kills them while very nearby them only. 
+	TODO: not working well.. There are two methods: onSelfKilledOther (from player and from NPCs) and onSelfDied. Keep only the one that is working! onSelfDied would be much better tho...
+	THIS WORKS OR NOT!?!??!
+	=========================================================================================================
+-->
+  <append xpath="/entity_classes/entity_class[@name='playerMale']">
+    <effect_group help="zombie crowd">
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,1)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerLow"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,2)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerMedium"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,3)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerHigh"/>
+      </triggered_effect>
+      <!--      HELPGOOD: granted extras-->
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="1">
+        <requirement name="EntityTagCompare" target="other" tags="feral"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="2">
+        <requirement name="EntityTagCompare" target="other" tags="radiated"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD:  
+	=========================================================================================================
+	THIS SEEMS TO WORK!!!?
+	=========================================================================================================
+-->
+  <append xpath="/entity_classes/entity_class[     starts-with(@name,'npc') or     starts-with(@name,'survivor') or     starts-with(@name,'raider')    ]" help="no matter if it is helping the player or not. THIS SEEMS TO WORK!">
+    <!--
+		HELPGOOD: doesnt work
+		<effect_group help="zombie crowd: TODO: chk if this works as there are 2 other being considered here: one for selfAOE and the other for onSelfKilledOther">
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,1)" target="selfAOE" range="60" target_tags="player">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerLow" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,2)" target="selfAOE" range="60" target_tags="player">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerMedium" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,3)" target="selfAOE" range="60" target_tags="player">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerHigh" />
+      </triggered_effect>
+      
+			<!- -      HELPGOOD: granted extras - ->
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="1" target="selfAOE" range="60" target_tags="player">
+        <requirement name="EntityTagCompare" target="other" tags="feral" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="2" target="selfAOE" range="60" target_tags="player">
+        <requirement name="EntityTagCompare" target="other" tags="radiated" />
+      </triggered_effect>
+    </effect_group>
+    -->
+    <effect_group help="zombie crowd: inc self">
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="randomInt(0,1)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerLow"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="randomInt(0,2)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerMedium"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="randomInt(0,3)">
+        <requirement name="EntityTagCompare" target="other" tags="crowdSpawnerHigh"/>
+      </triggered_effect>
+      <!--      HELPGOOD: granted extras-->
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="1">
+        <requirement name="EntityTagCompare" target="other" tags="feral"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="2">
+        <requirement name="EntityTagCompare" target="other" tags="radiated"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="zombie crowd: transfer to player">
+      <requirement name="CVarCompare" cvar=".iGSKNPCzombieCrowd" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="1" target="selfAOE" range="60" target_tags="player"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKNPCzombieCrowd" operation="add" value="-1"/>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD:  
+  =========================================================================================================
+  zombie crowd: ISSUE: onSelfDied doesnt seem to be able to modify a cvar on player??? THIS onSelfDied SEEMS TO NOT WORK??? :( !
+  =========================================================================================================
+-->
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieBiker') or    starts-with(@name,'zombieMaleHazmat') or    starts-with(@name,'zombieMiner') or    starts-with(@name,'zombieSkateboarder') or    starts-with(@name,'zombieSoldier') or    starts-with(@name,'zombieUtilityWorker') or        starts-with(@name,'zombieSpider') or    starts-with(@name,'zombieSteveCrawler')   ]" help="zombie crowd: armored (at least helmeted) or minor special">
+    <effect_group help="zombie crowd">
+      <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,1)" target="selfAOE" range="60" target_tags="player"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieFatHawaiian') or    starts-with(@name,'zombieFemaleFat') or    starts-with(@name,'zombieLumberjack')   ]" help="zombie crowd">
+    <effect_group help="zombie crowd: strong ones">
+      <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,2)" target="selfAOE" range="60" target_tags="player"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[    starts-with(@name,'zombieWight') or    starts-with(@name,'zombieMutated') or    starts-with(@name,'zombieDemolition') or    starts-with(@name,'zombieFatCop') or    starts-with(@name,'zombieScreamer')   ]" help="zombie crowd">
+    <effect_group help="zombie crowd: extra special">
+      <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="randomInt(0,3)" target="selfAOE" range="60" target_tags="player"/>
+    </effect_group>
+  </append>
+  <!--HELPGOOD: zombie crowd: granted extras -->
+  <append xpath="/entity_classes/entity_class[    contains(@name,'Feral')   ]" help="zombie crowd">
+    <effect_group help="zombie crowd: granted extra for feral">
+      <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="1" target="selfAOE" range="60" target_tags="player"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[    contains(@name,'Radiated')   ]" help="zombie crowd">
+    <effect_group help="zombie crowd: granted extra for radiated">
+      <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="2" target="selfAOE" range="60" target_tags="player"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>

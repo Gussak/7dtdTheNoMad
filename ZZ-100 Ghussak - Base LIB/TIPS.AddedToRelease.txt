@@ -1,0 +1,199 @@
+# The first time the world is started (new game), may happen just error exceptions preventing the player spawning, about FPcamera. Just cmd 'shutdown' it and restart the application, then 'continue' on that world.
+
+# If WMMGameOptions is installed run using "ZZ-005 Ghussak - Base LIB/restartLoop.sh", it may fail from 2 to 6 times
+
+ExtraHelp*1: run this to grant no trash is messing the data: sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1
+
+
+
+
+
+
+
+### OLD TIPS, doesnt exatcly work/help, improving above ###
+
+# If WMMGameOptions is installed and errors about MainMenu prevent reaching the main menu do cmd 'shutdown' and then (ExtraHelp*1)
+#  but you may have to restart 2 or 3 times: first, restart with WMMGameOptions/ModInfo.xml.DISABLED, then exit
+#  second: restart with WMMGameOptions/SaveData/WMMGameOptions.xml.bkp (so that file will also be re-created)
+#   the problem may be the mod WMMGameOptions, trying to load options from SaveData/WMMGameOptions.xml before the menu is ready?
+#  if you just set the options manually, just continue the game, otherwise, try restarting again with SaveData/WMMGameOptions.xml restored
+
+
+# If a lot of error messages about npc or mob jumping, or moving, or block.walking... happens, just restart the application.
+# The first time the world is started, may happen more error exceptions than 2nd time on?
+
+# may not be necessary?
+1) If it errors exception before reaching the main menu, do not ctrl+c on terminal, do not SIGKILL it, open it's terminal F1 and type "shutdown", do (ExtraHelp*1) then restart.
+2) if this error happens "at vp_FPCamera.DoCameraCollision", do a "shutdown", do (ExtraHelp*1) and restart then re-enter the same world. Obs.: (1) may happen, so follow the instructions there.
+
+
+
+
+
+
+##### ##### ##### ##### #####  ETC: ##### ##### ##### ##### ##### 
+
+#fix Version:
+clear;find ./ -iregex "./.*Ghussak.*ModInfo.xml" -exec sed -i -r 's@(.*Version.*value=").*("/>)@\11.0.1.0\2@' '{}' \;
+
+#all console commands help:
+#clear;strings ../7DaysToDie_Data/Managed/Assembly-CSharp.dll |sort -u |egrep -i "^ConsoleCmd" |sed -r 's@(ConsoleCmd)(.*)@xdotool type "help \2"@'
+#did not work, the help text for any specific command is not there: gcore $(pgrep -f "^C:.*7DaysToDie.exe");strings core.* >AllStrings.txt
+clear;strings ../7DaysToDie_Data/Managed/Assembly-CSharp.dll |sort -u |egrep -i "^ConsoleCmd" |sed -r 's@(ConsoleCmd)(.*)@\2@' # the below list may help already so here is easier to read and search thru them
+	Abstract
+	Admin
+	AI
+	AIDirectorDebug
+	AIDirectorShowNextWanderingHordeTime
+	AIDirectorSpawnAirDrop
+	AIDirectorSpawnHorde
+	AIDirectorSpawnScouts
+	AIDirectorSpawnSupplyCrate
+	AudioManager
+	AutoMove
+	Ban
+	Bents
+	Buff
+	BuffPlayer
+	Camera
+	Camera|CameraPosition
+	ChunkCache
+	ChunkReset
+	CommandPermissions
+	Cover
+	CreateWebUser
+	CreativeMenu
+	DamageReset
+	Debuff
+	DebuffPlayer
+	DebugMenu
+	DebugPanels
+	DebugShot
+	DebugWeather
+	DecoMgr
+	Dismemberment
+	DMS
+	DynamicProperties
+	Exhausted
+	ExportCurrentConfigs
+	ExportPrefab
+	FloatingOrigin
+	ForceEventDate
+	Fov
+	GameStage
+	GetGamePrefs
+	GetGameStats
+	GetLogfilePath
+	GetOptions
+	GetTime
+	Gfx
+	GiveQualityItem
+	GiveQuest
+	GiveXp
+	Graph
+	Help
+	Help|HelpTopic
+	JunkDrone
+	Kick
+	KickAll
+	Kill
+	KillAll
+	Lights
+	ListEntities
+	ListGameObjects
+	ListPlayerIds
+	ListPlayers
+	ListThreads
+	LogGameState
+	LogLevel
+	LogOwnedEntities
+	Loot
+	MapData
+	Mem
+	MemCl
+	MemoryProfiler
+	MumblePositionalAudio
+	NetworkClient
+	NetworkServer
+	NewAvatarTest
+	NewWeatherSurvival
+	Occlusion
+	PermissionsAllowed
+	PIRS
+	PlaceBlockRotations
+	PlaceBlockShapes
+	PlaceObserver
+	PlayerVisitMap
+	Pois
+	POIWaypoints
+	PPList
+	Prefab
+	PrefabEditor
+	PrefabUpdater
+	PrintChunkExpiryInfo
+	ProfileNetwork
+	Profiler
+	Profiling
+	RegionReset
+	ReloadEntityClasses
+	RemoveQuest
+	RepairChunkDensity
+	ResetAchievementStats
+	SaveChunkAgeMap
+	SaveWorld
+	ScreenEffect
+	SDCS
+	SelfExp
+	ServerJunkDrone
+	ServerMessage
+	SetGamePref
+	SetGameStat
+	SetTargetFps
+	SetTempUnit
+	SetTime
+	SetTriggerEffect
+	SetWaterValue
+	Show
+	ShowAlbedo
+	ShowChunkData
+	ShowClouds
+	Show|DebugView
+	ShowHits
+	ShowNormals
+	ShowSpecular
+	ShowSwings
+	ShowTriggers
+	Shutdown
+	Sleep
+	Sleeper
+	SmoothWorldAll
+	SpawnEntity
+	SpawnEntityAt
+	SpawnScreen
+	SpectatorMode
+	Spectrum
+	SquareSpiral
+	Stab
+	Starve
+	SwitchView
+	SystemInfo
+	Teleport
+	TeleportPlayer
+	TeleportPoi
+	TeleportPoiRelative
+	TeleportsAbs
+	TestLoop
+	Thirsty
+	TraderArea
+	Trees
+	TwitchCommand
+	UIOptions
+	Version
+	VersionUi
+	VisitMap
+	Weather
+	WeatherSurvival
+	Whitelist
+	WorkstationMaterials
+	Xui
+

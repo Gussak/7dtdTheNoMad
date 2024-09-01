@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/entity_classes" help="GSK loot by gun types">
+    <entity_class name="EntityLootContainerRegularWithLBow" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithLBow"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithXBow" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithXBow"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithRifle" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithRifle"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithPistol" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithPistol"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithShotgun" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithShotgun"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithAK47" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithAK47"/>
+    </entity_class>
+    <entity_class name="EntityLootContainerRegularWithRocket" extends="EntityLootContainerRegular">
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="LootListOnDeath" value="lootPackRegularWithRocket"/>
+    </entity_class>
+  </append>
+  <!--	HELPGOOD: this will apply the GSK loot by gun types, but will be replaced with 0-XNPCCore loot below, so disbling that section will enable this one -->
+  <append xpath="/entity_classes/entity_class[contains(@name, 'LBow')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithLBow"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'XBow')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithXBow"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Pistol') or contains(@name, 'SMG')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithPistol"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Shotgun')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithShotgun"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Rifle')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRifle"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'AK47') or contains(@name, 'PipeMG') or contains(@name, 'M60')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithAK47"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Rocket')]">
+    <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRocket"/>
+  </append>
+  <set xpath="/entity_classes/entity_class[@name='npcBanditPipePistolTemplate']/property[@name='LootDropEntityClass']/@value" help="fix tipo TODO pullrequest to repo">EntityNPCLootContainerPipePistol</set>
+  <!--
+  HELPGOOD:CODEGEN: 
+  This fixes friendly npcs and raiders in case they are not already. It is 'append' to grant wont miss with 'set'.
+  clear;egrep -iRohI -\-include="*.xml" 'EntityNPCLootContainer[a-zA-Z0-9_]+' * |sort -u |sed -r -e 's@EntityNPCLootContainer@@' |grep -v "PipePisol" |while read strNm;do echo -ne "\t<append xpath=\"/entity_classes/entity_class[contains(@name, '$strNm')]\">\n\t\t<property name=\"LootDropEntityClass\" value=\"EntityNPCLootContainer${strNm}\"/>\n\t</append>\n";declare -p strNm >&2;done 2>/dev/null
+-->
+  <append xpath="/entity_classes/entity_class[contains(@name, 'AK47')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerAK47"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'AShotgun')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerAShotgun"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Axe')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerAxe"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Bat')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerBat"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Club')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerClub"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'DPistol')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerDPistol"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'HRifle')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerHRifle"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Knife')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerKnife"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'LBow')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerLBow"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'M60')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerM60"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Machete')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerMachete"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Mech')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerMech"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PipeMG')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPipeMG"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PipePistol')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPipePistol"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PipeRifle')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPipeRifle"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PipeShotgun')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPipeShotgun"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Pistol')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPistol"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PistolHidden')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPistolHidden"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'PShotgun')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerPShotgun"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'RocketL')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerRocketL"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'SMG')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerSMG"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'Spear')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerSpear"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'SRifle')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerSRifle"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'TRifle')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerTRifle"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[contains(@name, 'XBow')]">
+    <property name="LootDropEntityClass" value="EntityNPCLootContainerXBow"/>
+  </append>
+</GhussakTweaks>

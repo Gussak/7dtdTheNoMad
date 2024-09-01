@@ -1,0 +1,13 @@
+CSV: editing parts of the value 
+	<property name="Tags" value="entity,player,human"/>
+	<csv xpath="/entity_classes/entity_class[@name='playerMale']/property[@name='Tags']/@value" delim="," op="add" >zombie</csv>
+	<csv xpath="/entity_classes/entity_class[@name='playerMale']/property[@name='Tags']/@value" delim="," op="remove" >entity</csv>
+	<property name="Tags" value="player,human,zombie"/>
+	
+CSV: remove all lines matching the simple expression
+	<csv xpath="/entitygroups/entitygroup[@name='ZombiesAll']/text()" delim="\n" op="remove" >zombieBiker*</csv>
+
+ISSUE?: op="add" is append, but on entitygroups the order matters (right?) so top entities shall be the ones with low probabilities or they may not be spawned?
+
+TODO: ask for op="prepend" or op="insertbefore", where is the 7dtd CSV documentation?
+TODO: or ask for complex sed regex expressions with op="replace" like this, to make modding "easier": <csv xpath="/entitygroups/entitygroup[@name='ZombiesAll']/text()" match="zombieBiker(.*)" delim="\n" op="replace" >zombieBoe\1</csv>

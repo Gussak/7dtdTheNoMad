@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items/item[       @name='ammo9mmBulletAP' or       @name='ammo44MagnumBulletAP' or       @name='ammo762mmBulletBall' or       @name='ammo762mmBulletAP' or       @name='ammoJunkTurretAP' or              @name='ammoShotgunBreachingSlug' or       @name='ammoShotgunSlug' or              @name='ammoArrowSteelAP' or       @name='ammoCrossbowBoltSteelAP' or              @name='meleeToolAxeT1IronFireaxe' or       @name='meleeToolPickT1IronPickaxe' or       @name='meleeToolPickT2SteelPickaxe' or       @name='meleeToolRepairT0StoneAxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT3SteelKnuckles' or       @name='meleeWpnSpearT0StoneSpear' or       @name='meleeWpnSpearT1IronSpear' or       @name='meleeWpnSpearT3SteelSpear'     ]" help="WYSIWYG: despite knuckes is set as blunt, the picture clearly shows piercing parts. TODO ammo762mmBulletBall should provide just half the AP of ammo762mmBulletAP, so create a new append setting a cvar to divide the AP value on the HS buff.">
+    <!-- HELPGOOD: HoldingItemHasTags armorPiercing doesnt seem to work with this tho.
+    <property name="Tags" value="ammo,armorPiercing" />
+    <property name="Tags" value="ammo,shotgun,armorPiercing" />
+    <property name="Tags" value="ammo,ranged,attAgility,perkArchery,perkPenetrator,armorPiercing" help="HoldingItemHasTags armorPiercing doesnt seem to work with this tho."/>
+-->
+    <effect_group tiered="false">
+      <!-- HELPGOOD:ISSUE: RemoveBuff seems to happen after the other gun with AP bullets AddBuff? so we would need to re-equip the other gun again :(-->
+      <!-- HELPGOOD:ISSUE: changing ammo to non AP will keep AP buff as doing that wont trigger onSelfEquipStop for ammo, it seems related only to the gun-->
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo"/>
+      <!--      HELPGOOD: this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo-->
+      <triggered_effect trigger="onReloadStop" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+      <triggered_effect trigger="onReloadStop" action="AddBuff" target="self" buff="buffGSKEquippedArmorPiercingAmmo"/>
+      <!-- HELPGOOD: tests
+			<triggered_effect trigger="onReloadUpdate" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+			<triggered_effect trigger="onReloadStop" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+			<triggered_effect trigger="onReloadStart" action="ModifyCVar" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="1" help="this re-enables after the disable that happens at buffGSKEquippedArmorPiercingAmmo"/>
+			<triggered_effect trigger="onReloadStart" action="LogMessage" message="GSK:onReloadStart"/>
+			<triggered_effect trigger="onReloadUpdate" action="LogMessage" message="GSK:onReloadUpdate"/>
+			<triggered_effect trigger="onReloadStop" action="LogMessage" message="GSK:onReloadStop"/>
+-->
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar=".iGSKfixAPbulletBuffRmAddBug" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD:
+  TODO: Piercing power: 
+		BulletBall - Pistol=0, SMG=0, M60=1(7.62mm mass), Riffle=2(7.62mm mass + long barrel); 
+		AP - Pistol=3, SMG=5, M60=7, Riffle=9. BoneKnife=1, spikedClub=2(spikes are short), huntingKnife=3, machete=6 (despite shown as slash, can also pierce), steelSledgeHammer=10(No Piercing But Just Smash It All, Equivalent Final Result); Helmets: none=0(clothHelmet, hats), weak=2 (bikerHelmet, workerHelmet, plastic, direworlf, lion, fireFighterHelmet, footBallHelmet, miningHelmet), medium=4(bear, scrapIronHelmet), high=6(ironHelmet), strong=9 (army, kevlar, steelBomberZomb, mechs, steelHelmet)
+-->
+  <!--  HELPGOOD: piercing dmg based on hardness. But this only works for the piercing melee weapons above -->
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3')]/property[@name='Tags']/@value">,armorPiercingAdd6</append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1')]/property[@name='Tags']/@value">,armorPiercingAdd3</append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T0')]/property[@name='Tags']/@value">,armorPiercingAdd1</append>
+  <!--  HELPGOOD: piercing dmg based on barrel length -->
+  <append xpath="/items/item[contains(@name,'Rifle')]/property[@name='Tags']/@value">,armorPiercingAdd10</append>
+  <append xpath="/items/item[contains(@name,'TacticalAR')]/property[@name='Tags']/@value">,armorPiercingAdd9</append>
+  <append xpath="/items/item[contains(@name,'M60')]/property[@name='Tags']/@value">,armorPiercingAdd7</append>
+  <append xpath="/items/item[contains(@name,'SMG')]/property[@name='Tags']/@value">,armorPiercingAdd6</append>
+  <append xpath="/items/item[contains(@name,'Magnum')]/property[@name='Tags']/@value">,armorPiercingAdd5</append>
+  <append xpath="/items/item[contains(@name,'Pistol')]/property[@name='Tags']/@value">,armorPiercingAdd3</append>
+</GhussakTweaks>

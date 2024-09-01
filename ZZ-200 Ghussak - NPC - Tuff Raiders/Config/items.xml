@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="ammoNPCArrowExploding">
+      <property name="Extends" value="ammoArrowExploding"/>
+      <property name="DisplayType" value="ammoArrowExploding"/>
+      <property name="Meshfile" value="@:Other/Items/Weapons/Ranged/Bows/Arrows/arrow_explodingPrefab.prefab"/>
+      <property name="HoldType" value="45"/>
+      <property name="HandMeshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="IsSticky" value="false"/>
+      <property name="Stacknumber" value="75"/>
+      <property name="EconomicValue" value="65"/>
+      <property name="EconomicBundleSize" value="1"/>
+      <property name="UnlockedBy" value="perkRangersExplodingBolts"/>
+      <property class="Action1">
+        <property name="Gravity" value="-5"/>
+        <property name="Explosion.ParticleIndex" value="11"/>
+        <property name="Explosion.RadiusBlocks" value="3"/>
+        <property name="Explosion.RadiusEntities" value="1.5"/>
+        <property name="Explosion.DamageBonus.stone" value=".3"/>
+        <property name="Explosion.DamageBonus.metal" value=".1"/>
+        <property name="Explosion.DamageBonus.earth" value="0"/>
+        <property name="Explosion.DamageBonus.wood" value=".5"/>
+        <property name="Explosion.DamageBonus.water" value="0"/>
+      </property>
+      <effect_group name="ammoArrowExploding" tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="2" tags="perkArchery"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="72" tags="perkArchery"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_set" value=".1" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_set" value="0" tags="earth,water"/>
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="40" tags="perkArchery"/>
+        <passive_effect name="ProjectileStickChance" operation="perc_set" value="0"/>
+        <display_value name="dExRadius" value="4"/>
+      </effect_group>
+      <effect_group tiered="false" dbginfo="tiered=false is a workaround to let Stacknumber property value work as intended">
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWExtExplKORandomTime" operation="add" value="randomint(4,60)"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffEWExtExplKOAdd"/>
+      </effect_group>
+    </item>
+    <item name="ammoNPCCrossbowBoltExploding">
+      <property name="Extends" value="ammoCrossbowBoltExploding"/>
+      <property name="DescriptionKey" value="ammoArrowExplodingDesc"/>
+      <property name="Tags" value="ammo,ranged,attAgility,perkArchery"/>
+      <property name="DisplayType" value="ammoArrowExploding"/>
+      <property name="Meshfile" value="@:Other/Items/Weapons/Ranged/Bows/Arrows/bolt_explodingPrefab.prefab"/>
+      <property name="HoldType" value="45"/>
+      <property name="HandMeshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="IsSticky" value="false"/>
+      <property name="Stacknumber" value="75"/>
+      <property name="EconomicValue" value="80"/>
+      <property name="EconomicBundleSize" value="1"/>
+      <property name="UnlockedBy" value="perkRangersExplodingBolts"/>
+      <property class="Action1">
+        <property name="Gravity" value="-5"/>
+        <property name="Explosion.ParticleIndex" value="11"/>
+        <property name="Explosion.RadiusBlocks" value="3"/>
+        <property name="Explosion.RadiusEntities" value="1.5"/>
+        <property name="Explosion.DamageBonus.stone" value=".3"/>
+        <property name="Explosion.DamageBonus.metal" value=".1"/>
+        <property name="Explosion.DamageBonus.earth" value="0"/>
+        <property name="Explosion.DamageBonus.wood" value=".5"/>
+        <property name="Explosion.DamageBonus.water" value="0"/>
+      </property>
+      <effect_group name="ammoCrossbowBoltExploding" tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="2" tags="perkArchery"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="100" tags="perkArchery"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_set" value=".1" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_set" value="0" tags="earth,water"/>
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="45" tags="perkArchery"/>
+        <passive_effect name="ProjectileStickChance" operation="perc_set" value="0"/>
+        <display_value name="dExRadius" value="4"/>
+      </effect_group>
+      <effect_group tiered="false" dbginfo="tiered=false is a workaround to let Stacknumber property value work as intended">
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="ModifyCVar" target="other" target_tags="zombie,animal,bandit" cvar="iEWExtExplKORandomTime" operation="add" value="randomint(7,75)"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit" buff="buffEWExtExplKOAdd"/>
+      </effect_group>
+    </item>
+  </append>
+  <remove xpath="/items/item[@name='gunNPCLBow']"/>
+  <remove xpath="/items/item[@name='gunNPCXBow']"/>
+  <append xpath="/items">
+    <item name="gunNPCXBow">
+      <property name="Meshfile" value="@:Other/Items/Weapons/Ranged/IronCrossbow/IronCrossbowPrefab.prefab" help="XBow only"/>
+      <property name="Material" value="MBowCrossbowParts"/>
+      <property name="Tags" value="weapon,ranged,launcher,gun,perkDemolitionsExpert"/>
+      <property name="DisplayType" value="rangedLauncher"/>
+      <property name="HoldType" value="32"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="Weight" value="4"/>
+      <property name="RepairTools" value="gunBowT1WoodenBowPartsRepair"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property name="SoundJammed" value="weapon_jam"/>
+      <property name="CrosshairOnAim" value="false"/>
+      <property name="CrosshairUpAfterShot" value="false"/>
+      <property name="Sound_Sight_In" value="launcher_sight_in"/>
+      <property name="Sound_Sight_Out" value="launcher_sight_out"/>
+      <property name="Group" value="Ammo/Weapons,Ranged Weapons"/>
+      <property name="RepairExpMultiplier" value="10.8"/>
+      <property name="EconomicValue" value="1000"/>
+      <property name="ShowQuality" value="false"/>
+      <property name="Candrop" value="false"/>
+      <property name="AutoReload" value="true"/>
+      <property name="Auto_fire" value="true"/>
+      <property class="Action0">
+        <property name="Class" value="Melee"/>
+        <property name="DamageEntity" value="15"/>
+        <property name="DamageBlock" value="10"/>
+        <property name="Range" value="1.65"/>
+        <property name="Sphere" value="1.2"/>
+        <property name="Delay" value=".8"/>
+        <property name="Sound_start" value="swoosh"/>
+        <property name="Block_range" value="1.65"/>
+      </property>
+      <property class="Action1">
+        <property name="Magazine_items" value="ammoNPCCrossbowBoltExploding" help="XBow only"/>
+        <property name="Hitmask_override" value="Arrow"/>
+        <property name="Class" value="LauncherSDX, SCore"/>
+        <property name="Delay" value=".1" help="was .8, but it is already like 5 or 6s between shots.."/>
+        <property name="Sound_start" value="crossbow_fire"/>
+        <property name="Sound_repeat" value=""/>
+        <property name="Sound_end" value=""/>
+        <property name="Sound_empty" value="dryfire"/>
+        <property name="Sound_reload" value="crossbow_reload"/>
+        <property name="AutoReload" value="true"/>
+        <property name="Auto_fire" value="true"/>
+        <property name="Reload_time" value="0" help="was 2"/>
+        <property name="Infinite_ammo" value="true"/>
+      </property>
+      <effect_group name="gunExplosivesT3RocketLauncher">
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
+        <passive_effect name="MaxRange" operation="base_set" value="120" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="120" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="RoundsPerMinute" operation="base_set" value="8" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,2,3,4,5,6" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="1" tags="perkDemolitionsExpert"/>
+        <passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="base_set" value=".4" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".10" tags="perkArchery"/>
+        <passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkArchery"/>
+        <passive_effect name="SpreadMultiplierWalking" operation="base_set" value=".9" tags="perkArchery" help="was 1.5, too messed shots"/>
+        <passive_effect name="SpreadMultiplierRunning" operation="base_set" value="1.0" tags="perkArchery" help="was 2.2, too messed shots"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="160,350" tier="1,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="0" tags="perkDemolitionsExpert"/>
+      </effect_group>
+    </item>
+    <item name="gunNPCLBow" help="ISSUE: sync all below least LBow only, with gunNPCXBow fields as I dont really get what is extended with extends='gunNPCXBow' or the property, and not doing this below will just mess things up..">
+      <property name="Meshfile" value="@:Other/Items/Weapons/Ranged/Bows/AdvancedBow/AdvancedWoodenBow/AdvancedWoodenBowPrefab.prefab" help="LBow only"/>
+      <property name="Material" value="MBowCrossbowParts"/>
+      <property name="Tags" value="weapon,ranged,launcher,gun,perkDemolitionsExpert"/>
+      <property name="DisplayType" value="rangedLauncher"/>
+      <property name="HoldType" value="32"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="Weight" value="4"/>
+      <property name="RepairTools" value="gunBowT1WoodenBowPartsRepair"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property name="SoundJammed" value="weapon_jam"/>
+      <property name="CrosshairOnAim" value="false"/>
+      <property name="CrosshairUpAfterShot" value="false"/>
+      <property name="Sound_Sight_In" value="launcher_sight_in"/>
+      <property name="Sound_Sight_Out" value="launcher_sight_out"/>
+      <property name="Group" value="Ammo/Weapons,Ranged Weapons"/>
+      <property name="RepairExpMultiplier" value="10.8"/>
+      <property name="EconomicValue" value="1000"/>
+      <property name="ShowQuality" value="false"/>
+      <property name="Candrop" value="false"/>
+      <property name="AutoReload" value="true"/>
+      <property name="Auto_fire" value="true"/>
+      <property class="Action0">
+        <property name="Class" value="Melee"/>
+        <property name="DamageEntity" value="15"/>
+        <property name="DamageBlock" value="10"/>
+        <property name="Range" value="1.65"/>
+        <property name="Sphere" value="1.2"/>
+        <property name="Delay" value=".8"/>
+        <property name="Sound_start" value="swoosh"/>
+        <property name="Block_range" value="1.65"/>
+      </property>
+      <property class="Action1">
+        <property name="Magazine_items" value="ammoNPCArrowExploding" help="LBow only"/>
+        <property name="Class" value="LauncherSDX, SCore"/>
+        <property name="Hitmask_override" value="Arrow"/>
+        <property name="Delay" value=".1" help="was .8, but it is already like 5 or 6s between shots.."/>
+        <property name="Sound_start" value="crossbow_fire"/>
+        <property name="Sound_repeat" value=""/>
+        <property name="Sound_end" value=""/>
+        <property name="Sound_empty" value="dryfire"/>
+        <property name="Sound_reload" value="crossbow_reload"/>
+        <property name="AutoReload" value="true"/>
+        <property name="Auto_fire" value="true"/>
+        <property name="Reload_time" value="0" help="was 2"/>
+        <property name="Infinite_ammo" value="true"/>
+      </property>
+      <!--			HELPGOOD: sync from here-->
+      <effect_group name="gunExplosivesT3RocketLauncher">
+        <passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkDemolitionsExpert"/>
+        <passive_effect name="MaxRange" operation="base_set" value="120" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="120" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.15,.15" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationMax" operation="perc_add" value="-.2,.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert"/>
+        <passive_effect name="RoundsPerMinute" operation="base_set" value="8" tags="perkDemolitionsExpert"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkDemolitionsExpert"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,2,3,4,5,6" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="1" tags="perkDemolitionsExpert"/>
+        <passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2.2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="WeaponHandling" operation="base_set" value=".4" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="2" tags="perkDemolitionsExpert"/>
+        <passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".10" tags="perkArchery"/>
+        <passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkArchery"/>
+        <passive_effect name="SpreadMultiplierWalking" operation="base_set" value=".9" tags="perkArchery" help="was 1.5, too messed shots"/>
+        <passive_effect name="SpreadMultiplierRunning" operation="base_set" value="1.0" tags="perkArchery" help="was 2.2, too messed shots"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="160,350" tier="1,6" tags="perkDemolitionsExpert"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="0" tags="perkDemolitionsExpert"/>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>
