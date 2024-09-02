@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNVEnUseUpdRate" operation="set" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBatteryEnergyMinModActivableCfgRO" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNVCfgRO" operation="set" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWLCfgRO" operation="set" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHLCfgRO" operation="set" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNVCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWLCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHLCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="75"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="150">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="300">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="600">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="1200">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="3"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="2400">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="4"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="4800">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="5"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="set" value="@iGSKBattMaxCharge"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="multiply" value="@fGSKDmgPercSubTB">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercSubTB" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="set" value="75" help="the minimum must always be the value when without the battery mod">
+          <requirement name="CVarCompare" cvar="fGSKBattMaxChargeCurrent" operation="LT" value="75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNVIntensity" operation="set" value="1.0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryCharge" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeStrong" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattStrongEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeSuperOvercharge" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattSuperOverchargeEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeWork" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnDegrade" target="self"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectHLON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectWLON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectNVON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="other very useful info">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg74"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLBlinkOffThenGoOn" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLBlinkOnThenGoOff" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLBlinkOffThenGoOn" hidden="true" remove_on_death="false" help="will turn OFF on start and turn ON on remove">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLBlinkOnThenGoOff" hidden="true" remove_on_death="false" help="will turn ON on start and turn OFF on remove">
+      <stack_type value="ignore"/>
+      <duration value="0.10" help="each calc frame is 0.05s right? 20fps. could be 0.05 as long it is removed on the next frame only"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVBlinkOffThenGoOn" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVBlinkOnThenGoOff" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCalcLightsPercRound" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercHLShow" operation="set" value="@fGSKDmgPercHL"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercHLShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercWLShow" operation="set" value="@fGSKDmgPercWL"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercWLShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercNVShow" operation="set" value="@fGSKDmgPercNV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercNVShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTAShow" operation="set" value="@fGSKDmgPercTA"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTAShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTBShow" operation="set" value="@fGSKDmgPercTB"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTBShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTHShow" operation="set" value="@fGSKDmgPercTH"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTHShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTPShow" operation="set" value="@fGSKDmgPercTP"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTPShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTRShow" operation="set" value="@fGSKDmgPercTR"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTRShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTSShow" operation="set" value="@fGSKDmgPercTS"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTSShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="set" value="@fGSKDmgPercTT"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="multiply" value="100"/>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>

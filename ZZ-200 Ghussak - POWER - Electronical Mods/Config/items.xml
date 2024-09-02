@@ -1,0 +1,617 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="silver01gram">
+      <property name="CustomIcon" value="resourceSilverNugget"/>
+      <property name="Stacknumber" value="311"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="HoldType" value="45"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+    </item>
+    <item name="gold01gram">
+      <property name="CustomIcon" value="resourceGoldNugget"/>
+      <property name="Stacknumber" value="311"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="HoldType" value="45"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+    </item>
+    <item name="electronicsParts">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="DescriptionKey" value="dkelectronicsParts"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="CustomIconTint" value="FFFF00"/>
+      <property name="CustomIcon" value="resourceElectronicParts"/>
+      <property name="ItemTypeIcon" value="bundle"/>
+      <property name="Stacknumber" value="150"/>
+      <property name="EconomicValue" value="100" help="electronic parts shall not be craftable, player should not sell it, but if needs it has some value"/>
+      <property name="SellableToTrader" value="true"/>
+      <property class="Action0">
+        <property name="Create_item" value="silver01gram,gold01gram,resourceElectricParts,resourceScrapPolymers,resourceScrapIron"/>
+        <property name="Create_item_count" value="3,1,2,3,10"/>
+      </property>
+    </item>
+    <item name="NightVisionBatteryBase">
+      <property name="CreativeMode" value="None"/>
+      <property name="HoldType" value="31"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapLeadLarge"/>
+      <property name="Stacknumber" value="60"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="NightVisionBatteryBase2">
+      <property name="CreativeMode" value="None"/>
+      <property name="HoldType" value="31"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapLeadLarge"/>
+      <property name="Stacknumber" value="60"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <property name="Class" value="OpenBundle"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Create_item" value="resourceWood"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="NightVisionBattery">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="3"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryCharge"/>
+      </effect_group>
+    </item>
+    <item name="NightVisionBatteryStrong">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBatteryStrong"/>
+      <property name="CustomIconTint" value="0,255,255"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Random_item" value="resourceScrapLead"/>
+        <property name="Random_item_count" value="45-90"/>
+        <property name="Random_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeStrong"/>
+      </effect_group>
+    </item>
+    <item name="NightVisionBatterySuperOvercharge">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBatterySuperOvercharge"/>
+      <property name="CustomIconTint" value="255,0,0"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Random_item" value="resourceScrapLead"/>
+        <property name="Random_item_count" value="720-1440"/>
+        <property name="Random_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeSuperOvercharge"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnHeroToggle">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="DescriptionKey" value="dkGSKElctrnHeroToggle"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="CustomIcon" value="7dtdHero"/>
+      <property name="CustomIconTint" value="128,128,128"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnHero">
+          <requirement name="HasBuff" buff="buffGSKElctrnHeroEnabled"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKElctrnHero"/>
+      </effect_group>
+    </item>
+    <item name="GSKRepairElctrnBase">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="dkModUpgOrFixInfo"/>
+      <property class="Action0">
+        <property name="Class" value="Melee" help="melee just to prevent player destroying it before using to craft specific object"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="GSKRepElctrnParts">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="CustomIconTint" value="0,150,150"/>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKRepairTT">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTS">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTA">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTH">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTP">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.01"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTR">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTB">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="0.01"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="1.0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceElctrnMods">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="DescriptionKey" value="dkGSKReplaceElctrnMods"/>
+      <property name="CustomIconTint" value="0,150,250"/>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKReplaceTA">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTB">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTH">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTP">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTR">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTS">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTT">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKUpgElctrnParts">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="100"/>
+      <property name="CustomIconTint" value="250,200,100"/>
+      <property class="Action1">
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="resourceElectricParts,gold01gram,silver01gram,electronicsParts"/>
+        <property name="Create_item_count" value="1,30,60,1"/>
+      </property>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKUpgradeTT">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTS">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTA">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTH">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTP">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTR">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTB">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[     starts-with(@name,'GSKRepairT') or      starts-with(@name,'GSKUpgradeT') or      starts-with(@name,'GSKReplaceT')    ]">
+    <!-- HELPGOOD: make it sure tho not change the base item that is used to craft specific repairs-->
+    <property class="Action0">
+      <property name="Class" value="Eat"/>
+    </property>
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>
