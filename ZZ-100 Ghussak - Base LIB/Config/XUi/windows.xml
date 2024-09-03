@@ -67,14 +67,15 @@ storage stops working when looting or from NPC invs
   <!--HELPGOOD: buffs display improvement-->
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@depth" help="in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla">50</set>
-  <!-- HELPGOOD: more space for items descriptions -->
+  <!-- HELPGOOD: more space for items descriptions TODO: review later if needed/useful, this seem to depend on other mod that changes vanilla layout
   <set xpath="//rect[@name='description']/@width">908</set>
   <setattribute xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']/panel[@name='header']" name="width" help="better readable big title or name">913</setattribute>
-  <setattribute xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']/panel[@name='header']/label[@style='header.name']" name="width" help="better readable big title or name">913</setattribute>
+  <setattribute xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']/panel[@name='header']/label[@style='header.name']" name="width"  help="better readable big title or name">913</setattribute>
   <set xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']//rect[@name='description' and not(@visible='{showstatanddescription}')]/sprite[@name='backgroundMain' and @fillcenter='false']/@width">913</set>
   <remove xpath="//window[@name='itemInfoPanel']//rect[@name='description' and @visible='{showstatanddescription}']/sprite[@name='backgroundMain' and @fillcenter='false']" help="the stat remaining short dont look good with the large border line"/>
   <set xpath="//label[@name='descriptionText' and (@text='{itemdescription}' or @text='{buffdescription}')]/@width">900</set>
   <remove xpath="//rect[starts-with(@name,'content')]//sprite[@width='603' and @name='backgroundMain' and @sprite='menu_empty3px' and @fillcenter='false']" help="wont look good but wont be over the text at least"/>
+-->
   <!-- HELPGOOD: more space for recipes names TODO: this needs to be sync with controls.xml:recipe_entry
   <set xpath="//window[@name='windowCraftingList']/panel[@name='content']/grid[@name='recipes']/@width" help="was 390">440</set>
   <set xpath="//window[@name='windowCraftingList']/panel[@name='content']/grid[@name='recipes']/@cell_width" help="was 390">440</set>
@@ -145,7 +146,12 @@ storage stops working when looting or from NPC invs
 			<filledsprite depth="4" name="borderHintHighHP" color="0,128,255,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
 		</rect>
 -->
-    <rect name="hintBloodMoon" pos="-420,-1125" width="200" height="45" rows="1" cols="1" visible="{#daycolor == 'FF0000'}">
+    <rect name="_tmpREMOVE_hintBloodMoonDEBUG" pos="-420,-900" width="200" height="45" rows="1" cols="1" visible="true">
+      <filledsprite depth="3" name="BackgroundBloodMoonHint" color="255,0,0,64" type="filled" fill="1.0" pivot="center" justify="center"/>
+      <filledsprite depth="4" name="borderBloodMoonHint" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
+      <label depth="5" text="[888888]BloodMoon[000000]Tonight" font_size="28" pivot="center" effect="outline" justify="center" color="255,255,255,220" help="the color attrib RGB components seems to work like brightness over colors at text attrib. {daycolor} expands to FF0000 (on bloodmoon) or FFFFFF strings"/>
+    </rect>
+    <rect name="hintBloodMoon" pos="-420,-900" width="200" height="45" rows="1" cols="1" visible="{#daycolor == 'FF0000'}">
       <filledsprite depth="3" name="BackgroundBloodMoonHint" color="255,0,0,64" type="filled" fill="1.0" pivot="center" justify="center"/>
       <filledsprite depth="4" name="borderBloodMoonHint" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
       <label depth="5" text="[888888]BloodMoon[000000]Tonight" font_size="28" pivot="center" effect="outline" justify="center" color="255,255,255,220" help="the color attrib RGB components seems to work like brightness over colors at text attrib. {daycolor} expands to FF0000 (on bloodmoon) or FFFFFF strings"/>
