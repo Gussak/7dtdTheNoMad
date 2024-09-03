@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <append xpath="/blocks/block[@name='cntCollapsedWorkbench' or @name='cntCollapsedWorkbenchEmpty']">
+  <append xpath="/blocks/block[@name='cntCollapsedWorkbench' or @name='cntCollapsedWorkbenchEmpty']" help="ISSUE: just fails">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="workbench"/>
       <property name="Item" value="resourceMechanicalParts"/>
@@ -8,7 +8,7 @@
       <property name="UpgradeHitCount" value="50"/>
     </property>
   </append>
-  <append xpath="/blocks/block[@name='cntCollapsedChemistryStation']">
+  <append xpath="/blocks/block[@name='cntCollapsedChemistryStation']" help="ok">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="chemistryStation"/>
       <property name="Item" value="resourceForgedIron"/>
@@ -32,7 +32,7 @@
       <property name="UpgradeHitCount" value="50"/>
     </property>
   </append>
-  <append xpath="/blocks/block[@name='cntCollapsedBatterybank']">
+  <append xpath="/blocks/block[@name='cntCollapsedBatterybank']" help="ISSUE: just fails">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="batterybank"/>
       <property name="Item" value="resourceElectricParts"/>
@@ -45,6 +45,14 @@
       <property name="ToBlock" value="generatorbank"/>
       <property name="Item" value="resourceElectricParts"/>
       <property name="ItemCount" value="20"/>
+      <property name="UpgradeHitCount" value="50"/>
+    </property>
+  </append>
+  <append xpath="/blocks/block[@name='cntCollapsedDewCollector']">
+    <property class="UpgradeBlock">
+      <property name="ToBlock" value="cntDewCollector"/>
+      <property name="Item" value="resourceScrapPolymers"/>
+      <property name="ItemCount" value="33"/>
       <property name="UpgradeHitCount" value="50"/>
     </property>
   </append>
@@ -62,7 +70,8 @@
       <property name="resourceScrapPolymers" value="2"/>
     </property>
   </append>
-  <set xpath="/blocks/block[starts-with(@name,'cntCollapsed')]/property[@name='CreativeMode']/@value">Player</set>
+  <set xpath="/blocks/block[starts-with(@name,'cntCollapsed') or @name='cntForgeWorkstationBroken']   /property[@name='UpgradeBlock']   /property[@name='UpgradeHitCount']/@value" help="easy tweaker">20</set>
+  <set xpath="/blocks/block[starts-with(@name,'cntCollapsed') or @name='cntForgeWorkstationBroken']   /property[@name='CreativeMode']/@value">Player</set>
   <!-- HELPGOOD: energy generators only for Elctrn features 
       none of these are possible to pick up as they behave as containers:
         @name='cntCollapsedGeneratorbank' or
@@ -73,6 +82,6 @@
   -->
   <append xpath="/blocks/block[         @name='cntCollapsedSolarbank'       ]">
     <property name="CanPickup" value="true"/>
-    <drop event="Harvest" name="solarCell" count="1,3" tag="allHarvest"/>
+    <drop event="Harvest" name="solarCell" count="1,3" tag="salvageHarvest"/>
   </append>
 </GhussakTweaks>
