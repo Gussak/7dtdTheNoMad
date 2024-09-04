@@ -1,8 +1,8 @@
 # The first time the world is started (new game), may happen just error exceptions preventing the player spawning, about FPcamera. Just cmd 'shutdown' it and restart the application, then 'continue' on that world.
 
-# If errors about the player or NPCs walking over a block happen, exit, do (ExtraHelp*1) and restore a savegame backup. TODO: try to slow down the CPU too, it could be some mutithread getting out of sync on startup? as this error rappens randomly...
+# If errors about the player or NPCs walking over a block happen (Block.OnEntityWalking .. at EntityHuman/EntityAnimal.OnUpdateLive), exit, do (ExtraHelp*1) and restore a savegame backup. If error happens again, run at least once without executing drop_caches.
 
-# If WMMGameOptions is installed run using "ZZ-005 Ghussak - Base LIB/restartLoop.sh", it may fail from 2 to 6 times
+# If WMMGameOptions is installed run using "ZZ-005 Ghussak - Base LIB/restartLoop.sh", it may fail to start from 2 to 6 times, try restartLoop.sh
 
 ExtraHelp*1: run this to grant no trash is messing the data: sudo dd if=/proc/3/stat of=/proc/sys/vm/drop_caches bs=1 count=1
 
@@ -11,8 +11,12 @@ ExtraHelp*1: run this to grant no trash is messing the data: sudo dd if=/proc/3/
 
 
 
-
+############################################################################################################
 ### OLD TIPS, doesnt exatcly work/help, improving above ###
+############################################################################################################
+
+TODO: try to slow down the CPU too, it could be some mutithread getting out of sync on startup? as this error rappens randomly...
+
 
 # If WMMGameOptions is installed and errors about MainMenu prevent reaching the main menu do cmd 'shutdown' and then (ExtraHelp*1)
 #  but you may have to restart 2 or 3 times: first, restart with WMMGameOptions/ModInfo.xml.DISABLED, then exit
