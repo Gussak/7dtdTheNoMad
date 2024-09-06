@@ -59,6 +59,16 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKInPineForestBiomeMonstersThrive15" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="7.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="2.5" target="selfAOE" range="60" target_tags="zombie">
+          <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHazardWDryAirIndicator" hidden="false" remove_on_death="true" description_key="dkbuffGSKHazardWDryAirIndicator" icon="ui_game_symbol_thirst" icon_blink="true" icon_color="255,255,0">
       <damage_type value="Dehydration"/>
       <stack_type value="ignore"/>
@@ -715,6 +725,546 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="set" value="@_wetness"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWetVsHeat" operation="multiply" value="3.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="@.fGSKWetVsHeat"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDenyGoreHarvest" hidden="true" remove_on_death="false" description_key="buffGSKDenyGoreHarvestDesc" name_key="GoreHarvest">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffGSKDenyGoreHarvest"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:buffGSKDenyGoreHarvest"/>
+        <passive_effect name="HarvestCount" operation="perc_subtract" level="0,1000" value="0.99" tags="butcherHarvest"/>
+        <!--
+				HELPGOOD: how to lower the 1st strike damage on a corpse? otherwise good butcher weapons will harvest almost nothing, only bad ones...
+				<passive_effect name="BlockDamage" operation="perc_subtract" level="0,1000" value="0.90" tags="butcherHarvest" help="corpse bags?"/>
+				<passive_effect name="EntityDamage" operation="perc_subtract" level="0,1000" value="0.90" tags="butcherHarvest" help="entities corpses?"/>
+-->
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGoreHazard" hidden="false" icon="7dtdGskMiasma" icon_color="250,200,0" icon_blink="true" description_key="buffGSKGoreHazardDesc">
+      <stack_type value="replace"/>
+      <update_rate value="3"/>
+      <duration value="5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKDenyGoreHarvest"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKDenyGoreHarvest"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,300)" help="using strong strikes will lower this hazard effect"/>
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.1,0.3)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,300)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied.;FixTinyRandomFloat: was randomFloat(0.1,0.3)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8542:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.1,0.3)" help="blocks being hit apply a buff to entities but apparently these buffs cannot call other buffs? so see buffStatusCheck01 where buffRadiation01 is actually applied."/> -->
+      </effect_group>
+    </buff>
+    <buff name="buffGSKFlushMiasma" description_key="buffGSKFlushMiasmaDesc" name_key="FlushMiasmaAndDirt">
+      <stack_type value="ignore"/>
+      <duration value="3600"/>
+      <update_rate value="1200"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <!-- HELPGOOD: if the player is just standing, the buff is just removed -->
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKFlushMiasma"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="1800"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(10,20)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message_key="TooltipbuffGSKFlushMiasma"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTakeBath">
+      <stack_type value="ignore"/>
+      <duration value="2"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTakeBath"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="180"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(1,2)">
+          <requirement name="!InBiome" biome="8"/>
+          <!-- HELPGOOD: wasteland -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(1,2)">
+          <requirement name="InBiome" biome="8"/>
+          <!-- HELPGOOD: wasteland -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You take a good bath."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.025">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTakeCatBath">
+      <stack_type value="ignore"/>
+      <duration value="2"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKTakeCatBath"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="60"/>
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.33,0.66)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(330,660)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,0.66)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8641:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomfloat(0.33,0.66)"> -->
+          <requirement name="!InBiome" biome="8"/>
+          <!-- HELPGOOD: wasteland -->
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.33,0.66)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(330,660)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.33,0.66)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=8644:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.33,0.66)"> -->
+          <requirement name="InBiome" biome="8"/>
+          <!-- HELPGOOD: wasteland -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You take a slow and relaxing bath like a cat :3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.01">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0.50"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMiasmaEffectWeak" icon_blink="true" icon="7dtdGskMiasma" icon_color="250,100,0" hidden="false">
+      <stack_type value="ignore"/>
+      <duration value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.40" fade="1" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0" fade="1" effect_name="Infected"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMiasmaEffectA" icon="7dtdGskMiasma" icon_blink="true" icon_color="250,150,0" hidden="false">
+      <stack_type value="ignore"/>
+      <duration value="2"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.60" fade="2" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0" fade="2" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="player#vomit" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message_key="ToolTipMiasmaDmg"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMiasmaEffectB" icon="7dtdGskMiasma" icon_blink="true" icon_color="250,150,0" hidden="false">
+      <stack_type value="ignore"/>
+      <duration value="4"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.80" fade="4" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0" fade="4" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="player#vomit" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="add" value="-2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="add" value="-2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message_key="ToolTipMiasmaDmg"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMiasmaEffectC" icon="7dtdGskMiasma" icon_blink="true" icon_color="250,150,0" hidden="false">
+      <stack_type value="ignore"/>
+      <duration value="6"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="6" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0" fade="6" effect_name="Infected"/>
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="player#vomit" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="add" value="-3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Food" operation="add" value="-3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message_key="ToolTipMiasmaDmg"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCalcHeating" hidden="true" help="this cvar shall be used as a multiplier">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="2.5">
+          <requirement name="HasBuff" buff="buffCampfireAOE"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="4.01">
+          <requirement name="HasBuff" buff="buffBurningFlamingArrow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="4.02">
+          <requirement name="HasBuff" buff="buffBurningElement"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="4.03">
+          <requirement name="HasBuff" buff="buffBurningEnvironment"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireHeatingMult" operation="set" value="6">
+          <requirement name="HasBuff" buff="buffBurningMolotov"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKAllHazardsCheck40" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <!-- HELPGOOD: these buffs change the near death levels -->
+      <effect_group help="hazard blood loss">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWBloodLoss53">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.14"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="0.000005" help="it is like about healing 0.018 per day (1.8%) (0.000005*3600), natural regeneration"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLossShow" operation="set" value="@fGSKBloodLoss"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodLossShow" operation="multiply" value="100"/>
+      </effect_group>
+      <!-- HELPGOOD: miasma&dirty 'iGSKNearDeathMiasmaLvl' tho is controlled by 'buffGSKHazardWeatherMiasmaDirty59' as it permanently happens everywhere -->
+      <effect_group help="dry air">
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWDryness40" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert"/>
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="dry air">
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWDryness40">
+          <requirement name="!InBiome" biome="5" help="desert"/>
+          <requirement name="!InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="freezing: in snow. in wasteland at night only">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="InBiome" biome="1" help="snow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+          <requirement name="IsNight"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="!InBiome" biome="1" help="snow"/>
+          <requirement name="!InBiome" biome="8" help="wasteland"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHazardWWetFreezingAndHunger27">
+          <requirement name="InBiome" biome="8" help="wasteland"/>
+          <requirement name="!IsNight"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCalcHeating"/>
+      </effect_group>
+      <effect_group help="you would need to overheat to cure frostbyte faster">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="0.0166" help="takes at least 60s to cure each level">
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHeatingLvlSubRandomChk" operation="set" value="@fGSKFireHeatingMult"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHeatingLvlSubRandomChk" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHeatingLvlSub" operation="set" value="@fGSKFireHeatingMult"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKHeatingLvlSub" operation="multiply" value="0.05" help="near a campfire that is mult 2.5, will be lvl-=0.125, will result in 40s to cure all 5 levels, because of update_rate 1s if random success">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.fGSKHeatingLvlSubRandomChk"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="@.fGSKHeatingLvlSub"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="randomFloat(0,0.25)">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GT" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="randomFloat(0,0.25)">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="randomFloat(0,0.25)">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="35"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="subtract" value="randomFloat(0,0.25)">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+          <requirement name="CVarCompare" cvar="_coretemp" operation="GTE" value="30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWRadiation40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="NotHasBuff" buff="buffGSKHazardousWRadiation40"/>
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="20"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: 'iGSKNearDeathPoisonLvl' is controlled by 'buffGSKSnakePoisonWork55' -->
+      <effect_group>
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathCriticalHitLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRadiationLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHeatColdProtClothDmgAdd32" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgHeatProt add randomFloat(0.005,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4849:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.005,0.050)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgHeatProt add randomFloat(0.05,0.20)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,200)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4850:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="randomFloat(0.05,0.20)"> -->
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgColdProt add randomFloat(0.005,0.050)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(5,50)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.005,0.050)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4854:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.005,0.050)"/> -->
+        <triggered_effect help="FixTinyRandomFloat:was fGSKDmgColdProt add randomFloat(0.05,0.20)" trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,200)"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.20)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=4855:        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="randomFloat(0.05,0.20)"> -->
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHeatColdProtClothDmgKeep32" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group help="natural degradation">
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKDmgHeatProtTMP" operation="set" value="randomInt(3,10)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKDmgHeatProtTMP" operation="divide" value="10000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@$fGSKDmgHeatProtTMP">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@$fGSKDmgHeatProtTMP">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="natural degradation">
+        <requirement name="!EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKDmgHeatProtTMP" operation="set" value="randomInt(0,2)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKDmgHeatProtTMP" operation="divide" value="10000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="add" value="@$fGSKDmgHeatProtTMP">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="add" value="@$fGSKDmgHeatProtTMP">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8. cuz of the probability of wearing coherent weather prot"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKDmgHeatProt" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgHeatProt" operation="set" value="1.00">
+          <requirement name="CVarCompare" cvar="fGSKDmgHeatProt" operation="GT" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKDmgColdProt" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKDmgColdProt" operation="set" value="1.00">
+          <requirement name="CVarCompare" cvar="fGSKDmgColdProt" operation="GT" value="1.00"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgColdProtx100" operation="set" value="@fGSKDmgColdProt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgColdProtx100" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgHeatProtx100" operation="set" value="@fGSKDmgHeatProt"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDmgHeatProtx100" operation="multiply" value="100"/>
+      </effect_group>
+      <effect_group>
+        <passive_effect name="HypothermalResist" operation="perc_subtract" value="@fGSKDmgColdProt">
+          <requirement name="CVarCompare" cvar="fGSKDmgColdProt" operation="GT" value="0"/>
+        </passive_effect>
+        <passive_effect name="HyperthermalResist" operation="perc_subtract" value="@fGSKDmgHeatProt">
+          <requirement name="CVarCompare" cvar="fGSKDmgHeatProt" operation="GT" value="0"/>
+        </passive_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHazardWeatherMiasmaDirty59" hidden="true" description_key="buffGSKHazardWeatherMiasmaDirtyDesc" name_key="MiasmaAndDirty" help="permanent buff, there is miasma everywhere">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group help="add miasma">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="LT" value="1.00"/>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.1)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,100)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.1)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14082:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.1)"> -->
+          <requirement name="InBiome" biome="1"/>
+          <!-- HELPGOOD: snow -->
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.2)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,200)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.2)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14085:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.2)"> -->
+          <requirement name="InBiome" biome="5"/>
+          <!-- HELPGOOD: desert -->
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.35)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,350)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.35)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14088:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.35)"> -->
+          <requirement name="InBiome" biome="8"/>
+          <!-- HELPGOOD: wasteland -->
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKMiasmaDirty add randomFloat(0.0,0.3)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(0,300)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.0,0.3)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=14091:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(0.0,0.3)"> -->
+          <requirement name="InBiome" biome="9"/>
+          <!-- HELPGOOD: burntforest (TODO: make it work like in desert about hazards)-->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(1.5,3.5)">
+          <requirement name="InBiome" biome="3"/>
+          <!-- HELPGOOD: pineforest (as desert and snow have each 2 hazards, it is much higher here) -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(3.0,6.0)">
+          <requirement name="InBiome" biome="13"/>
+          <!-- HELPGOOD: cavefloor -->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(5,10)">
+          <requirement name="InBiome" biome="14"/>
+          <!-- HELPGOOD: caveceiling fetid gases accumulating there -->
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="bathing underwater or rain or just wet">
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipBuffGSKHazardWeatherMiasmaDirty4Bath">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="10"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKCleanTheDirty" operation="set" value="360"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKCleanTheDirty" operation="multiply" value="@fGSKShownWetnessPerc">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKCleanTheDirty" operation="divide" value="30">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@fGSKCleanTheDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.20">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="3.5" help="this kind of bath will last more"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="0.10">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaBlockPercExtra" operation="LT" value="0.75" help="like between cat bath and normal bath"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBathMsgCooldownTime" operation="set" value="120">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKBathMsgCooldownTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message_key="TooltipBuffGSKHazardWeatherMiasmaDirty4Cleaned">
+          <requirement name="CVarCompare" cvar="iGSKBathMsgCooldownTime" operation="Equals" value="120"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBathMsgCooldownTime" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKBathMsgCooldownTime" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: TODO: bash script this code to generate stages easily -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="3300"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectA" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GTE" value="3300"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMiasmaEffectA">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectA" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectA" operation="set" value="100">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectA" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectA" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectA" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="3580"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectB" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GTE" value="3580"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMiasmaEffectB">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectB" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectB" operation="set" value="75">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectB" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectB" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectB" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="4800"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectC" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GTE" value="4800"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMiasmaEffectC">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectC" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectC" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectC" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMiasmaEffectC" operation="subtract" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMiasmaEffectC" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="3600"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKMiasmaDirtyTooMuch" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="3600"/>
+        <!-- HELPGOOD: like 1 baths a day -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKMiasmaDirtyTooMuch" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWMiasmaDirtyB45">
+          <requirement name="NotHasBuff" buff="buffGSKHazardousWMiasmaDirtyB45"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="7200">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="7200"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>
