@@ -19,6 +19,12 @@
     </effect_group>
   </append>
   <append xpath="/items">
+    <item name="GSKDbgTestMiasmaAdd">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="500"/>
+      </effect_group>
+    </item>
     <item name="medicalBloodBagEmpty">
       <property name="DescriptionKey" value="dkGSKmedicalBloodBagEmpty"/>
       <property name="CustomIcon" value="medicalBloodBag"/>
@@ -174,6 +180,22 @@
       </triggered_effect>
     </effect_group>
   </append>
+  <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drinkJarYuccaJuice' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarRedTea' or       @name='drinkYuccaJuiceSmoothie' or       @name='drinkCanMegaCrush' or       @name='drinkJarCoffee' or       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBeer' or       @name='drinkJarGrandpasMoonshine' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarGrandpasLearningElixir' or       @name='drinkJarGrandpasForgettingElixir'     ]">
+    <effect_group name="CleanMiasma" tiered="false" help="will clean a bit when drinking">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(350,550)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'foodCrop')]">
+    <effect_group name="CleanMiasma" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(100,200)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
   <!-- HELPGOOD: ================================================================
 		tweaks for fGSKHitpointsBlockageChemUse
 	-->
@@ -226,5 +248,11 @@
         <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
       </triggered_effect>
     </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHand') and (contains(@name,'Zombie') or contains(@name,'AnimalZombie'))]/effect_group">
+    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(50,100)" target_tags="player"/>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammoProjectile') and (contains(@name,'Zombie') or contains(@name,'Vomit'))]/effect_group">
+    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,350)" target="otherAOE" range="0.05" target_tags="player"/>
   </append>
 </GhussakTweaks>

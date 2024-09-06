@@ -37960,39 +37960,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'meleeHand') and (contains(@name,'Zombie') or contains(@name,'AnimalZombie'))]/effect_group">
-    <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.25,1.0)" trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,1000)"/>
-    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="other" target_tags="player" help="FixTinyRandomFloat: was randomFloat(0.25,1.0)">
-      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16283:    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.25,1.0)" target="other" target_tags="player"> -->
-      <requirement name="!HoldingItemHasTags" target="self" tags="radiated"/>
-      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(1.5,2.5)" target_tags="player">
-      <requirement name="HoldingItemHasTags" target="self" tags="radiated"/>
-      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffRadiation01" target_tags="player">
-      <requirement name="NotHasBuff" buff="god"/>
-      <requirement name="NotHasBuff" buff="buffRadSuit"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(50,100)" target_tags="player"/>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'ammoProjectile') and (contains(@name,'Zombie') or contains(@name,'Vomit'))]/effect_group">
-    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(1,2)" target="otherAOE" range="0.05" target_tags="player">
-      <requirement name="!HoldingItemHasTags" target="self" tags="radiated"/>
-      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
-    </triggered_effect>
-    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(3.5,7)" target="otherAOE" range="0.05" target_tags="player">
-      <requirement name="HoldingItemHasTags" target="self" tags="radiated"/>
-      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffRadiation01" target_tags="player">
-      <requirement name="NotHasBuff" buff="god"/>
-      <requirement name="NotHasBuff" buff="buffRadSuit"/>
-    </triggered_effect>
-    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,350)" target="otherAOE" range="0.05" target_tags="player"/>
-  </append>
   <append xpath="/items">
     <item name="RepairBase">
       <property name="HoldType" value="45"/>
@@ -38845,60 +38812,10 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKExpDebt" operation="add" value="-10000"/>
       </effect_group>
     </item>
-    <item name="GSKDbgBASE">
-      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
-      <property name="CustomIconTint" value="128,64,64"/>
-    </item>
-    <item name="GSKDbgToggle">
-      <property name="Extends" value="GSKDbgBASE"/>
-      <property name="CustomIconTint" value="1,100,1"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKToggleDebug"/>
-      </effect_group>
-    </item>
-    <item name="GSKDbgGodMode" help="do not create a recipe for this duh. ">
-      <property name="Extends" value="GSKDbgBASE"/>
-      <property name="DescriptionKey" value="dkbuffGSKGodMode"/>
-      <property name="CustomIconTint" value="1,100,255"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodMode">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodMode">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodModeFull">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodModeFull">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        </triggered_effect>
-      </effect_group>
-    </item>
-    <item name="GSKDbgTestMiasmaAdd">
-      <property name="Extends" value="GSKDbgBASE"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="500"/>
-      </effect_group>
-    </item>
-    <item name="GSKDbgTestPush">
-      <property name="Extends" value="GSKDbgBASE"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" target="self" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
-      </effect_group>
-    </item>
     <item name="GSKDbgSpawnBandits">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKSpawnBandits"/>
-      </effect_group>
-    </item>
-    <item name="GSKDbgTestRagdoll">
-      <property name="Extends" value="GSKDbgBASE"/>
-      <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" target="self" buff="buffGSKStrongPushAndRagdoll"/>
       </effect_group>
     </item>
     <item name="GSKDbgTestHeatColdProtDmgAdd">
@@ -40427,35 +40344,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
   <append xpath="/items/item[starts-with(@name, 'gunNPC')]/effect_group">
     <passive_effect name="SpreadDegreesVertical" operation="perc_add" value="2"/>
     <passive_effect name="SpreadDegreesHorizontal" operation="perc_add" value="2"/>
-  </append>
-  <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drinkJarYuccaJuice' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarRedTea' or       @name='drinkYuccaJuiceSmoothie' or       @name='drinkCanMegaCrush' or       @name='drinkJarCoffee' or       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBeer' or       @name='drinkJarGrandpasMoonshine' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarGrandpasLearningElixir' or       @name='drinkJarGrandpasForgettingElixir'     ]">
-    <effect_group name="CleanMiasma" tiered="false" help="will clean a bit when drinking">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(350,550)"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
-        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
-      </triggered_effect>
-      <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.5,1.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
-      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=20270:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.5,1.5)"/> -->
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'foodCrop')]">
-    <effect_group name="CleanMiasma" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(100,200)"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
-        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
-      </triggered_effect>
-      <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.1,0.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.1,0.5)">
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=20283:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.1,0.5)"> -->
-        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
-      </triggered_effect>
-    </effect_group>
   </append>
   <append xpath="/items">
     <item name="GSKsnakePoisonAntidote" help="TODO:RMMAJORVERSION">

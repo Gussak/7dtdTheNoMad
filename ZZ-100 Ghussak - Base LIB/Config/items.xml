@@ -148,5 +148,49 @@
       <property name="CustomIcon" value="resourceRockSmall"/>
       <property name="CustomIconTint" value="128,220,128"/>
     </item>
+    <item name="GSKDbgBASE">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIconTint" value="128,64,64"/>
+    </item>
+    <item name="GSKDbgToggle">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <property name="CustomIconTint" value="1,100,1"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKToggleDebug"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgGodMode" help="do not create a recipe for this duh. ">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <property name="DescriptionKey" value="dkbuffGSKGodMode"/>
+      <property name="CustomIconTint" value="1,100,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodMode">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodMode">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKGodModeFull">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKGodModeFull">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestRagdoll">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" target="self" buff="buffGSKStrongPushAndRagdoll"/>
+      </effect_group>
+    </item>
+    <item name="GSKDbgTestPush">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" target="self" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
+      </effect_group>
+    </item>
   </append>
 </GhussakTweaks>
