@@ -75,7 +75,8 @@ export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo pop
 export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
-export strChkNullptrReqRestart="^ at (EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive|Block.OnEntityWalking)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app.
+export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
+export strChkNullRefExc="^NullReferenceException: Object reference not set to an instance of an object"
 
 export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"
@@ -112,6 +113,15 @@ tail -F "$strFlLog" |while read strLine;do
 	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
 		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
 		FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
+	elif [[ "$strLine" =~ .*${strChkNullRefExc}.* ]];then
+		((nCountNullRef++))&&:
+	elif [[ "$strLine" =~ .*${strChkNullptrReqRestart}.* ]];then
+		((nCountNullPtrReqRestart++))&&:
+		if((nCountNullPtrReqRestart>10));then
+			CFGFUNCinfo "![NULLREF] !!! $strLine !!!"
+			FUNCsuspendPopup "These lines about null reference (tot=$nCountNullRef) of this kind '$strChkNullptrReqRestart' cannot be ignored, game is already unstable, foes and NPCs wont behave properly, and the app must be restarted and a previous savegame preferably should be loaded, try also drop_caches.\n\n${strLine}"
+			nCountNullPtrReqRestart=0 #so user can insist a bit too see what is happening
+		fi
 	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoadA}.* ]];then
 		bAllowPauseOnB=true
 	elif $bAllowPauseOnB && [[ "$strLine" =~ .*${strChkAutoStopOnLoadB}.* ]];then
