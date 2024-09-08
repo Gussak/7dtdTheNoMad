@@ -75,6 +75,7 @@ export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo pop
 export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
+export strChkNullptrReqRestart="^ at (EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive|Block.OnEntityWalking)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app.
 
 export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"

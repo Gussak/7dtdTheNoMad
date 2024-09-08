@@ -603,6 +603,43 @@
         </triggered_effect>
       </effect_group>
     </item>
+    <item name="GSKCFGElctrnTeleChangeQuadrantIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleChangeQuadrantIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <property name="Tags" value="teleportquadrant"/>
+      <property class="Action0">
+        <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+      </property>
+      <property class="Action1">
+        <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+      </property>
+      <effect_group tiered="false" help="Quadrant X standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false" help="Quadrant Z standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="!EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKExplrUndPOIcredit" operation="GTE" value="1" help="sync with buffGSKTeleQuadrantStart"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantStart">
+          <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantDeny"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleQuadrantStart"/>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[     starts-with(@name,'GSKRepairT') or      starts-with(@name,'GSKUpgradeT') or      starts-with(@name,'GSKReplaceT')    ]">
     <!-- HELPGOOD: make it sure tho not change the base item that is used to craft specific repairs-->
