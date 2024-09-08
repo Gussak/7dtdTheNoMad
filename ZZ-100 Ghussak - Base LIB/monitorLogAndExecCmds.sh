@@ -81,6 +81,9 @@ export strChkNullRefExc="^NullReferenceException: Object reference not set to an
 export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"
 #tail -n +1 -F "$strFlLog" |while read strLine;do
+export nCountExc=0
+export nCountNullPtrReqRestart=0
+export nCountNullRef=0
 tail -F "$strFlLog" |while read strLine;do
 	#echo "while.PID=$$"
 	bExecCmd=false
