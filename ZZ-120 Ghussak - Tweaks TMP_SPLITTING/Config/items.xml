@@ -40992,32 +40992,6 @@ LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSav
     </effect_group>
   </append>
 -->
-  <append xpath="/items/item[@name='resourceSnowBall']">
-    <property name="StickPercent" value="1.0" help="TODO:ISSUE: is this preventing them being picked up after dropped?"/>
-    <property class="Action1">
-      <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GTE" value="1.0"/>
-      <requirement name="HasBuff" target="self" buff="buffGSKHazardousWElementHotHook40"/>
-      <property name="Class" value="Eat"/>
-      <property name="Delay" value="0"/>
-      <property name="Sound_start" value="player_drinking"/>
-    </property>
-    <effect_group tiered="false" name="Drink Tier 0">
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="subtract" value="randomFloat(45,75)" help="TODO: create icecream safe recipe"/>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="5"/>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".DiseaseRoll" operation="set" value="12"/>
-      <display_value name="dDysenteryRisk" value=".12"/>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".DiseaseRoll" operation="add" value="@$MetabolismResist"/>
-      <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffDysenteryCatchDrink">
-        <requirement name="RandomRoll" seed_type="Random" min_max="1,100" operation="LTE" value="@.DiseaseRoll"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[@name='foodCropYuccaFruit']">
-    <effect_group tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="10"/>
-    </effect_group>
-  </append>
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
