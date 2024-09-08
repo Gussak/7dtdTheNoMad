@@ -72,7 +72,7 @@ export strChkButtonSpawn="INF Loading players.xml"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
-export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC "
+export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.DoCameraCollision" #fpcamera not so rarely happens just before trying to join the server
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
@@ -111,15 +111,19 @@ tail -F "$strFlLog" |while read strLine;do
 		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
 		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
 	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
-		CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
-		FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken and must be reloaded.\n\n${strLine}"
+		((nCountExc++))&&:
+		if((nCountExc==1));then
+			CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
+			FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken NullReference=$nCountNullRef and must be reloaded.\n\n${strLine}"
+		fi
+		if((nCountExc>10));then nCountExc=0;fi # this way, it lets the player see the log a bit
 	elif [[ "$strLine" =~ .*${strChkNullRefExc}.* ]];then
 		((nCountNullRef++))&&:
 	elif [[ "$strLine" =~ .*${strChkNullptrReqRestart}.* ]];then
 		((nCountNullPtrReqRestart++))&&:
 		if((nCountNullPtrReqRestart>10));then
 			CFGFUNCinfo "![NULLREF] !!! $strLine !!!"
-			FUNCsuspendPopup "These lines about null reference (tot=$nCountNullRef) of this kind '$strChkNullptrReqRestart' cannot be ignored, game is already unstable, foes and NPCs wont behave properly, and the app must be restarted and a previous savegame preferably should be loaded, try also drop_caches.\n\n${strLine}"
+			FUNCsuspendPopup "These lines about NullReference=$nCountNullRef of this kind '$strChkNullptrReqRestart' cannot be ignored, game is already unstable, foes and NPCs wont behave properly, and the app must be restarted and a previous savegame preferably should be loaded, try also drop_caches.\n\n${strLine}"
 			nCountNullPtrReqRestart=0 #so user can insist a bit too see what is happening
 		fi
 	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoadA}.* ]];then
