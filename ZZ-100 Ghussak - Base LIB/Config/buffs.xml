@@ -233,6 +233,28 @@
       <duration value="0"/>
       <update_rate value="1"/>
       <!-- HELPGOOD: from other mini mods, just append effec groups here! -->
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="set" value="10" help="if it is lagging or low FPS, NPCs, zombies etc may take a long time to answer">
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="add" value="-1" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveTotal30m" operation="set" value="@.iGSKNearbyFoeAliveCount30m"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCNearbyFoeAliveCount30m" operation="set" value="@.iGSKNearbyFoeAliveTotal30m" target="selfAOE" range="60" target_tags="npc">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30m" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes30m" target="selfAOE" range="30" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+          <requirement name="EntityTagCompare" target="other" tags="enemy"/>
+          <requirement name="EntityTagCompare" target="other" tags="hostile"/>
+          <requirement name="EntityTagCompare" target="other" tags="DeusExAngry"/>
+        </triggered_effect>
+      </effect_group>
     </buff>
   </append>
 </GhussakTweaks>
