@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKChemUseSideEffects31" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHPBCUSTmp" operation="set" value="@fGSKHitpointsBlockageChemUse"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHPBCUSTmp" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsBlockageChemUseShow" operation="set" value="@.iGSKHPBCUSTmp"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@iGSKHitpointsBlockageChemUseShow" help="TODO: wont work with perc_add?">
+          <requirement name="CVarCompare" cvar="iGSKHitpointsBlockageChemUseShow" operation="GT" value="0"/>
+        </passive_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="0.001" help="natural recovering from toxity"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>

@@ -356,6 +356,34 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCforceDefendThePlayerIfFoesAreTooNear" operation="set" value="2" help="disabled (because 0 is not set, so will set the default)"/>
       </effect_group>
     </item>
+    <item name="GSKCFGNPCproperSneakingWorkaround">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGNPCproperSneakingWorkaround"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="12" help="ON only at night, keep biggest value first">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="11"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="ON">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="10" help="OFF">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCproperSneakingWorkaroundAllowed"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKNPCproperSneakingWorkaroundAllowed"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKNPCSneakBehaveLikePlayer"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKNPCSneakBehaveLikePlayer"/>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'gun') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]" help="this is meant for a melee build with many hired NPCs using ranged weapons">
     <effect_group tiered="false">

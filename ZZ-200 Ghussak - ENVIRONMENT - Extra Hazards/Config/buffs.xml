@@ -1267,6 +1267,94 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKGasMaskWork12" hidden="true" icon="7dtdGskMiasma" name_key="GasMaskVsMiasma" help="vs miasma, this is a calc made after the increase so values may jump down on the screen. Todo: show this buff with icon? not necessary tho, will be on the detailed list anyway. May be show only if iGSKMiasmaBlockPercExtra GT 0" description_key="dkbuffGSKGasMaskWork">
+      <stack_type value="replace"/>
+      <update_rate value="3"/>
+      <duration value="0"/>
+      <effect_group help="DBG">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDbgGasMaskWork" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="DBG">
+        <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:'buffGSKGasMaskWork12':loop"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKMiasmaBlockPercExtra"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty">
+          <requirement name="CVarCompare" cvar=".iGSKMiasmaPrevious" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="@.iGSKMiasmaPrevious"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="set" value="@fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="subtract" value="@.iGSKMiasmaPrevious" help="diff"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyBkp" operation="set" value="@fGSKMiasmaDirty"/>
+      </effect_group>
+      <effect_group help="DBG">
+        <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaDelta"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".fGSKMiasmaDirtyBkp"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMiasmaDelta" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="set" value="@iGSKMiasmaBlockPerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="add" value="@iGSKMiasmaBlockPercExtra"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaBlockPercTmp" operation="set" value="0.95" help="as this will just change the reduction amount, but not 100%">
+          <requirement name="CVarCompare" cvar=".iGSKMiasmaBlockPercTmp" operation="GT" value="0.95"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="DBG">
+        <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaBlockPercTmp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMiasmaBlockPercTmp" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaDelta" operation="multiply" value="@.iGSKMiasmaBlockPercTmp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="@.iGSKMiasmaDelta"/>
+      </effect_group>
+      <effect_group help="DBG">
+        <requirement name="CVarCompare" cvar=".fGSKDbgGasMaskWork" operation="GTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMiasmaDelta"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKMiasmaBlockPercExtra"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMiasmaPrevious" operation="set" value="@fGSKMiasmaDirty"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKGasMaskWork12">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskBandana"/>
+          <requirement name="!HasBuff" buff="buffGSKGasMaskPro"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGasMaskPro" hidden="true" help="vs miasma">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.75" help="because the skin is not protected"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork12">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork12"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGasMaskBandana" hidden="true" help="vs miasma">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKMiasmaBlockPerc" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGasMaskWork12">
+          <requirement name="!HasBuff" buff="buffGSKGasMaskWork12"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <effect_group help="FAT: rm screff. place b4 adding on next group">
