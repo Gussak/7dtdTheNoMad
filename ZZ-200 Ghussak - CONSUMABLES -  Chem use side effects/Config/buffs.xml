@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKNearDeathChemUse"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="set" value="@iGSKNearDeathChemUse"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKNDCUStunChance"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKChemUseSideEffects31" hidden="true" remove_on_death="false">
       <stack_type value="replace"/>
       <duration value="0"/>
