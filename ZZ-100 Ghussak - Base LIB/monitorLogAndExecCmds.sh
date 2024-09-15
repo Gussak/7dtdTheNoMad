@@ -59,6 +59,7 @@ function FUNCsuspendPopup() {
 	#else
 		#CFGFUNCprompt "$strInfo"
 	#fi
+	CFGFUNCexec tail -n 20 "$strFlLog"
 	FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
 	CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
 }
@@ -70,9 +71,9 @@ export bAllowPauseOnB=false
 
 export strChkButtonSpawn=".* INF Loading players.xml"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
-export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
-export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
-export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.DoCameraCollision|at PlayerMoveController.OnGUI|at EntityMoveHelper.StartJump" #fpcamera not so rarely happens just before trying to join the server
+export strChkErrors1="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
+export strChkErrors2="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
+export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.DoCameraCollision|at PlayerMoveController.OnGUI|at EntityMoveHelper.StartJump" #fpcamera not so rarely happens just before trying to join the server. these other will cause a pseudo freeze, where we cant do nothing just move around
 : ${iChkExcLim:=20} #help
 export iChkExcLim
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
