@@ -63,18 +63,20 @@ function FUNCsuspendPopup() {
 	CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
 }
 
-export strChkAutoStopOnLoadA="`FUNCrawMatchRegex " INF Created player with id="`"
+export strChkAutoStopOnLoadA=".*`FUNCrawMatchRegex " INF Created player with id="`"
 #export strChkAutoStopOnLoadB="`FUNCrawMatchRegex " INF PlayerSpawnedInWorld (reason: LoadedGame, position:"`.*: localplayer" # this grants extra 10s w/o waiting!
-export strChkAutoStopOnLoadB=" INF PlayerSpawnedInWorld [(]reason: (LoadedGame|NewGame), position:.*: localplayer" # this grants extra 10s w/o waiting!
+export strChkAutoStopOnLoadB=".* INF PlayerSpawnedInWorld [(]reason: (LoadedGame|NewGame), position:.*: localplayer" # this grants extra 10s w/o waiting!
 export bAllowPauseOnB=false
 
-export strChkButtonSpawn="INF Loading players.xml"
+export strChkButtonSpawn=".* INF Loading players.xml"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
-export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.DoCameraCollision" #fpcamera not so rarely happens just before trying to join the server
+export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.DoCameraCollision|at PlayerMoveController.OnGUI|at EntityMoveHelper.StartJump" #fpcamera not so rarely happens just before trying to join the server
+: ${iChkExcLim:=20} #help
+export iChkExcLim
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
-export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
+export strChkStartServer=".*`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
 export strChkNullRefExc="^NullReferenceException: Object reference not set to an instance of an object"
 
@@ -90,7 +92,7 @@ tail -F "$strFlLog" |while read strLine;do
 	bRelevant=true
 	#if ! pgrep -fa "${strExecRegex}";then
 		#echo "-[WAIT:GameNotRunning:SKIP] ${strLine}"
-	if [[ "$strLine" =~ .*${strChkStartServer}.* ]];then
+	if [[ "$strLine" =~ ${strChkStartServer} ]];then
 		CFGFUNCinfo "+[EXEC:WritableCfgDump] $strLine (to let the game start the server)"
 		CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}" # this is important to try to grant the game wont try to write over RO files while they are becoming RW
 		while ! CFGFUNCexec --noErrorExit chmod -R u+w _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/;do
@@ -99,7 +101,7 @@ tail -F "$strFlLog" |while read strLine;do
 			fi
 		done
 		CFGFUNCexec pkill -SIGCONT -fe "${strExecRegex}"
-	elif [[ "$strLine" =~ .*${strChkButtonSpawn}.* ]];then
+	elif [[ "$strLine" =~ ${strChkButtonSpawn} ]];then
 		CFGFUNCinfo "skipping spawn button" # the ;\ below is just to help test on terminal, becomes one line to fix.
 		nWID="$(xdotool search "Default - Wine desktop")";\
 		strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
@@ -110,26 +112,26 @@ tail -F "$strFlLog" |while read strLine;do
 			xdotool click --repeat 3 --window $nWID 1
 			#xdotool click --repeat 3 --delay 200 --window $nWID 1
 		done
-	elif [[ "$strLine" =~ .*${strChkCrash}.* ]];then
+	elif [[ "$strLine" =~ ${strChkCrash} ]];then
 		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
 		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
-	elif [[ "$strLine" =~ .*${strChkExceptions}.* ]];then
+	elif [[ "$strLine" =~ ${strChkExceptions} ]];then
 		((nCountExc++))&&:
 		if((nCountExc==1));then
 			CFGFUNCinfo "![EXCEPTION] !!! $strLine !!!"
 			FUNCsuspendPopup "Exceptions cannot be ignored, game is already broken NullReference=$nCountNullRef and must be reloaded.\n\n${strLine}"
 		fi
-		if((nCountExc>10));then nCountExc=0;fi # this way, it lets the player see the log a bit
-	elif [[ "$strLine" =~ .*${strChkNullRefExc}.* ]];then
+		if((nCountExc>iChkExcLim));then nCountExc=0;fi # this way, it lets the player see the log a bit
+	elif [[ "$strLine" =~ ${strChkNullRefExc} ]];then
 		((nCountNullRef++))&&:
-	elif [[ "$strLine" =~ .*${strChkNullptrReqRestart}.* ]];then
+	elif [[ "$strLine" =~ ${strChkNullptrReqRestart} ]];then
 		((nCountNullPtrReqRestart++))&&:
 		if((nCountNullPtrReqRestart>10));then
 			CFGFUNCinfo "![NULLREF] !!! $strLine !!!"
 			FUNCsuspendPopup "These lines about NullReference=$nCountNullRef of this kind '$strChkNullptrReqRestart' cannot be ignored, game is already unstable, foes and NPCs wont behave properly, and the app must be restarted and a previous savegame preferably should be loaded, try also drop_caches.\n\n${strLine}"
 			nCountNullPtrReqRestart=0 #so user can insist a bit too see what is happening
 		fi
-	elif [[ "$strLine" =~ .*${strChkAutoStopOnLoadA}.* ]];then
+	elif [[ "$strLine" =~ ${strChkAutoStopOnLoadA} ]];then
 		bAllowPauseOnB=true
 	elif $bAllowPauseOnB && [[ "$strLine" =~ .*${strChkAutoStopOnLoadB}.* ]];then
 		if ! pgrep -fa "${strExecRegex}";then
@@ -196,6 +198,10 @@ tail -F "$strFlLog" |while read strLine;do
 	else
 		: ${bShowSkippedLines:=false} #help
 		if $bShowSkippedLines;then echo "-[SKIP] $strLine";fi
+		: ${iCountIrrelevant:=0}
+		((iCountIrrelevant++))&&:
+		#if((iCountIrrelevant%2==1));then echo -ne "x$((iCountIrrelevant%10))\r";else echo -ne "+$((iCountIrrelevant%10))\r";fi
+		echo -ne "(ignored lines: ${iCountIrrelevant})\r"
 		bRelevant=false
 	fi
 	
