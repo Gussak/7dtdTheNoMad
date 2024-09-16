@@ -118,10 +118,13 @@ function FUNCbkp() {
 
 
 	declare -p astrListFlToBkp |tr '[' '\n'
+	
+	strFlBkpCoreName="${strCFGAppDataFolder}/7dtdSaveMinimalBkpA22" #help
+	strFlBkpBN="${strFlBkpCoreName}.$(date +'%Y_%m_%d-%H_%M_%S_%N')" #help
 
-	: ${strFlBkpBN:="${strCFGAppDataFolder}/7dtdSaveMinimalBkpA22"} #help
-
-	trash "${strFlBkpBN}.tar.7z"&&:
+	#trash "${strFlBkpBN}.tar.7z"&&:
+	#trash "${strFlBkpBN}.jpg"&&:
+	#TODO: ls -1t "${strFlBkpCoreName}".*.7z |tail -n 1 # trash oldest if list > 20
 
 	while true;do
 		echo "`date` preparing minimal save bkp in 3s"
@@ -151,7 +154,6 @@ function FUNCbkp() {
 	done
 	
 	# screenshot 
-	trash "${strFlBkpBN}.jpg"&&:
 	if nWId="$(xdotool search "Default - Wine desktop")";then
 		import -window "$nWId" "${strFlBkpBN}.jpg"&&: #accepts webp tho
 	fi
