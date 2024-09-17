@@ -124,7 +124,17 @@ function FUNCbkp() {
 
 	#trash "${strFlBkpBN}.tar.7z"&&:
 	#trash "${strFlBkpBN}.jpg"&&:
-	#TODO: ls -1t "${strFlBkpCoreName}".*.7z |tail -n 1 # trash oldest if list > 20
+	: ${iKeepMaxSaves:=20} #help
+	while true;do
+		nTotSaves=$(ls -1t "${strFlBkpCoreName}".*.7z |wc -l)
+		if(( nTotSaves > iKeepMaxSaves ));then
+			strFlOldest="$(ls -1t "${strFlBkpCoreName}".*.7z |tail -n 1)"
+			echo "($nTotSaves) oldest to trash: $strFlOldest"
+			trash "$strFlOldest"
+		else
+			break
+		fi
+	done
 
 	while true;do
 		echo "`date` preparing minimal save bkp in 3s"
@@ -187,8 +197,10 @@ ls -ld *
 
 while true;do
 	FUNCbkp&&:
+	
+	: ${iDelayBetweenBkps:=60} #help
 	while read -t 0.01 -n 1;do :;done #clear buffer
-	echo "press ctrl+c to exit, ctrl+s to wait, ctrl+q to continue, or a key to repeat bkp now (60s)";read -t 60 -n 1&&:
+	echo "press ctrl+c to exit, ctrl+s to wait, ctrl+q to continue, or a key to repeat bkp now (60s)";read -t ${iDelayBetweenBkps} -n 1&&:
 done
 
 exit 0
