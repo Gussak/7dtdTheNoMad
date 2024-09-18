@@ -130,7 +130,7 @@ function FUNCbkp() {
 		if(( nTotSaves > iKeepMaxSaves ));then
 			strFlOldest="$(ls -1t "${strFlBkpCoreName}".*.7z |tail -n 1)"
 			echo "($nTotSaves) oldest to trash: $strFlOldest"
-			trash "$strFlOldest"
+			trash "$strFlOldest" "${strFlOldest%.tar.7z}.jpg"
 		else
 			break
 		fi
