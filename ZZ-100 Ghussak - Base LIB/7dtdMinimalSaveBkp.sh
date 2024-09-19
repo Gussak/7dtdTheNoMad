@@ -163,20 +163,26 @@ function FUNCbkp() {
 		fi
 	done
 	
-	# screenshot 
-	if nWId="$(xdotool search "Default - Wine desktop")";then
-		import -window "$nWId" "${strFlBkpBN}.jpg"&&: #accepts webp tho
-	fi
-	
-	#while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
-	7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
-	trash "${strFlBkpBN}.tar" #cleanup
-	
-	ls -l "${strFlBkpBN}.tar.7z"
-	7z l "${strFlBkpBN}.tar.7z"
+	if [[ "$strKeyPreviousBkp" != "$strKey" ]];then
+		# screenshot 
+		if nWId="$(xdotool search "Default - Wine desktop")";then
+			import -window "$nWId" "${strFlBkpBN}.jpg"&&: #accepts webp tho
+		fi
+		
+		#while ! tar --list -f "${strFlBkpBN}.tar";do echo "retring...";read -t 3 -n 1&&:;done
+		7z a "${strFlBkpBN}.tar.7z" "${strFlBkpBN}.tar"
+		trash "${strFlBkpBN}.tar" #cleanup
+		
+		ls -l "${strFlBkpBN}.tar.7z"
+		7z l "${strFlBkpBN}.tar.7z"
 
-	if((iMarginWarning>0));then
-		echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
+		if((iMarginWarning>0));then
+			echo "[[[ WARNING ]]]: there happened iMarginWarning=$iMarginWarning"
+		fi
+		
+		strKeyPreviousBkp="$strKey"
+	else
+		echo "Previous backup has identical contents, skipping."
 	fi
 };export -f FUNCbkp
 
@@ -195,6 +201,7 @@ cd "$strWorkPath"
 pwd
 ls -ld *
 
+export strKeyPreviousBkp=""
 while true;do
 	FUNCbkp&&:
 	

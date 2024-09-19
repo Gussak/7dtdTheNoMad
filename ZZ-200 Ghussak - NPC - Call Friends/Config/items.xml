@@ -78,6 +78,17 @@
         <passive_effect name="VehicleCarryCapacity" operation="perc_subtract" value="0.99"/>
       </effect_group>
     </item>
+    <item name="GSKCNPCragdollAllFriendliesNearby">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIconTint" value="00a0ff"/>
+      <property name="DescriptionKey" value="dkGSKCNPCragdollAllFriendliesNearby"/>
+      <property name="EconomicValue" value="0"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="Ragdoll" duration="0.5" force="200" target="selfAOE" range="3" target_tags="npc" help="this is very useful when climbing a ladder that has a friendly NPC above you blocking the path. the tiny force is also good to push it a bit helping on placing blocks as it moves away">
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Bullet')]">
     <effect_group name="penetration thru friendly NPCs (otherwise they just block the path and let foes kill them), but this extra empowers all bullets :( TODO: it could work only if aiming at a friendly hired NPC" tiered="false">
