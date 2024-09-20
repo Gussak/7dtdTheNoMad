@@ -130,7 +130,7 @@ function FUNCbkp() {
 		if(( nTotSaves > iKeepMaxSaves ));then
 			strFlOldest="$(ls -1t "${strFlBkpCoreName}".*.7z |tail -n 1)"
 			echo "($nTotSaves) oldest to trash: $strFlOldest"
-			trash "$strFlOldest" "${strFlOldest%.tar.7z}.jpg"
+			trash "$strFlOldest" "${strFlOldest%.tar.7z}.jpg"&&: #"${strFlOldest%.7z}"
 		else
 			break
 		fi
@@ -183,6 +183,7 @@ function FUNCbkp() {
 		strKeyPreviousBkp="$strKey"
 	else
 		echo "Previous backup has identical contents, skipping."
+		trash "${strFlBkpBN}.tar"
 	fi
 };export -f FUNCbkp
 
