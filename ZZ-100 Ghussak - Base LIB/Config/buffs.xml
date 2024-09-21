@@ -44,6 +44,142 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForEnterGameDuringBloodMoon'"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKGodModeFull" hidden="false" help="do not create a recipe to activate this duh. You can place super powers here, this is NOT meant to protect the player in a normal gameplay in special moments" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,250,155">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="god">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFull'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. DO NOT PUT SUPER POWERS HERE, this is meant just to protect the player in special moments in a normal gameplay" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,180,180">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0" help="or it is unplayable at ND lvl 5, but ND lvls will kick in after god mode ends"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="0" help="or it will kick in as soon god mode ends. this is equivalent to using antidote tho..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveAllNegativeBuffs"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
+          <requirement name="!HasBuff" buff="buffGSKGodModeMinimum"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeMinimum"/>
+        <!-- HELPGOOD: DO NOT PUT SUPER POWERS HERE, this is meant to protect the player too in special moments in a normal gameplay
+        <passive_effect name="WalkSpeed" operation="perc_add" value="5.0"/>
+        <passive_effect name="RunSpeed"  operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
+-->
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodMode'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeRespawn" hidden="false" help="do not create a recipe to activate this duh. " tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="100,250,200" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0" help="controlled by .iGSKGodModeRespawnTm tho"/>
+      <update_rate value="1"/>
+      <display_value value=".iGSKGodModeRespawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="LT" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="15" help="it may take some seconds to generate the world in the new location, also about 5s for the engine wakeup animation, and the player may need time to decide to use the teleport to backpack item before dieing again. shall not be enough time to the player get back the backpack"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode">
+          <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeRespawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Rise from your grave!"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeRespawn'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <requirements>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+      </requirements>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeNewbie"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFirstSpawn'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeNewbie" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeNewbie">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeNewbie'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeDeusExBless" hidden="false" description_key="dkbuffGSKGodModeDeusExBless" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,250">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeDeusExBless"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="set" value="66"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeDeusExBless">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeDeusExBless" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeDeusExBless'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeForTeleport" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after teleporting, this is to prevent that.">
+      <stack_type value="ignore"/>
+      <duration value="10"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForTeleport'"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKDetectEnterGame">
       <stack_type value="ignore"/>
       <duration value="0.15" help="to happen only one update as fast as possible. keep like this so other buffs can be added from here by using onSelfBuffUpdate thru append modlet patch too"/>
@@ -260,5 +396,11 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='god']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="BUFF:VanillaGodMode:ON"/>
+      <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:VanillaGodMode:OFF"/>
+    </effect_group>
   </append>
 </GhussakTweaks>
