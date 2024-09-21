@@ -124,7 +124,7 @@ function FUNCbkp() {
 
 	#trash "${strFlBkpBN}.tar.7z"&&:
 	#trash "${strFlBkpBN}.jpg"&&:
-	: ${iKeepMaxSaves:=20} #help
+	: ${iKeepMaxSaves:=30} #help
 	while true;do
 		nTotSaves=$(ls -1t "${strFlBkpCoreName}".*.7z |wc -l)
 		if(( nTotSaves > iKeepMaxSaves ));then
