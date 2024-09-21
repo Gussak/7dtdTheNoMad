@@ -1,36 +1,60 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <append xpath="/entity_classes/entity_class[@name='playerMale']" help="raider simple ambush">
+    <effect_group help="raider simple ambush ISSUE: never ends... this is not working: NotHasBuff buffGSKNPCTreasureAmbusherSpawned ? look for: iGSKNPCnpcBanditAmbushCooldownFixNeverEndIssue">
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbushTriggered" operation="add" value="1" target="other">
+        <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="!HasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned" help="ignore ambushers"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushMode" target="other" operation="Equals" value="0" help="ignore ambushers eq 1"/>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbush" operation="add" value="1" help="this will let it work if the player at least try to damage the bandit">
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="1"/>
+        <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+        <requirement name="!HasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned" help="ignore ambushers"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushMode" target="other" operation="Equals" value="0" help="ignore ambushers eq 1"/>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="iGSKNPCnpcBanditAmbush" operation="add" value="1" target="selfAOE" range="60" target_tags="player" help="this is in case your NPC followers kill the NPC raider. this will only work from playerMale and extenders right? from animals wont.. from zombies will it work too? Btw, with the below onSelfAttackedOther, this onSelfKilledOther will ever happen with iGSKNPCnpcBanditAmbushTriggered eq 0 ? yes, because only the player can inc that. TODO: try this bandit.onSelfDied selfAOE.range60.add:iGSKNPCnpcBanditAmbush? so anyting killing the bandit will also let it work from a call from the dead body. But I think dead corpses stop running scripts before these triggers happen? :(">
+        <requirement name="EntityTagCompare" target="other" tags="bandit" help="TODO: could too but needs patching with tag ambush:  !EntityTagCompare target=other tags=ambush "/>
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushTriggered" target="other" operation="Equals" value="0" help="player never attacked it but somehow killed it TODO: ever possible?"/>
+        <requirement name="!HasBuff" target="other" buff="buffGSKNPCTreasureAmbusherSpawned" help="ignore ambushers"/>
+        <requirement name="CVarCompare" cvar="iGSKNPCnpcBanditAmbushMode" target="other" operation="Equals" value="0" help="ignore ambushers"/>
+        <requirement name="!EntityTagCompare" tags="player"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <!--	HELPGOOD: this is the GSK more generic loot by gun types, but prefering 0-XNPCCore grant loot (in case some other mod is missing it) below
   <append xpath="/entity_classes" help="GSK loot by gun types">
     <entity_class name="EntityLootContainerRegularWithLBow" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithLBow"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithXBow" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithXBow"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithRifle" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithRifle"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithPistol" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithPistol"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithShotgun" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithShotgun"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithAK47" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithAK47"/>
     </entity_class>
     <entity_class name="EntityLootContainerRegularWithRocket" extends="EntityLootContainerRegular">
-      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab"/>
+      <property name="Mesh" value="@:Entities/LootContainers/backpack_droppedPrefab.prefab" />
       <property name="LootListOnDeath" value="lootPackRegularWithRocket"/>
     </entity_class>
   </append>
-  <!--	HELPGOOD: this will apply the GSK loot by gun types, but will be replaced with 0-XNPCCore loot below, so disbling that section will enable this one -->
   <append xpath="/entity_classes/entity_class[contains(@name, 'LBow')]">
     <property name="LootDropEntityClass" value="EntityLootContainerRegularWithLBow"/>
   </append>
@@ -52,7 +76,8 @@
   <append xpath="/entity_classes/entity_class[contains(@name, 'Rocket')]">
     <property name="LootDropEntityClass" value="EntityLootContainerRegularWithRocket"/>
   </append>
-  <set xpath="/entity_classes/entity_class[@name='npcBanditPipePistolTemplate']/property[@name='LootDropEntityClass']/@value" help="fix tipo TODO pullrequest to repo">EntityNPCLootContainerPipePistol</set>
+  -->
+  <set xpath="/entity_classes/entity_class[@name='npcBanditPipePistolTemplate']/property[@name='LootDropEntityClass']/@value" help="fix tipo TODO pullrequest to repo, DONE, update and remove this line">EntityNPCLootContainerPipePistol</set>
   <!--
   HELPGOOD:CODEGEN: grant 0-XNPCCore loot
   This fixes friendly npcs and raiders in case they are not already. It is 'append' to grant wont miss with 'set'.
