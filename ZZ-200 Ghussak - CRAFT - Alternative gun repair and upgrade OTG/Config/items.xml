@@ -1,4 +1,104 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <remove xpath="/items/item[starts-with(@name,'gun') and not(contains(@name,'T0'))]/property[@name='RepairTools']"/>
+  <!-- HELPGOOD instead of this, keep RepairTools property and modify it, so it is possible to maintain a higher level gun than the one you can currently craft, you will be "replacing damaged parts" basically
+	<remove xpath="/items/item[starts-with(@name,'gun') and not(contains(@name,'T0'))]/property[@name='RepairTools']"/>
+-->
+  <!-- HELPGOOD: A20
+  repair with gun parts
+  TODO: 4 parts to build means 25% each for the maximum degradation value, so low tier guns will be easier to fix
+  this below is a generic easier implementation
+  this is intended only for complex mechanical shooting guns
+-->
+  <!--  HELPGOOD: resourceRepairKit is only for complex tools like motorized etc
+LookingForPossibleThingsToChangeCmd: clear;egrep 'RepairTools|<item ' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml |egrep RepairTools -B 1 |egrep resourceRepairKit -C 100
+-->
+  <append xpath="/items/item[       starts-with(@name, 'meleeToolSalvageT2Ratchet')     ]">
+    <property name="RepairTools" value="resourceMechanicalParts"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnClubT1BaseballBat')     ]">
+    <property name="RepairTools" value="resourceWood"/>
+  </append>
+  <!-- HELPGOOD: TODO: failed...
+  <set xpath="/items/item[starts-with(@name,'meleeWpnBatonT2StunBaton')]/property[@name='RepairTools']/@value" help="appending was crashing... simply changing this with set will also crash! is it hardcoded to repairkit therefore cant be changed?">resourceElectricParts</set>
+-->
+  <append xpath="/items/item[       starts-with(@name, 'armorFootballHelmet')     ]">
+    <property name="RepairTools" value="resourceScrapPolymers"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'armorFirefightersHelmet')     ]">
+    <property name="RepairTools" value="resourceLeather"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnBladeT1CandyKnife') or       starts-with(@name, 'meleeWpnBladeT1HuntingKnife') or       starts-with(@name, 'meleeWpnClubT1CandyClub') or       starts-with(@name, 'meleeWpnKnucklesT1IronKnuckles') or       starts-with(@name, 'meleeWpnSledgeT1IronSledgehammer') or       starts-with(@name, 'meleeWpnSpearT1IronSpear') or       starts-with(@name, 'meleeToolAxeT1IronFireaxe') or       starts-with(@name, 'meleeToolFarmT1IronHoe') or       starts-with(@name, 'meleeToolPickT1IronPickaxe') or       starts-with(@name, 'meleeToolShovelT1IronShovel') or       starts-with(@name, 'meleeToolRepairT1ClawHammer') or       starts-with(@name, 'armorMiningHelmet') or       starts-with(@name, 'armorIron')     ]">
+    <property name="RepairTools" value="resourceForgedIron"/>
+  </append>
+  <append xpath="/items/item[       starts-with(@name, 'meleeWpnSpearT3SteelSpear') or       starts-with(@name, 'meleeWpnClubT3SteelClub') or       starts-with(@name, 'meleeWpnSledgeT3SteelSledgehammer') or       starts-with(@name, 'meleeWpnBladeT3Machete') or       starts-with(@name, 'meleeWpnKnucklesT3SteelKnuckles') or       starts-with(@name, 'meleeToolShovelT2SteelShovel') or       starts-with(@name, 'meleeToolPickT2SteelPickaxe') or       starts-with(@name, 'armorSwatHelmet') or       starts-with(@name, 'armorSteel')     ]">
+    <property name="RepairTools" value="resourceForgedSteel"/>
+  </append>
+  <append xpath="/items">
+    <!-- HELPGOOD:CODEGEN: egrep 'name="gun.*Parts"' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/items.xml |sed -r 's@<item name="(.*)">@    <item name="\1Repair">\n      <property name="Extends" value="\1" />\n      <property name="CustomIcon" value="\1"/>\n      <property name="CustomIconTint" value="128,220,128" />\n    </item>@' -->
+    <item name="gunMGT1AK47PartsRepair">
+      <property name="Extends" value="gunMGT1AK47Parts"/>
+      <property name="CustomIcon" value="gunMGT1AK47Parts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunHandgunT1PistolPartsRepair">
+      <property name="Extends" value="gunHandgunT1PistolParts"/>
+      <property name="CustomIcon" value="gunHandgunT1PistolParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunRifleT1HuntingRiflePartsRepair">
+      <property name="Extends" value="gunRifleT1HuntingRifleParts"/>
+      <property name="CustomIcon" value="gunRifleT1HuntingRifleParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunShotgunT1DoubleBarrelPartsRepair">
+      <property name="Extends" value="gunShotgunT1DoubleBarrelParts"/>
+      <property name="CustomIcon" value="gunShotgunT1DoubleBarrelParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunBowT1WoodenBowPartsRepair">
+      <property name="Extends" value="gunBowT1WoodenBowParts"/>
+      <property name="CustomIcon" value="gunBowT1WoodenBowParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunExplosivesT3RocketLauncherPartsRepair">
+      <property name="Extends" value="gunExplosivesT3RocketLauncherParts"/>
+      <property name="CustomIcon" value="gunExplosivesT3RocketLauncherParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+    <item name="gunBotRoboticsPartsRepair">
+      <property name="Extends" value="gunBotRoboticsParts"/>
+      <property name="CustomIcon" value="gunBotRoboticsParts"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+    </item>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'gun') and contains(@name,'PartsRepair')]">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="50"/>
+    <property name="DescriptionKey" value="dkGSKgunRepairParts"/>
+    <property name="EconomicValue" value="5"/>
+  </append>
+  <set xpath="/items/item[       starts-with(@name, 'gunBowT1') or        starts-with(@name, 'gunBowT3')     ]/property[@name='RepairTools']/@value">gunBowT1WoodenBowPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunHandgun')]/property[@name='RepairTools']/@value">gunHandgunT1PistolPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunShotgun')]/property[@name='RepairTools']/@value">gunShotgunT1DoubleBarrelPartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunMG')]/property[@name='RepairTools']/@value">gunMGT1AK47PartsRepair</set>
+  <set xpath="/items/item[starts-with(@name, 'gunRifle')]/property[@name='RepairTools']/@value">gunRifleT1HuntingRiflePartsRepair</set>
+  <set xpath="/items/item[@name='gunExplosivesT3RocketLauncher']/property[@name='RepairTools']/@value">gunExplosivesT3RocketLauncherPartsRepair</set>
+  <set xpath="/items/item[       starts-with(@name, 'gunHandgunT0PipePistol')  or        starts-with(@name, 'gunRifleT0PipeRifle')     or        starts-with(@name, 'gunShotgunT0PipeShotgun') or        starts-with(@name, 'gunMGT0PipeMachineGun')   or        starts-with(@name, 'meleeWpnBatonT0PipeBaton')      ]/property[@name='RepairTools']/@value">resourceMetalPipe</set>
+  <set xpath="/items/item[       starts-with(@name, 'gunBotT1JunkSledge')  or        starts-with(@name, 'gunBotT2JunkTurret')  or        starts-with(@name, 'gunBotT3JunkDrone')     ]/property[@name='RepairTools']/@value">gunBotRoboticsPartsRepair</set>
+  <append xpath="/items/item[@name='resourceMetalPipe']">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="50"/>
+  </append>
+  <append xpath="/items/item[@name='resourceForgedIron']">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="50"/>
+  </append>
+  <append xpath="/items/item[@name='resourceForgedSteel']">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
+  <append xpath="/items/item[@name='gunBotRoboticsParts']">
+    <property name="RepairTime" value="1"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
 </GhussakTweaks>
