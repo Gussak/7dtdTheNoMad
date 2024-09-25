@@ -31,6 +31,8 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
+#help Hitting ctrl+s will suspend also receiving the log lines, so if you think it is ok to let error messages show up (like in a way that you believe it may not cause further troble, wont mess the savegame), just hit ctrl+s, wait and later hit ctrl+q, and all lines during that suspend will be ignored!
+
 source ./libSrcCfgGenericToImport.sh
 
 export strFlLog="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pimps/7 Days To Die/Player.log"
