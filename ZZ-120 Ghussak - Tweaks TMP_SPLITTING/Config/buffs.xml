@@ -707,46 +707,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTelePOIWERUp"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKnpcRaiderHealingKit" hidden="true">
-      <stack_type value="replace"/>
-      <duration value="0"/>
-      <update_rate value="1"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKnpcRaiderMedkits" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKnpcRaiderHeal" operation="set" value="180"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKnpcRaiderHPmod" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKnpcRaiderHPmod" operation="set" value="5">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.90"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKnpcRaiderHPmod" operation="set" value="20">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.75"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKnpcRaiderHPmod" operation="set" value="50" help="ISSUE? this may lead to a lucky final healing of extra 49, but it is no problem as is just a minor extra challenge.">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.50"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKnpcRaiderHeal" operation="subtract" value="@iGSKnpcRaiderHPmod"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@iGSKnpcRaiderHPmod">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="1.0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKnpcRaiderHealingKit">
-          <requirement name="CVarCompare" cvar="iGSKnpcRaiderHeal" operation="LTE" value="0"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKnpcRaiderSelfHealing" hidden="true">
-      <stack_type value="replace"/>
-      <duration value="0"/>
-      <update_rate value="3"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKnpcRaiderMedkits" operation="set" value="randomInt(0,5)"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKnpcRaiderHealingKit">
-          <requirement name="!HasBuff" buff="buffGSKnpcRaiderHealingKit"/>
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.75"/>
-          <requirement name="CVarCompare" cvar="iGSKnpcRaiderMedkits" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
     <buff name="_buffGSKProperSwimming45" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>
@@ -778,78 +738,6 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="_buffPlayerHiredNPCInc" target="selfAOE" range="20" target_tags="player"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="_buffNPCHiredCounter"/>
-      </effect_group>
-    </buff>
-  </append>
-  <append xpath="/buffs/buff[@name='buffOrderDismiss']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iNPCAmmoSpent" operation="subtract" value="@iNPCAmmoLimit"/>
-    <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="if the npc had this buff, the player will have to give another power armor to the npc. This is to compensate for the diff of hire prices between this and the npc that comes with power armor already.">
-      <requirement name="!EntityTagCompare" tags="powerarmor"/>
-    </triggered_effect>
-  </append>
-  <append xpath="/buffs/buff[@name='buffOrderFollow']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item">
-      <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="10" help="this is to prevent increasing that too much for free"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="this is just a dummy to prevent miss giving powerarmor to the npc that already come with it and is already high cost">
-      <requirement name="EntityTagCompare" tags="powerarmor"/>
-      <requirement name="!HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
-    </triggered_effect>
-  </append>
-  <append xpath="/buffs">
-    <buff name="buffGSKRespawnPreventWaterBkp12" hidden="true" remove_on_death="true">
-      <duration value="120"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKRespawnPreventWaterBkp12'"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKRespawnPreventWaterBkp12'"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnPreventWaterBkp12">
-          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKShowWaterBkp22" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
-      <duration value="0"/>
-      <display_value value="fGSKWaterPercBkp"/>
-      <display_value_key value="{0:0.00}"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp22">
-          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKBkpWaterVal73" hidden="true" remove_on_death="true">
-      <stack_type value="replace"/>
-      <duration value="0"/>
-      <update_rate value="0.5"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKBkpWaterVal73'"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKBkpWaterVal73'"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
-          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
-          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp12"/>
-        </triggered_effect>
-        <!-- HELPGOOD: only lower the bkp after buffNearDeathRegen has ended because water is being raised there!-->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="subtract" value="0.025">
-          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="@fGSKWaterPercBkp"/>
-          <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
-          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp12"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="0.05">
-          <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="0.05"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="0">
-          <requirement name="NotHasBuff" buff="buffInfectionMain"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="@infectionCounter">
-          <requirement name="HasBuff" buff="buffInfectionMain"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCureCounterBkp" operation="set" value="@$infectionCureCounter"/>
       </effect_group>
     </buff>
   </append>

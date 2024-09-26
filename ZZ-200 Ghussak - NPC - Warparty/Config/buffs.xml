@@ -4184,4 +4184,19 @@
       </triggered_effect>
     </effect_group>
   </append>
+  <append xpath="/buffs/buff[@name='buffOrderDismiss']/effect_group">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iNPCAmmoSpent" operation="subtract" value="@iNPCAmmoLimit"/>
+    <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="if the npc had this buff, the player will have to give another power armor to the npc. This is to compensate for the diff of hire prices between this and the npc that comes with power armor already.">
+      <requirement name="!EntityTagCompare" tags="powerarmor"/>
+    </triggered_effect>
+  </append>
+  <append xpath="/buffs/buff[@name='buffOrderFollow']/effect_group">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="add" value="15" help="so the player has a bit more time to create and use the prevent dismiss NPC item">
+      <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LTE" value="10" help="this is to prevent increasing that too much for free"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse" help="this is just a dummy to prevent miss giving powerarmor to the npc that already come with it and is already high cost">
+      <requirement name="EntityTagCompare" tags="powerarmor"/>
+      <requirement name="!HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
+    </triggered_effect>
+  </append>
 </GhussakTweaks>

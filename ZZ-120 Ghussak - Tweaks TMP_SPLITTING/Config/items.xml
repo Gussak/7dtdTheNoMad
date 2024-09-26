@@ -1705,35 +1705,6 @@
       </effect_group>
     </item>
   </append>
-  <append xpath="/items/item[starts-with(@name, 'meleeNPC') or starts-with(@name,'meleeHandAnimal')]">
-    <effect_group help="GSK hit enemies">
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoLimit" operation="set" value="500"/>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1">
-        <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCExpCredit" operation="add" value="10" help="sync with gunNPC">
-        <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
-        <requirement name="CVarCompare" target="self" cvar="Leader" operation="GT" value="0"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name, 'gunNPC')]/effect_group[starts-with(@name,'gun')]">
-    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoLimit" operation="set" value="1000"/>
-    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCAmmoSpent" operation="add" value="1">
-      <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="iNPCExpCredit" operation="add" value="10" help="sync with meleeNPC">
-      <requirement name="!EntityTagCompare" tags="DeusEx" target="other"/>
-      <requirement name="CVarCompare" target="self" cvar="Leader" operation="GT" value="0"/>
-    </triggered_effect>
-  </append>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'Shotgun')]/effect_group[starts-with(@name,'gun')]/triggered_effect[@trigger='onSelfDamagedOther' and @action='ModifyCVar' and @target='self' and @cvar='iNPCAmmoSpent' and @operation='add']/@value" help="shotguns hit many times in a single shot, it is 20 pellets right? so 0.05 per pellet">0.05</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'Pistol')]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCAmmoLimit']/@value">500</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and (contains(@name,'HRifle') or contains(@name,'SRifle'))]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCAmmoLimit']/@value">180</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'Bow')]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCAmmoLimit']/@value">300</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'Shotgun')]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCAmmoLimit']/@value">175</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'RocketLauncher')]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCAmmoLimit']/@value">35</set>
-  <set xpath="/items/item[starts-with(@name, 'gunNPC') and contains(@name,'RocketLauncher')]/     effect_group[starts-with(@name,'gun')]/triggered_effect[@cvar='iNPCExpCredit']/@value">50</set>
   <append xpath="/items">
     <item name="flareFakeFlames">
       <property name="CustomIcon" value="thrownGrenadeContact"/>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKRespawnPreventWaterBkp12" hidden="true" remove_on_death="true">
+      <duration value="120"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKRespawnPreventWaterBkp12'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKRespawnPreventWaterBkp12'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRespawnPreventWaterBkp12">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKShowWaterBkp22" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
+      <duration value="0"/>
+      <display_value value="fGSKWaterPercBkp"/>
+      <display_value_key value="{0:0.00}"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp22">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKBkpWaterVal73" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
+          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp12"/>
+        </triggered_effect>
+        <!-- HELPGOOD: only lower the bkp after buffNearDeathRegen has ended because water is being raised there!-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="subtract" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="@fGSKWaterPercBkp"/>
+          <requirement name="NotHasBuff" buff="buffNearDeathRegen" help="just resurrected indicator"/>
+          <requirement name="NotHasBuff" buff="buffGSKRespawnPreventWaterBkp12"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="0.05">
+          <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="0.05"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="0">
+          <requirement name="NotHasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="@infectionCounter">
+          <requirement name="HasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCureCounterBkp" operation="set" value="@$infectionCureCounter"/>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>
