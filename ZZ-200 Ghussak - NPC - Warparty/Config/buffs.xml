@@ -3438,6 +3438,9 @@
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffOrderDismiss"/>
+        <!-- HELPGOOD:TODO: may be, the NPC using a ranged weapon could bkp $Magsize and then set it to 0 instead of getting dismissed. teoretically would continue following the player but only using the gun to hit in melee. The player would then have to dismiss and re-hire
+				<triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="$Magsize" operation="set" value="0"/>
+-->
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: (*AutoStopFollowHint)"/>
         <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="iGSKNPCDismissedWander" operation="set" value="60" help="to have a chance to move so far away that will despawn and stop helping the player for free, so the player must not be careless"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCDismissedWander" operation="add" value="-1">
@@ -3457,7 +3460,7 @@
           <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.75"/>
         </triggered_effect>
         <triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffOrderPatrol">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="0.75"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="0.75" help="greater chance to survive if it can move"/>
         </triggered_effect>
       </effect_group>
     </buff>
