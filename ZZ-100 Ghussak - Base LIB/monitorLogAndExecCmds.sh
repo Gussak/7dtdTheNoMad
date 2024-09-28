@@ -80,7 +80,7 @@ export strChkExceptions="^....-..-.*:..:.. [0-9]*[.][0-9]* EXC |at vp_FPCamera.D
 export iChkExcLim
 #export strChkStartServer="`FUNCrawMatchRegex " INF NET: Starting server protocols"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkStartServer=".*`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
-export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking|EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
+export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking|EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive|vp_FPCamera.UpdateSwaying)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
 export strChkNullRefExc="^NullReferenceException: Object reference not set to an instance of an object"
 
 export strChkCrash="^Crash[!][!][!]$"
