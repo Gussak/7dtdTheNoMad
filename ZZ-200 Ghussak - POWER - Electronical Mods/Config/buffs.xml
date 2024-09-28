@@ -361,8 +361,9 @@
     <buff name="buffGSKTeleRandomQuadrantTilMatchBiome">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="10.0"/>
+      <update_rate value="1.0"/>
       <effect_group>
+        <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
           <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
@@ -693,7 +694,13 @@
         <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="this is a trick/workaround that grantedly protects the player from fall damage ISSUE: if ragdolled player receives fall damage one day, this have to be reviewed."/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops" help="it seems only fall damage can kill player now? so this fix it">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="GT" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantCallEvent"/>
       </effect_group>
     </buff>
