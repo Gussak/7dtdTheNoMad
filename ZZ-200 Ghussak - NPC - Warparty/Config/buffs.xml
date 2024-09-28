@@ -4202,4 +4202,12 @@
       <requirement name="!HasBuff" buff="buffGSKNPCHiredFollowingPowerArmorUse"/>
     </triggered_effect>
   </append>
+  <append xpath="/buffs/buff[@name='buffCrouching']">
+    <effect_group help="prevent NPCs luring mobs while sneaking">
+      <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+      <requirement name="EntityTagCompare" tags="npc"/>
+      <passive_effect name="NoiseMultiplier" operation="perc_subtract" value="1.25" help="1.0 would be enough? ISSUE: THIS FAILS in A20"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="1" force="10000" target="selfAOE" range="2" target_tags="zombie,animal" help="WORKAROUND: at least you can move at night with a follower now TODO: seems overpowered, allow only if player in less than 5m"/>
+    </effect_group>
+  </append>
 </GhussakTweaks>

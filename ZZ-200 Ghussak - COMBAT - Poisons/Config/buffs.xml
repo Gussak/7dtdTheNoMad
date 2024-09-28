@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKSnakePoisonFromTrapDelayed">
+      <stack_type value="ignore"/>
+      <duration value="5.0" help="the player must have some time to understand what is happening"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoison"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKSnakePoison">
+      <duration value="0.10"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonDur" operation="add" value="randomInt(250,500)" help="sync with antidote"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKSnakePoisonWork55">
+          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: this didnt work as expected
+      <effect_group help="player">
+        <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0" />
+        <requirement name="EntityTagCompare" tags="player"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="set" value="randomInt(-6,3)" help="-6 -5 -4 -3 -2 -1 0 (1 2 3) = 30%"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKParalizeTime" operation="multiply" value="3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKParalizeTime"/> 
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze3s">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="3" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze6s">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="6" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdollParalyze9s">
+          <requirement name="CVarCompare" cvar=".iGSKParalizeTime" operation="Equals" value="9" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKBeastFangsHoldup" help="to compensate not being able to control player ragdoll time. to work also like spider net TODO: spider net thru ranged attack"/>
+      </effect_group>
+-->
+    </buff>
+    <buff name="buffGSKSnakePoisonDmgIndicator" hidden="false" icon="7dtdPoison" icon_blink="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+      <damage_type value="Toxic"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKNearDeathPoisonLvl"/>
+      <display_value_key value="{0:0.0}/5"/>
+    </buff>
+    <buff name="buffGSKSnakePoisonWork55" hidden="true" name_key="buffGSKSnakePoisonName" description_key="buffGSKSnakePoisonDesc">
+      <damage_type value="Toxic"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <display_value value="iGSKNearDeathPoisonLvl"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <effect_group name="poison damage">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="1500" help="it is 300 per ND lvl, so max is 5. this is good also to limit the required antidotes to be used. It subtracts 1 HP per 3s poison duration, to it is like 500HP max possible damage. Antidote is 250-500, so it will require 3-6 antidotes to cure it all. But a single mini spider may bite enough to quickly reach 1500.">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="1500"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="antidote cures poison">
+        <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonSub" operation="set" value="300">
+          <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GTE" value="300"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonSub" operation="set" value="@iGSKPoisonAntidoteDur">
+          <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="LT" value="300"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonSub" operation="set" value="@iGSKPoisonDur">
+          <requirement name="CVarCompare" cvar="iGSKPoisonSub" operation="GT" value="@iGSKPoisonDur"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonAntidoteDur" operation="subtract" value="@iGSKPoisonSub"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="subtract" value="@iGSKPoisonSub"/>
+      </effect_group>
+      <effect_group name="antidote stays much longer if no poison">
+        <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonAntidoteDur" operation="subtract" value="1"/>
+      </effect_group>
+      <effect_group name="poison damage">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="subtract" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSnakePoisonWork55">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="1.0">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="TODO: what is lg (hard) and sm (weak)?">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.25"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painsm">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GTE" value="1"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.25"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.50"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="set" value="@iGSKPoisonDur"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="divide" value="300"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSnakePoisonDmgIndicator">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSnakePoisonDmgIndicator">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKSnakePoisonDmgIndicator"/>
+      </effect_group>
+      <effect_group help="poison prevents radiated zombie regen power">
+        <requirement name="EntityTagCompare" tags="radiated"/>
+        <requirement name="!HasBuff" buff="buffRadiatedRegenBlock"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffRadiatedRegenBlock"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKSpiderNet11" hidden="false" icon_blink="true" icon="7dtdSpiderNet" icon_color="255,255,255" help="TODO: spider net icon" description_key="dkbuffGSKSpiderNet" remove_on_death="true">
+      <damage_type value="Stun"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.33"/>
+      <effect_group>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0,0.90,0.90" duration="0,1,900" help="the 1st second of a running zombie will let it pass thru the trap so another can go thru too"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0,0.90,0.90" duration="0,1,900"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.50"/>
+        <!-- HELPGOOD: the player have to act for it to work -->
+        <triggered_effect trigger="onSelfCrouch" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfStand" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@iGSKMeleeParryChance"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfJump" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+          <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="buffOrderFollow"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+          <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+          <requirement name="EntityTagCompare" tags="bear"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="4"/>
+          <requirement name="EntityTagCompare" tags="mountainlion"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="3"/>
+          <requirement name="EntityTagCompare" tags="boar"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="2"/>
+          <requirement name="EntityTagCompare" tags="dog"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="2"/>
+          <requirement name="EntityTagCompare" tags="wolf"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKSpiderNet11" help="like 3% per second?">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEquippedPoisonedAmmo" hidden="false" icon="7dtdPoison" icon_color="0,255,255" description_key="dkbuffGSKEquippedPoisonedAmmo" help="this is only an indicator, not the power itself. see buffGSKSnakePoison being added only by poisoned arrow">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+    </buff>
+    <buff name="buffGSKSpiderQueenSpawnsMiniSpidersOnDeath" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfDied" action="CallGameEvent" event="eventGSKSpawnSpiderMiniFromQueen"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKSteppingOnGrass" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="5"/>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="SpawnMiniSpider:countdown. Forest has more spiders.">
+      <requirement name="!IsBloodMoon" help="to avoid this that would just be an annoyance"/>
+      <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="LTE" value="0" help="TODO: count how many spiders are nearby and stop the countdown if there is any"/>
+      <!--        HELPGOOD: these are mainly the countdown between spawns, no need to be sheltered-->
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-2" help="forest spawns spiders faster indoors">
+        <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="GT" value="10"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="other biomes than forest have a slow spawn rate and only if sheltered">
+        <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="GT" value="10"/>
+      </triggered_effect>
+      <!--        HELPGOOD: this will let spawns happen only when sheltered-->
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="">
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors, wilderness or not well sheltered"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="10"/>
+      </triggered_effect>
+      <!--        HELPGOOD: this will let spawns happen in tall grass. stepping on grass may wakeup a spider-->
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-1" help="">
+        <requirement name="HasBuff" buff="buffGSKSteppingOnGrass"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="EntityHasMovementTag" tags="walking"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="-3" help="">
+        <requirement name="HasBuff" buff="buffGSKSteppingOnGrass"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="EntityHasMovementTag" tags="running"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(1,4)">
+        <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(-1,2)" help="why -1? this means 50% chance to not spawning: -1 0 1 2">
+        <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="SpawnMiniSpider:DoIt. many spiders spawning at once will increase the cooldown. in 24h = 60min irl, 2m30s irl = 1h game time. so 30min irl = 12h game time">
+      <requirement name="CVarCompare" cvar=".iGSKSpawnSpiderMiniCount" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKSpawnSpiderMiniCount"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
+        <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnSpiderMini">
+        <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GTE" value="0.30" help="indoors"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="[TNM] A spider is hungrily watching you..."/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="randomInt(300,600)">
+        <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="randomInt(600,1200)">
+        <requirement name="!InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="Poison work">
+      <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSnakePoisonWork55">
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKPoisonAntidoteDur" operation="GT" value="0"/>
+        </requirements>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']/effect_group[@name='onSelfDied:Work']">
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="0"/>
+  </append>
+</GhussakTweaks>

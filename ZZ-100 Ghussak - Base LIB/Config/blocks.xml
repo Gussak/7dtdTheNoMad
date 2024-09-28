@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/blocks/block[@name='cobweb']">
+    <drop event="Destroy" name="cobweb" count="1" prob="0.25"/>
+  </append>
+  <append xpath="/blocks">
+    <block name="barbedCobWebFence">
+      <property name="Extends" value="barbedFence"/>
+      <property name="CustomIcon" value="barbedFence"/>
+      <property name="CustomIconTint" value="128,220,128"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="Damage_received" value="1"/>
+      <property name="MaxDamage" value="1000"/>
+      <property name="BuffsWhenWalkedOn" value="buffGSKSpiderNet11"/>
+      <property class="RepairItems">
+        <property name="cobweb" value="100"/>
+        <property name="ammoProjectileSpiderWebPlayer" value="50"/>
+      </property>
+      <drop event="Destroy" name="cobweb" count="1,2"/>
+    </block>
+  </append>
+  <append xpath="/blocks">
+    <block name="looseBoardsTrapShapesGSK" shapes="All">
+      <property name="Extends" value="looseBoardsTrapPoleCentered"/>
+      <property name="Group" value="Building,advBuilding"/>
+      <property name="Texture" value="552" help="painting:txName_GraniteBlack/TextureId"/>
+      <property name="Material" value="Mconcrete"/>
+      <property name="MaxDamage" value="3000" help="like all the concrete around it. meant mainly to be destroyed thru collapsing structure."/>
+    </block>
+    <block name="trapSpikesPoisonGSK">
+      <property name="Extends" value="trapSpikesWoodMaster"/>
+      <property name="CreativeMode" value="Dev"/>
+      <property name="Model" value="Entities/Traps/woodSpikesTrap2BloodPrefab"/>
+      <property class="RepairItems">
+        <property name="GSKsnakePoison" value="10"/>
+      </property>
+      <property name="Damage" value="1"/>
+      <property name="Damage_received" value="1"/>
+      <property name="MaxDamage" value="30"/>
+      <property name="FuelValue" value="50"/>
+      <property name="CustomIcon" value="trapSpikesWoodDmg2"/>
+      <property name="CustomIconTint" value="0,180,180"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="BuffsWhenWalkedOn" value="buffGSKSnakePoisonFromTrapDelayed" help="the class TrunkTip apparently is what calls this buff like 10x/s! so the final buff must be delayed"/>
+      <property name="CanPickup" value="false"/>
+      <property name="Stacknumber" value="10"/>
+      <drop event="Harvest" name="GSKsnakePoison" count="0,2" tag="allHarvest"/>
+      <drop event="Harvest" name="resourceWood" count="2,3" tag="allToolsHarvest"/>
+    </block>
+    <block name="trapMinePseudoLooseBoardGSK" help="copied from rScrapIronPlateMine. Must not extend to prevent dropping things on fall event. This is meant to instantly trigger faster than loose boards and cause almost no damage to entities, but cause enough damage to trigger nearby loose boards and others of this same mine">
+      <property name="CustomIcon" value="looseBoardsTrapPlate1x1"/>
+      <property name="CustomIconTint" value="0,180,180"/>
+      <property name="TriggerDelay" value="0.05"/>
+      <property name="Texture" value="342,342,173,173,173,173"/>
+      <property name="Explosion.ParticleIndex" value="0"/>
+      <property name="Explosion.BlockDamage" value="100"/>
+      <property name="Explosion.EntityDamage" value="1"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="true"/>
+      <property name="StabilitySupport" value="true" help="meant to be like loose boards"/>
+      <property name="CanPickup" value="false"/>
+      <property name="Class" value="Mine"/>
+      <property name="Tags" value="Mine"/>
+      <property name="ItemTypeIcon" value="explosion"/>
+      <property name="UnlockedBy" value="perkDemolitionsExpert"/>
+      <property name="Material" value="MLandMine"/>
+      <property name="Shape" value="New"/>
+      <property name="Model" value="Plate"/>
+      <property name="Stacknumber" value="65535"/>
+      <property name="MaxDamage" value="4"/>
+      <property name="TriggerSound" value="landmine_trigger"/>
+      <property name="Explosion.RadiusBlocks" value="2"/>
+      <property name="Explosion.RadiusEntities" value="3"/>
+      <property name="Explosion.DamageBonus.stone" value="0.1"/>
+      <property name="Explosion.DamageBonus.metal" value="0.1"/>
+      <property name="Explosion.DamageBonus.earth" value="0"/>
+      <property name="Explosion.DamageBonus.wood" value="0"/>
+      <property name="Explosion.DamageBonus.water" value="0"/>
+      <drop event="Destroy" count="0"/>
+      <property name="Group" value="Tools/Traps"/>
+      <property name="FilterTags" value="MC_building,SC_traps"/>
+      <property name="SortOrder1" value="70g0"/>
+    </block>
+  </append>
+  <append xpath="/blocks">
+    <block name="trapJumpPadGSK" shapes="All">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="EconomicValue" value="50"/>
+      <property name="DescriptionKey" value="dkbuffGSKJumpPad"/>
+      <!-- HELPGOOD: todo try to use only this shape from shapes.xml
+	<shape name="pillar100Plate">
+		<property name="Shape" value="New" />
+		<property name="Model" value="pillar100_plate" />
+		<property name="CustomIcon" value="shapePillar100Plate" />
+-->
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="592" help="painting:txName_Concrete_mustard:139/TextureId:592"/>
+      <property name="UiBackgroundTexture" value="65"/>
+      <property name="CustomIcon" value="shapeArrowSlitHalfCross"/>
+      <property name="CustomIconTint" value="32,32,64"/>
+      <property name="CustomIconTint" value="220,200,128"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKJumpPad"/>
+      <property name="CanPickup" value="true"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+    <block name="trapJumpPadGSK2">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="EconomicValue" value="50"/>
+      <property name="DescriptionKey" value="dkbuffGSKJumpPad"/>
+      <property name="CustomIcon" value="shapeArrowSlitHalfCross"/>
+      <property name="CustomIconTint" value="220,200,128"/>
+      <property name="Model" value="arrow_slit_half_cross"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="592" help="painting:txName_Concrete_mustard:139/TextureId:592"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKJumpPad"/>
+      <property name="CanPickup" value="true"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+    <block name="trapJumpPadGSK2x3">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="EconomicValue" value="150"/>
+      <property name="DescriptionKey" value="dkbuffGSKJumpPad"/>
+      <property name="CustomIcon" value="shapeArrowSlitHalfCross"/>
+      <property name="CustomIconTint" value="220,200,128"/>
+      <property name="Model" value="arrow_slit_half_cross"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="592" help="painting:txName_Concrete_mustard:139/TextureId:592"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKJumpPadx3a"/>
+      <property name="CanPickup" value="true"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+    <block name="trapJumpPadGSK2x9">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="EconomicValue" value="450"/>
+      <property name="DescriptionKey" value="dkbuffGSKJumpPad"/>
+      <property name="CustomIcon" value="shapeArrowSlitHalfCross"/>
+      <property name="CustomIconTint" value="220,200,128"/>
+      <property name="Model" value="arrow_slit_half_cross"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="592" help="painting:txName_Concrete_mustard:139/TextureId:592"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKJumpPadx9a"/>
+      <property name="CanPickup" value="true"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+    <block name="trapTeleportPadY50">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="Model" value="billboard"/>
+      <property name="CustomIcon" value="looseBoardsTrapPlate1x1"/>
+      <property name="CustomIconTint" value="255,0,0"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="540" help="painting:txName_Concrete_red:156/TextureId:540"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKTrapPOIWERaboveCrafters"/>
+      <property name="CanPickup" value="true"/>
+      <property name="EconomicValue" value="1000"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+  </append>
+  <append xpath="/blocks/block[@name='cntWoodBurningStove']">
+    <property name="BuffsWhenWalkedOn" value="buffCampfireAOE"/>
+  </append>
+</GhussakTweaks>

@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs" help="mutants powers">
+    <buff name="buffGSKPsyResistWork28" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="fGSKPsyResistDur"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="add" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork28">
+          <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKMutant_ChkAndApplyOnMobs21" hidden="true">
       <stack_type value="replace"/>
       <duration value="0"/>

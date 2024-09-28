@@ -100,5 +100,40 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffFortifyingGripDebuffOT" hidden="false" remove_on_death="true" name_key="FortifyingGripDebuff" description_key="dkbuffFortifyingGripDebuffOT" icon="7dtdShockTip" icon_blink="true" icon_color="255,128,128">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="0.2" help="max rads is 100.0">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffFortifyingGripDebuffAttack" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group help="do not mess with stamina because HP is already very low">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="set" value="0.0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKfortGripDebuff" operation="add" value="0.1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value=".1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKfortGripDebuff" help="max rads is 100.0"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
   </append>
 </GhussakTweaks>
