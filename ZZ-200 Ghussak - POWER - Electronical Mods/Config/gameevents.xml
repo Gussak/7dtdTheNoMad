@@ -11,9 +11,10 @@
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
       <!--
-      HELPGOOD: explosion MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH. disintegrates blocks to let a safe teleport.
-      ExplodeTarget seems to require the player to be standing somewhere and not falling (standing nowhere).
-      ExplodePosition too...
+      HELPGOOD:
+      explosion MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH.
+      disintegrates blocks to let a safe teleport.
+      ExplodeTarget seems to require the player to be in somewhere valid, be standing somewhere or falling in air (not in an invalid location like inside/below the terrain), ExplodePosition too...
 -->
       <action class="ExplodePosition" help="FAIL: trying to explode where the player will teleport to while the player is standing on the ground">
         <property name="phase" value="10"/>
@@ -31,7 +32,7 @@
         <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
       </action>
-      <action class="BlockReplace" help="after teleport">
+      <action class="BlockReplace" help="after teleport ISSUE: seems to require to be in a valid location not inside terrain">
         <property name="phase" value="14"/>
         <property name="min_offset" value="-2,-2,-2"/>
         <property name="max_offset" value="2,3,2"/>
@@ -100,7 +101,19 @@
       <variable name="iXplodRangeBlock" value="4"/>
     </action_sequence>
     <action_sequence name="eventGSKexplodeUnderground">
+      <action class="BlockReplace" help="after teleport">
+        <property name="phase" value="14"/>
+        <property name="min_offset" value="-2,-52,-2"/>
+        <property name="max_offset" value="2,-48,2"/>
+        <property name="block_to" value="air"/>
+        <property name="allow_terrain" value="true"/>
+        <!-- HELPGOOD: prevent disintegrating spawners how? needed? is just this one?
+				<property name="exclude_tags" value="twitchHordeStone" />
+-->
+        <property name="safe_allowed" value="true"/>
+      </action>
       <action class="ExplodePosition">
+        <property name="phase" value="15"/>
         <property name="offset_type" value="Relative" help="ISSUE: is ignored?"/>
         <property name="position" value="0,-50,0" help="ISSUE: is ignored?"/>
         <property name="target_position" value="0,-50,0" help="ISSUE: is ignored?"/>
