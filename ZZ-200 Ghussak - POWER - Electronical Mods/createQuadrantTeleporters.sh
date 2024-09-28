@@ -46,7 +46,7 @@ CFGFUNCtrash "${strFlGenBuf}TeleQuadrantLog${strGenTmpSuffix}"&&:
 
 iTeleportIndexBase=55000 #TODO: collect thru xmlstarlet from buffs.xml: IMPORTANT! this must be in sync with the value at buffs: .iGSKElctrnTeleSpawnBEGIN
 iTeleportIndex=$iTeleportIndexBase
-iTeleportMaxAllowed=200 #TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
+iTeleportMaxAllowed=100 # was 200(?) on A20, but seems to be 100 on A22, or it wont work. TODO: a buff with too many tests may simply fail right? may be it could be split into buffs with range of 100 checks each
 iTeleportMaxAllowedIndex=$((iTeleportIndex + iTeleportMaxAllowed))&&: 
 iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
