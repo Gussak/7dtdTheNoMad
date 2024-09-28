@@ -16,32 +16,23 @@
       disintegrates blocks to let a safe teleport.
       ExplodeTarget seems to require the player to be in somewhere valid, be standing somewhere or falling in air (not in an invalid location like inside/below the terrain), ExplodePosition too...
 -->
+      <!-- HELPGOOD
       <action class="ExplodePosition" help="FAIL: trying to explode where the player will teleport to while the player is standing on the ground">
-        <property name="phase" value="10"/>
+        <property name="phase" value="10" />
         <property name="position" value="0,0,0" param1="v3Dir" help="ISSUE: is ignored?"/>
         <property name="target_position" value="0,0,0" param1="v3Dir" help="ISSUE: is ignored?"/>
         <property name="offset_type" value="Relative" help="ISSUE: is ignored?"/>
-        <property name="blast_power" value="75"/>
+        <property name="blast_power" value="75" />
         <property name="block_damage" value="32000" param1="iXplodDmgBlk"/>
         <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
-        <property name="entity_damage" value="0"/>
-        <property name="entity_radius" value="0"/>
+        <property name="entity_damage" value="0" />
+        <property name="entity_radius" value="0" />
       </action>
+-->
       <action class="Teleport">
         <property name="phase" value="13"/>
         <property name="target_position" value="0,0,0" param1="v3Dir"/>
         <property name="offset_type" value="Relative"/>
-      </action>
-      <action class="BlockReplace" help="after teleport ISSUE: seems to require to be in a valid location not inside terrain">
-        <property name="phase" value="14"/>
-        <property name="min_offset" value="-2,-2,-2"/>
-        <property name="max_offset" value="2,3,2"/>
-        <property name="block_to" value="air"/>
-        <property name="allow_terrain" value="true"/>
-        <!-- HELPGOOD: prevent disintegrating spawners how? needed? is just this one?
-				<property name="exclude_tags" value="twitchHordeStone" />
--->
-        <property name="safe_allowed" value="true"/>
       </action>
       <action class="ExplodeTarget" help="FAIL: will not explode around the player after teleport, I think it is because the player is in an invalid location (inside the terrain and not stepping over it even if in an underground cave)">
         <property name="phase" value="16"/>
@@ -96,13 +87,9 @@
     <action_sequence name="eventGSKElctrnTeleNoBlockDmg" template="eventGSKElctrnTele">
       <variable name="iXplodDmgBlk" value="0"/>
     </action_sequence>
-    <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety" template="eventGSKElctrnTele">
-      <variable name="v3Dir" value="0,-50,0" help="this far down to also help stay away of mutants psyonic attack and rads range"/>
-      <variable name="iXplodRangeBlock" value="4"/>
-    </action_sequence>
-    <action_sequence name="eventGSKexplodeUnderground">
+    <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety">
       <action class="BlockReplace" help="after teleport">
-        <property name="phase" value="14"/>
+        <property name="phase" value="10"/>
         <property name="min_offset" value="-2,-52,-2"/>
         <property name="max_offset" value="2,-48,2"/>
         <property name="block_to" value="air"/>
@@ -112,16 +99,18 @@
 -->
         <property name="safe_allowed" value="true"/>
       </action>
-      <action class="ExplodePosition">
-        <property name="phase" value="15"/>
-        <property name="offset_type" value="Relative" help="ISSUE: is ignored?"/>
-        <property name="position" value="0,-50,0" help="ISSUE: is ignored?"/>
-        <property name="target_position" value="0,-50,0" help="ISSUE: is ignored?"/>
-        <property name="blast_power" value="75"/>
-        <property name="block_damage" value="32000"/>
-        <property name="block_radius" value="4"/>
-        <property name="entity_damage" value="0"/>
-        <property name="entity_radius" value="0"/>
+      <action class="Delay" help="otherwise the block replace wont happen before player being moved to invalid location inside terrain">
+        <property name="phase" value="20"/>
+        <property name="time" value="0.5"/>
+      </action>
+      <action class="Teleport" help="as a template/variable cant be used with CallGameEvent, this grants the teleport">
+        <property name="phase" value="30"/>
+        <property name="target_position" value="0,-50,0"/>
+        <property name="offset_type" value="Relative"/>
+      </action>
+      <action class="CallGameEvent" help="this is mainly to call all the explosions there">
+        <property name="phase" value="40"/>
+        <property name="game_events" value="eventGSKElctrnTele"/>
       </action>
     </action_sequence>
     <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
