@@ -882,7 +882,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGGameFolder
   export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
   
-  : ${strCFGBaseLIBFolder:="$(find ../ -type d -iname "*Ghussak - Base LIB*"&&:)"} #help
+  : ${strCFGBaseLIBFolder:="$(find ../ -maxdepth 1 -type d -iname "*Ghussak - Base LIB*"&&:)"} #help
   
   : ${strCFGAppDataFolder:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/"}&&: #help
   : ${strCFG7dtdAppDataFolder:="${strCFGAppDataFolder}/7DaysToDie/"}&&: #help
@@ -943,27 +943,30 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   
   export strGenTmpSuffix=".GenCode.UpdateSection.TMP"
   
-  strFlScriptDepsCmds="ScriptsDependencies.AddedToRelease.Commands.txt"
-  strFlScriptDepsPkgs="ScriptsDependencies.AddedToRelease.Packages.txt"
+  strFlScriptDepsCmds="${strCFGBaseLIBFolder}/ScriptsDependencies.AddedToRelease.Commands.txt"
+  strFlScriptDepsPkgs="${strCFGBaseLIBFolder}/ScriptsDependencies.AddedToRelease.Packages.txt"
   if [[ -f "$strFlScriptDepsCmds" ]];then
-		iMissingCmdCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "`find ../ -maxdepth 2 -name "$strFlScriptDepsCmds"`")&&:;for strFl in "${astrFlList[@]}";do if ! which "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux command is missing: '$strFl'";((iMissingCmdCount++))&&:;fi;done
+		iMissingCmdCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "$strFlScriptDepsCmds")&&:;for strFl in "${astrFlList[@]}";do if ! which "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux command is missing: '$strFl'";((iMissingCmdCount++))&&:;fi;done
 		if((iMissingCmdCount>0));then
-			if [[ -f "$strFlScriptDepsPkgs" ]];then
-				strFlPkgDeps="`find ../ -maxdepth 2 -name "$strFlScriptDepsPkgs"`"
-				iMissingPkgsCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "${strFlPkgDeps}")&&:;for strFl in "${astrFlList[@]}";do if ! dpkg -s "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux PACKAGE is missing: '$strFl'";((iMissingPkgsCount++))&&:;fi;done
-				if((iMissingPkgsCount>0));then
-					if ! CFGFUNCprompt -q "WARNING: PROBLEM! There are missing command(s) and package(s) above, continue anyway? But you should install them first if possible. Removing the package from the file '${strFlPkgDeps}' will prevent this message prompt on next run.";then
-						CFGFUNCerrorExit "MissingCmdsPgks"
+			if which dpkg >/dev/null;then
+			
+				if [[ -f "$strFlScriptDepsPkgs" ]];then
+					iMissingPkgsCount=0;IFS=$'\n' read -d '' -r -a astrFlList < <(cat "${strFlScriptDepsPkgs}")&&:;for strFl in "${astrFlList[@]}";do if ! dpkg -s "$strFl" >/dev/null;then CFGFUNCinfo "WARNING: this linux PACKAGE is missing: '$strFl'";((iMissingPkgsCount++))&&:;fi;done
+					if((iMissingPkgsCount>0));then
+						if ! CFGFUNCprompt -q "WARNING: PROBLEM! There are missing command(s) and package(s) above, continue anyway? But you should install them first if possible. Removing the package from the file '${strFlScriptDepsPkgs}' will prevent this message prompt on next run.";then
+							CFGFUNCerrorExit "MissingCmdsPgks"
+						fi
+					fi
+				else
+					if ! CFGFUNCprompt -q "WARNING: The file '$strFlScriptDepsPkgs' is missing, so packages dependencies can't be checked, continue anyway?";then
+						CFGFUNCerrorExit "MissingDepsFile"
 					fi
 				fi
-			else
-				if ! CFGFUNCprompt -q "WARNING: The file '$strFlScriptDepsPkgs' is missing, so dependencies can't be checked, continue anyway?";then
-					CFGFUNCerrorExit "MissingDepsFile"
-				fi
-			fi
-		fi
+				
+			fi #if which dpkg >/dev/null;then
+		fi #if((iMissingCmdCount>0));then
 	else
-		if ! CFGFUNCprompt -q "WARNING: The file '$strFlScriptDepsCmds' is missing, so dependencies can't be checked, continue anyway?";then
+		if ! CFGFUNCprompt -q "WARNING: The file '$strFlScriptDepsCmds' is missing, so commands dependencies can't be checked, continue anyway?";then
 			CFGFUNCerrorExit "MissingDepsFile"
 		fi
 	fi

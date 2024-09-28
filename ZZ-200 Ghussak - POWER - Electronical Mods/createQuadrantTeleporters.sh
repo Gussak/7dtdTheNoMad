@@ -52,10 +52,15 @@ iTeleportMaxIndex=$iTeleportIndex
 iTeleportIndexFirst=-1
 
 : ${iMapSize:=10240} #help for X and Z
-: ${iDivMapSizeBy:=13} #help for X and Z. could be 10x10, but using the max possible (right?) limit of buff's triggered_effect list iTeleportMaxAllowed
+: ${iDivMapSizeBy:=9} #help for X and Z. could be 10x10, but using the max possible (right?) limit of buff's triggered_effect list iTeleportMaxAllowed #was 13 on A20, had to lower to 9 on A22
 : ${iMarginMapEdges:=250} #help for X and Z, consider a good distance away from the radiactive borders
-iDistQuadrant=$(( (iMapSize - (iMarginMapEdges * 2)) / iDivMapSizeBy ))
 : ${iTeleAtY:=260} #help just above max placeable block
+
+if(( (iDivMapSizeBy+1) * (iDivMapSizeBy+1) > iTeleportMaxAllowed ));then
+	CFGFUNCerrorExit "PROBLEM: (iDivMapSizeBy+1) * (iDivMapSizeBy+1) must be less than iTeleportMaxAllowed"
+fi
+
+iDistQuadrant=$(( (iMapSize - (iMarginMapEdges * 2)) / iDivMapSizeBy ))
 bStop=false
 for((iIndexZ=0; iIndexZ<=iDivMapSizeBy; iIndexZ++));do
 	for((iIndexX=0; iIndexX<=iDivMapSizeBy; iIndexX++));do
@@ -105,7 +110,7 @@ for((iIndexZ=0; iIndexZ<=iDivMapSizeBy; iIndexZ++));do
 		iTeleportMaxIndex=$iTeleportIndex
 		if((iTeleportMaxIndex > iTeleportMaxAllowedIndex));then bStop=true;break;fi
 	done
-	if $bStop;then CFGFUNCerrorExit "PROBLEM: not all tele targets were made available, but for quadrants it should all be available!";fi
+	if $bStop;then CFGFUNCerrorExit "PROBLEM: it was not possible to make all quadrant tele targets available, try lowering iTeleportMaxAllowed value";fi
 done
 
 CFGFUNCgencodeApply "${strFlGenBuf}${strGenTmpSuffix}" "${strFlGenBuf}"
