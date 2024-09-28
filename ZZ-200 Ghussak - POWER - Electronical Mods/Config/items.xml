@@ -688,6 +688,7 @@
       <property name="CustomIconTint" value="80,80,128"/>
       <property class="Action1">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="PlayerLevel" operation="LT" value="2" help="only meant to be used just after joining"/>
         <requirement name="!IsBloodMoon" help="this is not enough, player may use it just before bloodmoon kicks in.. TODO:ISSUE?: the engine may even not spawn zombs properly if player is that far away underground?"/>
         <property name="Class" value="Eat" help="because 2nd actiom must also consume!"/>
       </property>
@@ -705,25 +706,11 @@
       <property name="CustomIconTint" value="80,80,80"/>
       <property class="Action1">
         <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="PlayerLevel" operation="LT" value="2" help="only meant to be used just after joining"/>
         <property name="Class" value="Eat" help="to be consumed at secondary action"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-1" help="Snow">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="9"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-3" help="PineForest">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-5" help="Desert">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="3"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-8" help="Wasteland">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-9" help="BurntForest">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCycleBiomeChoice"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="set" value="1"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
         <!-- HELPGOOD: this tho is not chaotic as buffGSKTeleRandomQuadrantTilMatchBiome
@@ -746,22 +733,11 @@
         <property name="Class" value="Eat" help="to be consumed at secondary action"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-1" help="Snow">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="9"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-3" help="PineForest">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-5" help="Desert">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="3"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-8" help="Wasteland">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-9" help="BurntForest">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCycleBiomeChoice"/>
+        <!-- HELPGOOD: this tho is not chaotic as buffGSKTeleRandomQuadrantTilMatchBiome
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
+-->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
@@ -1261,5 +1237,5 @@
     </effect_group>
   </append>
   <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,GSKElctrnTeleportToBiomeFreeAndSafeCall,GSKElctrnTeleportUndergroundFreeAndSafeCall</append>
-  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value">,1,1</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value" help="there is 2 because the underground teleport may be impossible to use initially where the player was random spawned, if player is below 60 ground elevation and unable to flee enough from enemies">,2,2</append>
 </GhussakTweaks>
