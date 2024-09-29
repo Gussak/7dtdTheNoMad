@@ -152,7 +152,7 @@ particle="torch02_firePrefab"
     <property name="LootDropEntityClass" value="EntityLootContainerMutant"/>
   </append>
   <append xpath="/entity_classes/entity_class[@name='playerMale']">
-    <effect_group>
+    <effect_group help="Vampire drain HP">
       <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="5">
         <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
@@ -167,6 +167,17 @@ particle="torch02_firePrefab"
         <requirement name="!EntityTagCompare" target="other" tags="mech"/>
         <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="other"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="Wight drain stamina">
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyStats" stat="Stamina" operation="add" value="25">
+        <requirement name="!EntityTagCompare" target="other" tags="zombie" help="only the living provides proper healing for the player"/>
+        <requirement name="!EntityTagCompare" target="other" tags="mech"/>
+        <requirement name="IsAlive" target="other" help="cuz shall not allow easy heal from fresh corpse"/>
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         <requirement name="!HasBuff" buff="buffGSKNPCproperSneakingProtectFoes" target="other"/>
         <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
         <requirement name="HoldingItemHasTags" tags="perkDeepCuts,perkJavelinMaster" help="only weapons that can pierce or cut, spears will work on melee only"/>

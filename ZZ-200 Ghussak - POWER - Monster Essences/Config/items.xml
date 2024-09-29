@@ -273,9 +273,9 @@
       <property name="DropScale" value="1.5"/>
       <property name="Explosion.BlockDamage" value="0"/>
       <property name="Explosion.EntityDamage" value="10" help="ISSUE:TODO: should be just 1 or 0 but triggers wont work if not at least 10?"/>
-      <property name="Explosion.ParticleIndex" value="0" help="20 ISSUE:TODO: should be 0 or something not visible but seems to not work to apply the buff?"/>
+      <property name="Explosion.ParticleIndex" value="0"/>
       <property name="Explosion.RadiusBlocks" value="0"/>
-      <property name="Explosion.RadiusEntities" value="4" help="ISSUE:TODO: should be just 0.05, one entity"/>
+      <property name="Explosion.RadiusEntities" value="2.5" help="ISSUE:TODO: should be just 0.05, one entity. it tries to reach the feet? so if it exploded on the head, shoud be at least 2 radius?"/>
       <property name="Explosion.DamageBonus.earth" value="0"/>
       <property name="Explosion.DamageBonus.water" value="0"/>
       <property name="Explosion.BlastPower" value="0"/>
@@ -306,8 +306,13 @@
       <effect_group tiered="false">
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTarget"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTarget"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
       </effect_group>
     </item>
   </append>

@@ -584,18 +584,27 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKThrownBoneDartMarkTarget">
+    <buff name="buffGSKThrownBoneDartMarkTargetToDrain">
       <stack_type value="ignore"/>
-      <duration value="10" help="TODO: when it is working should be 3"/>
+      <duration value="0"/>
       <effect_group>
-        <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit" help="TODO: improve filter logic ISSUE: cant put animal as will accept npcAnimalFox, and ostile are also mechs that are inorganic. TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier.."/>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKThrownBoneDartTeleToTarget" target="selfAOE" range="300" target_tags="player"/>
-        <!-- HELPGOOD:
-				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTarget" help="when it is working enable this"/>
--->
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
+          <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKThrownBoneDartTeleToTarget">
+    <buff name="buffGSKThrownBoneDartMarkTargetToTeleport">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
+          <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit" help="TODO: improve filter logic ISSUE: cant put animal as will accept npcAnimalFox, and ostile are also mechs that are inorganic. TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier.."/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKThrownBoneDartFeedPlayer">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
@@ -603,10 +612,15 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5">
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToTarget">
-          <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="25">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartTeleToTarget"/>
+        <!-- HELPGOOD: fails
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToTarget">
+					<requirement name="HasBuff" buff="buffGSKMutantEssence" />
+				</triggered_effect>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartFeedPlayer"/>
       </effect_group>
     </buff>
   </append>
