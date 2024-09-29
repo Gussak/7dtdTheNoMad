@@ -283,6 +283,7 @@
       <property name="FusePrimeOnActivate" value="true"/>
       <property name="ExplodeOnHit" value="true"/>
       <property name="StickPercent" value=".5"/>
+      <property name="SellableToTrader" value="false"/>
       <property class="Action0">
         <property name="Class" value="ThrowAway" help="ISSUE: ThrowAway makes it rotate.. but A20 ThrownWeapon had some issues right?"/>
         <property name="Delay" value="1.2"/>
@@ -294,10 +295,52 @@
       <property class="Action1">
         <property name="Class" value="Activate"/>
         <property name="Delay" value="0.33"/>
-        <property name="Sound_start" value="swoosh"/>
+        <property name="Sound_start" value="grenade_pullpin" help="better be this as has no animation"/>
       </property>
       <property name="ThrowableDecoy" value="true"/>
       <property name="DistractionTags" value="zombie,requires_contact"/>
+      <effect_group name="decoy" tiered="false">
+        <passive_effect name="DistractionRadius" operation="base_set" value="25"/>
+        <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
+        <passive_effect name="DistractionStrength" operation="base_set" value="100"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="0"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="10"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      </effect_group>
+    </item>
+    <item name="thrownBoneDart2GSK">
+      <property name="Extends" value="thrownBoneDartGSK"/>
+      <property name="IsSticky" value="true"/>
+      <property name="StickyOffset" value=".7"/>
+      <property name="StickyColliderUp" value="1"/>
+      <property name="StickyColliderRadius" value=".1"/>
+      <property name="StickyColliderLength" value="2"/>
+      <property name="StickyForwardDirection" value="0,0,1"/>
+      <property name="NavObject" value="spear"/>
+      <property class="Action1">
+        <property name="Class" value="ThrownWeapon"/>
+        <property name="Hitmask_override" value="Bullet"/>
+        <property name="Delay" value="1.2"/>
+        <property name="Throw_strength_default" value="6"/>
+        <property name="Throw_strength_max" value="18"/>
+        <property name="Max_strain_time" value="1"/>
+        <property name="Sound_start" value="spear_throw"/>
+        <property name="Explosion.ParticleIndex" value="0"/>
+        <property name="FlyTime" value="0"/>
+        <property name="Gravity" value="-7.5"/>
+        <property name="LifeTime" value="60"/>
+        <property class="HitSounds">
+          <property name="Override0" value="organic" param1="metalstaborganic"/>
+        </property>
+      </property>
       <effect_group name="decoy" tiered="false">
         <passive_effect name="DistractionRadius" operation="base_set" value="25"/>
         <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
