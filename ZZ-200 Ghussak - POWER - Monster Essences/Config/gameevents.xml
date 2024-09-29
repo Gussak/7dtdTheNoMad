@@ -4,12 +4,19 @@
     <action_sequence name="eventGSKTeleToTarget">
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
-      <requirement class="HasSpawnedEntities">
-        <property name="entity_tags" value="entity"/>
-      </requirement>
-      <action class="AddSpawnedEntitiesToGroup" help="TODO: should be only the entity with buffGSKThrownBoneDartMarkTarget :(">
+      <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
-        <!-- HELPGOOD: how :( ?
+        <requirement class="HasBuff">
+          <property name="buff_name" value="buffGSKThrownBoneDartMarkTarget"/>
+        </requirement>
+        <property name="entity_tags" value="entity"/>
+        <property name="group_name" value="targetEntity"/>
+        <property name="max_distance" value="1000"/>
+        <property name="y_height" value="1000" help="only upwards or up and down? is a box or a cylinder?"/>
+      </action>
+      <!-- HELPGOOD: how :( ?
+			<action class="AddSpawnedEntitiesToGroup" help="TODO: should be only the entity with buffGSKThrownBoneDartMarkTarget :(">
+				<property name="phase" value="10" />
 				<requirement class="HasBuff">
 					<property name="buff_name" value="buffGSKThrownBoneDartMarkTarget" />
 				</requirement>
@@ -20,11 +27,12 @@ ArgumentNullException: Value cannot be null.
 Parameter name: collection
   at System.Collections.Generic.List`1[T].InsertRange (System.Int32 index, System.Collections.Generic.IEnumerable`1[T] collection) [0x00003] 				
   
-  ahhh... this more confusing than what I can handle... 
+too confusing... what can work where? so many restarts to try things... we need more examples to copy from...
+
+				<property name="group_name" value="targetEntity" />
+				<property name="entity_tags" value="entity" />
+			</action>
 -->
-        <property name="group_name" value="targetEntity"/>
-        <property name="entity_tags" value="entity"/>
-      </action>
       <action class="TeleportToTarget">
         <property name="phase" value="20"/>
         <property name="min_distance" value="1"/>
