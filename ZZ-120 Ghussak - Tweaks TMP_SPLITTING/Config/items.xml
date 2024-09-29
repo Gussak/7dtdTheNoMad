@@ -38938,26 +38938,6 @@
       <triggered_effect trigger="onSelfAttackedOther" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
     </effect_group>
   </append>
-  <append xpath="/items/item[       @name='meleeToolRepairT0StoneAxe' or       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT1IronKnuckles' or       @name='meleeWpnKnucklesT3SteelKnuckles'       ]">
-    <effect_group name="gore harvest" tiered="false">
-      <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
-        <requirement name="EntityTagCompare" tags="player" target="self"/>
-        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
-        <requirement name="!IsAlive" target="other"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
-        <requirement name="EntityTagCompare" tags="player" target="self"/>
-        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
-        <requirement name="!IsAlive" target="other"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="self" buff="buffGSKGoreHazard">
-        <requirement name="EntityTagCompare" tags="player" target="self"/>
-        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
-        <requirement name="!IsAlive" target="other"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[       @name='meleeToolRepairT1ClawHammer' or        @name='meleeToolRepairT0StoneAxe' or        @name='meleeToolRepairT3Nailgun'     ]/property[@class='Action1']/property[@name='Allowed_upgrade_items']/@value">,resourceMechanicalParts,resourceElectricParts</append>
   <set xpath="/items/item[@name='meleeToolSalvageT1Wrench']/property[@name='RepairTools']/@value">resourceMechanicalParts</set>
   <append xpath="/items">
     <item name="meleeToolSalvageT0MakeshiftWrench">
@@ -39026,16 +39006,6 @@
       <property name="Group" value="Tools/Traps"/>
       <property name="RepairExpMultiplier" value="5.5"/>
     </item>
-  </append>
-  <append xpath="/items/item[       @name='meleeToolSalvageT0MakeshiftWrench'   or       @name='meleeToolSalvageT1Wrench'            or       @name='meleeToolSalvageT2Ratchet'           or       @name='meleeToolSalvageT3ImpactDriver'     ]">
-    <effect_group tiered="false">
-      <triggered_effect trigger="onSelfSecondaryActionRayHit" target="other" action="ModifyStats" stat="Health" operation="add" value="-200" help="it ends like double damage with onSelfAttackedOther too">
-        <requirement name="EntityTagCompare" target="other" tags="mech"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyStats" stat="Health" operation="add" value="-200">
-        <requirement name="EntityTagCompare" target="other" tags="mech"/>
-      </triggered_effect>
-    </effect_group>
   </append>
   <append xpath="/items">
     <item name="drinkCanEmptyCookingOneUse">
