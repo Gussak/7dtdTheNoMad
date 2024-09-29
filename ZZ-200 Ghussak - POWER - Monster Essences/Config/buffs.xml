@@ -584,6 +584,31 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKThrownBoneDartMarkTarget">
+      <stack_type value="ignore"/>
+      <duration value="10" help="TODO: when it is working should be 3"/>
+      <effect_group>
+        <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit" help="TODO: improve filter logic ISSUE: cant put animal as will accept npcAnimalFox, and ostile are also mechs that are inorganic. TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier.."/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKThrownBoneDartTeleToTarget" target="selfAOE" range="300" target_tags="player"/>
+        <!-- HELPGOOD:
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTarget" help="when it is working enable this"/>
+-->
+      </effect_group>
+    </buff>
+    <buff name="buffGSKThrownBoneDartTeleToTarget">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToTarget">
+          <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartTeleToTarget"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[@action='AddBuff' and @buff='buffDrowning01']" help="Monster Essences: mutant essence lets you breath underwater">
     <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>

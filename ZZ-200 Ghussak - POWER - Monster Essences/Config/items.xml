@@ -255,6 +255,61 @@
         <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKEssenceWightMinStam"/>
       </effect_group>
     </item>
+    <item name="thrownBoneDartGSK">
+      <property name="Class" value="ItemClassTimeBomb"/>
+      <property name="HoldType" value="40"/>
+      <property name="Meshfile" value="@:Other/Items/Weapons/Melee/Knives/boneShivPrefab.prefab"/>
+      <property name="DropScale" value="6"/>
+      <property name="Material" value="MresourceBone"/>
+      <property name="CustomIcon" value="meleeWpnBladeT0BoneKnife"/>
+      <property name="CustomIconTint" value="128,180,220"/>
+      <property name="TintColor" value="128,180,220"/>
+      <property name="Stacknumber" value="1200" help="so you can turn all bones into this, but could be 300 to match 9mm stack"/>
+      <property name="EconomicValue" value="0"/>
+      <property name="SoundUnholster" value="weapon_unholster"/>
+      <property name="SoundHolster" value="weapon_holster"/>
+      <property name="SoundPickup" value="boneknife_grab"/>
+      <property name="SoundPlace" value="boneknife_place"/>
+      <property name="DropScale" value="1.5"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="10" help="ISSUE:TODO: should be just 1 or 0 but triggers wont work if not at least 10?"/>
+      <property name="Explosion.ParticleIndex" value="20" help="ISSUE:TODO: should be 0 or something not visible but seems to not work to apply the buff?"/>
+      <property name="Explosion.RadiusBlocks" value="0"/>
+      <property name="Explosion.RadiusEntities" value="4" help="ISSUE:TODO: should be just 0.05, one entity"/>
+      <property name="Explosion.DamageBonus.earth" value="0"/>
+      <property name="Explosion.DamageBonus.water" value="0"/>
+      <property name="Explosion.BlastPower" value="0"/>
+      <property name="FuseTime" value="6"/>
+      <property name="FusePrimeOnActivate" value="true"/>
+      <property name="ExplodeOnHit" value="true"/>
+      <property name="StickPercent" value=".5"/>
+      <property class="Action0">
+        <property name="Class" value="ThrowAway" help="ISSUE: ThrowAway makes it rotate.. but A20 ThrownWeapon had some issues right?"/>
+        <property name="Delay" value="1.2"/>
+        <property name="Throw_strength_default" value="8"/>
+        <property name="Throw_strength_max" value="60"/>
+        <property name="Max_strain_time" value="1.25"/>
+        <property name="Sound_start" value="swoosh"/>
+      </property>
+      <property class="Action1">
+        <property name="Class" value="Activate"/>
+        <property name="Delay" value="0.33"/>
+        <property name="Sound_start" value="swoosh"/>
+      </property>
+      <property name="ThrowableDecoy" value="true"/>
+      <property name="DistractionTags" value="zombie,requires_contact"/>
+      <effect_group name="decoy" tiered="false">
+        <passive_effect name="DistractionRadius" operation="base_set" value="25"/>
+        <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
+        <passive_effect name="DistractionStrength" operation="base_set" value="100"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <passive_effect name="BlockDamage" operation="base_set" value="0"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="10"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTarget"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTarget"/>
+      </effect_group>
+    </item>
   </append>
   <append xpath="/items/item[@name='GlowStickGreen']">
     <effect_group name="wight scared" tiered="false">

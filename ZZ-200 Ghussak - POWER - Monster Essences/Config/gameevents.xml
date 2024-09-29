@@ -1,6 +1,47 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/gameevents">
+    <action_sequence name="eventGSKTeleToTarget">
+      <property name="allow_user_trigger" value="true"/>
+      <property name="action_type" value="Game"/>
+      <requirement class="HasSpawnedEntities">
+        <property name="entity_tags" value="entity"/>
+      </requirement>
+      <action class="AddSpawnedEntitiesToGroup" help="TODO: should be only the entity with buffGSKThrownBoneDartMarkTarget :(">
+        <property name="phase" value="10"/>
+        <!-- HELPGOOD: how :( ?
+				<requirement class="HasBuff">
+					<property name="buff_name" value="buffGSKThrownBoneDartMarkTarget" />
+				</requirement>
+				
+ends up causing this endless flood error on log (shouldnt be just one error message?) :
+
+ArgumentNullException: Value cannot be null.
+Parameter name: collection
+  at System.Collections.Generic.List`1[T].InsertRange (System.Int32 index, System.Collections.Generic.IEnumerable`1[T] collection) [0x00003] 				
+  
+  ahhh... this more confusing than what I can handle... 
+-->
+        <property name="group_name" value="targetEntity"/>
+        <property name="entity_tags" value="entity"/>
+      </action>
+      <action class="TeleportToTarget">
+        <property name="phase" value="20"/>
+        <property name="min_distance" value="1"/>
+        <property name="max_distance" value="1000" help="this is a random distance near the target or a limit distance to allow the teleport?"/>
+        <property name="teleport_to_group" value="targetEntity"/>
+        <property name="safe_spawn" value="true"/>
+        <property name="air_spawn" value="true"/>
+      </action>
+      <action class="ExplodeTarget">
+        <property name="phase" value="30"/>
+        <property name="blast_power" value="75"/>
+        <property name="block_damage" value="32000"/>
+        <property name="block_radius" value="1"/>
+        <property name="entity_damage" value="32000"/>
+        <property name="entity_radius" value="1"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKSpawnHelper">
       <action class="SpawnEntity">
         <property name="entity_names" value="zombieWight" param1="strNameList"/>
