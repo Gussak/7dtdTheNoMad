@@ -621,12 +621,30 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
       </effect_group>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCheckAliveCanTeleToMe"/>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar=".fGSKDartTeleDoIt" operation="Equals" value="1"/>
         <requirement name="IsAlive"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCheckAliveCanTeleToMe" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="0">
+          <requirement name="!IsAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="1">
+          <requirement name="IsAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKCheckAliveCanTeleToMe"/>
       </effect_group>
     </buff>
     <buff name="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe" remove_on_death="false">

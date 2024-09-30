@@ -17,6 +17,11 @@
 -->
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
+        <!-- HELPGOOD
+				<requirement class="HasBuff" help="this is a check on the event caller entity or on the entity being added to the group????">
+					<property name="buff_name" value="buffGSKThrownBoneDartMarkTarget" />
+				</requirement>
+-->
         <property name="entity_tags" value="player"/>
         <property name="group_name" value="playerRequestingTeleport"/>
         <property name="max_distance" value="1000"/>
@@ -28,7 +33,12 @@
         <property name="buff_name" value="buffGSKGodModeForTeleport"/>
         <property name="target_group" value="playerRequestingTeleport"/>
       </action>
-      <action class="TeleportToTarget" help="target_to_group is this event entity caller">
+      <action class="TeleportToTarget" help="teleport_to_group is this event entity caller">
+        <requirement class="CVar">
+          <property name="cvar" value=".iGSKCanTeleportToMe"/>
+          <property name="operation" value="GT"/>
+          <property name="value" value="0"/>
+        </requirement>
         <property name="phase" value="20"/>
         <property name="min_distance" value="0"/>
         <property name="max_distance" value="0"/>
@@ -37,6 +47,11 @@
         <property name="air_spawn" value="true"/>
       </action>
       <action class="ExplodeTarget">
+        <requirement class="CVar">
+          <property name="cvar" value=".iGSKCanTeleportToMe"/>
+          <property name="operation" value="GT"/>
+          <property name="value" value="0"/>
+        </requirement>
         <property name="phase" value="30"/>
         <property name="blast_power" value="75"/>
         <property name="block_damage" value="32000"/>
