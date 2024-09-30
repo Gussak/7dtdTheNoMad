@@ -15,6 +15,10 @@
       <!-- HELPGOOD: this is simply completely preventing it from working at all, why? and without this may randomly cause a lot of endless error messages on the log..
 			<requirement class="HasParty" help="this one only detects the presence of player" />
 -->
+      <action class="AddChatMessage">
+        <property name="phase" value="10"/>
+        <property name="text" value="TNM:DEBUG:eventGSKpullPlayerToMe:BEGIN"/>
+      </action>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
         <property name="entity_tags" value="player"/>
@@ -27,6 +31,10 @@
         <property name="phase" value="15"/>
         <property name="buff_name" value="buffGSKGodModeForTeleport"/>
         <property name="target_group" value="playerRequestingTeleport"/>
+      </action>
+      <action class="AddChatMessage">
+        <property name="phase" value="20"/>
+        <property name="text" value="TNM:DEBUG:eventGSKpullPlayerToMe:TeleportToTarget"/>
       </action>
       <action class="TeleportToTarget" help="target_to_group is this event entity caller">
         <property name="phase" value="20"/>
@@ -43,6 +51,10 @@
         <property name="block_radius" value="1"/>
         <property name="entity_damage" value="32000"/>
         <property name="entity_radius" value="1"/>
+      </action>
+      <action class="AddChatMessage">
+        <property name="phase" value="1000"/>
+        <property name="text" value="TNM:DEBUG:eventGSKpullPlayerToMe:END"/>
       </action>
     </action_sequence>
     <action_sequence name="eventGSKTeleToLastPlacedBedroll">
