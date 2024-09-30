@@ -601,6 +601,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
           <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit,TeleportPlayerToMe" help="TODO: improve filter logic ISSUE: cant put animal as will accept npcAnimalFox, and ostile are also mechs that are inorganic. TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier.."/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
+          <requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="a hired NPC is protected from damage and can become a teleport target too"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
       </effect_group>
     </buff>
@@ -653,10 +656,10 @@
     </buff>
     <buff name="buffGSKTeleToLastPlacedBedroll" remove_on_death="false">
       <stack_type value="ignore"/>
-      <duration value="3"/>
+      <duration value="10"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodModeForTeleport"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll"/>
       </effect_group>
     </buff>
   </append>
