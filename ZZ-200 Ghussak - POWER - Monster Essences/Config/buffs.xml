@@ -604,6 +604,23 @@
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKKillSelfWhenRagdollEnds" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.2"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollBegin" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollEnd" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="ragdollBegin" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000">
+          <requirement name="CVarCompare" cvar="ragdollEnd" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKThrownBoneDartFeedPlayer">
       <stack_type value="ignore"/>
       <duration value="0"/>
