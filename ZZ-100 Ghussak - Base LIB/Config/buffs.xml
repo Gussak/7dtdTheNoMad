@@ -449,6 +449,250 @@
       <effect_group name="onSelfDied:Work" help="will be filled by mini mods based on this group name">
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="NearDeathApply">
+        <requirements compare_type="or" help="TODO: split below in mini mods">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathCriticalHitLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRadiationLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKNearDeath40" hidden="false" remove_on_death="true" icon="ui_game_symbol_near_death_trauma" icon_color="255,128,128" icon_blink="true" description_key="buffGSKNearDeathDesc" name_key="NearDeathLevels">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="iGSKNearDeath"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathLowCostTeleportLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathLowCostTeleportLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathCriticalHitLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathCriticalHitLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPsyPowerLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPsyPowerLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathMiasmaLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathMiasmaLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathFreezingLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathFreezingLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathDryHotLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathDryHotLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRadiationLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRadiationLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPoisonLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPoisonLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathHazadousWeatherLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathHazadousWeatherLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathFrostbyteLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathFrostbyteLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloated"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathOverhydrated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathOverhydrated"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathChemUse">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathChemUse"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRewindTime">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRewindTime"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathProtectionCBM" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="set" value="28" help="max is 75% of this value, so 21"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: existing ModifyScreenEffect options (?) from resources.assets, read also Data/Config/XML.txt
+				ISSUE: how is the bleeding ModifyScreenEffect applied? there is nothing there... could be thru the damage_type=bloodloss? TODO: use bleeding screen effect to hint when stepping over pointy fences, losing HP cuz of neardeath conditions or when using wight power. May be call a new buff buffInjuryBleedingMinor like buffInjuryBleedingOne but with bleedcounter=0.25 and force a duration of 1s only?
+        AtDeath (MAYBE)
+        Beer (no)
+        Bright (no)
+        Cold (no)
+        Crouched
+        Crouching
+        Dark (weak)
+        Death (MAYBE.no, only 1.0?)
+        Drugs
+        FireSmallLoop ?
+        HalfHealth (may be?)
+        Painkillers
+        Spawn
+        SpawnIn
+        Stealth
+        Tonemapping ?
+        Vibrant
+        VibrantDeSat (nice but too bright at 1.0)
+      -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="2"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" compare_type="or" help="vibrant actually helps on darkening the screen. intensity was 0.80 but becomes too dark at night">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.76" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.80" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="2"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="3"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.75" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.89" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.20" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="3"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="4"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.45"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.45"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.78" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.88" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.93" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.40" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="4"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="5"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.25"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.81" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.90" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.95" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="5"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.33"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.92" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.98" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="@.fHWBlockageStamTmp" help="must be set after calc on the tmp to prevent it varying"/>
+        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fNearDeathBlockageStam"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40" compare_type="or">
+          <requirement name="HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="HasBuff" buff="god"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="10"/>
       </effect_group>
     </buff>
     <buff name="buffGSKLowCostTeleportDebuffApply">
