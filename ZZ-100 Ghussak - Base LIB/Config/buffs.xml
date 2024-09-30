@@ -451,6 +451,18 @@
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKLowCostTeleportDebuffApply">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] This cheap teleport makes you feel dizzy..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <!-- HELPGOOD: being in ragdoll prevents teleport right?
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" />
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKLowCostTeleportDebuffApply"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='god']">
     <effect_group>
