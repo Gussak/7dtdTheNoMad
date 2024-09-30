@@ -188,4 +188,14 @@ particle="torch02_firePrefab"
   <append xpath="/entity_classes/entity_class[@name='playerMale']/property[@name='ItemsOnEnterGame.GameModeSurvival' or @name='ItemsOnEnterGame.GameModeSurvivalSP' or @name='ItemsOnEnterGame.GameModeSurvivalMP']/@value" help="to be able to see dark areas and defeat a few wights too (otherwise it may be almost impossible to defeat them initially)">,GlowStickGreen=10</append>
   <csv xpath="/entity_classes/entity_class[@name='playerMale']/property[@name='ItemsOnEnterGame.GameModeSurvival' or @name='ItemsOnEnterGame.GameModeSurvivalSP' or @name='ItemsOnEnterGame.GameModeSurvivalMP']/@value" delim="," op="add" help="to be able to see dark areas and defeat a few wights too (otherwise it may be almost impossible to defeat them initially)">GlowStickGreen=10</csv>
 -->
+  <append xpath="/entity_classes">
+    <entity_class name="animalHelperTeleportPlayerToMeGSK" extends="animalChicken">
+      <property name="TimeStayAfterDeath" value="0.1"/>
+      <property name="Tags" value="entity,animal,chicken,TeleportPlayerToMe"/>
+      <effect_group name="Base Effects">
+        <passive_effect name="HealthMax" operation="base_set" value="100" help="shall die with the teleport explosion"/>
+        <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      </effect_group>
+    </entity_class>
+  </append>
 </GhussakTweaks>

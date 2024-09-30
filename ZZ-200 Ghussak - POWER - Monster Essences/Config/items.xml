@@ -257,6 +257,8 @@
     </item>
     <item name="thrownBoneDartGSK">
       <property name="Class" value="ItemClassTimeBomb"/>
+      <property name="DescriptionKey" value="dkthrownBoneDartGSK"/>
+      <property name="Group" value="Ammo/Weapons,Melee Weapons"/>
       <property name="HoldType" value="32"/>
       <property name="Meshfile" value="@:Other/Items/Weapons/Melee/Knives/boneShivPrefab.prefab"/>
       <property name="DropScale" value="6"/>
@@ -318,6 +320,7 @@
     </item>
     <item name="thrownBoneDart2GSK">
       <property name="Extends" value="thrownBoneDartGSK"/>
+      <property name="DescriptionKey" value="dkthrownBoneDart2GSK"/>
       <property name="HoldType" value="36"/>
       <property name="IsSticky" value="true"/>
       <property name="StickyOffset" value=".7"/>
@@ -327,6 +330,7 @@
       <property name="StickyForwardDirection" value="0,0,1"/>
       <property name="NavObject" value="spear"/>
       <property name="Stacknumber" value="1"/>
+      <property name="ShowQuality" value="true"/>
       <property class="Action0">
         <property name="Class" value="DynamicMelee"/>
         <property name="Damage_type" value="Piercing"/>
@@ -371,6 +375,27 @@
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="100"/>
         <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity"/>
+      </effect_group>
+      <effect_group name="meleeWpnBladeT0BoneKnife">
+        <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
+        <passive_effect name="StaminaLoss" operation="base_set" value="7.3" tags="primary"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="250,500" tier="1,6" tags="perkDeepCuts"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDeepCuts"/>
+        <passive_effect name="MaxRange" operation="base_set" value="2.0" tags="perkDeepCuts"/>
+        <passive_effect name="BlockRange" operation="base_set" value="2.5" tags="perkDeepCuts"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,1,1,2,2,3" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="5" tags="perkDeepCuts,knife"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDeepCuts"/>
+        <passive_effect name="BlockDamage" operation="base_set" value="4" tags="perkDeepCuts"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDeepCuts"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="earth"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="stone"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="metal"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value=".6" tags="organic"/>
+        <passive_effect name="HarvestCount" operation="base_set" value="1" tags="butcherHarvest"/>
       </effect_group>
     </item>
   </append>
