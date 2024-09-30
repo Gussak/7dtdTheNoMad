@@ -257,7 +257,7 @@
     </item>
     <item name="thrownBoneDartGSK">
       <property name="Class" value="ItemClassTimeBomb"/>
-      <property name="DescriptionKey" value="dkthrownBoneDartGSK"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Group" value="Ammo/Weapons,Melee Weapons"/>
       <property name="HoldType" value="32"/>
       <property name="Meshfile" value="@:Other/Items/Weapons/Melee/Knives/boneShivPrefab.prefab"/>
@@ -320,7 +320,7 @@
     </item>
     <item name="thrownBoneDart2GSK">
       <property name="Extends" value="thrownBoneDartGSK"/>
-      <property name="DescriptionKey" value="dkthrownBoneDart2GSK"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="HoldType" value="36"/>
       <property name="Tags" value="knife,melee,grunting,light,perkFlurryOfAgility,weapon,meleeWeapon,attAgility,perkDeepCuts,perkTheHuntsman,canHaveCosmetic,bladeSkill,corpseRemoval,armorPiercingAdd1,thrownWeapon,perkJavelinMaster"/>
       <property name="DisplayType" value="meleeKnife"/>
@@ -400,7 +400,7 @@
     <item name="GSKCallTeleportEntity">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIconTint" value="00a0ff"/>
-      <property name="DescriptionKey" value="dkGSKCallTeleportEntity"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="EconomicValue" value="0"/>
       <property class="Action0">
       </property>
@@ -409,6 +409,34 @@
       </effect_group>
     </item>
   </append>
+  <append xpath="/items">
+    <item name="ammo9mmPsyonic">
+      <property name="Extends" value="ammo9mmBulletBall"/>
+      <property name="CustomIcon" value="ammo9mmBulletBall"/>
+    </item>
+    <item name="ammo762mmPsyonic">
+      <property name="Extends" value="ammo762mmBulletBall"/>
+      <property name="CustomIcon" value="ammo762mmBulletBall"/>
+    </item>
+    <item name="ammo44MagnumPsyonic">
+      <property name="Extends" value="ammo44MagnumBulletBall"/>
+      <property name="CustomIcon" value="ammo44MagnumBulletBall"/>
+    </item>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]">
+    <property name="CustomIconTint" value="128,180,220"/>
+    <property name="DescriptionKey" value="dkPsyonicAmmo"/>
+    <effect_group tiered="false" help="drain">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+    </effect_group>
+    <effect_group tiered="false" help="teleport">
+      <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+    </effect_group>
+  </append>
+  <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo9mmBulletBall')]/@value" delim="," op="add">ammo9mmPsyonic</csv>
+  <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo762mmBulletBall')]/@value" delim="," op="add">ammo762mmPsyonic</csv>
+  <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo44MagnumBulletBall')]/@value" delim="," op="add">ammo44MagnumPsyonic</csv>
   <append xpath="/items/item[@name='GlowStickGreen']">
     <effect_group name="wight scared" tiered="false">
       <passive_effect name="EntityDamage" operation="base_set" value="10" help="if 0 wouldnt trigger luring but would also not add buff to wight. 10 seems the minimum to trigger onSelfExplosionAttackedOther right?"/>
