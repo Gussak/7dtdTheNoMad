@@ -438,6 +438,14 @@
           <requirement name="InBiome" biome="15"/>
         </triggered_effect>
       </effect_group>
+      <effect_group help="lowcost teleport neardeath sideeffects">
+        <requirement name="CVarCompare" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="-12" help="sync with update_rate for 20s total duration from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="subtract" value="@iGSKEnergyLvlTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="set" value="@fGSKNearDeathLowCostTeleportTimeout"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="divide" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="@.iGSKNearDeathLowCostTeleportLvlTmp"/>
+      </effect_group>
       <effect_group name="onSelfDied:Work" help="will be filled by mini mods based on this group name">
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
         <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
