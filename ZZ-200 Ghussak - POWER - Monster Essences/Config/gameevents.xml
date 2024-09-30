@@ -5,6 +5,9 @@
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
       <property name="allow_while_dead" value="true" help="in case you do a headshot and it dies"/>
+      <requirement class="HasSpawnedEntities" help="this is simply completely preventing it from working at all, why? and without this may randomly cause a lot of endless error messages on the log..">
+        <property name="entity_tags" value="player"/>
+      </requirement>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
         <property name="entity_tags" value="player"/>
@@ -67,6 +70,9 @@
     <action_sequence name="_eventGSKTeleToTarget" help="FAIL">
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
+      <requirement class="HasSpawnedEntities">
+        <property name="entity_tags" value="entity"/>
+      </requirement>
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
         <requirement class="HasBuff" help="this is a check on the event caller entity or on the entity being added to the group????">
@@ -90,8 +96,6 @@ ArgumentNullException: Value cannot be null.
 Parameter name: collection
   at System.Collections.Generic.List`1[T].InsertRange (System.Int32 index, System.Collections.Generic.IEnumerable`1[T] collection) [0x00003] 				
   
-too confusing... what can work where? so many restarts to try things... we need more examples to copy from...
-
 				<property name="group_name" value="targetEntity" />
 				<property name="entity_tags" value="entity" />
 			</action>

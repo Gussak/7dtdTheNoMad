@@ -601,15 +601,17 @@
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
           <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit,TeleportPlayerToMe" help="TODO: improve filter logic ISSUE: cant put animal as will accept npcAnimalFox, and ostile are also mechs that are inorganic. TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier.."/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
-          <requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="a hired NPC is protected from damage and can become a teleport target too"/>
-        </triggered_effect>
+        <!-- HELPGOOD: as friendly NPCs may move in front of our shooting line suddenly, better not enable this.
+				<triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKpullPlayerToMe">
+					<requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="a hired NPC is NOT protected from damage but can become a teleport target too. trick: shotgun shooting a fox will not damage it and will make it fly very far, but the direction is not where you aim, it is based on the position on the terrain, so move around until it flies where you want to teleport. But only throwing weapon can trigger the teleport, bullets wont trigger in friendlies."/>
+				</triggered_effect>
+-->
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
       </effect_group>
     </buff>
     <buff name="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe" remove_on_death="false">
       <stack_type value="ignore"/>
-      <duration value="0"/>
+      <duration value="15"/>
       <update_rate value="0.1"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollBegin" operation="set" value="1">
@@ -633,6 +635,9 @@
         <requirement name="CVarCompare" cvar="ragdollEnd" operation="GTE" value="100"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
       </effect_group>
     </buff>
     <buff name="buffGSKThrownBoneDartFeedPlayer">
@@ -658,8 +663,10 @@
       <stack_type value="ignore"/>
       <duration value="10"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodModeForTeleport"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport" help="this will grant some time before calling again the game event"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll"/>
       </effect_group>
     </buff>
   </append>
