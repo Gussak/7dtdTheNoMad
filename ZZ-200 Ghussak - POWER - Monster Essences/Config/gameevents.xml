@@ -4,10 +4,17 @@
     <action_sequence name="eventGSKpullPlayerToMe">
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
-      <property name="allow_while_dead" value="true" help="in case you do a headshot and it dies"/>
-      <requirement class="HasSpawnedEntities" help="this is simply completely preventing it from working at all, why? and without this may randomly cause a lot of endless error messages on the log..">
-        <property name="entity_tags" value="player"/>
-      </requirement>
+      <!-- HELPGOOD: this is not good because TeleportToTarget will flood errors if the target entity (calling this event) dies 
+			<property name="allow_while_dead" value="true" help="in case you do a headshot and it dies"/>
+-->
+      <!-- HELPGOOD: HasSpawnedEntities seems to not detect players?
+			<requirement class="HasSpawnedEntities" help="this is simply completely preventing it from working at all, why? and without this may randomly cause a lot of endless error messages on the log..">
+				<property name="entity_tags" value="player" />
+			</requirement>
+-->
+      <!-- HELPGOOD: this is simply completely preventing it from working at all, why? and without this may randomly cause a lot of endless error messages on the log..
+			<requirement class="HasParty" help="this one only detects the presence of player" />
+-->
       <action class="AddEntitiesToGroup">
         <property name="phase" value="10"/>
         <property name="entity_tags" value="player"/>
@@ -41,7 +48,6 @@
     <action_sequence name="eventGSKTeleToLastPlacedBedroll">
       <property name="allow_user_trigger" value="true"/>
       <property name="action_type" value="Game"/>
-      <property name="allow_while_dead" value="true"/>
       <action class="TeleportToSpecial">
         <property name="phase" value="20"/>
         <property name="special_type" value="Bedroll"/>
