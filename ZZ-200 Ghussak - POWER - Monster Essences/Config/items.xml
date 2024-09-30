@@ -309,13 +309,14 @@
       <effect_group tiered="false" help="drain">
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
       </effect_group>
       <effect_group tiered="false" help="teleport">
         <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTeleToMeEntityID" operation="set" value="@EntityID"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
       </effect_group>
     </item>
     <item name="thrownBoneDart2GSK" help="TODO: should be a bone spear tho, not a knife. longShaft allows installing burning mod that helps find it on the ground">
@@ -370,11 +371,13 @@
         </property>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKTeleToMeEntityID" operation="set" value="@EntityID"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
         <!-- HELPGOOD: fail
 				<triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity" help="ISSUE: this will spawn the helper chicken near the player not near the projectile hit spot in the terrain! poc poc poc xD :("/>
 -->
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="this still depends on essences being used"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="this still depends on essences being used"/>
       </effect_group>
       <effect_group name="thrownBoneDart2GSK" help="copy of meleeWpnBladeT0BoneKnife">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
@@ -427,11 +430,12 @@
     <property name="CustomIconTint" value="128,180,220"/>
     <property name="DescriptionKey" value="dkPsyonicAmmo"/>
     <effect_group tiered="false" help="drain">
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
     </effect_group>
     <effect_group tiered="false" help="teleport">
       <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKTeleToMeEntityID" operation="set" value="@EntityID"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
     </effect_group>
   </append>
   <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo9mmBulletBall')]/@value" delim="," op="add">ammo9mmPsyonic</csv>
