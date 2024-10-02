@@ -142,6 +142,8 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		
 	done #for((i=0;i<${#astrMAINMatshape[@]};i++));do
 	echo
+	
+	break #TODO this is just a test, too many blocks seems to break the engine
 done #for((j=0;j<${#astrVariant[@]};j++));do
 
 CFGFUNCgencodeApply "${strFlGenBlo}${strGenTmpSuffix}" "${strFlGenBlo}"
