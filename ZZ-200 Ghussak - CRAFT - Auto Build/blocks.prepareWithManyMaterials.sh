@@ -62,8 +62,8 @@ astrResource=(
 if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
 if((${#astrMAINMatshape[@]} != ${#astrResource[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrResource";fi
 
-astrVariant=(   A B)
-astrVarGrowMax=(5 5)
+astrVariant=(   A B C D)
+#astrVarGrowMax=(5 5 2 2)
 
 function FUNCshape() {
 	local lstrMatshape="$1";shift
@@ -80,13 +80,20 @@ function FUNCshape() {
 strOutputRecipes=""
 for((j=0;j<${#astrVariant[@]};j++));do
 	strVariant="${astrVariant[j]}"
-	iMaxGrow="${astrVarGrowMax[j]}"
+	#iMaxGrow="${astrVarGrowMax[j]}"
 	if [[ "$strVariant" == A ]];then
 		astrShape=(railing railing ladderSquare plateCornerRound1m plateCornerRound1m catwalkPlate)
 	fi
 	if [[ "$strVariant" == B ]];then
 		astrShape=(railing railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3")
 	fi
+	if [[ "$strVariant" == C ]];then
+		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed ladderSquare)
+	fi
+	if [[ "$strVariant" == D ]];then
+		astrShape=(cube3x3x1Destroyed cubeHalf3x3x1DestroyedOffset ladderSquare)
+	fi
+	iMaxGrow="$((${#astrShape[@]}-1))"
 	#for strMatshape in "${astrMAINMatshape[@]}";do
 	for((i=0;i<${#astrMAINMatshape[@]};i++));do
 		strMatshape="${astrMAINMatshape[i]}"
@@ -103,8 +110,9 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			fi
 			if((iGrowIndex==1));then strCreativeMode="Player";else strCreativeMode="None";fi
 			#if [[ "${strGrowOnTop:0:1}" != "@" ]];then strGrowOnTop="${strMatshape}:${strGrowOnTop}";fi
+			strBlockName="autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"
 			echo \
-'			<block name="'"autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"'">
+'			<block name="'"$strBlockName"'">
 				<property name="Extends" value="AutoBuild:MiniFortressBase"/>
 				<property name="CustomIcon" value="7dtdShockTip" />
 				<property name="CreativeMode" value="'"${strCreativeMode}"'"/>
@@ -113,20 +121,25 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
 			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
 			
-			iCount=60
-			#declare -p strResource iCount
-			if [[ "$strResource" =~ .*=.* ]];then
-				iCount="${strResource#*=}";
-				strResource="${strResource%=*}";
-			fi
-			echo \
-'			<recipe name="'"autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"'" count="1" craft_time="13">
-				<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
-				<ingredient name="resourceMechanicalParts" count="6" help="6 for lifting mechanism"/>
-			</recipe>
+			if((iGrowIndex==1));then
+				iCount=60
+				#declare -p strResource iCount
+				if [[ "$strResource" =~ .*=.* ]];then
+					iCount="${strResource#*=}";
+					strResource="${strResource%=*}";
+				fi
+				echo \
+'				<recipe name="'"$strBlockName"'" count="1" craft_time="13">
+					<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
+					<ingredient name="resourceMechanicalParts" count="6" help="6 for lifting mechanism"/>
+				</recipe>
 ' >>"${strFlGenRec}${strGenTmpSuffix}"
+			fi
+			
 		done #for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
+		
 		break #TODO this is just a test, too many blocks seems to break the engine
+		
 	done #for((i=0;i<${#astrMAINMatshape[@]};i++));do
 	echo
 done #for((j=0;j<${#astrVariant[@]};j++));do
