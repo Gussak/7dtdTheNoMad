@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/blocks">
-    <block name="AutoBuild:MiniFortressBase" help="basically you can jump on the ladder, climb and hide from ranged enemies in a strong structure, jump again to look from the top ISSUE: this is a very fragile hack, the engine grow plant system is not intended to be used like that, any minor changes may break it and break many other things randomly on other xml files, like this cfg is missing more safety checks and protections in the engine code">
+    <!--
+		HELPGOOD: try some way to create a new shape at shapes.xml based on cube1mHole that the default is rotation W=West,B=Bottom to let the player go inside it from below
+		TODO:SUGGESTION: auto build (plant growth) could have grow direction (left right front back up down, currently it is only up), could let we set the texture and the material for each block too if the block accepts it
+-->
+    <block name="AutoBuild:MiniFortressBase" help="basically you can jump on the ladder, climb and hide from ranged enemies in a strong structure, jump again to look from the top ISSUE: this is a very fragile hack, the engine grow plant system is not intended to be used like that, any minor changes may break it and break many other things randomly on other xml files. It feels like it is missing more safety checks and protections in the engine code.">
       <property name="CreativeMode" value="None"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
-      <property name="Group" value="Building,advBuilding"/>
-      <property name="Tags" value="steel"/>
       <property name="Material" value="Mwood" help="ANYTHING MUST BE SET HERE, even if later ends up ignored, OR WILL ERROR ON LOG AND MESS MANY THINGS!"/>
-      <property name="Texture" value="352" help="txName_Reinforced_metal_plate_wall ISSUE: isnt applied on PlantGrowing.Next block"/>
+      <property name="Texture" value="352" help="txName_Reinforced_metal_plate_wall ISSUE: isnt applied on PlantGrowing.Next block, but is necessary to show something before placing the block"/>
+      <property name="Group" value="Building,advBuilding"/>
       <property name="IsDistantDecoration" value="true"/>
       <property name="Class" value="PlantGrowing"/>
       <property name="PlantGrowing.IsGrowOnTopEnabled" value="true"/>
@@ -20,7 +23,6 @@
       <property name="Extends" value="AutoBuild:MiniFortressBase"/>
       <property name="CustomIcon" value="7dtdShockTip"/>
       <property name="CreativeMode" value="Player"/>
-      <property name="Material" value="Msteel"/>
       <property name="PlantGrowing.Next" value="steelShapes:railing"/>
       <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressA2"/>
     </block>
@@ -79,9 +81,6 @@
       <property name="PlantGrowing.Next" value="woodShapes:cube3x3x1Destroyed"/>
       <property name="PlantGrowing.GrowOnTop" value="looseBoardsTrapBlock3x3" help="this ignores the material property"/>
     </block>
-    <!--
- 	HELPGOOD: try some way to create a new shape at shapes.xml based on cube1mHole that the default is rotation W=West,B=Bottom to let the player go inside it from below
- -->
     <!-- HELPGOOD errors on log
 		<block name="AutoBuild:MiniFortressBase" help="basically you can jump on the ladder, climb and hide from ranged enemies in a strong structure, jump again to look from the top">
 			<property name="CustomIcon" value="7dtdShockTip" />
