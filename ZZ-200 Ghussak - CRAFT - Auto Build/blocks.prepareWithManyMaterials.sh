@@ -33,7 +33,7 @@
 
 source ../*" Ghussak - Base LIB/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
 
-astrMatshape=(
+astrMAINMatshape=(
 	frameShapes 
 	woodShapes 
 	cobblestoneShapes 
@@ -41,16 +41,16 @@ astrMatshape=(
 	steelShapes
 )
 astrMaterial=(
-	#Mwood_weak_shapes 
-	#Mwood_shapes 
-	#Mcobblestone_shapes 
-	#Mconcrete_shapes 
-	#Msteel_shapes
-	Mwood_weak
-	Mwood
-	MresourceCobblestones
-	Mconcrete
-	Msteel
+	Mwood_weak_shapes 
+	Mwood_shapes 
+	Mcobblestone_shapes 
+	Mconcrete_shapes 
+	Msteel_shapes
+	#Mwood_weak
+	#Mwood
+	#MresourceCobblestones
+	#Mconcrete
+	#Msteel
 )
 astrResource=(
 	"resourceWood=12"
@@ -59,8 +59,8 @@ astrResource=(
 	resourceConcreteMix
 	resourceForgedSteel
 )
-if((${#astrMatshape[@]} != ${#astrMaterial[@]}));then echo "ERROR $LINENO";exit;fi
-if((${#astrMatshape[@]} != ${#astrResource[@]}));then echo "ERROR $LINENO";exit;fi
+if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
+if((${#astrMAINMatshape[@]} != ${#astrResource[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrResource";fi
 
 astrVariant=(   A B)
 astrVarGrowMax=(5 5)
@@ -87,9 +87,9 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	if [[ "$strVariant" == B ]];then
 		astrShape=(railing railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3")
 	fi
-	#for strMatshape in "${astrMatshape[@]}";do
-	for((i=0;i<${#astrMatshape[@]};i++));do
-		strMatshape="${astrMatshape[i]}"
+	#for strMatshape in "${astrMAINMatshape[@]}";do
+	for((i=0;i<${#astrMAINMatshape[@]};i++));do
+		strMatshape="${astrMAINMatshape[i]}"
 		strMaterial="${astrMaterial[i]}"
 		strResource="${astrResource[i]}"
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
@@ -111,7 +111,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				<property name="Material" value="'"${strMaterial}"'"/>
 				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${strMatshape}" "${astrShape[iGrowIndex-1]}")"'"/>
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
-			</block>'
+			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
 			
 			iCount=60
 			#declare -p strResource iCount
@@ -119,14 +119,21 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				iCount="${strResource#*=}";
 				strResource="${strResource%=*}";
 			fi
-			strOutputRecipes+=\
+			echo \
 '			<recipe name="'"autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"'" count="1" craft_time="13">
 				<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
 				<ingredient name="resourceMechanicalParts" count="6" help="6 for lifting mechanism"/>
 			</recipe>
-'
-		done
-	done
+' >>"${strFlGenRec}${strGenTmpSuffix}"
+		done #for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
+		break #TODO this is just a test, too many blocks seems to break the engine
+	done #for((i=0;i<${#astrMAINMatshape[@]};i++));do
 	echo
-done
-echo "$strOutputRecipes"
+done #for((j=0;j<${#astrVariant[@]};j++));do
+
+CFGFUNCgencodeApply "${strFlGenBlo}${strGenTmpSuffix}" "${strFlGenBlo}"
+CFGFUNCgencodeApply "${strFlGenRec}${strGenTmpSuffix}" "${strFlGenRec}"
+
+#last
+CFGFUNCgencodeApply --cleanChkDupTokenFiles
+CFGFUNCwriteTotalScriptTimeOnSuccess

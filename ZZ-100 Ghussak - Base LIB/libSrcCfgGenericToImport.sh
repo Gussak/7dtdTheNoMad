@@ -1039,6 +1039,7 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   export strFlGenRec="Config/recipes.xml"
   export strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml" #TODO change everywhere to strFlGenIte
   export strFlGenBuf="Config/buffs.xml"
+  export strFlGenBlo="Config/blocks.xml"
   #ps --no-headers -o cmd $$ $PPID;declare -p bCFGLIBONLYOptgencodeTrashLast;read -p oi
   if $bCFGLIBONLYOptgencodeTrashLast;then
     CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
@@ -1047,6 +1048,7 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
     CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenBlo}${strGenTmpSuffix}"&&:
   fi
 #)
 
