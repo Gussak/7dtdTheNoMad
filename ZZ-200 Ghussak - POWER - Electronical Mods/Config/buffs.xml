@@ -361,12 +361,18 @@
     <buff name="buffGSKTeleRandomQuadrantTilMatchBiome" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="0.5" help="must be slower than .iGSKBiomeId is updated"/>
+      <update_rate value="0.25" help="must be slower than .iGSKBiomeId is updated"/>
       <effect_group>
         <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleBiomeMatchOkCount" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleBiomeMatchOkCount" operation="add" value="1">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
+          <requirement name="CVarCompare" cvar=".iGSKTeleBiomeMatchOkCount" operation="GT" value="3"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -1572,6 +1578,8 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </buff>
   </append>
