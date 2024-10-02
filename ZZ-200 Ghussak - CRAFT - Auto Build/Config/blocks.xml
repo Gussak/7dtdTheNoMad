@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/blocks">
-    <block name="AutoBuild:MiniFortress" help="basically you can jump on the ladder, climb and hide from ranged enemies in a strong structure, just to be too confident..">
+    <block name="AutoBuild:MiniFortressA" help="basically you can jump on the ladder, climb and hide from ranged enemies in a strong structure, jump again to look from the top">
       <property name="CustomIcon" value="7dtdShockTip"/>
       <property name="Group" value="Building,advBuilding"/>
       <property name="Tags" value="steel"/>
       <property name="Material" value="Msteel"/>
-      <property name="Texture" value="110"/>
+      <property name="Texture" value="352" help="txName_Reinforced_metal_plate_wall ISSUE: doesnt work.."/>
       <property name="UiBackgroundTexture" value="356"/>
       <property name="CreativeMode" value="Player"/>
       <property name="IsDistantDecoration" value="true"/>
@@ -17,31 +17,73 @@
       <property name="Class" value="PlantGrowing"/>
       <property name="PlantGrowing.IsGrowOnTopEnabled" value="true"/>
       <property name="PlantGrowing.Next" value="steelShapes:railing"/>
-      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortress2"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressA2"/>
       <property name="PlantGrowing.FertileLevel" value="0"/>
-      <property name="PlantGrowing.GrowthRate" value="0.05" help="engine is 20 ticks/s AFAIK"/>
+      <property name="PlantGrowing.GrowthRate" value="0.01"/>
       <property name="PlantGrowing.IsRandom" value="false"/>
       <property name="PlantGrowing.LightLevelStay" value="0"/>
+      <property name="AllowedRotations" value="Headfirst" help="how to W=West,B=Bottom rotate here like is shown in debug F3+shift mode? options found: Advanced Basic90 Basic45 Basic90And45 Basic90No45 Headfirst Sideways No45 ISSUE: makes no difference?"/>
+      <property name="AllowAllRotations" value="true" help=" ISSUE: makes no difference?"/>
+      <property name="OnlySimpleRotations" value="false" help=" ISSUE: makes no difference?"/>
+      <property name="PlaceAsRandomRotation" value="false" help="ISSUE: seems to be ignored"/>
     </block>
-    <block name="autoBuildMiniFortress2">
-      <property name="Extends" value="AutoBuild:MiniFortress"/>
+    <block name="autoBuildMiniFortressA2">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
       <property name="PlantGrowing.Next" value="steelShapes:railing"/>
-      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortress3"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressA3"/>
     </block>
-    <block name="autoBuildMiniFortress3">
-      <property name="Extends" value="AutoBuild:MiniFortress"/>
+    <block name="autoBuildMiniFortressA3">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
       <property name="PlantGrowing.Next" value="steelShapes:ladderSquare"/>
-      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortress4"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressA4"/>
     </block>
-    <block name="autoBuildMiniFortress4">
-      <property name="Extends" value="AutoBuild:MiniFortress"/>
-      <property name="PlantGrowing.Next" value="steelShapes:cube1mHole"/>
-      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortress5"/>
+    <block name="autoBuildMiniFortressA4">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:plateCornerRound1m" help="cube1mHole will not rotate in the needed rotation"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressA5"/>
     </block>
-    <block name="autoBuildMiniFortress5">
-      <property name="Extends" value="AutoBuild:MiniFortress"/>
-      <property name="PlantGrowing.Next" value="steelShapes:cube1mHole"/>
-      <property name="PlantGrowing.GrowOnTop" value="vaultHatch01"/>
+    <block name="autoBuildMiniFortressA5">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:plateCornerRound1m" help="cube1mHole will not rotate in the needed rotation"/>
+      <property name="PlantGrowing.GrowOnTop" value="steelShapes:catwalkPlate" help="ISSUE: steelShapes:ladderSquare cant jump and climb on it, just falls down ISSUE: ironHatchBlack vaultHatch01 is being placed locked and unable to interact.."/>
     </block>
+    <block name="AutoBuild:MiniFortressB">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="Material" value="Msteel"/>
+      <property name="PlantGrowing.Next" value="steelShapes:railing"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressB2"/>
+    </block>
+    <block name="autoBuildMiniFortressB2">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:railing"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressB3"/>
+    </block>
+    <block name="autoBuildMiniFortressB3">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:ladderSquare"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressB4"/>
+    </block>
+    <block name="autoBuildMiniFortressB4">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:cube3x3x1Destroyed"/>
+      <property name="PlantGrowing.GrowOnTop" value="autoBuildMiniFortressB5"/>
+    </block>
+    <block name="autoBuildMiniFortressB5">
+      <property name="Extends" value="AutoBuild:MiniFortressA"/>
+      <property name="CreativeMode" value="None"/>
+      <property name="PlantGrowing.Next" value="steelShapes:cube3x3x1Destroyed"/>
+      <property name="PlantGrowing.GrowOnTop" value="looseBoardsTrapBlock3x3"/>
+    </block>
+    <!--
+	HELPGOOD: try some way to create a new shape at shapes.xml based on cube1mHole that the default is rotation W=West,B=Bottom to let the player go inside it from below
+-->
   </append>
 </GhussakTweaks>
