@@ -100,7 +100,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		strMaterial="${astrMaterial[i]}"
 		strResource="${astrResource[i]}"
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
-		echo "$strCommentMaterial"
+		echo "$strCommentMaterial"  >>"${strFlGenBlo}${strGenTmpSuffix}"
 		#iMaxGrow=5
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
 			if((iGrowIndex<iMaxGrow));then
@@ -108,15 +108,20 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			else
 				strGrowOnTop="${astrShape[iGrowIndex]}";
 			fi
-			if((iGrowIndex==1));then strCreativeMode="Player";else strCreativeMode="None";fi
+			if((iGrowIndex==1));then
+				strCustomIcon='<property name="CustomIcon" value="7dtdShockTip" />'
+				strCreativeMode="Player";
+			else
+				strCustomIcon=""
+				strCreativeMode="None";
+			fi
 			#if [[ "${strGrowOnTop:0:1}" != "@" ]];then strGrowOnTop="${strMatshape}:${strGrowOnTop}";fi
 			strBlockName="autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"
+			#makes no difference: <property name="Material" value="'"${strMaterial}"'"/>
 			echo \
 '			<block name="'"$strBlockName"'">
-				<property name="Extends" value="AutoBuild:MiniFortressBase"/>
-				<property name="CustomIcon" value="7dtdShockTip" />
+				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}"'
 				<property name="CreativeMode" value="'"${strCreativeMode}"'"/>
-				<property name="Material" value="'"${strMaterial}"'"/>
 				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${strMatshape}" "${astrShape[iGrowIndex-1]}")"'"/>
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
 			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
@@ -138,12 +143,12 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			
 		done #for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
 		
-		break #TODO this is just a test, too many blocks seems to break the engine
+		#break #TODO this is just a test, too many blocks seems to break the engine
 		
 	done #for((i=0;i<${#astrMAINMatshape[@]};i++));do
 	echo
 	
-	break #TODO this is just a test, too many blocks seems to break the engine
+	#break #TODO this is just a test, too many blocks seems to break the engine
 done #for((j=0;j<${#astrVariant[@]};j++));do
 
 CFGFUNCgencodeApply "${strFlGenBlo}${strGenTmpSuffix}" "${strFlGenBlo}"
