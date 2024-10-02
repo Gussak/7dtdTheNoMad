@@ -1582,6 +1582,17 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKTrapPOIWERaboveCrafters" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="6"/>
+      <update_rate value="7"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Teleport Pad activated"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffBurningElement"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTelePOIWERUp"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']/effect_group[@id='GSKConfigConstants']">
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantBASE" operation="set" value="55000" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
