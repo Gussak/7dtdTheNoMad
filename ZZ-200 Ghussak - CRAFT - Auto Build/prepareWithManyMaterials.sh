@@ -41,11 +41,16 @@ astrMatshape=(
 	steelShapes
 )
 astrMaterial=(
-	Mwood_weak_shapes 
-	Mwood_shapes 
-	Mcobblestone_shapes 
-	Mconcrete_shapes 
-	Msteel_shapes
+	#Mwood_weak_shapes 
+	#Mwood_shapes 
+	#Mcobblestone_shapes 
+	#Mconcrete_shapes 
+	#Msteel_shapes
+	Mwood_weak
+	Mwood
+	MresourceCobblestones
+	Mconcrete
+	Msteel
 )
 astrResource=(
 	"resourceWood=12"
