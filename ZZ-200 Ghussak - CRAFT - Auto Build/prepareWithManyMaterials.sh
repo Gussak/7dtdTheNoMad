@@ -47,9 +47,17 @@ astrMaterial=(
 	Mconcrete_shapes 
 	Msteel_shapes
 )
+astrResource=(
+	"resourceWood=12"
+	resourceWood
+	resourceCobblestones
+	resourceConcreteMix
+	resourceForgedSteel
+)
 if((${#astrMatshape[@]} != ${#astrMaterial[@]}));then echo "ERROR $LINENO";exit;fi
+if((${#astrMatshape[@]} != ${#astrResource[@]}));then echo "ERROR $LINENO";exit;fi
 
-astrVariant=(A B)
+astrVariant=(   A B)
 astrVarGrowMax=(5 5)
 
 function FUNCshape() {
@@ -64,6 +72,7 @@ function FUNCshape() {
 }
 
 #for strVariant in "${astrVariant[@]}";do
+strOutputRecipes=""
 for((j=0;j<${#astrVariant[@]};j++));do
 	strVariant="${astrVariant[j]}"
 	iMaxGrow="${astrVarGrowMax[j]}"
@@ -77,7 +86,9 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	for((i=0;i<${#astrMatshape[@]};i++));do
 		strMatshape="${astrMatshape[i]}"
 		strMaterial="${astrMaterial[i]}"
-		echo "			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
+		strResource="${astrResource[i]}"
+		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
+		echo "$strCommentMaterial"
 		#iMaxGrow=5
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
 			if((iGrowIndex<iMaxGrow));then
@@ -96,7 +107,21 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${strMatshape}" "${astrShape[iGrowIndex-1]}")"'"/>
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
 			</block>'
+			
+			iCount=60
+			#declare -p strResource iCount
+			if [[ "$strResource" =~ .*=.* ]];then
+				iCount="${strResource#*=}";
+				strResource="${strResource%=*}";
+			fi
+			strOutputRecipes+=\
+'			<recipe name="'"autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"'" count="1" craft_time="13">
+				<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
+				<ingredient name="resourceMechanicalParts" count="6" help="6 for lifting mechanism"/>
+			</recipe>
+'
 		done
 	done
 	echo
 done
+echo "$strOutputRecipes"
