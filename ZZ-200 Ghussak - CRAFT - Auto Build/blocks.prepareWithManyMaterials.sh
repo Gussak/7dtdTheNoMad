@@ -52,12 +52,12 @@ astrMaterial=(
 	#Mconcrete
 	#Msteel
 )
-astrResource=(
-	"resourceWood=12"
-	resourceWood
-	resourceCobblestones
-	resourceConcreteMix
-	resourceForgedSteel
+astrResource=( # material countPerGrowStep
+	resourceWood=2
+	resourceWood=10
+	resourceCobblestones=10
+	resourceConcreteMix=10
+	resourceForgedSteel=10
 )
 if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
 if((${#astrMAINMatshape[@]} != ${#astrResource[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrResource";fi
@@ -126,17 +126,19 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
 			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
 			
-			if((iGrowIndex==1));then
-				iCount=60
+			if((iGrowIndex==1));then # one recipe per initial block
+				#iCount=$(( (iMaxGrow+1) * 10))
 				#declare -p strResource iCount
-				if [[ "$strResource" =~ .*=.* ]];then
-					iCount="${strResource#*=}";
+				#if [[ "$strResource" =~ .*=.* ]];then
+					iCount="${strResource#*=}"; # BEFORE overwriting strResource!
+					(( iCount*=(iMaxGrow+1) ))&&:
+					
 					strResource="${strResource%=*}";
-				fi
+				#fi
 				echo \
 '				<recipe name="'"$strBlockName"'" count="1" craft_time="13">
 					<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
-					<ingredient name="resourceMechanicalParts" count="6" help="6 for lifting mechanism"/>
+					<ingredient name="resourceMechanicalParts" count="'"$((iMaxGrow+1))"'" help="lifting mechanism"/>
 				</recipe>
 ' >>"${strFlGenRec}${strGenTmpSuffix}"
 			fi
