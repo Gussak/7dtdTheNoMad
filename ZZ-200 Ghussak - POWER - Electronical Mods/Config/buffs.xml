@@ -361,9 +361,10 @@
     <buff name="buffGSKTeleRandomQuadrantTilMatchBiome" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="3.0" help="must be slower than .iGSKBiomeId is updated"/>
+      <update_rate value="0.5" help="must be slower than .iGSKBiomeId is updated"/>
       <effect_group>
         <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
           <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
         </triggered_effect>
