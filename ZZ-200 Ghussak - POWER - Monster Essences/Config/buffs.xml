@@ -178,6 +178,14 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKpsyonicDeathDelayed1s" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="1.25"/>
+      <update_rate value="1.00"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKpsyonicMutantCountNPCBUFF" hidden="false" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="15"/>
@@ -600,7 +608,7 @@
     <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="0.05" help="ISSUE: happens so many log errors of failing to kick in game event action TeleportToTarget much more often when hitting npcHarleyPipeRifle npcHarleySniperRifle ? or just NPCs, but happened also with a desert fox, and a zombie I think..."/>
+      <update_rate value="0.05" help=""/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="0"/>
       </effect_group>
@@ -633,6 +641,7 @@
         <requirement name="CVarCompare" cvar=".fGSKDartTeleDoIt" operation="Equals" value="1"/>
         <requirement name="IsAlive"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpullPlayerToMe"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKpsyonicDeathDelayed1s" help="this grants the target causing the flood of errors on the log will be killed as it would already with the teleport ISSUE: the teleport may not happen. and happens so many log errors of failing to kick in game event action TeleportToTarget. Seems to happen much more often when hitting npcHarleyPipeRifle npcHarleySniperRifle ? or just NPCs? but happened also with a desert fox? and a zombie I think..."/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
