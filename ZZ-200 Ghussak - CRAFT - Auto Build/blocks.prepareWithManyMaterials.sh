@@ -40,6 +40,13 @@ astrMAINMatshape=(
 	concreteShapes 
 	steelShapes
 )
+anEconomicV=( # just equal to the hp or a mult of it
+	  100
+	  500
+	 1500
+	 5000
+	10000
+)
 astrMaterial=(
 	Mwood_weak_shapes 
 	Mwood_shapes 
@@ -99,28 +106,36 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		strMatshape="${astrMAINMatshape[i]}"
 		strMaterial="${astrMaterial[i]}"
 		strResource="${astrResource[i]}"
+		nEV="${anEconomicV[i]}"
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
 		echo "$strCommentMaterial"  >>"${strFlGenBlo}${strGenTmpSuffix}"
 		#iMaxGrow=5
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
+		
 			if((iGrowIndex<iMaxGrow));then
 				strGrowOnTop="@autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex+1))";
 			else
 				strGrowOnTop="${astrShape[iGrowIndex]}";
 			fi
+			
 			if((iGrowIndex==1));then
-				strCustomIcon='<property name="CustomIcon" value="7dtdShockTip" />'
+				strCustomIcon='
+				<property name="CustomIcon" value="7dtdShockTip" />'
 				strCreativeMode="Player";
+				strEconomicValue='
+				<property name="EconomicValue" value="'"$(( (nEV*iMaxGrow)/10 ))"'"/>'
 			else
 				strCustomIcon=""
 				strCreativeMode="None";
+				strEconomicValue=""
 			fi
+			
 			#if [[ "${strGrowOnTop:0:1}" != "@" ]];then strGrowOnTop="${strMatshape}:${strGrowOnTop}";fi
 			strBlockName="autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"
 			#makes no difference: <property name="Material" value="'"${strMaterial}"'"/>
 			echo \
 '			<block name="'"$strBlockName"'">
-				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}"'
+				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}${strEconomicValue}"'
 				<property name="CreativeMode" value="'"${strCreativeMode}"'"/>
 				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${strMatshape}" "${astrShape[iGrowIndex-1]}")"'"/>
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
