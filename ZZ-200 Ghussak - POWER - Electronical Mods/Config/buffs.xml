@@ -361,26 +361,48 @@
     <buff name="buffGSKTeleRandomQuadrantTilMatchBiome" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="0.25" help="must be slower than .iGSKBiomeId is updated"/>
-      <effect_group>
-        <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleBiomeMatchOkCount" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleBiomeMatchOkCount" operation="add" value="1">
-          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
-          <requirement name="CVarCompare" cvar=".iGSKTeleBiomeMatchOkCount" operation="GT" value="3"/>
-        </triggered_effect>
+      <update_rate value="0.50" help="buffGSKUpdateBiomeID is very fast 0.05"/>
+      <effect_group help="init">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="10"/>
       </effect_group>
-      <effect_group>
-        <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+      <effect_group help="request update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="20"/>
+      </effect_group>
+      <effect_group help="wait update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="20"/>
+        <requirement name="NotHasBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="25"/>
+      </effect_group>
+      <effect_group help="biome ID matches requested, go to end">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="25"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="40"/>
+      </effect_group>
+      <effect_group help="biome ID differs from requested, randomize and teleport">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="25"/>
         <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToRandomQuadrant" operation="set" value="randomInt(55001,55100)" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKTeleToRandomQuadrant"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="30"/>
+      </effect_group>
+      <effect_group help="wait teleport end and request update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="30"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="40"/>
+      </effect_group>
+      <effect_group help="wait update biome ID and finish if matches request or restart if differs from requested biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="40"/>
+        <requirement name="NotHasBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKTeleQuadrantCallEvent">
