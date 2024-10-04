@@ -690,34 +690,6 @@
       </effect_group>
     </buff>
   </append>
-  <remove xpath="/buffs/buff[@name='buffDeathFoodDrinkAdjust']/effect_group/triggered_effect[     @trigger='onSelfBuffUpdate'     and      @action='ModifyStats'           and      @stat='Food'                    and      @operation='set']"/>
-  <set xpath="/buffs/buff[@name='buffDeathFoodDrinkAdjust']/effect_group/triggered_effect[       @stat='Health'     ]/@value">15</set>
-  <set xpath="/buffs/buff[@name='buffDeathFoodDrinkAdjust']/effect_group/triggered_effect[       @stat='Water'     ]/@value">0</set>
-  <remove xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/triggered_effect[@trigger='onSelfBuffStart'      and @action='RemoveAllNegativeBuffs']"/>
-  <remove xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/triggered_effect[@trigger='onSelfBuffStart'      and @action='RemoveBuff' and @buff='buffLegSprained']"/>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/duration/@value">600</set>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/triggered_effect[       @trigger='onSelfBuffStart' and        @action='ModifyCVar'       and        @cvar='$NearDeathRegen'    and        @operation='set'     ]/@value">0.10</set>
-  <append xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$NearDeathRegenWater" operation="set" value="@fGSKWaterPercBkp"/>
-    <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="STARTED:buffNearDeathRegen"/>
-    <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="REMOVED:buffNearDeathRegen"/>
-  </append>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/     passive_effect[@name='WaterChangeOT']/        requirement[@name='StatComparePercCurrentToMax']/@value">@$NearDeathRegenWater</set>
-  <append xpath="/buffs/buff[@name='buffNearDeathTraumaTrigger']/effect_group">
-    <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="infectionCounter" operation="set" value="@fGSKinfectionCounterBkp">
-      <requirement name="CVarCompare" cvar="fGSKinfectionCounterBkp" operation="GT" value="@infectionCounter"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="$infectionCureCounter" operation="set" value="@fGSKinfectionCureCounterBkp">
-      <requirement name="CVarCompare" cvar="fGSKinfectionCureCounterBkp" operation="GT" value="@$infectionCureCounter"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffInfectionMain">
-      <requirement name="NotHasBuff" buff="buffInfectionMain"/>
-      <requirement name="CVarCompare" cvar="fGSKinfectionCounterBkp" operation="GT" value="@infectionCounter"/>
-    </triggered_effect>
-  </append>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/requirement[       @name='StatComparePercCurrentToMax' and       @stat='Water' and       @operation='GTE'     ]/@value">@fGSKWaterPercBkp</set>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/requirement[       @name='StatComparePercCurrentToModMax' and       @stat='Health' and       @operation='GTE'     ]/@value">0.75</set>
-  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/stack_type/@value">replace</set>
   <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[       @trigger='onSelfFallImpact' and        @action='AddBuff'           and        @buff='buffPlayerFallingDamage'     ]">
     <requirement name="!EntityTagCompare" tags="npc"/>
     <requirement name="!HasBuff" buff="buffGSKGodMode"/>
