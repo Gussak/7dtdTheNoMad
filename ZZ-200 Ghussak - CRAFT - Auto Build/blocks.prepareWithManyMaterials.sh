@@ -105,7 +105,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			railing 
 			railing 
 			$(for((i=0;i<150;i++));do echo ladderSquare;done) 
-			$(egrep -iRhIo --include=*.xml 'cntShippingCrate[^"]*' ../* |sort -u |sed 's!.*!@&!' |tr '\n' ' ') # "@cntShippingCrateHero" 
+			$(egrep -iRhI --include=*.xml '<block.*cntShippingCrate[^"]*' ../* |egrep -o 'cntShippingCrate[^"]*' |sort -u |sed 's!.*!@&!' |tr '\n' ' ') # all possible simpler containers that accept placing another block over them ex.: "@cntShippingCrateHero" , this will keep the player more time there, increasing the challenge of not falling to death
 			"@cntMedicLootPileB"
 		) #the last is a chance to find ohShitzDropz
 		bStairsToHeaven=true
@@ -117,7 +117,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		strMatshape="${astrMAINMatshape[i]}"
 		#strMaterial="${astrMaterial[i]}"
 		strResource="${astrResource[i]}"
-		nEV="${anEconomicV[i]}"
+		nEconomicValue="${anEconomicV[i]}"
 		
 		if $bStairsToHeaven && [[ "${strMatshape}" != cobblestoneShapes ]];then continue;fi
 		
@@ -131,6 +131,8 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			strMaterialName=${strMatshape%Shapes}
 			strMaterialName="$(echo "${strMaterialName:0:1}" |tr '[:lower:]' '[:upper:]')${strMaterialName:1}"
 			if $bStairsToHeaven;then strMaterialName="";fi
+			
+			if $bStairsToHeaven;then ((nEconomicValue/=10))&&:;fi
 			
 			strBlockBaseName="autoBuild${strBaseContextName}${strMaterialName}${strVariant}H$((iMaxGrow+1))" # H is +1 because the last placed block is not a growing one
 			
@@ -147,7 +149,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				<property name="CustomIcon" value="7dtdShockTip" />'
 				strCreativeMode="Player";
 				strEconomicValue='
-				<property name="EconomicValue" value="'"$(( (nEV*iMaxGrow)/10 ))"'"/>'
+				<property name="EconomicValue" value="'"$(( (nEconomicValue*iMaxGrow)/10 ))"'"/>'
 			else
 				strCustomIcon=""
 				strCreativeMode="None";
