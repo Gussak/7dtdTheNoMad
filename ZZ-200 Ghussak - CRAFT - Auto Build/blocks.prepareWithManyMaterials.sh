@@ -47,18 +47,18 @@ anEconomicV=( # just equal to the hp or a mult of it
 	 5000
 	10000
 )
-astrMaterial=(
-	Mwood_weak_shapes 
-	Mwood_shapes 
-	Mcobblestone_shapes 
-	Mconcrete_shapes 
-	Msteel_shapes
-	#Mwood_weak
-	#Mwood
-	#MresourceCobblestones
-	#Mconcrete
-	#Msteel
-)
+#astrMaterial=(
+	#Mwood_weak_shapes 
+	#Mwood_shapes 
+	#Mcobblestone_shapes 
+	#Mconcrete_shapes 
+	#Msteel_shapes
+	##Mwood_weak
+	##Mwood
+	##MresourceCobblestones
+	##Mconcrete
+	##Msteel
+#)
 astrResource=( # material countPerGrowStep
 	resourceWood=2
 	resourceWood=10
@@ -66,11 +66,10 @@ astrResource=( # material countPerGrowStep
 	resourceConcreteMix=10
 	resourceForgedSteel=10
 )
-if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
+#if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
 if((${#astrMAINMatshape[@]} != ${#astrResource[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrResource";fi
 
-astrVariant=(   A B C D)
-#astrVarGrowMax=(5 5 2 2)
+astrVariant=(A B C D E)
 
 function FUNCshape() {
 	local lstrMatshape="$1";shift
@@ -100,20 +99,37 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	if [[ "$strVariant" == D ]];then
 		astrShape=(cube3x3x1Destroyed cubeHalf3x3x1DestroyedOffset ladderSquare)
 	fi
+	bStairsToHeaven=false
+	if [[ "$strVariant" == E ]];then # stairs to heaven
+		astrShape=(railing railing $(for((i=0;i<150;i++));do echo ladderSquare;done) "@cntShippingCrateHero" "@cntMedicLootPileB") #the last is a chance to find ohShitzDropz
+		bStairsToHeaven=true
+	fi
+	
 	iMaxGrow="$((${#astrShape[@]}-1))"
 	#for strMatshape in "${astrMAINMatshape[@]}";do
 	for((i=0;i<${#astrMAINMatshape[@]};i++));do
 		strMatshape="${astrMAINMatshape[i]}"
-		strMaterial="${astrMaterial[i]}"
+		#strMaterial="${astrMaterial[i]}"
 		strResource="${astrResource[i]}"
 		nEV="${anEconomicV[i]}"
+		
+		if $bStairsToHeaven && [[ "${strMatshape}" != cobblestoneShapes ]];then continue;fi
+		
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
 		echo "$strCommentMaterial"  >>"${strFlGenBlo}${strGenTmpSuffix}"
 		#iMaxGrow=5
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
-		
+			strBaseContextName="MiniFortress"
+			if $bStairsToHeaven;then strBaseContextName="StairsToHeaven";fi
+			
+			strMaterialName=${strMatshape%Shapes}
+			strMaterialName="$(echo "${strMaterialName:0:1}" |tr '[:lower:]' '[:upper:]')${strMaterialName:1}"
+			if $bStairsToHeaven;then strMaterialName="";fi
+			
+			strBlockBaseName="autoBuild${strBaseContextName}${strMaterialName}${strVariant}"
+			
 			if((iGrowIndex<iMaxGrow));then
-				strGrowOnTop="@autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex+1))";
+				strGrowOnTop="@${strBlockBaseName}$((iGrowIndex+1))";
 			else
 				strGrowOnTop="${astrShape[iGrowIndex]}";
 			fi
@@ -130,9 +146,8 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				strEconomicValue=""
 			fi
 			
-			#if [[ "${strGrowOnTop:0:1}" != "@" ]];then strGrowOnTop="${strMatshape}:${strGrowOnTop}";fi
-			strBlockName="autoBuildMiniFortress${strMatshape%Shapes}${strVariant}$((iGrowIndex))"
 			#makes no difference: <property name="Material" value="'"${strMaterial}"'"/>
+			strBlockName="${strBlockBaseName}$((iGrowIndex))"
 			echo \
 '			<block name="'"$strBlockName"'">
 				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}${strEconomicValue}"'
@@ -142,18 +157,28 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
 			
 			if((iGrowIndex==1));then # one recipe per initial block
-				#iCount=$(( (iMaxGrow+1) * 10))
-				#declare -p strResource iCount
-				#if [[ "$strResource" =~ .*=.* ]];then
-					iCount="${strResource#*=}"; # BEFORE overwriting strResource!
-					(( iCount*=(iMaxGrow+1) ))&&:
-					
-					strResource="${strResource%=*}";
-				#fi
+				iCountMainResource="${strResource#*=}"; # BEFORE overwriting strResource!
+				(( iCountMainResource*=(iMaxGrow+1) ))&&:
+				
+				strResource="${strResource%=*}";
+				
+				((iCountLiftingMechanism=iMaxGrow+1))&&:
+				
+				iCraftTime=$((iCountLiftingMechanism + iCountMainResource))
+				
+				strIngredentExtra1=''
+				if $bStairsToHeaven;then
+					((iCountMainResource/=10))&&:
+					((iCountLiftingMechanism/=10))&&:
+					((iCraftTime/=10))&&: #iCraftTime=66.6 # was 666 but so much time may just be annoying..
+					strIngredentExtra1='
+					<ingredient name="resourceLegendaryParts" count="1"/>'
+				fi
+				
 				echo \
-'				<recipe name="'"$strBlockName"'" count="1" craft_time="13">
-					<ingredient name="'"${strResource}"'" count="'"${iCount}"'"/>
-					<ingredient name="resourceMechanicalParts" count="'"$((iMaxGrow+1))"'" help="lifting mechanism"/>
+'				<recipe name="'"$strBlockName"'" count="1" craft_time="'${iCraftTime}'">
+					<ingredient name="'"${strResource}"'" count="'"${iCountMainResource}"'"/>
+					<ingredient name="resourceMechanicalParts" count="'"${iCountLiftingMechanism}"'" help="lifting mechanism"/>'"${strIngredentExtra1}"'
 				</recipe>
 ' >>"${strFlGenRec}${strGenTmpSuffix}"
 			fi
