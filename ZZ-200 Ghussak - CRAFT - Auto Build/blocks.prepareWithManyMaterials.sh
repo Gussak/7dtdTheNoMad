@@ -101,7 +101,13 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	fi
 	bStairsToHeaven=false
 	if [[ "$strVariant" == E ]];then # stairs to heaven
-		astrShape=(railing railing $(for((i=0;i<150;i++));do echo ladderSquare;done) "@cntShippingCrateHero" "@cntMedicLootPileB") #the last is a chance to find ohShitzDropz
+		astrShape=(
+			railing 
+			railing 
+			$(for((i=0;i<150;i++));do echo ladderSquare;done) 
+			$(egrep -iRhIo --include=*.xml 'cntShippingCrate[^"]*' ../* |sort -u |sed 's!.*!@&!' |tr '\n' ' ') # "@cntShippingCrateHero" 
+			"@cntMedicLootPileB"
+		) #the last is a chance to find ohShitzDropz
 		bStairsToHeaven=true
 	fi
 	
@@ -126,10 +132,10 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			strMaterialName="$(echo "${strMaterialName:0:1}" |tr '[:lower:]' '[:upper:]')${strMaterialName:1}"
 			if $bStairsToHeaven;then strMaterialName="";fi
 			
-			strBlockBaseName="autoBuild${strBaseContextName}${strMaterialName}${strVariant}"
+			strBlockBaseName="autoBuild${strBaseContextName}${strMaterialName}${strVariant}H$((iMaxGrow+1))" # H is +1 because the last placed block is not a growing one
 			
 			if((iGrowIndex<iMaxGrow));then
-				strGrowOnTop="@${strBlockBaseName}$((iGrowIndex+1))";
+				strGrowOnTop="@${strBlockBaseName}G$((iGrowIndex+1))";
 			else
 				strGrowOnTop="${astrShape[iGrowIndex]}";
 			fi
@@ -149,7 +155,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			fi
 			
 			#makes no difference: <property name="Material" value="'"${strMaterial}"'"/>
-			strBlockName="${strBlockBaseName}$((iGrowIndex))"
+			strBlockName="${strBlockBaseName}G$((iGrowIndex))"
 			echo \
 '			<block name="'"$strBlockName"'">
 				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}${strEconomicValue}"'
