@@ -135,6 +135,8 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			fi
 			
 			if((iGrowIndex==1));then
+				strDesc='
+				<property name="DescriptionKey" value="dkAutoBuild" />'
 				strCustomIcon='
 				<property name="CustomIcon" value="7dtdShockTip" />'
 				strCreativeMode="Player";
