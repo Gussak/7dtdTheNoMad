@@ -102,10 +102,9 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	bStairsToHeaven=false
 	if [[ "$strVariant" == E ]];then # stairs to heaven
 		astrShape=(
-			railing 
-			railing 
+			# railing railing  # these 2 makes make it difficult for zombies to climb, but then they will try to break them making it more difficult to defent this structure
 			$(for((i=0;i<150;i++));do echo ladderSquare;done) 
-			$(egrep -iRhI --include=*.xml '<block.*cntShippingCrate[^"]*' ../* |egrep -o 'cntShippingCrate[^"]*' |sort -u |sed 's!.*!@&!' |tr '\n' ' ') # all possible simpler containers that accept placing another block over them ex.: "@cntShippingCrateHero" , this will keep the player more time there, increasing the challenge of not falling to death
+			$(egrep -iRhI --include=*.xml '<block.*cnt[^"]*' ../* |egrep -o 'cntShippingCrate[^"]*|cntHardenedChestSecure' |sort -ur |sed 's!.*!@&!' |tr '\n' ' ') # all possible simpler containers that accept placing another block over them ex.: "@cntShippingCrateHero" , this will keep the player more time there, increasing the challenge of not falling to death # dont use as they do not fill 100% the block space: cntLootChestHero cntLootChestHeroInsecureT1
 			"@cntMedicLootPileB"
 		) #the last is a chance to find ohShitzDropz
 		bStairsToHeaven=true
@@ -182,7 +181,9 @@ for((j=0;j<${#astrVariant[@]};j++));do
 					((iCountLiftingMechanism/=10))&&:
 					((iCraftTime/=10))&&: #iCraftTime=66.6 # was 666 but so much time may just be annoying..
 					strIngredentExtra1='
-					<ingredient name="resourceLegendaryParts" count="1"/>'
+					<ingredient name="resourceLegendaryParts" count="1"/>
+					<ingredient name="resourceRawDiamond" count="1"/>
+					<ingredient name="plantedGraceCorn1" count="1"/>'
 				fi
 				
 				echo \
