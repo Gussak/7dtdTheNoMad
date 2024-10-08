@@ -1,0 +1,626 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/gameevents">
+    <action_sequence name="eventGSKremoveTeleQuadrantItem">
+      <action class="RemoveItems">
+        <property name="items_location" value="All"/>
+        <property name="items_tags" value="teleportquadrant"/>
+        <property name="count_type" value="Items"/>
+        <property name="count" value="1"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKElctrnTele" help="TODO: directional teleportations will require proper prior BlockReplace to work well when teleporting to invalid locations like inside terrain or inside a massive mass of blocks">
+      <property name="allow_user_trigger" value="true"/>
+      <property name="action_type" value="Game"/>
+      <!--
+      HELPGOOD:
+      explosion MUST BE JUST AFTER TELEPORT TO PREVENT PLAYER HAVING TIME TO FALL TOO MUCH.
+      disintegrates blocks to let a safe teleport.
+      ExplodeTarget seems to require the player to be in somewhere valid, be standing somewhere or falling in air (not in an invalid location like inside/below the terrain), ExplodePosition too...
+-->
+      <!-- HELPGOOD
+      <action class="ExplodePosition" help="FAIL: trying to explode where the player will teleport to while the player is standing on the ground">
+        <property name="phase" value="10" />
+        <property name="position" value="0,0,0" param1="v3Dir" help="ISSUE: is ignored?"/>
+        <property name="target_position" value="0,0,0" param1="v3Dir" help="ISSUE: is ignored?"/>
+        <property name="offset_type" value="Relative" help="ISSUE: is ignored?"/>
+        <property name="blast_power" value="75" />
+        <property name="block_damage" value="32000" param1="iXplodDmgBlk"/>
+        <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
+        <property name="entity_damage" value="0" />
+        <property name="entity_radius" value="0" />
+      </action>
+-->
+      <action class="Teleport">
+        <property name="phase" value="13"/>
+        <property name="target_position" value="0,0,0" param1="v3Dir"/>
+        <property name="offset_type" value="Relative"/>
+      </action>
+      <action class="ExplodeTarget" help="will not explode around the player after teleport to an invalid location (inside the terrain and not stepping over it even if in an underground cave)">
+        <property name="phase" value="16"/>
+        <property name="blast_power" value="75"/>
+        <property name="block_damage" value="32000" param1="iXplodDmgBlk"/>
+        <property name="block_radius" value="1" param1="iXplodRangeBlock"/>
+        <property name="entity_damage" value="0"/>
+        <property name="entity_radius" value="0"/>
+      </action>
+      <action class="ModifyCVar">
+        <property name="phase" value="19"/>
+        <property name="cvar" value=".bGSKEventFeedbackTeleportCompleted"/>
+        <property name="value" value="1"/>
+        <property name="operation" value="Set"/>
+      </action>
+      <!-- HELPGOOD: ragdoll here is not good as it just creates a fall damage prevention (ragdoll does not take fall damage right?)
+      <action class="Ragdoll">
+        <property name="phase" value="20" />
+        <property name="stun_duration" value="0.5" />
+      </action>
+      <action class="ModifyCVar">
+        <property name="phase" value="20" />
+        <property name="cvar" value=".iGSKEventFeedbackTeleportPhase" />
+        <property name="value" value="20" help="the phase"/>
+        <property name="operation" value="Set"/>
+      </action>
+-->
+      <action class="AddEntitiesToGroup" help="no filter means hostiles">
+        <property name="phase" value="30"/>
+        <property name="group_name" value="gnHostiles"/>
+        <property name="max_distance" value="2" param1="iXplodRangeEnt"/>
+      </action>
+      <action class="ExplodeTarget" help="kill any hostile entity at teleport destination">
+        <property name="phase" value="31"/>
+        <property name="target_group" value="gnHostiles"/>
+        <property name="blast_power" value="0"/>
+        <property name="block_damage" value="0"/>
+        <property name="block_radius" value="0"/>
+        <property name="entity_damage" value="32000" param1="iXplodDmgEnt"/>
+        <property name="entity_radius" value="2" param1="iXplodRangeEnt" help="will only affect selected gnHostiles tho"/>
+      </action>
+      <action class="ExplodeTarget" help="this is like a sonic damage TODO: make them ragdoll with a good force too">
+        <property name="phase" value="40"/>
+        <property name="target_group" value="gnHostiles"/>
+        <property name="blast_power" value="500" param1="iBlastPower"/>
+        <property name="block_damage" value="0"/>
+        <property name="block_radius" value="0"/>
+        <property name="entity_damage" value="30"/>
+        <property name="entity_radius" value="5" param1="iXplodRangeSonicBlastEnt"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTelePOIWERUp" template="eventGSKElctrnTele" help="above crafters">
+      <variable name="v3Dir" value="0,55,0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKElctrnTeleNoBlockDmg" template="eventGSKElctrnTele">
+      <variable name="iXplodDmgBlk" value="0"/>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleUndergroundFirstSpawnSafety">
+      <property name="allow_user_trigger" value="true"/>
+      <property name="action_type" value="Game"/>
+      <action class="BlockReplace" help="before teleport">
+        <property name="phase" value="10"/>
+        <property name="min_offset" value="-2,-52,-2"/>
+        <property name="max_offset" value="2,-48,2"/>
+        <property name="block_to" value="air"/>
+        <property name="allow_terrain" value="true"/>
+        <!-- HELPGOOD: prevent disintegrating spawners how? needed? is just this one?
+				<property name="exclude_tags" value="twitchHordeStone" />
+-->
+        <property name="safe_allowed" value="true"/>
+      </action>
+      <action class="Delay" help="otherwise the block replace wont happen before player being moved to invalid location inside terrain">
+        <property name="phase" value="20"/>
+        <property name="time" value="0.5"/>
+      </action>
+      <action class="Teleport" help="as a template/variable cant be used with CallGameEvent, this grants the teleport">
+        <property name="phase" value="30"/>
+        <property name="target_position" value="0,-50,0"/>
+        <property name="offset_type" value="Relative"/>
+      </action>
+      <action class="CallGameEvent" help="this is mainly to call all the explosions there">
+        <property name="phase" value="40"/>
+        <property name="game_events" value="eventGSKElctrnTele"/>
+      </action>
+    </action_sequence>
+    <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+    <action_sequence name="eventGSKTeleport55001">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,-4870" help="index=55001;Quadrant:0,0;teleQuadrantPos=-4870,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55002">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,-4870" help="index=55002;Quadrant:1,0;teleQuadrantPos=-3788,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55003">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,-4870" help="index=55003;Quadrant:2,0;teleQuadrantPos=-2706,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55004">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,-4870" help="index=55004;Quadrant:3,0;teleQuadrantPos=-1624,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55005">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,-4870" help="index=55005;Quadrant:4,0;teleQuadrantPos=-542,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55006">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,-4870" help="index=55006;Quadrant:5,0;teleQuadrantPos=540,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55007">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,-4870" help="index=55007;Quadrant:6,0;teleQuadrantPos=1622,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55008">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,-4870" help="index=55008;Quadrant:7,0;teleQuadrantPos=2704,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55009">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,-4870" help="index=55009;Quadrant:8,0;teleQuadrantPos=3786,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55010">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,-4870" help="index=55010;Quadrant:9,0;teleQuadrantPos=4868,260,-4870;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55011">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,-3788" help="index=55011;Quadrant:0,1;teleQuadrantPos=-4870,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55012">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,-3788" help="index=55012;Quadrant:1,1;teleQuadrantPos=-3788,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55013">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,-3788" help="index=55013;Quadrant:2,1;teleQuadrantPos=-2706,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55014">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,-3788" help="index=55014;Quadrant:3,1;teleQuadrantPos=-1624,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55015">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,-3788" help="index=55015;Quadrant:4,1;teleQuadrantPos=-542,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55016">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,-3788" help="index=55016;Quadrant:5,1;teleQuadrantPos=540,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55017">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,-3788" help="index=55017;Quadrant:6,1;teleQuadrantPos=1622,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55018">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,-3788" help="index=55018;Quadrant:7,1;teleQuadrantPos=2704,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55019">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,-3788" help="index=55019;Quadrant:8,1;teleQuadrantPos=3786,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55020">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,-3788" help="index=55020;Quadrant:9,1;teleQuadrantPos=4868,260,-3788;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55021">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,-2706" help="index=55021;Quadrant:0,2;teleQuadrantPos=-4870,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55022">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,-2706" help="index=55022;Quadrant:1,2;teleQuadrantPos=-3788,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55023">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,-2706" help="index=55023;Quadrant:2,2;teleQuadrantPos=-2706,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55024">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,-2706" help="index=55024;Quadrant:3,2;teleQuadrantPos=-1624,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55025">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,-2706" help="index=55025;Quadrant:4,2;teleQuadrantPos=-542,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55026">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,-2706" help="index=55026;Quadrant:5,2;teleQuadrantPos=540,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55027">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,-2706" help="index=55027;Quadrant:6,2;teleQuadrantPos=1622,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55028">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,-2706" help="index=55028;Quadrant:7,2;teleQuadrantPos=2704,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55029">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,-2706" help="index=55029;Quadrant:8,2;teleQuadrantPos=3786,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55030">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,-2706" help="index=55030;Quadrant:9,2;teleQuadrantPos=4868,260,-2706;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55031">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,-1624" help="index=55031;Quadrant:0,3;teleQuadrantPos=-4870,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55032">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,-1624" help="index=55032;Quadrant:1,3;teleQuadrantPos=-3788,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55033">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,-1624" help="index=55033;Quadrant:2,3;teleQuadrantPos=-2706,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55034">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,-1624" help="index=55034;Quadrant:3,3;teleQuadrantPos=-1624,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55035">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,-1624" help="index=55035;Quadrant:4,3;teleQuadrantPos=-542,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55036">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,-1624" help="index=55036;Quadrant:5,3;teleQuadrantPos=540,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55037">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,-1624" help="index=55037;Quadrant:6,3;teleQuadrantPos=1622,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55038">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,-1624" help="index=55038;Quadrant:7,3;teleQuadrantPos=2704,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55039">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,-1624" help="index=55039;Quadrant:8,3;teleQuadrantPos=3786,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55040">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,-1624" help="index=55040;Quadrant:9,3;teleQuadrantPos=4868,260,-1624;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55041">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,-542" help="index=55041;Quadrant:0,4;teleQuadrantPos=-4870,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55042">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,-542" help="index=55042;Quadrant:1,4;teleQuadrantPos=-3788,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55043">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,-542" help="index=55043;Quadrant:2,4;teleQuadrantPos=-2706,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55044">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,-542" help="index=55044;Quadrant:3,4;teleQuadrantPos=-1624,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55045">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,-542" help="index=55045;Quadrant:4,4;teleQuadrantPos=-542,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55046">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,-542" help="index=55046;Quadrant:5,4;teleQuadrantPos=540,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55047">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,-542" help="index=55047;Quadrant:6,4;teleQuadrantPos=1622,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55048">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,-542" help="index=55048;Quadrant:7,4;teleQuadrantPos=2704,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55049">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,-542" help="index=55049;Quadrant:8,4;teleQuadrantPos=3786,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55050">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,-542" help="index=55050;Quadrant:9,4;teleQuadrantPos=4868,260,-542;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55051">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,540" help="index=55051;Quadrant:0,5;teleQuadrantPos=-4870,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55052">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,540" help="index=55052;Quadrant:1,5;teleQuadrantPos=-3788,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55053">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,540" help="index=55053;Quadrant:2,5;teleQuadrantPos=-2706,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55054">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,540" help="index=55054;Quadrant:3,5;teleQuadrantPos=-1624,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55055">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,540" help="index=55055;Quadrant:4,5;teleQuadrantPos=-542,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55056">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,540" help="index=55056;Quadrant:5,5;teleQuadrantPos=540,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55057">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,540" help="index=55057;Quadrant:6,5;teleQuadrantPos=1622,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55058">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,540" help="index=55058;Quadrant:7,5;teleQuadrantPos=2704,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55059">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,540" help="index=55059;Quadrant:8,5;teleQuadrantPos=3786,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55060">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,540" help="index=55060;Quadrant:9,5;teleQuadrantPos=4868,260,540;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55061">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,1622" help="index=55061;Quadrant:0,6;teleQuadrantPos=-4870,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55062">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,1622" help="index=55062;Quadrant:1,6;teleQuadrantPos=-3788,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55063">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,1622" help="index=55063;Quadrant:2,6;teleQuadrantPos=-2706,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55064">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,1622" help="index=55064;Quadrant:3,6;teleQuadrantPos=-1624,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55065">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,1622" help="index=55065;Quadrant:4,6;teleQuadrantPos=-542,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55066">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,1622" help="index=55066;Quadrant:5,6;teleQuadrantPos=540,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55067">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,1622" help="index=55067;Quadrant:6,6;teleQuadrantPos=1622,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55068">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,1622" help="index=55068;Quadrant:7,6;teleQuadrantPos=2704,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55069">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,1622" help="index=55069;Quadrant:8,6;teleQuadrantPos=3786,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55070">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,1622" help="index=55070;Quadrant:9,6;teleQuadrantPos=4868,260,1622;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55071">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,2704" help="index=55071;Quadrant:0,7;teleQuadrantPos=-4870,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55072">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,2704" help="index=55072;Quadrant:1,7;teleQuadrantPos=-3788,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55073">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,2704" help="index=55073;Quadrant:2,7;teleQuadrantPos=-2706,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55074">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,2704" help="index=55074;Quadrant:3,7;teleQuadrantPos=-1624,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55075">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,2704" help="index=55075;Quadrant:4,7;teleQuadrantPos=-542,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55076">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,2704" help="index=55076;Quadrant:5,7;teleQuadrantPos=540,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55077">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,2704" help="index=55077;Quadrant:6,7;teleQuadrantPos=1622,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55078">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,2704" help="index=55078;Quadrant:7,7;teleQuadrantPos=2704,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55079">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,2704" help="index=55079;Quadrant:8,7;teleQuadrantPos=3786,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55080">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,2704" help="index=55080;Quadrant:9,7;teleQuadrantPos=4868,260,2704;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55081">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,3786" help="index=55081;Quadrant:0,8;teleQuadrantPos=-4870,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55082">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,3786" help="index=55082;Quadrant:1,8;teleQuadrantPos=-3788,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55083">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,3786" help="index=55083;Quadrant:2,8;teleQuadrantPos=-2706,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55084">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,3786" help="index=55084;Quadrant:3,8;teleQuadrantPos=-1624,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55085">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,3786" help="index=55085;Quadrant:4,8;teleQuadrantPos=-542,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55086">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,3786" help="index=55086;Quadrant:5,8;teleQuadrantPos=540,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55087">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,3786" help="index=55087;Quadrant:6,8;teleQuadrantPos=1622,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55088">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,3786" help="index=55088;Quadrant:7,8;teleQuadrantPos=2704,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55089">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,3786" help="index=55089;Quadrant:8,8;teleQuadrantPos=3786,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55090">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,3786" help="index=55090;Quadrant:9,8;teleQuadrantPos=4868,260,3786;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55091">
+      <action class="Teleport">
+        <property name="target_position" value="-4870,260,4868" help="index=55091;Quadrant:0,9;teleQuadrantPos=-4870,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55092">
+      <action class="Teleport">
+        <property name="target_position" value="-3788,260,4868" help="index=55092;Quadrant:1,9;teleQuadrantPos=-3788,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55093">
+      <action class="Teleport">
+        <property name="target_position" value="-2706,260,4868" help="index=55093;Quadrant:2,9;teleQuadrantPos=-2706,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55094">
+      <action class="Teleport">
+        <property name="target_position" value="-1624,260,4868" help="index=55094;Quadrant:3,9;teleQuadrantPos=-1624,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55095">
+      <action class="Teleport">
+        <property name="target_position" value="-542,260,4868" help="index=55095;Quadrant:4,9;teleQuadrantPos=-542,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55096">
+      <action class="Teleport">
+        <property name="target_position" value="540,260,4868" help="index=55096;Quadrant:5,9;teleQuadrantPos=540,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55097">
+      <action class="Teleport">
+        <property name="target_position" value="1622,260,4868" help="index=55097;Quadrant:6,9;teleQuadrantPos=1622,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55098">
+      <action class="Teleport">
+        <property name="target_position" value="2704,260,4868" help="index=55098;Quadrant:7,9;teleQuadrantPos=2704,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55099">
+      <action class="Teleport">
+        <property name="target_position" value="3786,260,4868" help="index=55099;Quadrant:8,9;teleQuadrantPos=3786,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <action_sequence name="eventGSKTeleport55100">
+      <action class="Teleport">
+        <property name="target_position" value="4868,260,4868" help="index=55100;Quadrant:9,9;teleQuadrantPos=4868,260,4868;iDistQuadrant=1082"/>
+      </action>
+    </action_sequence>
+    <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+  </append>
+</GhussakTweaks>

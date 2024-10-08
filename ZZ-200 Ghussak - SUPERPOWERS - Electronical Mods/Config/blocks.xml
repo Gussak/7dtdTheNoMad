@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/blocks">
+    <block name="trapTeleportPadY50">
+      <property name="Extends" value="trapMinePseudoLooseBoardGSK"/>
+      <property name="Model" value="billboard"/>
+      <property name="CustomIcon" value="looseBoardsTrapPlate1x1"/>
+      <property name="CustomIconTint" value="255,0,0"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Texture" value="540" help="painting:txName_Concrete_red:156/TextureId:540"/>
+      <property name="Explosion.ParticleIndex" value="10" help="fire"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
+      <property name="Explosion.Buff" value="buffGSKTrapPOIWERaboveCrafters"/>
+      <property name="CanPickup" value="true"/>
+      <property name="EconomicValue" value="1000"/>
+      <property name="FilterTags" value="MC_building"/>
+    </block>
+  </append>
+  <!--
+		HELPGOOD:
+			pickup fancy things:
+			dont put too many things here, as POIs seems to be designed to have thematic barriers, so if you can easily remove them they become pointless
+			no:
+			@name='palletEmpty' or
+			@name='cntWoodBurningStove' or
+	-->
+  <append xpath="/blocks/block[    @name='wallClock' or    @name='wallClockBroken' or    @name='decoReptileTerrarium' or    @name='decoCowSkull' or    @name='satelliteDish' or    starts-with(@name, 'tv') or    starts-with(@name, 'decoComputer') or    starts-with(@name, 'decoMannequin') or    starts-with(@name, 'signPosterMovie') or    @name='decoClassicDogHouse' or    @name='cntStoreElectronicsBookShelfSpeaker' or    starts-with(@name, 'candelabraLight') or    @name='chandelierLight' or    @name='radioHam'    ]">
+    <property name="CanPickup" value="true"/>
+    <property name="Stacknumber" value="25"/>
+  </append>
+  <append xpath="/blocks/block[@name='cntStoreElectronicsPalletTvFallen']">
+    <drop event="Harvest" name="electronicsParts" count="2" tag="allHarvest"/>
+  </append>
+  <append xpath="/blocks/block[@name='cntStoreElectronicsPalletTvStanding']">
+    <drop event="Harvest" name="electronicsParts" count="8" tag="allHarvest"/>
+  </append>
+  <append xpath="/blocks/block[   @name='cntATMInsecure' or   @name='cntHardenedChestInsecure' or   @name='cntHardenedChestInsecureT5'  ]">
+    <drop event="Harvest" name="electronicsParts" count="1,2" tag="salvageHarvest"/>
+    <drop event="Harvest" name="NightVisionBattery" count="5,10" tag="salvageHarvest"/>
+  </append>
+  <append xpath="/blocks">
+    <block name="NVBatteryChargePostX1" help="placing 8 creating a square, with the center empty, and energising them all, ISSUE/TESTING: will not work like x4 charging speed, only one of them will affect the player? see more at buffNVBattChargerPost">
+      <property name="Extends" value="electricfencepost"/>
+      <property name="CustomIcon" value="electricfencepost"/>
+      <property name="DescriptionKey" value="dkNVBatteryChargePost"/>
+      <property name="UnlockedBy" value="perkElectrocutioner"/>
+      <property name="RequiredPower" value="74" help="was 80, but generator with engines limit is 300, and switch requires 1"/>
+      <property name="Buff" value="buffNVBattChargerPost"/>
+      <property name="BuffChance" value="1"/>
+      <property name="MaxDamage" value="1000"/>
+    </block>
+    <block name="NVBatteryChargePostX2" help="one full generator required">
+      <property name="Extends" value="electricfencepost"/>
+      <property name="CustomIcon" value="electricfencepost"/>
+      <property name="DescriptionKey" value="dkNVBatteryChargePost"/>
+      <property name="UnlockedBy" value="perkElectrocutioner"/>
+      <property name="RequiredPower" value="148"/>
+      <property name="Buff" value="buffNVBattChargerPostX2"/>
+      <property name="BuffChance" value="1"/>
+      <property name="MaxDamage" value="1000"/>
+    </block>
+    <block name="NVBatteryChargePostX4" help="2 full generators required">
+      <property name="Extends" value="electricfencepost"/>
+      <property name="CustomIcon" value="electricfencepost"/>
+      <property name="DescriptionKey" value="dkNVBatteryChargePost"/>
+      <property name="UnlockedBy" value="perkElectrocutioner"/>
+      <property name="RequiredPower" value="296"/>
+      <property name="Buff" value="buffNVBattChargerPostX4"/>
+      <property name="BuffChance" value="1"/>
+      <property name="MaxDamage" value="1000"/>
+    </block>
+  </append>
+  <append xpath="/blocks/block[@name='cntATMSecure' or @name='cntATMInsecure']" help="TODO:FAILED in A20">
+    <property name="Buff" value="buffShocked"/>
+  </append>
+</GhussakTweaks>

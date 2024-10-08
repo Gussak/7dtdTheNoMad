@@ -1,0 +1,1630 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNVEnUseUpdRate" operation="set" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBatteryEnergyMinModActivableCfgRO" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNVCfgRO" operation="set" value="1.00"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWLCfgRO" operation="set" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHLCfgRO" operation="set" value="0.10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNVCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWLCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHLCfgRO" operation="multiply" value="@fGSKNVEnUseUpdRate"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="75"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="150">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="300">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="600">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="1200">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="3"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="2400">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="4"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattMaxCharge" operation="set" value="4800">
+          <requirement name="CVarCompare" cvar="bGSKEnergyTB" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="5"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="set" value="@iGSKBattMaxCharge"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="multiply" value="@fGSKDmgPercSubTB">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercSubTB" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKBattMaxChargeCurrent" operation="set" value="75" help="the minimum must always be the value when without the battery mod">
+          <requirement name="CVarCompare" cvar="fGSKBattMaxChargeCurrent" operation="LT" value="75"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNVIntensity" operation="set" value="1.0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryCharge" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeStrong" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattStrongEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeSuperOvercharge" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@iGSKBattSuperOverchargeEnergy"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionAddBatteryChargeWork"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNightVisionAddBatteryChargeWork" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnDegrade" target="self"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectHLON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectWLON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectNVON" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="other very useful info">
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnLog"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKElctrnOverchargeDmg74"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLBlinkOffThenGoOn" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectHLBlinkOnThenGoOff" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLight" active="true"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightCam" active="true"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLight" active="false"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightCam" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLBlinkOffThenGoOn" hidden="true" remove_on_death="false" help="will turn OFF on start and turn ON on remove">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectWLBlinkOnThenGoOff" hidden="true" remove_on_death="false" help="will turn ON on start and turn OFF on remove">
+      <stack_type value="ignore"/>
+      <duration value="0.10" help="each calc frame is 0.05s right? 20fps. could be 0.05 as long it is removed on the next frame only"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetTransformActive" active="false" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Side" transform_path="lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="Gunjoint" transform_path="flashlight_lightSource"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetTransformActive" active="true" parent_transform="#HeldItemRoot" transform_path="lightSource"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVWeakON" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="LT" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVOFF" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVBlinkOffThenGoOn" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVisualEffectNVBlinkOnThenGoOff" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.10"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" intensity="0.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightTPV" active="false"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="SetPartActive" part="HeadLightFPV" active="false"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" intensity="1.00" fade="0.0" effect_name="NightVision"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightTPV" active="@!.IsFPV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="SetPartActive" part="HeadLightFPV" active="@.IsFPV"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCalcLightsPercRound" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercHLShow" operation="set" value="@fGSKDmgPercHL"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercHLShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercWLShow" operation="set" value="@fGSKDmgPercWL"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercWLShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercNVShow" operation="set" value="@fGSKDmgPercNV"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercNVShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTAShow" operation="set" value="@fGSKDmgPercTA"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTAShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTBShow" operation="set" value="@fGSKDmgPercTB"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTBShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTHShow" operation="set" value="@fGSKDmgPercTH"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTHShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTPShow" operation="set" value="@fGSKDmgPercTP"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTPShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTRShow" operation="set" value="@fGSKDmgPercTR"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTRShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTSShow" operation="set" value="@fGSKDmgPercTS"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTSShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="set" value="@fGSKDmgPercTT"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgPercTTShow" operation="multiply" value="100"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleQuadrantDeny" hidden="false" remove_on_death="true" name_key="TeleToQuadrantDenied" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex">
+      <stack_type value="ignore"/>
+      <duration value="900" help="ISSUE: should be based in 1/4 of one day in game time"/>
+    </buff>
+    <buff name="buffGSKTeleQuadrantStart" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="60.0"/>
+      <display_value value=".iGSKTeleQuadrantCount"/>
+      <display_value_key value="{0:0}/10s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleQuadrantCount" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKTeleQuadrantCount" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNPCSelfPreventDismissSecs" operation="set" value="15" help="just to prevent followers staying for any reason just b4 teleporting">
+          <requirement name="CVarCompare" cvar="fGSKNPCSelfPreventDismissSecs" operation="LT" value="15" help="this is to prevent increasing that too much for free"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="15">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="15" help="this is essential because still dieing of fall damage..."/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantLog"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKremoveTeleQuadrantItem" help="TODO: removes 1 or all???"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantDeny"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff" help="here will be just a debuff, unless if using the teleport to sky just above option"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKFallProtTm" operation="set" value="@.fGSKCfgFallProtTmMin" help="this is to protect from fall damage">
+          <requirement name="CVarCompare" cvar=".bGSKFallProtTm" operation="LT" value="@.fGSKCfgFallProtTmMin"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKTeleportedToSky" operation="set" value="1" help="this is to protect from fall damage"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKParachuteSQN"/>
+        <!-- HELPGOOD: is consuming energy and damaging tele mod already -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKExplrUndPOIcredit" operation="add" value="-1" help="sync with requirement from GSKCFGElctrnTeleChangeQuadrantIndex"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleRandomQuadrantTilMatchBiome" hidden="false" remove_on_death="true" name_key="TeleportToQuadrant" description_key="dkGSKCFGElctrnTeleChangeQuadrantIndex" icon="7dtdShockTip" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.50" help="buffGSKUpdateBiomeID is very fast 0.05"/>
+      <effect_group help="init">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="10"/>
+      </effect_group>
+      <effect_group help="request update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="20"/>
+      </effect_group>
+      <effect_group help="wait update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="20"/>
+        <requirement name="NotHasBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="25"/>
+      </effect_group>
+      <effect_group help="biome ID matches requested, go to end">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="25"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="40"/>
+      </effect_group>
+      <effect_group help="biome ID differs from requested, randomize and teleport">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="25"/>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToRandomQuadrant" operation="set" value="randomInt(55001,55100)" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKTeleToRandomQuadrant"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="30"/>
+      </effect_group>
+      <effect_group help="wait teleport end and request update biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="30"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="40"/>
+      </effect_group>
+      <effect_group help="wait update biome ID and finish if matches request or restart if differs from requested biome ID">
+        <requirement name="CVarCompare" cvar=".iGSKTeleToMatchBiomePhase" operation="Equals" value="40"/>
+        <requirement name="NotHasBuff" buff="buffGSKUpdateBiomeID"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTeleToMatchBiomePhase" operation="set" value="10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="NotEquals" value="@.iGSKBiomeId"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleQuadrantCallEvent">
+      <stack_type value="ignore"/>
+      <duration value="3.0"/>
+      <update_rate value="2.0" help="this trick of duration=3 update_rate=2 and onSelfBuffUpdate, is meant to let other buffs kickin before the player teleports, to try to protect the player from fall damage"/>
+      <effect_group>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55001" help="index=55001;Quadrant:0,0;teleQuadrantPos=-4870,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55001"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55002" help="index=55002;Quadrant:1,0;teleQuadrantPos=-3788,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55002"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55003" help="index=55003;Quadrant:2,0;teleQuadrantPos=-2706,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55003"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55004" help="index=55004;Quadrant:3,0;teleQuadrantPos=-1624,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55004"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55005" help="index=55005;Quadrant:4,0;teleQuadrantPos=-542,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55005"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55006" help="index=55006;Quadrant:5,0;teleQuadrantPos=540,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55006"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55007" help="index=55007;Quadrant:6,0;teleQuadrantPos=1622,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55007"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55008" help="index=55008;Quadrant:7,0;teleQuadrantPos=2704,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55008"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55009" help="index=55009;Quadrant:8,0;teleQuadrantPos=3786,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55009"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55010" help="index=55010;Quadrant:9,0;teleQuadrantPos=4868,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55010"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55011" help="index=55011;Quadrant:0,1;teleQuadrantPos=-4870,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55011"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55012" help="index=55012;Quadrant:1,1;teleQuadrantPos=-3788,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55012"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55013" help="index=55013;Quadrant:2,1;teleQuadrantPos=-2706,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55013"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55014" help="index=55014;Quadrant:3,1;teleQuadrantPos=-1624,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55014"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55015" help="index=55015;Quadrant:4,1;teleQuadrantPos=-542,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55015"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55016" help="index=55016;Quadrant:5,1;teleQuadrantPos=540,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55016"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55017" help="index=55017;Quadrant:6,1;teleQuadrantPos=1622,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55017"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55018" help="index=55018;Quadrant:7,1;teleQuadrantPos=2704,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55018"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55019" help="index=55019;Quadrant:8,1;teleQuadrantPos=3786,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55019"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55020" help="index=55020;Quadrant:9,1;teleQuadrantPos=4868,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55020"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55021" help="index=55021;Quadrant:0,2;teleQuadrantPos=-4870,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55021"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55022" help="index=55022;Quadrant:1,2;teleQuadrantPos=-3788,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55022"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55023" help="index=55023;Quadrant:2,2;teleQuadrantPos=-2706,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55023"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55024" help="index=55024;Quadrant:3,2;teleQuadrantPos=-1624,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55024"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55025" help="index=55025;Quadrant:4,2;teleQuadrantPos=-542,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55025"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55026" help="index=55026;Quadrant:5,2;teleQuadrantPos=540,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55026"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55027" help="index=55027;Quadrant:6,2;teleQuadrantPos=1622,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55027"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55028" help="index=55028;Quadrant:7,2;teleQuadrantPos=2704,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55028"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55029" help="index=55029;Quadrant:8,2;teleQuadrantPos=3786,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55029"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55030" help="index=55030;Quadrant:9,2;teleQuadrantPos=4868,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55030"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55031" help="index=55031;Quadrant:0,3;teleQuadrantPos=-4870,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55031"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55032" help="index=55032;Quadrant:1,3;teleQuadrantPos=-3788,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55032"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55033" help="index=55033;Quadrant:2,3;teleQuadrantPos=-2706,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55033"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55034" help="index=55034;Quadrant:3,3;teleQuadrantPos=-1624,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55034"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55035" help="index=55035;Quadrant:4,3;teleQuadrantPos=-542,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55035"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55036" help="index=55036;Quadrant:5,3;teleQuadrantPos=540,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55036"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55037" help="index=55037;Quadrant:6,3;teleQuadrantPos=1622,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55037"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55038" help="index=55038;Quadrant:7,3;teleQuadrantPos=2704,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55038"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55039" help="index=55039;Quadrant:8,3;teleQuadrantPos=3786,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55039"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55040" help="index=55040;Quadrant:9,3;teleQuadrantPos=4868,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55040"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55041" help="index=55041;Quadrant:0,4;teleQuadrantPos=-4870,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55041"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55042" help="index=55042;Quadrant:1,4;teleQuadrantPos=-3788,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55042"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55043" help="index=55043;Quadrant:2,4;teleQuadrantPos=-2706,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55043"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55044" help="index=55044;Quadrant:3,4;teleQuadrantPos=-1624,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55044"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55045" help="index=55045;Quadrant:4,4;teleQuadrantPos=-542,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55045"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55046" help="index=55046;Quadrant:5,4;teleQuadrantPos=540,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55046"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55047" help="index=55047;Quadrant:6,4;teleQuadrantPos=1622,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55047"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55048" help="index=55048;Quadrant:7,4;teleQuadrantPos=2704,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55048"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55049" help="index=55049;Quadrant:8,4;teleQuadrantPos=3786,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55049"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55050" help="index=55050;Quadrant:9,4;teleQuadrantPos=4868,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55050"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55051" help="index=55051;Quadrant:0,5;teleQuadrantPos=-4870,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55051"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55052" help="index=55052;Quadrant:1,5;teleQuadrantPos=-3788,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55052"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55053" help="index=55053;Quadrant:2,5;teleQuadrantPos=-2706,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55053"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55054" help="index=55054;Quadrant:3,5;teleQuadrantPos=-1624,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55054"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55055" help="index=55055;Quadrant:4,5;teleQuadrantPos=-542,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55055"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55056" help="index=55056;Quadrant:5,5;teleQuadrantPos=540,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55056"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55057" help="index=55057;Quadrant:6,5;teleQuadrantPos=1622,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55057"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55058" help="index=55058;Quadrant:7,5;teleQuadrantPos=2704,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55058"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55059" help="index=55059;Quadrant:8,5;teleQuadrantPos=3786,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55059"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55060" help="index=55060;Quadrant:9,5;teleQuadrantPos=4868,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55060"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55061" help="index=55061;Quadrant:0,6;teleQuadrantPos=-4870,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55061"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55062" help="index=55062;Quadrant:1,6;teleQuadrantPos=-3788,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55062"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55063" help="index=55063;Quadrant:2,6;teleQuadrantPos=-2706,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55063"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55064" help="index=55064;Quadrant:3,6;teleQuadrantPos=-1624,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55064"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55065" help="index=55065;Quadrant:4,6;teleQuadrantPos=-542,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55065"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55066" help="index=55066;Quadrant:5,6;teleQuadrantPos=540,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55066"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55067" help="index=55067;Quadrant:6,6;teleQuadrantPos=1622,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55067"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55068" help="index=55068;Quadrant:7,6;teleQuadrantPos=2704,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55068"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55069" help="index=55069;Quadrant:8,6;teleQuadrantPos=3786,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55069"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55070" help="index=55070;Quadrant:9,6;teleQuadrantPos=4868,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55070"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55071" help="index=55071;Quadrant:0,7;teleQuadrantPos=-4870,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55071"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55072" help="index=55072;Quadrant:1,7;teleQuadrantPos=-3788,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55072"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55073" help="index=55073;Quadrant:2,7;teleQuadrantPos=-2706,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55073"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55074" help="index=55074;Quadrant:3,7;teleQuadrantPos=-1624,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55074"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55075" help="index=55075;Quadrant:4,7;teleQuadrantPos=-542,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55075"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55076" help="index=55076;Quadrant:5,7;teleQuadrantPos=540,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55076"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55077" help="index=55077;Quadrant:6,7;teleQuadrantPos=1622,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55077"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55078" help="index=55078;Quadrant:7,7;teleQuadrantPos=2704,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55078"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55079" help="index=55079;Quadrant:8,7;teleQuadrantPos=3786,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55079"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55080" help="index=55080;Quadrant:9,7;teleQuadrantPos=4868,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55080"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55081" help="index=55081;Quadrant:0,8;teleQuadrantPos=-4870,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55081"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55082" help="index=55082;Quadrant:1,8;teleQuadrantPos=-3788,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55082"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55083" help="index=55083;Quadrant:2,8;teleQuadrantPos=-2706,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55083"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55084" help="index=55084;Quadrant:3,8;teleQuadrantPos=-1624,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55084"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55085" help="index=55085;Quadrant:4,8;teleQuadrantPos=-542,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55085"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55086" help="index=55086;Quadrant:5,8;teleQuadrantPos=540,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55086"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55087" help="index=55087;Quadrant:6,8;teleQuadrantPos=1622,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55087"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55088" help="index=55088;Quadrant:7,8;teleQuadrantPos=2704,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55088"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55089" help="index=55089;Quadrant:8,8;teleQuadrantPos=3786,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55089"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55090" help="index=55090;Quadrant:9,8;teleQuadrantPos=4868,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55090"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55091" help="index=55091;Quadrant:0,9;teleQuadrantPos=-4870,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55091"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55092" help="index=55092;Quadrant:1,9;teleQuadrantPos=-3788,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55092"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55093" help="index=55093;Quadrant:2,9;teleQuadrantPos=-2706,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55093"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55094" help="index=55094;Quadrant:3,9;teleQuadrantPos=-1624,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55094"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55095" help="index=55095;Quadrant:4,9;teleQuadrantPos=-542,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55095"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55096" help="index=55096;Quadrant:5,9;teleQuadrantPos=540,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55096"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55097" help="index=55097;Quadrant:6,9;teleQuadrantPos=1622,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55097"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55098" help="index=55098;Quadrant:7,9;teleQuadrantPos=2704,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55098"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55099" help="index=55099;Quadrant:8,9;teleQuadrantPos=3786,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55099"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleport55100" help="index=55100;Quadrant:9,9;teleQuadrantPos=4868,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55100"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops" help="it seems only fall damage can kill player now? so this fix it">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantCallEvent"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleQuadrantLog">
+      <stack_type value="ignore"/>
+      <duration value="2.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_TeleQuadrantLog_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55001;Quadrant:0,0;teleQuadrantPos=-4870,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55001"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55002;Quadrant:1,0;teleQuadrantPos=-3788,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55002"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55003;Quadrant:2,0;teleQuadrantPos=-2706,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55003"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55004;Quadrant:3,0;teleQuadrantPos=-1624,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55004"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55005;Quadrant:4,0;teleQuadrantPos=-542,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55005"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55006;Quadrant:5,0;teleQuadrantPos=540,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55006"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55007;Quadrant:6,0;teleQuadrantPos=1622,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55007"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55008;Quadrant:7,0;teleQuadrantPos=2704,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55008"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55009;Quadrant:8,0;teleQuadrantPos=3786,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55009"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55010;Quadrant:9,0;teleQuadrantPos=4868,260,-4870;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55010"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55011;Quadrant:0,1;teleQuadrantPos=-4870,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55011"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55012;Quadrant:1,1;teleQuadrantPos=-3788,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55012"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55013;Quadrant:2,1;teleQuadrantPos=-2706,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55013"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55014;Quadrant:3,1;teleQuadrantPos=-1624,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55014"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55015;Quadrant:4,1;teleQuadrantPos=-542,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55015"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55016;Quadrant:5,1;teleQuadrantPos=540,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55016"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55017;Quadrant:6,1;teleQuadrantPos=1622,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55017"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55018;Quadrant:7,1;teleQuadrantPos=2704,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55018"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55019;Quadrant:8,1;teleQuadrantPos=3786,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55019"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55020;Quadrant:9,1;teleQuadrantPos=4868,260,-3788;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55020"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55021;Quadrant:0,2;teleQuadrantPos=-4870,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55021"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55022;Quadrant:1,2;teleQuadrantPos=-3788,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55022"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55023;Quadrant:2,2;teleQuadrantPos=-2706,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55023"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55024;Quadrant:3,2;teleQuadrantPos=-1624,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55024"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55025;Quadrant:4,2;teleQuadrantPos=-542,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55025"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55026;Quadrant:5,2;teleQuadrantPos=540,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55026"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55027;Quadrant:6,2;teleQuadrantPos=1622,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55027"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55028;Quadrant:7,2;teleQuadrantPos=2704,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55028"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55029;Quadrant:8,2;teleQuadrantPos=3786,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55029"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55030;Quadrant:9,2;teleQuadrantPos=4868,260,-2706;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55030"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55031;Quadrant:0,3;teleQuadrantPos=-4870,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55031"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55032;Quadrant:1,3;teleQuadrantPos=-3788,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55032"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55033;Quadrant:2,3;teleQuadrantPos=-2706,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55033"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55034;Quadrant:3,3;teleQuadrantPos=-1624,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55034"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55035;Quadrant:4,3;teleQuadrantPos=-542,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55035"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55036;Quadrant:5,3;teleQuadrantPos=540,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55036"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55037;Quadrant:6,3;teleQuadrantPos=1622,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55037"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55038;Quadrant:7,3;teleQuadrantPos=2704,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55038"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55039;Quadrant:8,3;teleQuadrantPos=3786,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55039"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55040;Quadrant:9,3;teleQuadrantPos=4868,260,-1624;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55040"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55041;Quadrant:0,4;teleQuadrantPos=-4870,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55041"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55042;Quadrant:1,4;teleQuadrantPos=-3788,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55042"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55043;Quadrant:2,4;teleQuadrantPos=-2706,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55043"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55044;Quadrant:3,4;teleQuadrantPos=-1624,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55044"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55045;Quadrant:4,4;teleQuadrantPos=-542,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55045"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55046;Quadrant:5,4;teleQuadrantPos=540,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55046"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55047;Quadrant:6,4;teleQuadrantPos=1622,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55047"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55048;Quadrant:7,4;teleQuadrantPos=2704,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55048"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55049;Quadrant:8,4;teleQuadrantPos=3786,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55049"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55050;Quadrant:9,4;teleQuadrantPos=4868,260,-542;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55050"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55051;Quadrant:0,5;teleQuadrantPos=-4870,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55051"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55052;Quadrant:1,5;teleQuadrantPos=-3788,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55052"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55053;Quadrant:2,5;teleQuadrantPos=-2706,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55053"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55054;Quadrant:3,5;teleQuadrantPos=-1624,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55054"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55055;Quadrant:4,5;teleQuadrantPos=-542,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55055"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55056;Quadrant:5,5;teleQuadrantPos=540,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55056"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55057;Quadrant:6,5;teleQuadrantPos=1622,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55057"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55058;Quadrant:7,5;teleQuadrantPos=2704,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55058"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55059;Quadrant:8,5;teleQuadrantPos=3786,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55059"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55060;Quadrant:9,5;teleQuadrantPos=4868,260,540;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55060"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55061;Quadrant:0,6;teleQuadrantPos=-4870,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55061"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55062;Quadrant:1,6;teleQuadrantPos=-3788,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55062"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55063;Quadrant:2,6;teleQuadrantPos=-2706,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55063"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55064;Quadrant:3,6;teleQuadrantPos=-1624,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55064"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55065;Quadrant:4,6;teleQuadrantPos=-542,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55065"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55066;Quadrant:5,6;teleQuadrantPos=540,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55066"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55067;Quadrant:6,6;teleQuadrantPos=1622,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55067"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55068;Quadrant:7,6;teleQuadrantPos=2704,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55068"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55069;Quadrant:8,6;teleQuadrantPos=3786,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55069"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55070;Quadrant:9,6;teleQuadrantPos=4868,260,1622;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55070"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55071;Quadrant:0,7;teleQuadrantPos=-4870,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55071"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55072;Quadrant:1,7;teleQuadrantPos=-3788,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55072"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55073;Quadrant:2,7;teleQuadrantPos=-2706,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55073"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55074;Quadrant:3,7;teleQuadrantPos=-1624,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55074"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55075;Quadrant:4,7;teleQuadrantPos=-542,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55075"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55076;Quadrant:5,7;teleQuadrantPos=540,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55076"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55077;Quadrant:6,7;teleQuadrantPos=1622,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55077"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55078;Quadrant:7,7;teleQuadrantPos=2704,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55078"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55079;Quadrant:8,7;teleQuadrantPos=3786,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55079"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55080;Quadrant:9,7;teleQuadrantPos=4868,260,2704;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55080"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55081;Quadrant:0,8;teleQuadrantPos=-4870,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55081"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55082;Quadrant:1,8;teleQuadrantPos=-3788,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55082"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55083;Quadrant:2,8;teleQuadrantPos=-2706,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55083"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55084;Quadrant:3,8;teleQuadrantPos=-1624,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55084"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55085;Quadrant:4,8;teleQuadrantPos=-542,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55085"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55086;Quadrant:5,8;teleQuadrantPos=540,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55086"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55087;Quadrant:6,8;teleQuadrantPos=1622,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55087"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55088;Quadrant:7,8;teleQuadrantPos=2704,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55088"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55089;Quadrant:8,8;teleQuadrantPos=3786,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55089"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55090;Quadrant:9,8;teleQuadrantPos=4868,260,3786;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55090"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55091;Quadrant:0,9;teleQuadrantPos=-4870,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55091"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55092;Quadrant:1,9;teleQuadrantPos=-3788,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55092"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55093;Quadrant:2,9;teleQuadrantPos=-2706,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55093"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55094;Quadrant:3,9;teleQuadrantPos=-1624,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55094"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55095;Quadrant:4,9;teleQuadrantPos=-542,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55095"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55096;Quadrant:5,9;teleQuadrantPos=540,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55096"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55097;Quadrant:6,9;teleQuadrantPos=1622,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55097"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55098;Quadrant:7,9;teleQuadrantPos=2704,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55098"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55099;Quadrant:8,9;teleQuadrantPos=3786,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55099"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:index=55100;Quadrant:9,9;teleQuadrantPos=4868,260,4868;iDistQuadrant=1082">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55100"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_TeleQuadrantLog_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantLog"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleQuadrantCalc">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <!--				HELPGOOD: X -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="set" value="@.iGSKElctrnTeleQuadrantMaxINDEX">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleQuadrantX" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleQuadrantX" operation="GT" value="@.iGSKElctrnTeleQuadrantMaxINDEX"/>
+        </triggered_effect>
+        <!--				HELPGOOD: Z -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="set" value="@.iGSKElctrnTeleQuadrantMaxINDEX">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleQuadrantZ" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKElctrnTeleQuadrantZ" operation="GT" value="@.iGSKElctrnTeleQuadrantMaxINDEX"/>
+        </triggered_effect>
+        <!--				HELPGOOD: sync calc with script codegen createQuadrantTeleporters.sh 
+iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKElctrnTeleQuadrantZ"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="multiply" value="@.iGSKElctrnTeleQuadrantTotXorZ"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="@.iGSKElctrnTeleQuadrantX"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="@.iGSKElctrnTeleQuadrantFIRST"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKTeleportedToSpawnPointIndex"/>
+        <!--				HELPGOOD: HUD -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKTeleQuadrantHUD"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantCalc"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleQuadrantHUD">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_TeleQuadrantHUD_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55001" help="index=55001;Quadrant:0,0;teleQuadrantPos=-4870,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55002" help="index=55002;Quadrant:1,0;teleQuadrantPos=-3788,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55003" help="index=55003;Quadrant:2,0;teleQuadrantPos=-2706,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55004" help="index=55004;Quadrant:3,0;teleQuadrantPos=-1624,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55005" help="index=55005;Quadrant:4,0;teleQuadrantPos=-542,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55006" help="index=55006;Quadrant:5,0;teleQuadrantPos=540,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55007" help="index=55007;Quadrant:6,0;teleQuadrantPos=1622,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55008" help="index=55008;Quadrant:7,0;teleQuadrantPos=2704,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55009" help="index=55009;Quadrant:8,0;teleQuadrantPos=3786,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55010" help="index=55010;Quadrant:9,0;teleQuadrantPos=4868,260,-4870;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-4870"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55011" help="index=55011;Quadrant:0,1;teleQuadrantPos=-4870,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55012" help="index=55012;Quadrant:1,1;teleQuadrantPos=-3788,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55013" help="index=55013;Quadrant:2,1;teleQuadrantPos=-2706,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55014" help="index=55014;Quadrant:3,1;teleQuadrantPos=-1624,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55015" help="index=55015;Quadrant:4,1;teleQuadrantPos=-542,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55016" help="index=55016;Quadrant:5,1;teleQuadrantPos=540,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55017" help="index=55017;Quadrant:6,1;teleQuadrantPos=1622,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55018" help="index=55018;Quadrant:7,1;teleQuadrantPos=2704,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55019" help="index=55019;Quadrant:8,1;teleQuadrantPos=3786,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55020" help="index=55020;Quadrant:9,1;teleQuadrantPos=4868,260,-3788;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-3788"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55021" help="index=55021;Quadrant:0,2;teleQuadrantPos=-4870,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55022" help="index=55022;Quadrant:1,2;teleQuadrantPos=-3788,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55023" help="index=55023;Quadrant:2,2;teleQuadrantPos=-2706,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55024" help="index=55024;Quadrant:3,2;teleQuadrantPos=-1624,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55025" help="index=55025;Quadrant:4,2;teleQuadrantPos=-542,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55026" help="index=55026;Quadrant:5,2;teleQuadrantPos=540,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55027" help="index=55027;Quadrant:6,2;teleQuadrantPos=1622,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55028" help="index=55028;Quadrant:7,2;teleQuadrantPos=2704,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55029" help="index=55029;Quadrant:8,2;teleQuadrantPos=3786,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55030" help="index=55030;Quadrant:9,2;teleQuadrantPos=4868,260,-2706;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-2706"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55031" help="index=55031;Quadrant:0,3;teleQuadrantPos=-4870,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55032" help="index=55032;Quadrant:1,3;teleQuadrantPos=-3788,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55033" help="index=55033;Quadrant:2,3;teleQuadrantPos=-2706,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55034" help="index=55034;Quadrant:3,3;teleQuadrantPos=-1624,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55035" help="index=55035;Quadrant:4,3;teleQuadrantPos=-542,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55036" help="index=55036;Quadrant:5,3;teleQuadrantPos=540,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55037" help="index=55037;Quadrant:6,3;teleQuadrantPos=1622,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55038" help="index=55038;Quadrant:7,3;teleQuadrantPos=2704,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55039" help="index=55039;Quadrant:8,3;teleQuadrantPos=3786,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55040" help="index=55040;Quadrant:9,3;teleQuadrantPos=4868,260,-1624;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-1624"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55041" help="index=55041;Quadrant:0,4;teleQuadrantPos=-4870,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55042" help="index=55042;Quadrant:1,4;teleQuadrantPos=-3788,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55043" help="index=55043;Quadrant:2,4;teleQuadrantPos=-2706,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55044" help="index=55044;Quadrant:3,4;teleQuadrantPos=-1624,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55045" help="index=55045;Quadrant:4,4;teleQuadrantPos=-542,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55046" help="index=55046;Quadrant:5,4;teleQuadrantPos=540,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55047" help="index=55047;Quadrant:6,4;teleQuadrantPos=1622,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55048" help="index=55048;Quadrant:7,4;teleQuadrantPos=2704,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55049" help="index=55049;Quadrant:8,4;teleQuadrantPos=3786,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55050" help="index=55050;Quadrant:9,4;teleQuadrantPos=4868,260,-542;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="-542"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55051" help="index=55051;Quadrant:0,5;teleQuadrantPos=-4870,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55052" help="index=55052;Quadrant:1,5;teleQuadrantPos=-3788,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55053" help="index=55053;Quadrant:2,5;teleQuadrantPos=-2706,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55054" help="index=55054;Quadrant:3,5;teleQuadrantPos=-1624,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55055" help="index=55055;Quadrant:4,5;teleQuadrantPos=-542,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55056" help="index=55056;Quadrant:5,5;teleQuadrantPos=540,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55057" help="index=55057;Quadrant:6,5;teleQuadrantPos=1622,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55058" help="index=55058;Quadrant:7,5;teleQuadrantPos=2704,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55059" help="index=55059;Quadrant:8,5;teleQuadrantPos=3786,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55060" help="index=55060;Quadrant:9,5;teleQuadrantPos=4868,260,540;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="540"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55061" help="index=55061;Quadrant:0,6;teleQuadrantPos=-4870,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55062" help="index=55062;Quadrant:1,6;teleQuadrantPos=-3788,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55063" help="index=55063;Quadrant:2,6;teleQuadrantPos=-2706,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55064" help="index=55064;Quadrant:3,6;teleQuadrantPos=-1624,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55065" help="index=55065;Quadrant:4,6;teleQuadrantPos=-542,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55066" help="index=55066;Quadrant:5,6;teleQuadrantPos=540,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55067" help="index=55067;Quadrant:6,6;teleQuadrantPos=1622,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55068" help="index=55068;Quadrant:7,6;teleQuadrantPos=2704,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55069" help="index=55069;Quadrant:8,6;teleQuadrantPos=3786,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55070" help="index=55070;Quadrant:9,6;teleQuadrantPos=4868,260,1622;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="1622"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55071" help="index=55071;Quadrant:0,7;teleQuadrantPos=-4870,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55072" help="index=55072;Quadrant:1,7;teleQuadrantPos=-3788,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55073" help="index=55073;Quadrant:2,7;teleQuadrantPos=-2706,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55074" help="index=55074;Quadrant:3,7;teleQuadrantPos=-1624,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55075" help="index=55075;Quadrant:4,7;teleQuadrantPos=-542,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55076" help="index=55076;Quadrant:5,7;teleQuadrantPos=540,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55077" help="index=55077;Quadrant:6,7;teleQuadrantPos=1622,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55078" help="index=55078;Quadrant:7,7;teleQuadrantPos=2704,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55079" help="index=55079;Quadrant:8,7;teleQuadrantPos=3786,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55080" help="index=55080;Quadrant:9,7;teleQuadrantPos=4868,260,2704;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="2704"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55081" help="index=55081;Quadrant:0,8;teleQuadrantPos=-4870,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55082" help="index=55082;Quadrant:1,8;teleQuadrantPos=-3788,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55083" help="index=55083;Quadrant:2,8;teleQuadrantPos=-2706,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55084" help="index=55084;Quadrant:3,8;teleQuadrantPos=-1624,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55085" help="index=55085;Quadrant:4,8;teleQuadrantPos=-542,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55086" help="index=55086;Quadrant:5,8;teleQuadrantPos=540,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55087" help="index=55087;Quadrant:6,8;teleQuadrantPos=1622,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55088" help="index=55088;Quadrant:7,8;teleQuadrantPos=2704,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55089" help="index=55089;Quadrant:8,8;teleQuadrantPos=3786,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55090" help="index=55090;Quadrant:9,8;teleQuadrantPos=4868,260,3786;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="3786"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55091" help="index=55091;Quadrant:0,9;teleQuadrantPos=-4870,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-4870"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55092" help="index=55092;Quadrant:1,9;teleQuadrantPos=-3788,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-3788"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55093" help="index=55093;Quadrant:2,9;teleQuadrantPos=-2706,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-2706"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55094" help="index=55094;Quadrant:3,9;teleQuadrantPos=-1624,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-1624"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55095" help="index=55095;Quadrant:4,9;teleQuadrantPos=-542,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="-542"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55096" help="index=55096;Quadrant:5,9;teleQuadrantPos=540,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="540"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55097" help="index=55097;Quadrant:6,9;teleQuadrantPos=1622,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="1622"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55098" help="index=55098;Quadrant:7,9;teleQuadrantPos=2704,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="2704"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55099" help="index=55099;Quadrant:8,9;teleQuadrantPos=3786,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="3786"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="Equals" value="55100" help="index=55100;Quadrant:9,9;teleQuadrantPos=4868,260,4868;iDistQuadrant=1082"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="4868"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="4868"/>
+      </effect_group>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATEQUADRANTTELEPORTERS_TeleQuadrantHUD_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createQuadrantTeleporters.sh ===== -->
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleQuadrantHUD"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCycleBiomeChoice" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-1" help="Snow">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="9"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-3" help="PineForest">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-5" help="Desert">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-8" help="Wasteland">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="-9" help="BurntForest">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="multiply" value="-1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointBiomeId"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTrapPOIWERaboveCrafters" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="6"/>
+      <update_rate value="7"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Teleport Pad activated"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffBurningElement"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKTelePOIWERUp"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']/effect_group[@id='GSKConfigConstants']">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantBASE" operation="set" value="55000" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantFIRST" operation="set" value="55001" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantLAST" operation="set" value="55100" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantMinINDEX" operation="set" value="0" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantMaxINDEX" operation="set" value="9" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantTotXorZ" operation="set" value="10" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantDIST" operation="set" value="1082" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantMARGIN" operation="set" value="250" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantHalfMapSIZE" operation="set" value="5120" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
+  </append>
+</GhussakTweaks>
