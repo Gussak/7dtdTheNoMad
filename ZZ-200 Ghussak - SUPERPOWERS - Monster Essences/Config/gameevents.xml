@@ -222,4 +222,89 @@ Parameter name: collection
       </action>
     </action_sequence>
   </append>
+  <append xpath="/gameevents" help="psyonic bullet explosion target based">
+    <action_sequence name="eventGSKbulletExplosionPsyonic">
+      <property name="allow_user_trigger" value="true"/>
+      <property name="action_type" value="Game"/>
+      <!-- HELPGOOD: will have at least self
+			<requirement class="NearbyEntities">
+				<property name="max_distance" value="2" param1="iRadius" />
+			</requirement>
+-->
+      <action class="AddEntitiesToGroup">
+        <property name="phase" value="5"/>
+        <property name="group_name" value="ragdollgroup"/>
+        <property name="max_distance" value="2" param1="iRadius"/>
+        <property name="allow_player" value="true"/>
+      </action>
+      <!-- HELPGOOD: this was to make the bodies fly away with the explosion but as zombie dmg zombie wont kick in, this just looks bad..
+			<action class="Ragdoll">
+				<property name="phase" value="10" />
+				<property name="stun_duration" value="6" />
+				<property name="target_group" value="ragdollgroup" />
+			</action>
+-->
+      <action class="ExplodeTarget">
+        <property name="phase" value="20"/>
+        <property name="blast_power" value="500" param1="iBlastPower"/>
+        <property name="block_damage" value="25" help="do not use iExplDmg here as causes too much chaos"/>
+        <property name="block_radius" value="2" param1="iRadius"/>
+        <property name="entity_damage" value="25" param1="iExplDmg" help="this doesnt work..."/>
+        <property name="entity_radius" value="2" param1="iRadius"/>
+        <!-- HELPGOOD: this will make only nearby targets explode, not the one the player targeted...
+        <property name="target_group" value="ragdollgroup" />
+-->
+      </action>
+      <action class="ModifyEntityStat" help="workaround to dmg the targets ISSUE: fails">
+        <property name="phase" value="30"/>
+        <property name="stat" value="Health"/>
+        <property name="operation" value="Subtract"/>
+        <property name="value" value="25" param1="iExplDmg"/>
+        <!-- HELPGOOD: didnt work?
+        <property name="target_group" value="ragdollgroup" />
+-->
+      </action>
+      <action class="Ragdoll">
+        <property name="phase" value="35"/>
+        <property name="stun_duration" value="6"/>
+        <property name="target_group" value="ragdollgroup"/>
+      </action>
+      <action class="ModifyCVar" help="ISSUE: not working">
+        <property name="phase" value="40"/>
+        <property name="cvar" value=".bGSKBulletExplosionCanDamageNow"/>
+        <property name="value" value="1"/>
+        <property name="operation" value="Set"/>
+      </action>
+      <action class="AddBuff" help="only self as dmg from buff is aoe">
+        <property name="phase" value="45"/>
+        <property name="buff_name" value="buffGSKBulletExplosionCanDamageNow"/>
+      </action>
+    </action_sequence>
+    <!--    HELPGOOD: based on timed charge powder and damage 
+				ISSUE: zombies running the event will not cause entity_damage to other zombies neither to self...
+				ISSUE: ModifyEntityStat wont work with zombies? or is because is being applied by a zombie?
+				TODO: damage the zombies using a buff? :(
+				TODO:REQUEST: the explosion could mark entities with a buff with a property: add_buff, and then using that buff marker we could dmg them thru other buff, but the AddEntitiesToGroup radius may suffice.
+				-->
+    <action_sequence name="eventGSKbulletExplosionPsyonic10" template="eventGSKbulletExplosionPsyonic">
+      <variable name="iBlastPower" value="100"/>
+      <variable name="iExplDmg" value="400"/>
+      <variable name="iRadius" value="0.65" help="means that anything touching it will be hit. entity is diameter 1.00, so 0.50 radius would be just the entity itself"/>
+    </action_sequence>
+    <action_sequence name="eventGSKbulletExplosionPsyonic20" template="eventGSKbulletExplosionPsyonic">
+      <variable name="iBlastPower" value="250"/>
+      <variable name="iExplDmg" value="800"/>
+      <variable name="iRadius" value="1.50"/>
+    </action_sequence>
+    <action_sequence name="eventGSKbulletExplosionPsyonic30" template="eventGSKbulletExplosionPsyonic">
+      <variable name="iBlastPower" value="500"/>
+      <variable name="iExplDmg" value="1200"/>
+      <variable name="iRadius" value="2.50"/>
+    </action_sequence>
+    <action_sequence name="eventGSKbulletExplosionPsyonic50" template="eventGSKbulletExplosionPsyonic">
+      <variable name="iBlastPower" value="1000"/>
+      <variable name="iExplDmg" value="2000"/>
+      <variable name="iRadius" value="3.50"/>
+    </action_sequence>
+  </append>
 </GhussakTweaks>
