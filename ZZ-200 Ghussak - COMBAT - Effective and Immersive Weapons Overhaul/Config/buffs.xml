@@ -4,23 +4,43 @@
     <buff name="buffGSKbulletExplosion" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
       <duration value="0.07"/>
-      <update_rate value="0.05"/>
+      <update_rate value="0.05" help="TODO: use onSelfBuffStart and duration 0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion">
           <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="LT" value="10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion10">
-          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion20">
-          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion30">
-          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion50">
-          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
-        </triggered_effect>
+      </effect_group>
+      <!--        HELPGOOD: sync dmg with values of gameevent (that are not working from there...)
+	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)-->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="0.65" target_tags="zombie,animal,bandit"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion20"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-800"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400" target="selfAOE" range="0.65" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="1.50" target_tags="zombie,animal,bandit"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1200"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-600" target="selfAOE" range="0.65" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-300" target="selfAOE" range="1.50" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-150" target="selfAOE" range="2.50" target_tags="zombie,animal,bandit"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKbulletExplosion50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-2000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1000" target="selfAOE" range="0.65" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-500" target="selfAOE" range="1.50" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-250" target="selfAOE" range="2.50" target_tags="zombie,animal,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-125" target="selfAOE" range="3.50" target_tags="zombie,animal,bandit"/>
       </effect_group>
     </buff>
     <buff name="buffGSKEWToggleDebug" hidden="true" remove_on_death="true">
