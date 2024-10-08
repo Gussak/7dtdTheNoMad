@@ -931,92 +931,100 @@ Zombies/Materials/Burnt_Zombie_.mat
       </triggered_effect>
     </effect_group>
   </append>
+  <!--        HELPGOOD: sync dmg and range with values of gameevent (that are not working from there...)
+	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)-->
+  <!--HELPGOOD:
   <append xpath="/buffs" help="explosive bullets target based TODO: change to projectiles like explosive arrows one day">
     <buff name="buffGSKbulletExplosion">
       <stack_type value="effect"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="set" value="1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKbulletExplosionStack"/>
+        <triggered_effect trigger="onSelfBuffStart"  action="ModifyCVar"   cvar=".iGSKbulletExplosionStack" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack"  action="ModifyCVar"   cvar=".iGSKbulletExplosionStack" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKbulletExplosionStack" />
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".iGSKbulletExplosionStack" operation="GTE" value="1"/>
-        <requirement name="NotHasBuff" buff="buffGSKbulletExplosionWork"/>
+				<requirement name="CVarCompare" cvar=".iGSKbulletExplosionStack" operation="GTE" value="1"/>
+				<requirement name="NotHasBuff" buff="buffGSKbulletExplosionWork"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKbulletExplosionWork"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="add" value="-1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionStack"/>
+        <triggered_effect trigger="onSelfBuffUpdate"  action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionStack" />
       </effect_group>
     </buff>
-    <buff name="buffGSKBulletExplosionCanDamageNow"/>
+		<buff name="buffGSKBulletExplosionCanDamageNow"/>
     <buff name="buffGSKbulletExplosionWork">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion">
-          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="LT" value="10"/>
+					<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="LT" value="10"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKbulletExplosionPower"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbulletExplosionUpdateCount" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKbulletExplosionUpdateCount" operation="add" value="1"/>
+        
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKbulletExplosionPower" />
+        
+        <triggered_effect trigger="onSelfBuffStart"  action="ModifyCVar"   cvar=".iGSKbulletExplosionUpdateCount" operation="set" value="0" />
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar"   cvar=".iGSKbulletExplosionUpdateCount" operation="add" value="1" />
       </effect_group>
-      <!--        HELPGOOD: sync dmg and range with values of gameevent (that are not working from there...)
-	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)-->
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion10"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
-        <requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="10"/>
+				<requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="0.65"/>
       </effect_group>
+      
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion20"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
-        <requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="20"/>
+				<requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-800"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="1.50"/>
       </effect_group>
+      
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion30"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
-        <requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="30"/>
+				<requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1200"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-300" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-150" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-75" target="selfAOE" range="2.50"/>
       </effect_group>
+      
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosion50"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
-        <requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<requirement name="CVarCompare" cvar="iGSKbulletExplosionPower" operation="Equals" value="50"/>
+				<requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-2000"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-500" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-250" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-125" target="selfAOE" range="2.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-63" target="selfAOE" range="3.50"/>
       </effect_group>
+      
       <effect_group>
-        <requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKBulletExplosionCanDamageNow" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKbulletExplosionWork"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionUpdateCount"/>
-      </effect_group>
+				<requirement name="HasBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".bGSKBulletExplosionCanDamageNow" operation="set" value="0" />
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKbulletExplosionWork"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBulletExplosionCanDamageNow"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionUpdateCount" />
+			</effect_group>
     </buff>
   </append>
+-->
 </configs>
