@@ -15,6 +15,13 @@
         <property name="max_distance" value="2" param1="iRadius"/>
         <property name="allow_player" value="true"/>
       </action>
+      <!-- HELPGOOD: this was to make the bodies fly away with the explosion but as zombie dmg zombie wont kick in, this just looks bad..
+			<action class="Ragdoll">
+				<property name="phase" value="10" />
+				<property name="stun_duration" value="6" />
+				<property name="target_group" value="ragdollgroup" />
+			</action>
+-->
       <action class="ExplodeTarget">
         <property name="phase" value="20"/>
         <property name="blast_power" value="500" param1="iBlastPower"/>
@@ -40,18 +47,22 @@
         <property name="stun_duration" value="6"/>
         <property name="target_group" value="ragdollgroup"/>
       </action>
-      <action class="ModifyCVar">
+      <action class="ModifyCVar" help="ISSUE: not working">
         <property name="phase" value="40"/>
         <property name="cvar" value=".bGSKBulletExplosionCanDamageNow"/>
         <property name="value" value="1"/>
         <property name="operation" value="Set"/>
+      </action>
+      <action class="AddBuff" help="only self as dmg from buff is aoe">
+        <property name="phase" value="45"/>
+        <property name="buff_name" value="buffGSKBulletExplosionCanDamageNow"/>
       </action>
     </action_sequence>
     <!--    HELPGOOD: based on timed charge powder and damage 
 				ISSUE: zombies running the event will not cause entity_damage to other zombies neither to self...
 				ISSUE: ModifyEntityStat wont work with zombies? or is because is being applied by a zombie?
 				TODO: damage the zombies using a buff? :(
-				TODO:REQUEST: the explosion could mark entities with a buff with a property: add_buff, and then using that buff marker we could dmg them thru other buff
+				TODO:REQUEST: the explosion could mark entities with a buff with a property: add_buff, and then using that buff marker we could dmg them thru other buff, but the AddEntitiesToGroup radius may suffice.
 				-->
     <action_sequence name="eventGSKbulletExplosion10" template="eventGSKbulletExplosion">
       <variable name="iBlastPower" value="100"/>
