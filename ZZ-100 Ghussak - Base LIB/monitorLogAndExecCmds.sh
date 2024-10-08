@@ -82,6 +82,7 @@ export iChkExcLim
 export strChkStartServer=".*`FUNCrawMatchRegex " INF NET: Starting offline server"`" #" INF [MODS] Start loading" " INF StartAsServer"
 export strChkNullptrReqRestart="^ *at (Block.OnEntityWalking|EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive|vp_FPCamera.UpdateSwaying)" #help if this happens, the game becomes unplayable because NPCs and foes will start lagging a lot. This solves with 1 or more engine full restart, exit the engine and restart the app. #EntityHuman.OnUpdateLive|EntityAnimal.OnUpdateLive
 export strChkNullRefExc="^NullReferenceException: Object reference not set to an instance of an object"
+export strPKILLtoRestart="^ *at (vp_FPCamera.UpdateSwaying|MainMenuMono.Update)" #there is no way to workaround vp_FPCamera.UpdateSwaying (seems to happen 33% chance from SCore); MainMenuMono.Update happens 85% the times if WMMGameOptions dll is installed;
 
 export strChkCrash="^Crash[!][!][!]$"
 #echo "PID=$$"
@@ -133,6 +134,10 @@ tail -F "$strFlLog" |while read strLine;do
 			CFGFUNCinfo "![NULLREF] !!! $strLine !!!"
 			FUNCsuspendPopup "These lines about NullReference=$nCountNullRef of this kind '$strChkNullptrReqRestart' cannot be ignored, game is already unstable, foes and NPCs wont behave properly, and the app must be restarted and a previous savegame preferably should be loaded, try also drop_caches.\n\n${strLine}"
 			nCountNullPtrReqRestart=0 #so user can insist a bit too see what is happening
+		fi
+	elif [[ "$strLine" =~ ${strPKILLtoRestart} ]];then
+		echo -n "NEED TO RESTART! pkill it? (try F1 shutdown tho)";read -n 1 -t 3 strResp&&:;if [[ "$strResp" =~ [yY] ]];then
+			CFGFUNCexec pkill -SIGSTOP -fe "${strExecRegex}" #TODO it would be better try first open console F1 and xdotool type "shutdown"
 		fi
 	elif [[ "$strLine" =~ ${strChkAutoStopOnLoadA} ]];then
 		bAllowPauseOnB=true
