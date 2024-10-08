@@ -71,7 +71,7 @@ export strChkAutoStopOnLoadA=".*`FUNCrawMatchRegex " INF Created player with id=
 export strChkAutoStopOnLoadB=".* INF PlayerSpawnedInWorld [(]reason: (LoadedGame|NewGame), position:.*: localplayer" # this grants extra 10s w/o waiting!
 export bAllowPauseOnB=false
 
-export strChkButtonSpawn=".* INF Loading players.xml"
+export strChkButtonSpawn=".*INF createWorld\(.*\) done" #".* INF Loading players.xml"
 export strChkShapesIni="`FUNCrawMatchRegex " INF Loaded (local): shapes"`"
 export strChkErrors1="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR " #todo ignore some errors like "Object reference not set to an instance of an object"
 export strChkErrors2="^....-..-.*:..:.. [0-9]*[.][0-9]* ERR XML loader" #todo popup and SIGSTOP
