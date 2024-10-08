@@ -416,7 +416,7 @@
       </effect_group>
     </item>
   </append>
-  <append xpath="/items">
+  <append xpath="/items" help="psyonic bullets are almost useless without using essences">
     <item name="ammo9mmBulletPsyonic">
       <property name="Extends" value="ammo9mmBulletBall"/>
       <property name="CustomIcon" value="ammo9mmBulletBall"/>
@@ -428,6 +428,10 @@
     <item name="ammo44MagnumBulletPsyonic">
       <property name="Extends" value="ammo44MagnumBulletBall"/>
       <property name="CustomIcon" value="ammo44MagnumBulletBall"/>
+    </item>
+    <item name="ammoShotgunSlugPsyonic">
+      <property name="Extends" value="ammoShotgunSlug"/>
+      <property name="CustomIcon" value="ammoShotgunSlug"/>
     </item>
   </append>
   <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]">
@@ -444,16 +448,16 @@
     <effect_group tiered="false" help="explosion">
       <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="10">
-        <requirement name="HoldingItemHasTags" tags="ammo9mm"/>
+        <requirement name="ItemHasTags" tags="ammo9mm"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="20">
-        <requirement name="HoldingItemHasTags" tags="ammo44Mag"/>
+        <requirement name="ItemHasTags" tags="ammo44Mag"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="30">
-        <requirement name="HoldingItemHasTags" tags="ammo762mm"/>
+        <requirement name="ItemHasTags" tags="ammo762mm"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="50">
-        <requirement name="HoldingItemHasTags" tags="ammoShells"/>
+        <requirement name="ItemHasTags" tags="ammoShells"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKbulletExplosionPsyonic"/>
     </effect_group>
@@ -461,6 +465,7 @@
   <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo9mmBulletBall')]/@value" delim="," op="add">ammo9mmBulletPsyonic</csv>
   <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo762mmBulletBall')]/@value" delim="," op="add">ammo762mmBulletPsyonic</csv>
   <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammo44MagnumBulletBall')]/@value" delim="," op="add">ammo44MagnumBulletPsyonic</csv>
+  <csv xpath="//property[@name='Magazine_items' and contains(@value,'ammoShotgun')]/@value" delim="," op="add">ammoShotgunSlugPsyonic</csv>
   <append xpath="/items/item[@name='GlowStickGreen']">
     <effect_group name="wight scared" tiered="false">
       <passive_effect name="EntityDamage" operation="base_set" value="10" help="if 0 wouldnt trigger luring but would also not add buff to wight. 10 seems the minimum to trigger onSelfExplosionAttackedOther right?"/>
