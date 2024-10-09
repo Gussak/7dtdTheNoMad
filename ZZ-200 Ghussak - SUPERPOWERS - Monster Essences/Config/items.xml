@@ -309,8 +309,8 @@
       <effect_group tiered="false" help="drain">
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrainB"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrainB"/>
       </effect_group>
       <effect_group tiered="false" help="teleport">
         <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
@@ -372,7 +372,7 @@
         </property>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrainB" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKPsyExplosion" target_tags="zombie,animal,bandit,hostile" help="for melee">
           <requirement name="HasBuff" target="self" buff="buffGSKPsyResistWork28"/>
         </triggered_effect>
@@ -381,7 +381,7 @@
         <!-- HELPGOOD: fail
 				<triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity" help="ISSUE: this will spawn the helper chicken near the player not near the projectile hit spot in the terrain! poc poc poc xD :("/>
 -->
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="this still depends on essences being used"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrainB" help="this still depends on essences being used"/>
       </effect_group>
       <effect_group name="thrownBoneDart2GSK" help="copy of meleeWpnBladeT0BoneKnife">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
@@ -434,6 +434,58 @@
       <property name="CustomIcon" value="ammoShotgunSlug"/>
     </item>
   </append>
+  <append xpath="/items/item[starts-with(@name,'ammo9mmBullet') and contains(@name,'Psyonic')]">
+    <effect_group tiered="false" help="psy power">
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="10">
+        <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="5">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="25">
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammo44MagnumBullet') and contains(@name,'Psyonic')]">
+    <effect_group tiered="false" help="psy power">
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="20">
+        <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="8">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="35">
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammo762mmBullet') and contains(@name,'Psyonic')]">
+    <effect_group tiered="false" help="psy power">
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="30">
+        <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="12">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="45">
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammoShotgun') and contains(@name,'Psyonic')]">
+    <effect_group tiered="false" help="psy power">
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="50">
+        <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="15">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="55">
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
   <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]">
     <property name="CustomIconTint" value="128,180,220"/>
     <property name="DescriptionKey" value="dkPsyonicAmmo"/>
@@ -445,32 +497,8 @@
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKTeleToMeEntityID" operation="set" value="@EntityID"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
     </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'ammo9mmBullet') and contains(@name,'Psyonic')]">
     <effect_group tiered="false" help="explosion">
       <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
-      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="10"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKbulletExplosionPsyonic"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'ammo44MagnumBullet') and contains(@name,'Psyonic')]">
-    <effect_group tiered="false" help="explosion">
-      <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
-      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="20"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKbulletExplosionPsyonic"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'ammo762mmBullet') and contains(@name,'Psyonic')]">
-    <effect_group tiered="false" help="explosion">
-      <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
-      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="30"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKbulletExplosionPsyonic"/>
-    </effect_group>
-  </append>
-  <append xpath="/items/item[starts-with(@name,'ammoShotgun') and contains(@name,'Psyonic')]">
-    <effect_group tiered="false" help="explosion">
-      <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
-      <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="50"/>
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKbulletExplosionPsyonic"/>
     </effect_group>
   </append>

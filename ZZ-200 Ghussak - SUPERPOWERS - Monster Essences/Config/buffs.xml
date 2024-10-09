@@ -614,6 +614,19 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKThrownBoneDartMarkTargetToDrainB">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
+          <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -708,10 +721,10 @@
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@iGSKdrainHP">
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="25">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="@iGSKdrainStamina">
           <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </triggered_effect>
         <!-- HELPGOOD: fails
@@ -923,6 +936,10 @@
       <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="10"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="10"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-10"/>
+    </effect_group>
+    <effect_group help="stamina pool: slowly deplet">
+      <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-1"/>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPlayerVomit']/effect_group">
