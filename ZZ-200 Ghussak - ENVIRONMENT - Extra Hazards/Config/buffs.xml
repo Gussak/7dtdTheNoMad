@@ -1002,13 +1002,11 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="3600"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKMiasmaDirtyTooMuch" operation="set" value="0"/>
-      </effect_group>
-      <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="3600"/>
-        <!-- HELPGOOD: like 1 baths a day -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="bGSKMiasmaDirtyTooMuch" operation="set" value="1"/>
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="3600"/>
+          <!-- HELPGOOD: like 1 baths a day -->
+        </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKHazardousWMiasmaDirtyB45">
           <requirement name="NotHasBuff" buff="buffGSKHazardousWMiasmaDirtyB45"/>
         </triggered_effect>
