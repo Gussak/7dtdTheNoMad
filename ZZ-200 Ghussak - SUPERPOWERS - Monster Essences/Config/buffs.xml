@@ -603,7 +603,7 @@
     </buff>
   </append>
   <append xpath="/buffs" help="Monster Essences powers thru thrown weapons and bullets for PLAYER">
-    <buff name="buffGSKThrownBoneDartMarkTargetToDrain">
+    <buff name="_buffGSKThrownBoneDartMarkTargetToDrain" help="ISSUE: setting a zombie cvar with players EntityID doesnt work">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>
@@ -631,6 +631,38 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="@iGSKdrainHP"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="subtract" value="@iGSKdrainStamina"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerDrainHP">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrain"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerDrainStamina">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrain"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerFeed">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="10">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="40">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerFeed"/>
       </effect_group>
     </buff>
     <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" remove_on_death="false">
@@ -719,10 +751,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe"/>
       </effect_group>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000" help="TODO: this should actually just dismember torso making it explode leaving only limbs on the ground"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKThrownBoneDartFeedPlayer">
+    <buff name="_buffGSKThrownBoneDartFeedPlayer">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05"/>

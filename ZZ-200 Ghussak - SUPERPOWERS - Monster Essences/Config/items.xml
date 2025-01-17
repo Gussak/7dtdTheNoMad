@@ -306,13 +306,20 @@
         <passive_effect name="DistractionLifetime" operation="base_set" value="1"/>
         <passive_effect name="DistractionStrength" operation="base_set" value="100"/>
       </effect_group>
-      <effect_group tiered="false" help="drain">
+      <effect_group tiered="false">
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+      </effect_group>
+      <effect_group tiered="false" help="drain">
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
+          <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+        </triggered_effect>
       </effect_group>
       <effect_group tiered="false" help="teleport">
         <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
@@ -374,8 +381,15 @@
         </property>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
+          <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKPsyExplosion" target_tags="zombie,animal,bandit,hostile" help="for melee">
           <requirement name="HasBuff" target="self" buff="buffGSKPsyResistWork28"/>
         </triggered_effect>
@@ -384,8 +398,15 @@
         <!-- HELPGOOD: fail
 				<triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity" help="ISSUE: this will spawn the helper chicken near the player not near the projectile hit spot in the terrain! poc poc poc xD :("/>
 -->
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="this still depends on essences being used"/>
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainHP" help="this still depends on essences being used">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainStamina" help="this still depends on essences being used">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onProjectileImpact" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
+          <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+        </triggered_effect>
       </effect_group>
       <effect_group name="thrownBoneDart2GSK" help="copy of meleeWpnBladeT0BoneKnife">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
@@ -502,8 +523,15 @@
     <property name="CustomIconTint" value="128,180,220"/>
     <property name="DescriptionKey" value="dkPsyonicAmmo"/>
     <effect_group tiered="false" help="drain">
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
-      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID" target_tags="zombie,animal,bandit,hostile"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP">
+        <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina">
+        <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
+        <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+      </triggered_effect>
     </effect_group>
     <effect_group tiered="false" help="teleport">
       <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
