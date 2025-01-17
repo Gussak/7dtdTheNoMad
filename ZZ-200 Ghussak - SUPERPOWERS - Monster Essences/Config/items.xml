@@ -309,8 +309,10 @@
       <effect_group tiered="false" help="drain">
         <passive_effect name="BlockDamage" operation="base_set" value="0"/>
         <passive_effect name="EntityDamage" operation="base_set" value="10"/>
-        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrainB"/>
-        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrainB"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
+        <triggered_effect trigger="onSelfExplosionAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+        <triggered_effect trigger="onSelfExplosionDamagedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
       </effect_group>
       <effect_group tiered="false" help="teleport">
         <requirement name="HasBuff" buff="buffGSKMutantEssence"/>
@@ -372,7 +374,8 @@
         </property>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrainB" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKPsyExplosion" target_tags="zombie,animal,bandit,hostile" help="for melee">
           <requirement name="HasBuff" target="self" buff="buffGSKPsyResistWork28"/>
         </triggered_effect>
@@ -381,7 +384,8 @@
         <!-- HELPGOOD: fail
 				<triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity" help="ISSUE: this will spawn the helper chicken near the player not near the projectile hit spot in the terrain! poc poc poc xD :("/>
 -->
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrainB" help="this still depends on essences being used"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="this still depends on essences being used"/>
+        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKentityToFeed" operation="set" value="@EntityID"/>
       </effect_group>
       <effect_group name="thrownBoneDart2GSK" help="copy of meleeWpnBladeT0BoneKnife">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
@@ -418,18 +422,26 @@
   </append>
   <append xpath="/items" help="psyonic bullets are meant to be almost useless without using essences">
     <item name="ammo9mmBulletPsyonic">
+      <property name="Tags" value="ammo,PsyonicBullet"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo9mmBulletBall"/>
       <property name="CustomIcon" value="ammo9mmBulletBall"/>
     </item>
     <item name="ammo762mmBulletPsyonic">
+      <property name="Tags" value="ammo,PsyonicBullet"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo762mmBulletBall"/>
       <property name="CustomIcon" value="ammo762mmBulletBall"/>
     </item>
     <item name="ammo44MagnumBulletPsyonic">
+      <property name="Tags" value="ammo,PsyonicBullet"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo44MagnumBulletBall"/>
       <property name="CustomIcon" value="ammo44MagnumBulletBall"/>
     </item>
     <item name="ammoShotgunSlugPsyonic">
+      <property name="Tags" value="ammo,PsyonicBullet"/>
+      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammoShotgunSlug"/>
       <property name="CustomIcon" value="ammoShotgunSlug"/>
     </item>
@@ -491,6 +503,7 @@
     <property name="DescriptionKey" value="dkPsyonicAmmo"/>
     <effect_group tiered="false" help="drain">
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKThrownBoneDartMarkTargetToDrain"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKentityToFeed" operation="set" value="@EntityID" target_tags="zombie,animal,bandit,hostile"/>
     </effect_group>
     <effect_group tiered="false" help="teleport">
       <requirement name="HasBuff" buff="buffGSKMutantEssence"/>

@@ -608,22 +608,28 @@
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
-          <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="5">
+          <requirement name="EntityTagCompare" target="self" tags="zombie"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKThrownBoneDartMarkTargetToDrainB">
-      <stack_type value="ignore"/>
-      <duration value="0"/>
-      <update_rate value="0.05"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="15">
+          <requirement name="EntityTagCompare" target="self" tags="animal"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="20">
+          <requirement name="EntityTagCompare" target="self" tags="bandit"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="40"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
-          <requirement name="EntityTagCompare" compare_type="or" tags="hostile,zombie,bandit"/>
+        <!--					HELPGOOD: TODO: feed only the player attacking the zombie, but requires being able to read player ID into a cvar and comparing later, this works already? -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedHP" operation="add" value="@iGSKdrainHP" target="selfAOE" range="300" target_tags="player">
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKentityToFeed"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedStamina" operation="add" value="@iGSKdrainStamina" target="selfAOE" range="300" target_tags="player">
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKentityToFeed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
+          <requirement name="EntityTagCompare" target="self" compare_type="or" tags="hostile,zombie,bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="@iGSKdrainHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="subtract" value="@iGSKdrainStamina"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
       </effect_group>
     </buff>
@@ -721,12 +727,14 @@
       <duration value="0"/>
       <update_rate value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@iGSKdrainHP">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="@iGSKfeedHP">
           <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="@iGSKdrainStamina">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="@iGSKfeedStamina">
           <requirement name="HasBuff" buff="buffGSKWightEssence"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedHP" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedStamina" operation="set" value="0"/>
         <!-- HELPGOOD: fails
 				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToTarget">
 					<requirement name="HasBuff" buff="buffGSKMutantEssence" />
@@ -940,6 +948,37 @@
     <effect_group help="stamina pool: slowly deplet">
       <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Health" operation="LTE" value="0.25"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GT" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-50"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Health" operation="LTE" value="0.50"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GT" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-25"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Health" operation="LTE" value="0.75"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GT" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-10"/>
+    </effect_group>
+    <effect_group help="HP pool: slowly deplet">
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="psyonicBulletVanish">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="psyonicBulletVanish">
+      <requirement name="CVarCompare" cvar="iGSKpsyBulletVanishTimeout" operation="LTE" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpsyonicBulletVanish"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="set" value="60"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="add" value="@iGSKPsyonicChemUseCount"/>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPlayerVomit']/effect_group">
