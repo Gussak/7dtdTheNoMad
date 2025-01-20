@@ -40,7 +40,7 @@ declare -p strFlLog
 
 : ${strExecFlNm:="7DaysToDie.exe"} #help
 strExecFlNm="`echo "$strExecFlNm" |sed 's@.@[&]@g'`" # this prevent other pgrep elseware matching like the pgrep here was the running game..
-: ${strExecRegex:="C:/.*/${strExecFlNm}"} #help
+: ${strExecRegex:="C:/.*/${strExecFlNm}|^${strExecFlNm}"} #help
 declare -p strExecRegex
 export strExecRegex
 
