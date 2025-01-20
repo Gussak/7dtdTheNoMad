@@ -121,6 +121,28 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="@iGSKNearDeathDryHotTime"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="divide" value="60"/>
+        <!--
+        HELPGOOD: limit the iGSKNearDeathDryHotLvl based on the remaining water in the body
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="1">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.5"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="2">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="0.5"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.4"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="3">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="0.4"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.3"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="4">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="0.3"/>
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.2"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="4"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="NoseBleed">
         <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
