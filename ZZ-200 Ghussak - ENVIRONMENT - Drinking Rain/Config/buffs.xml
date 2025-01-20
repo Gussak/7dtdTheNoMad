@@ -164,6 +164,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="add" value="-1" help="this is like the inverse action: you would take time to fill a bottle, but this way you fill a bottle instantly but needs to wait before filling another. the final result is equivalent TODO primary starts collecting water iGSKcollectingWaterML, secondary allows creating the water bottle after 350ml if it is still raining, only fills the bottle if it is raining on the player, inc more or less based on rain % ">
           <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="add" value="-1" help="in snow, you have water everywhere. in desert, almost everywhere you have yucca. burnt forest and wasteland are not meant to have any easy water. but in forest, there should have more water, more small rivers, small lakes etc, more sources of water. So this is to compensate that, like in that rain should last longer in forests as evaporate more water there from plants.">
+          <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
+          <requirement name="InBiome" biome="3" help="PineForest"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDenyCollectRainTime" operation="subtract" value="@_wetness">
           <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="GT" value="0"/>
