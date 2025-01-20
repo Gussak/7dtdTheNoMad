@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <set xpath="/items/item[@name='meleeToolSalvageT1Wrench']/property[@name='RepairTools']/@value">resourceMechanicalParts</set>
+  <append xpath="/items">
+    <item name="meleeToolSalvageT0MakeshiftWrench">
+      <property name="Tags" value="blunt,melee,grunting,light,tool,longShaft,attPerception,perkSalvageOperations,canHaveCosmetic"/>
+      <property name="DisplayType" value="melee"/>
+      <property name="HoldType" value="29"/>
+      <property name="Meshfile" value="@:Other/Items/Tools/wrenchPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="SoundJammed" value="ItemNeedsRepair"/>
+      <property name="SoundDestroy" value="metaldestroy"/>
+      <property name="ShowQuality" value="true"/>
+      <property name="CustomIcon" value="meleeToolSalvageT1Wrench"/>
+      <property name="CustomIconTint" value="255,180,70"/>
+      <property name="RepairTools" value="resourceMechanicalParts"/>
+      <property name="DegradationBreaksAfter" value="true"/>
+      <property name="EconomicValue" value="25"/>
+      <property name="SellableToTrader" value="false"/>
+      <property class="Action0">
+        <property name="Class" value="DynamicMelee"/>
+        <property name="Sound_start" value="swoosh"/>
+        <property name="ToolCategory.harvestingTools" value=".5" param1="1"/>
+        <property name="ToolCategory.Disassemble" value="1" param1="1"/>
+        <property name="Particle_harvesting" value="true" param1="metal"/>
+        <property name="UseGrazingHits" value="true"/>
+        <property name="GrazeStart" value=".25"/>
+        <property name="GrazeEnd" value=".3"/>
+        <property name="SwingDegrees" value="50"/>
+        <property name="SwingAngle" value="180"/>
+      </property>
+      <property class="Action1">
+        <property name="Class" value="DynamicMelee"/>
+        <property name="Sound_start" value="swoosh"/>
+        <property name="ToolCategory.harvestingTools" value=".5" param1="1"/>
+        <property name="UseGrazingHits" value="true"/>
+        <property name="GrazeStart" value=".25"/>
+        <property name="GrazeEnd" value=".3"/>
+        <property name="SwingDegrees" value="50"/>
+        <property name="SwingAngle" value="180"/>
+      </property>
+      <effect_group name="meleeToolSalvageT0MakeshiftWrench">
+        <passive_effect name="DegradationMax" operation="base_set" value="200" tier="1"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="4"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="16.5" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="base_set" value="38.5" tags="perkSalvageOperations"/>
+        <passive_effect name="AttacksPerMinute" operation="base_set" value="50"/>
+        <passive_effect name="StaminaLoss" operation="base_set" value="18.3" tags="primary"/>
+        <passive_effect name="MaxRange" operation="base_set" value="2.4" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockRange" operation="base_set" value="3.5" tags="perkSalvageOperations"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,2,3,4,5,6" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.15,.15" tags="perkSalvageOperations"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.15,.15" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkSalvageOperations"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.75" tags="earth"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="stone"/>
+        <passive_effect name="HarvestCount" operation="base_set" value="1" tags="salvageHarvest"/>
+      </effect_group>
+      <effect_group name="Power Attack">
+        <passive_effect name="EntityDamage" operation="perc_add" value="1" tags="secondary"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="1" tags="secondary"/>
+        <passive_effect name="StaminaLoss" operation="base_set" value="31.1" tags="secondary"/>
+      </effect_group>
+      <property name="Group" value="Tools/Traps"/>
+      <property name="RepairExpMultiplier" value="5.5"/>
+    </item>
+  </append>
+</GhussakTweaks>
