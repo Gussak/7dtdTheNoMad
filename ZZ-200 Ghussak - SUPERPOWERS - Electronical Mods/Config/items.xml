@@ -694,9 +694,34 @@
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportUndergroundFree"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
-        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety"/>
       </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="10">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="50">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="40">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="20">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="10">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKTeleUndDist"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKTeleUndDist"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+      <effect_group tiered="false"><requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>todob
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/><triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety50"><requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="50"/></triggered_effect><triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety40"><requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="40"/></triggered_effect><triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety30"><requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="30"/></triggered_effect><triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety20"><requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="20"/></triggered_effect><triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety10"><requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="10"/></triggered_effect></effect_group>
     </item>
     <item name="GSKElctrnTeleportToBiomeFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod.">
       <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
