@@ -796,6 +796,42 @@
         <passive_effect name="JumpStrength" operation="perc_add" value="90"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKBkpWaterVal73" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="subtract" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="@fGSKWaterPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="add" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GT" value="@fGSKFoodPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="subtract" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LT" value="@fGSKFoodPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKFoodPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="0">
+          <requirement name="NotHasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="@infectionCounter">
+          <requirement name="HasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCureCounterBkp" operation="set" value="@$infectionCureCounter"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='god']">
     <effect_group>

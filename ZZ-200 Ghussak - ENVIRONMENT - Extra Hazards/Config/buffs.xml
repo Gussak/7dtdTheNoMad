@@ -106,7 +106,10 @@
           <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="LT" value="@fGSKHazDesWetLim"/>
           <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LTE" value="@fGSKHazDesWtrLim"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKaddDryness" operation="set" value="@fGSKWaterPercBkp" help="ex.: 0.66*-1 = -0.66; 0.66+1.0 = 0.44, the less water you have, the faster dryness will increase"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKaddDryness" operation="multiply" value="-1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKaddDryness" operation="add" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="add" value="@fGSKaddDryness">
           <requirement name="CVarCompare" cvar="bGSKHazDesert" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="subtract" value="14" help="was 7, somewhat slow">
