@@ -2,7 +2,7 @@
 
 # BSD 3-Clause License
 # 
-# Copyright (c) 2023, Gussak(github.com/Gussak,ghussak@www.nexusmods.com)
+# Copyright (c) 2023-2025, Gussak(github.com/Gussak,ghussak@www.nexusmods.com)
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ function FUNCsuspendPopup() {
 	#fi
 	CFGFUNCexec tail -n 20 "$strFlLog"
 	FUNCpromptGfx "${strInfo}. Close this popup to SIGCONT the game."
-	CFGFUNCexec pkill -SIGCONT -fe "$strExecRegex"
+	CFGFUNCexec --noErrorExit pkill -SIGCONT -fe "$strExecRegex"
 }
 
 export strChkAutoStopOnLoadA=".*`FUNCrawMatchRegex " INF Created player with id="`"
@@ -104,7 +104,7 @@ tail -F "$strFlLog" |while read strLine;do
 				FUNCsuspendPopup "failed to updateNewestSavegameSymlink.sh";
 			fi
 		done
-		CFGFUNCexec pkill -SIGCONT -fe "${strExecRegex}"
+		CFGFUNCexec --noErrorExit pkill -SIGCONT -fe "${strExecRegex}"
 	elif [[ "$strLine" =~ ${strChkButtonSpawn} ]];then
 		CFGFUNCinfo "skipping spawn button" # the ;\ below is just to help test on terminal, becomes one line to fix.
 		nWID="$(xdotool search "Default - Wine desktop")";\
