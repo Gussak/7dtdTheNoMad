@@ -1,54 +1,17 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <append xpath="/items/item[@name='resourceMechanicalParts']">
+    <property name="RepairTime" value=".5"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
+  <append xpath="/items/item[@name='resourceElectricParts']">
+    <property name="RepairTime" value=".5"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
   <set xpath="/items/item[@name='meleeToolSalvageT1Wrench']/property[@name='RepairTools']/@value">resourceMechanicalParts</set>
   <append xpath="/items">
-    <item name="meleeToolSalvageT0MakeshiftWrench" help="copy all from meleeToolSalvageT1Wrench vanilla xml at game install folder, and patch after in the end">
-      <property name="Tags" value="blunt,melee,grunting,light,tool,longShaft,attPerception,perkSalvageOperations,canHaveCosmetic,salvageTool,salvagingSkill"/>
-      <property name="DisplayType" value="melee"/>
-      <property name="HoldType" value="29"/>
-      <property name="Meshfile" value="@:Other/Items/Tools/wrenchPrefab.prefab"/>
-      <property name="Material" value="Mmetal"/>
-      <property name="TintColor" value="128, 32, 0"/>
-      <property name="ScrapTimeOverride" value="10.0"/>
-      <property name="RepairTools" value="resourceRepairKit"/>
-      <property name="DegradationBreaksAfter" value="false"/>
-      <property name="SoundJammed" value="ItemNeedsRepair"/>
-      <property name="SoundDestroy" value="metaldestroy"/>
-      <property name="EconomicValue" value="400"/>
-      <property name="TraderStageTemplate" value="baseTier0"/>
-      <property name="UnlockedBy" value="craftingSalvageTools"/>
-      <property name="ShowQuality" value="true"/>
-      <property name="Group" value="Tools/Traps"/>
-      <property name="RepairExpMultiplier" value="5.5"/>
-      <property name="SoundUnholster" value="weapon_unholster"/>
-      <property name="SoundHolster" value="weapon_holster"/>
-      <property name="SoundPickup" value="wrench_grab"/>
-      <property name="SoundPlace" value="wrench_place"/>
-      <property class="Action0">
-        <property name="Class" value="DynamicMelee"/>
-        <property name="Sound_start" value="wrench_swinglight"/>
-        <property name="ToolCategory.harvestingTools" value=".5" param1="1"/>
-        <property name="ToolCategory.Disassemble" value="1" param1="1"/>
-        <property name="Particle_harvesting" value="true" param1="metal"/>
-        <property name="UseGrazingHits" value="true"/>
-        <property name="GrazeStart" value=".25"/>
-        <property name="GrazeEnd" value=".3"/>
-        <property name="SwingDegrees" value="50"/>
-        <property name="SwingAngle" value="180"/>
-        <property name="HarvestHitEffectOn" value="false"/>
-      </property>
-      <property class="Action1">
-        <property name="Class" value="DynamicMelee"/>
-        <property name="Sound_start" value="wrench_swinglight"/>
-        <property name="ToolCategory.harvestingTools" value=".5" param1="1"/>
-        <property name="UsePowerAttackAnimation" value="false"/>
-        <property name="UsePowerAttackTriggers" value="true"/>
-        <property name="UseGrazingHits" value="true"/>
-        <property name="GrazeStart" value=".25"/>
-        <property name="GrazeEnd" value=".3"/>
-        <property name="SwingDegrees" value="50"/>
-        <property name="SwingAngle" value="180"/>
-      </property>
+    <item name="meleeToolSalvageT0MakeshiftWrench">
+      <property name="Extends" value="meleeToolSalvageT1Wrench" help="you still need to copy the effect groups from meleeToolSalvageT1Wrench of vanilla xml tho, and patch after in the end"/>
       <effect_group name="meleeToolSalvageT1Wrench">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="50"/>
         <passive_effect name="StaminaLoss" operation="base_set" value="16.5" tags="primary"/>
