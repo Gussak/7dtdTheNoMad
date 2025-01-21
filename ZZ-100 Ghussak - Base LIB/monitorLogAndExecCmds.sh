@@ -35,6 +35,14 @@
 
 source ./libSrcCfgGenericToImport.sh
 
+strSelfExe="$(basename "$0")"
+if pgrep -fa "${strSelfExe} --ReallyRunningPgrepTip" |egrep -v "^$$";then CFGFUNCerrorExit "I am already running, exiting";fi
+
+if [[ "${1-}" != "--ReallyRunningPgrepTip" ]];then
+	"$0" --ReallyRunningPgrepTip
+	exit
+fi
+
 export strFlLog="$WINEPREFIX/drive_c/users/$USER/AppData/LocalLow/The Fun Pimps/7 Days To Die/Player.log"
 declare -p strFlLog
 
