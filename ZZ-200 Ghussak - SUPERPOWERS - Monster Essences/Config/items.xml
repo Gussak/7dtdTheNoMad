@@ -446,31 +446,29 @@
   </append>
   <append xpath="/items" help="psyonic bullets are meant to be almost useless without using essences">
     <item name="ammo9mmBulletPsyonic">
-      <property name="Tags" value="ammo,PsyonicBullet"/>
-      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo9mmBulletBall"/>
       <property name="CustomIcon" value="ammo9mmBulletBall"/>
     </item>
     <item name="ammo762mmBulletPsyonic">
-      <property name="Tags" value="ammo,PsyonicBullet"/>
-      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo762mmBulletBall"/>
       <property name="CustomIcon" value="ammo762mmBulletBall"/>
     </item>
     <item name="ammo44MagnumBulletPsyonic">
-      <property name="Tags" value="ammo,PsyonicBullet"/>
-      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammo44MagnumBulletBall"/>
       <property name="CustomIcon" value="ammo44MagnumBulletBall"/>
     </item>
     <item name="ammoShotgunSlugPsyonic">
-      <property name="Tags" value="ammo,PsyonicBullet"/>
-      <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="Extends" value="ammoShotgunSlug"/>
       <property name="CustomIcon" value="ammoShotgunSlug"/>
     </item>
   </append>
-  <append xpath="/items/item[starts-with(@name,'ammo9mmBullet') and contains(@name,'Psyonic')]">
+  <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]" help="all psy ammo">
+    <property name="CustomIconTint" value="128,180,220"/>
+    <property name="Tags" value="ammo,PsyonicBullet"/>
+    <property name="DescriptionKey" value="dkPsyonicAmmo"/>
+    <property name="Stacknumber" value="65535"/>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammo9mmBullet') and contains(@name,'Psyonic')]" help="config psy powers for this ammo">
     <effect_group tiered="false" help="psy power">
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="10">
         <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
@@ -483,7 +481,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'ammo44MagnumBullet') and contains(@name,'Psyonic')]">
+  <append xpath="/items/item[starts-with(@name,'ammo44MagnumBullet') and contains(@name,'Psyonic')]" help="config psy powers for this ammo">
     <effect_group tiered="false" help="psy power">
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="20">
         <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
@@ -496,7 +494,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'ammo762mmBullet') and contains(@name,'Psyonic')]">
+  <append xpath="/items/item[starts-with(@name,'ammo762mmBullet') and contains(@name,'Psyonic')]" help="config psy powers for this ammo">
     <effect_group tiered="false" help="psy power">
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="30">
         <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
@@ -509,7 +507,7 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'ammoShotgun') and contains(@name,'Psyonic')]">
+  <append xpath="/items/item[starts-with(@name,'ammoShotgun') and contains(@name,'Psyonic')]" help="config psy powers for shotgun shells">
     <effect_group tiered="false" help="psy power">
       <triggered_effect trigger="onSelfAttackedOther" target="other" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="50">
         <requirement name="HasBuff" buff="buffGSKPsyResistWork28"/>
@@ -522,10 +520,8 @@
       </triggered_effect>
     </effect_group>
   </append>
-  <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]">
-    <property name="CustomIconTint" value="128,180,220"/>
-    <property name="DescriptionKey" value="dkPsyonicAmmo"/>
-    <effect_group tiered="false" help="drain">
+  <append xpath="/items/item[starts-with(@name,'ammo') and contains(@name,'Psyonic')]" help="apply drain and teleport powers for all psy ammo">
+    <effect_group tiered="false" help="drain HP and/or Stamina">
       <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP">
         <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
       </triggered_effect>
