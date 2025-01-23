@@ -153,6 +153,8 @@
       <property name="CustomIconTint" value="128,180,128"/>
       <property name="Material" value="Mcloth"/>
       <property name="Explosion.ParticleIndex" value="0" help="was 7 vomit, but that puts fire on everything... there could have some particle that is just plain light and some sound"/>
+      <property name="Explosion.BlockDamage" value="0"/>
+      <property name="Explosion.EntityDamage" value="0"/>
       <property name="Explosion.RadiusBlocks" value="1"/>
       <property name="Explosion.RadiusEntities" value="1"/>
       <property name="Explosion.DamageBonus.earth" value="0"/>
@@ -173,8 +175,6 @@
         <property name="Sound_start" value="swoosh"/>
       </property>
       <effect_group name="ammoProjectileSpiderWebPlayer" tiered="false">
-        <passive_effect name="BlockDamage" operation="base_set" value="0"/>
-        <passive_effect name="EntityDamage" operation="base_set" value="0" help="10 is actually hitting for 200hp in v 1.1b14 why? old: 10 seems the minimum to trigger onSelfExplosionAttackedOther right? "/>
         <passive_effect name="ModSlots" operation="base_set" value="0"/>
         <passive_effect name="BuffProcChance" operation="base_set" value="1.0" tags="buffGSKSpiderNet11"/>
         <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSpiderNet11"/>
@@ -291,6 +291,22 @@
       <passive_effect name="SpreadMultiplierIdle" operation="base_set" value="1"/>
       <passive_effect name="DamageFalloffRange" operation="base_set" value="50"/>
       <passive_effect name="MaxRange" operation="base_set" value="50"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeToolPickT1IronPickaxe' or       @name='meleeToolPickT2SteelPickaxe' or       @name='meleeToolRepairT0StoneAxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT3SteelKnuckles' or       @name='meleeWpnSpearT0StoneSpear' or       @name='meleeWpnSpearT1IronSpear' or       @name='meleeWpnSpearT3SteelSpear'     ]" help="WYSIWYG: despite knuckes is set as blunt, the picture clearly shows piercing parts">
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison">
+        <requirement name="CVarCompare" cvar="fGSKPoisonedMeleePiercing" operation="GTE" value="1"/>
+        <requirement name="IsAlive" target="other"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="fGSKPoisonedMeleePiercing" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar="fGSKPoisonedMeleePiercing" operation="GTE" value="1"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeHandAnimalSnake' or starts-with(@name,'meleeHandAnimalSpider')]">
+    <effect_group name="poison and paralyze" tiered="false">
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison"/>
     </effect_group>
   </append>
 </GhussakTweaks>

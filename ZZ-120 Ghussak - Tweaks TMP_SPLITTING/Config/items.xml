@@ -1290,17 +1290,6 @@
   <append xpath="/items/item[starts-with(@name,'ammoBundle')]" help="to make it more easy to distinguish from the parts bundle">
     <property name="CustomIconTint" value="255,180,128"/>
   </append>
-  <append xpath="/items/item[       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeToolPickT1IronPickaxe' or       @name='meleeToolPickT2SteelPickaxe' or       @name='meleeToolRepairT0StoneAxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT3SteelKnuckles' or       @name='meleeWpnSpearT0StoneSpear' or       @name='meleeWpnSpearT1IronSpear' or       @name='meleeWpnSpearT3SteelSpear'     ]" help="WYSIWYG: despite knuckes is set as blunt, the picture clearly shows piercing parts">
-    <effect_group tiered="false">
-      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison">
-        <requirement name="CVarCompare" cvar="fGSKPoisonedMeleePiercing" operation="GTE" value="1"/>
-        <requirement name="IsAlive" target="other"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="self" cvar="fGSKPoisonedMeleePiercing" operation="add" value="-1">
-        <requirement name="CVarCompare" cvar="fGSKPoisonedMeleePiercing" operation="GTE" value="1"/>
-      </triggered_effect>
-    </effect_group>
-  </append>
   <append xpath="/items/item[@name='drugSteroids']">
     <property name="Stacknumber" value="100"/>
   </append>
@@ -39458,11 +39447,6 @@
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
   <!-- HELPGOOD: =========== LAST THINGS GO HERE TO PATCH ABOVE THINGS TOO ============ -->
-  <append xpath="/items/item[@name='meleeHandAnimalSnake' or starts-with(@name,'meleeHandAnimalSpider')]">
-    <effect_group name="poison and paralyze" tiered="false">
-      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKSnakePoison"/>
-    </effect_group>
-  </append>
   <remove xpath="/items/item[@name='bucketEmpty']/property[@class='Action1']/property[@value='waterMoving' or @value='waterStaticBucket' or @value='waterMovingBucket']" help="can only be filled in world generated water, not water placed by players. TODO: prevent from sea salty water tho as even boiled would still be salty, but how?"/>
   <!-- HELPGOOD: being able to create water is too powerful, this is an attempt to try to balance it, so will occupy more inv slots. This way, every water block can only be used to fill up to 5 empty jars. As a bucket can create -->
   <set xpath="/items/item[@name='drinkJarEmptyToGetWater']/property[@name='Stacknumber']/@value">6</set>
