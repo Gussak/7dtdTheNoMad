@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+	</append>
+  <append xpath="/items/item[@name='meleeToolFlashlight02']">
+    <effect_group name="parry chance" tiered="false" help="todoa create a buff to monitor when light fails and apply increasesd parry thru blinding effect">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55" compare_type="or">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="85" help="blinding light">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeToolTorch']">
+    <effect_group name="parry chance" tiered="false" help="todoa create a buff to monitor when light fails and apply increasesd parry thru blinding effect">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55" compare_type="or">
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1" help="fire off"/>
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70" help="blinding light">
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and (contains(@name,'T0') or contains(@name,'Hand')) and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="55"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T1') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="65"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T2') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]" help="if someone creates it">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="75"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'melee') and contains(@name,'T3') and not(contains(@name,'Schematic') or contains(@name,'Parts'))]">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="85"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeWpnBatonT0PipeBaton')]" help="special case">
+    <effect_group name="parry chance" tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="70"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="iGSKMeleeParryChance" operation="set" value="0"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>
