@@ -418,6 +418,7 @@
       <duration value="1"/>
       <stack_type value="ignore"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPsyResistWork28"/>
       </effect_group>
@@ -426,6 +427,7 @@
       <duration value="1"/>
       <stack_type value="ignore"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKWightEssence"/>
       </effect_group>
@@ -434,6 +436,7 @@
       <duration value="1"/>
       <stack_type value="ignore"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVampireEssence"/>
       </effect_group>
@@ -442,16 +445,38 @@
       <duration value="1"/>
       <stack_type value="ignore"/>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKMutantEssence"/>
       </effect_group>
     </buff>
     <buff name="buffGSKPsyExplosionDelayed6s" hidden="true">
       <duration value="6"/>
+      <stack_type value="effect"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: could be some kind of highlight like the dynamite has"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKPsyExplosion"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKPsyExplosion">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" buff="eventGSKbulletExplosionPsyonic10">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" buff="eventGSKbulletExplosionPsyonic20">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" buff="eventGSKbulletExplosionPsyonic30">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" buff="eventGSKbulletExplosionPsyonic40">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" buff="eventGSKbulletExplosionPsyonic50">
+          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="GTE" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMonsterMixEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,255,128" description_key="dkGSKMonsterEssence">
@@ -936,6 +961,19 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-75" target="selfAOE" range="2.50"/>
       </effect_group>
       <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="Equals" value="40"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic40"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="Equals" value="40"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1600"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400" target="selfAOE" range="0.65"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="1.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="2.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-50" target="selfAOE" range="3.00"/>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="Equals" value="50"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic50"/>
       </effect_group>
@@ -946,7 +984,8 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-500" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-250" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-125" target="selfAOE" range="2.50"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-63" target="selfAOE" range="3.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-63" target="selfAOE" range="3.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-31" target="selfAOE" range="3.50"/>
       </effect_group>
       <effect_group>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
