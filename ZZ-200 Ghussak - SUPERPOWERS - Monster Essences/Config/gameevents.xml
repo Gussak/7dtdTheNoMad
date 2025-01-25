@@ -249,20 +249,17 @@ Parameter name: collection
         <property name="blast_power" value="500" param1="iBlastPower"/>
         <property name="block_damage" value="25" help="do not use iExplDmg here as causes too much chaos"/>
         <property name="block_radius" value="2" param1="iRadius"/>
-        <property name="entity_damage" value="25" param1="iExplDmg" help="this doesnt work? see ModifyEntityStat"/>
+        <property name="entity_damage" value="25" param1="_iExplDmg" help="this doesnt work (disabled with _). see ModifyEntityStat"/>
         <property name="entity_radius" value="2" param1="iRadius"/>
         <!-- HELPGOOD: this will make only nearby targets explode, not the one the player targeted...
         <property name="target_group" value="ragdollgroup" />
 -->
       </action>
-      <action class="ModifyEntityStat" help="workaround to dmg the targets ISSUE: fails">
+      <action class="ModifyEntityStat" help="workaround to dmg the targets">
         <property name="phase" value="30"/>
         <property name="stat" value="Health"/>
         <property name="operation" value="Subtract"/>
-        <property name="value" value="1"/>
-        <!--HELPGOOD: restore?
-				<property name="value" value="25" param1="iExplDmg"/>
--->
+        <property name="value" value="25" param1="_iExplDmg" help="this doesnt work (disabled with _). see buffGSKbulletExplosionPsyonicWork"/>
         <!-- HELPGOOD: didnt work?
         <property name="target_group" value="ragdollgroup" />
 -->
@@ -291,6 +288,11 @@ Parameter name: collection
 				TODO: damage the zombies using a buff? :(
 				TODO:REQUEST: the explosion could mark entities with a buff with a property: add_buff, and then using that buff marker we could dmg them thru other buff, but the AddEntitiesToGroup radius may suffice.
 				-->
+    <action_sequence name="eventGSKbulletExplosionPsyonic1" template="eventGSKbulletExplosionPsyonic">
+      <variable name="iBlastPower" value="10"/>
+      <variable name="iExplDmg" value="25"/>
+      <variable name="iRadius" value="0.33"/>
+    </action_sequence>
     <action_sequence name="eventGSKbulletExplosionPsyonic10" template="eventGSKbulletExplosionPsyonic">
       <variable name="iBlastPower" value="100"/>
       <variable name="iExplDmg" value="400"/>

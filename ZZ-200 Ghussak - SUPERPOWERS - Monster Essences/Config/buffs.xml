@@ -418,7 +418,7 @@
       <duration value="1"/>
       <stack_type value="ignore"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="LT" value="60"/>
+        <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LT" value="60"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPsyResistWork28"/>
       </effect_group>
@@ -458,24 +458,10 @@
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKPsyExplosion">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic10">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="2"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic20">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="3"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic30">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="4"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic40">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="Equals" value="5"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffRemove" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic50">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="GTE" value="6"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="@iGSKstackPsyExplod" help="starts in 1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKbulletExplosionPsyonic"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="set" value="0"/>
       </effect_group>
     </buff>
