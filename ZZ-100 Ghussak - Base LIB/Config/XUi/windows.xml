@@ -64,6 +64,12 @@ storage stops working when looting or from NPC invs
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/sprite[@name='background' and @type='sliced']/@color" help="must be the filled background that shows the blockage">200,250,0,255</set>
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/filledsprite[@name='background' and @color='110,110,110,128']/@color" help="must be opaque to not let yellow pass thru">0,0,0,255</set>
   <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="the text must contrast with all backgrounds to be clearly readable">[green]</set>
+  <append xpath="/windows/window[@name='HUDLeftStatBars']" help="drain pools">
+    <rect name="drainHud" depth="50" anchor="CenterRight" pos="0,-50" width="100" side="right" controller="HUDStatBar">
+      <label depth="0" pos="0,0" name="DrainedHP" width="100" height="20" pivot="center" justify="center" text="HP++{cvar(iGSKHitpointsPool:0)}" font_size="20" color="255,200,200,255" tooltip_key="xuiGSKDrainPool"/>
+      <label depth="0" pos="0,20" name="DrainedStam" width="150" height="20" pivot="center" justify="center" text="Stam++{cvar(iGSKstaminaPool:0)}" font_size="20" color="200,200,255,255" tooltip_key="xuiGSKDrainPool"/>
+    </rect>
+  </append>
   <!--HELPGOOD: buffs display improvement-->
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
   <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@depth" help="in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla">50</set>

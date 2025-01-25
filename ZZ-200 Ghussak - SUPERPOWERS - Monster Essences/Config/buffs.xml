@@ -418,6 +418,9 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKWightEssence"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="-1" help="prevent ragdoll side effect">
+          <requirement name="CVarCompare" cvar="iGSKEssenceStack" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKVampireEssence5s" hidden="true">
@@ -425,6 +428,19 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKVampireEssence"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="-1" help="prevent ragdoll side effect">
+          <requirement name="CVarCompare" cvar="iGSKEssenceStack" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKMutantEssence"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="-1" help="prevent ragdoll side effect">
+          <requirement name="CVarCompare" cvar="iGSKEssenceStack" operation="GT" value="0"/>
+        </triggered_effect>
       </effect_group>
     </buff>
     <buff name="buffGSKPsyExplosionDelayed6s" hidden="true">
@@ -473,8 +489,12 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
         <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16896:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/> -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
           <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
@@ -523,8 +543,12 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
         <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16932:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/> -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
           <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
@@ -569,8 +593,12 @@
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
         <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16966:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="randomFloat(0.5,1.5)"/> -->
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="set" value="1">
           <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
           <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
