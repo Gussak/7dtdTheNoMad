@@ -92,6 +92,7 @@
       <property name="DescriptionKey" value="dkGSKMonsterEssence"/>
       <property name="EconomicValue" value="900" help="based on the recipe ingredients count and a bit extra +33% for the cooking"/>
       <property name="SellableToTrader" value="true"/>
+      <property name="RepairAmount" value="500"/>
       <property class="Action0">
         <requirement name="NotHasBuff" target="self" buff="buffGSKMonsterMixEssence"/>
         <property name="Class" value="Eat"/>
@@ -334,7 +335,7 @@
       <property name="DescriptionKey" value="dkPsyonicAmmo"/>
       <property name="CustomIconTint" value="150,180,250"/>
       <property name="HoldType" value="36"/>
-      <property name="Tags" value="knife,melee,grunting,light,perkFlurryOfAgility,weapon,meleeWeapon,attAgility,perkDeepCuts,perkTheHuntsman,canHaveCosmetic,bladeSkill,corpseRemoval,armorPiercingAdd1,thrownWeapon,perkJavelinMaster,longShaft"/>
+      <property name="Tags" value="knife,melee,grunting,light,perkFlurryOfAgility,weapon,meleeWeapon,attAgility,perkDeepCuts,perkTheHuntsman,canHaveCosmetic,bladeSkill,corpseRemoval,armorPiercingAdd1,thrownWeapon,perkJavelinMaster,longShaft,spearSkill"/>
       <property name="DisplayType" value="meleeKnife"/>
       <property name="IsSticky" value="true"/>
       <property name="StickyOffset" value=".7"/>
@@ -345,8 +346,9 @@
       <property name="NavObject" value="spear"/>
       <property name="Stacknumber" value="1"/>
       <property name="ShowQuality" value="true"/>
-      <property name="DegradationBreaksAfter" value="true"/>
+      <property name="DegradationBreaksAfter" value="false"/>
       <property name="Group" value="Ammo/Weapons,Melee Weapons"/>
+      <property name="RepairTools" value="drugGSKmonsterEssence"/>
       <property class="Action0">
         <property name="Class" value="DynamicMelee"/>
         <property name="Damage_type" value="Piercing"/>
@@ -383,39 +385,37 @@
         </property>
       </property>
       <effect_group tiered="false" help="monster essence powers">
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP">
-          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina">
-          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKVampireEssence5s"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKWightEssence5s"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP"/>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina"/>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
           <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
           <requirement name="IsAlive" target="other"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKPsyExplosion" target_tags="zombie,animal,bandit,hostile" help="for melee">
-          <requirement name="HasBuff" target="self" buff="buffGSKPsyResistWork28"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" target="other" action="AddBuff" buff="buffGSKPsyExplosionDelayed6s" target_tags="zombie,animal,bandit,hostile" help="for melee"/>
         <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="ModifyCVar" cvar=".iGSKTeleToMeEntityID" operation="set" value="@EntityID"/>
         <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
         <!-- HELPGOOD: fail
 				<triggered_effect trigger="onProjectileImpact" action="CallGameEvent" event="eventGSKspawnTelePlayerToMeEntity" help="ISSUE: this will spawn the helper chicken near the player not near the projectile hit spot in the terrain! poc poc poc xD :("/>
 -->
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainHP" help="this still depends on essences being used">
-          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
-        </triggered_effect>
-        <triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainStamina" help="this still depends on essences being used">
-          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
-        </triggered_effect>
-        <triggered_effect trigger="onProjectileImpact" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
-          <requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
-          <requirement name="IsAlive" target="other"/>
-        </triggered_effect>
+        <!-- HELPGOOD:
+				<triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainHP">
+					<requirement name="HasBuff" buff="buffGSKVampireEssence" />
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" target="otherAOE" range="0.05" target_tags="zombie,animal,bandit,hostile" action="AddBuff" buff="buffGSKessencePowerDrainStamina">
+					<requirement name="HasBuff" buff="buffGSKWightEssence" />
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="self" buff="buffGSKessencePowerFeed">
+					<requirement name="EntityTagCompare" target="other" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+					<requirement name="IsAlive" target="other"/>
+				</triggered_effect>
+-->
       </effect_group>
       <effect_group name="meleeWpnSpearT0BoneSpearGSK" help="copy of meleeWpnBladeT0BoneKnife">
         <passive_effect name="AttacksPerMinute" operation="base_set" value="120" tags="perkDeepCuts,perkFlurryOfAgility"/>
         <passive_effect name="StaminaLoss" operation="base_set" value="7.3" tags="primary"/>
-        <passive_effect name="DegradationMax" operation="base_set" value="100,125,150,175,200,600" tier="1,2,3,4,5,6" tags="perkDeepCuts" help="6 req legendary"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="400,500,600,700,800,2000" tier="1,2,3,4,5,6" tags="perkDeepCuts" help="6 req legendary"/>
         <passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDeepCuts"/>
         <passive_effect name="MaxRange" operation="base_set" value="2.0" tags="perkDeepCuts"/>
         <passive_effect name="BlockRange" operation="base_set" value="2.5" tags="perkDeepCuts"/>
@@ -425,11 +425,11 @@
         <passive_effect name="EntityDamage" operation="base_set" value="5" tags="perkDeepCuts,knife"/>
         <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkDeepCuts"/>
         <passive_effect name="BlockDamage" operation="base_set" value="4" tags="perkDeepCuts"/>
-        <passive_effect name="BlockDamage" operation="perc_add" value="1.1,1.5" tier="2,6" tags="perkDeepCuts" help="as we cant power attack with it, harvesting will be faster with primary attack, was 0.1,0.5"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="1.6,2.0" tier="2,6" tags="perkDeepCuts" help="as we cant power attack with it, harvesting will be faster with primary attack, was 0.1,0.5"/>
         <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="earth"/>
         <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="stone"/>
         <passive_effect name="DamageModifier" operation="perc_add" value="-.8" tags="metal"/>
-        <passive_effect name="DamageModifier" operation="perc_add" value="1.6" tags="organic" help="as we cant power attack with it, harvesting will be faster with primary attack. was 0.6"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="2.0" tags="organic" help="as we cant power attack with it, harvesting will be faster with primary attack. was 0.6"/>
         <passive_effect name="HarvestCount" operation="base_set" value="1" tags="butcherHarvest"/>
       </effect_group>
     </item>

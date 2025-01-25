@@ -17,9 +17,16 @@
       <display_value value="fGSKPsyResistDur"/>
       <display_value_key value="{0:0}s"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="add" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork28">
           <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
@@ -406,6 +413,26 @@
     </buff>
   </append>
   <append xpath="/buffs" help="Monster Essences powers for PLAYER">
+    <buff name="buffGSKWightEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKWightEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampireEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKVampireEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPsyExplosionDelayed6s" hidden="true">
+      <duration value="6"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKPsyExplosion"/>
+      </effect_group>
+    </buff>
     <buff name="buffGSKMonsterMixEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,255,128" description_key="dkGSKMonsterEssence">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -454,8 +481,16 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKEssenceSideEffects"/>
         <passive_effect name="StaminaMax" operation="base_add" value="@iGSKEssenceWight"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@.iGSKbuffGSKWightEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@.iGSKbuffGSKWightEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@iGSKEssenceWight" help="the more you use the better it becomes"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-0.33" help="sync with update_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="set" value="0">
@@ -496,8 +531,16 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKEssenceSideEffects"/>
         <passive_effect name="HealthMax" operation="base_add" value="@iGSKEssenceVampire"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@.iGSKbuffGSKVampireEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@.iGSKbuffGSKVampireEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@iGSKEssenceVampire"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="-0.33" help="sync with udpate_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="set" value="0">
@@ -565,8 +608,16 @@
           <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=17001:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"> -->
           <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
-        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@.iGSKbuffGSKMutantEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@.iGSKbuffGSKMutantEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@iGSKEssenceMutant"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="-5" help="sync with udpate_rate"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.005" help="sync with udpate_rate">
