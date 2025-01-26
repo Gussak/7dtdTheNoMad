@@ -413,9 +413,40 @@
     </buff>
   </append>
   <append xpath="/buffs" help="Monster Essences powers for PLAYER">
-    <!--	HELPGOOD: the duration of 1s is to prevent the quick adding that happens if it was 0.05s for onSelfPrimaryActionRayHit -->
+    <buff name="buffGSKShamanPowers" hidden="true">
+      <duration value="2" help="to prevent the quick adding that happens if it was 0.05s for onSelfPrimaryActionRayHit"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPsyResist5s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKWightEssence5s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVampireEssence5s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKMutantEssence5s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.34">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="2.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.20">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="3.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.15">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="4.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.10">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="5.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.03">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="5.0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKPsyResist5s" hidden="true">
-      <duration value="1"/>
+      <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LT" value="60"/>
@@ -424,7 +455,7 @@
       </effect_group>
     </buff>
     <buff name="buffGSKWightEssence5s" hidden="true">
-      <duration value="1"/>
+      <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LT" value="60"/>
@@ -433,7 +464,7 @@
       </effect_group>
     </buff>
     <buff name="buffGSKVampireEssence5s" hidden="true">
-      <duration value="1"/>
+      <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LT" value="60"/>
@@ -442,7 +473,7 @@
       </effect_group>
     </buff>
     <buff name="buffGSKMutantEssence5s" hidden="true">
-      <duration value="1"/>
+      <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LT" value="60"/>
@@ -997,6 +1028,7 @@
     <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="set" value="0" help="resurrection completely removes essences DNA mutations"/>
     <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKEssenceWight" operation="set" value="0" help="resurrection completely removes essences DNA mutations"/>
     <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0"/>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <!--
@@ -1142,6 +1174,14 @@
       <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpsyonicBulletVanish"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="set" value="60"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="add" value="@iGSKPsyonicChemUseCount"/>
+    </effect_group>
+    <effect_group help="shamanPowerDecay">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="-0.20">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="0"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPlayerVomit']/effect_group">
