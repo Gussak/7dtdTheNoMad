@@ -726,6 +726,22 @@
         </triggered_effect>
       </effect_group>
     </buff>
+    <buff name="buffGSKShamanDebuff" hidden="false" icon="ui_game_symbol_critical" icon_color="128,180,180" description_key="dkbuffGSKWightEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.33" help="3 ragdollings per second works well to keep the player down"/>
+      <display_value value="iGSKNearDeathShamanPowerLvlMax"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEssenceSideEffects" help="lvl decayed and reached 0, then the debuff begins. the max it reached, the more after debuff happens"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="add" value="-0.33" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShamanDebuff"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs" help="Monster Essences powers thru thrown weapons and bullets for PLAYER">
     <buff name="_buffGSKThrownBoneDartMarkTargetToDrain" help="ISSUE: setting a zombie cvar with players EntityID doesnt work">
@@ -1197,11 +1213,7 @@
     <effect_group help="shamanPower:Debuff">
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="Equals" value="0"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="lvl decayed and reached 0, then the debuff begins. the max it reached, the more after debuff happens"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="add" value="-1"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0">
-        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LT" value="1"/>
-      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
