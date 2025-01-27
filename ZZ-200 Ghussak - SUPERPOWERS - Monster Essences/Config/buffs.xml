@@ -813,6 +813,7 @@
       <duration value="0"/>
       <update_rate value="0.05" help=""/>
       <effect_group>
+        <passive_effect name="DismemberChance" operation="base_set" value="100" help="TODO: check if it is being fully dismembered by the explosion (actually the torso should explode like the zombie cop, and limbs should fly away)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="0"/>
       </effect_group>
       <!-- HELPGOOD: as friendly NPCs may move in front of our shooting line suddenly, better not enable this.
@@ -1214,6 +1215,21 @@
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="Equals" value="0"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
+    </effect_group>
+    <effect_group help="shamanPower:Pain">
+      <requirement name="HoldingItemHasTags" tags="shamanpower"/>
+      <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryBleedingOne">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+        <requirement name="!HasBuff" buff="buffInjuryBleeding"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned01">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned00"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned01"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned02"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned03"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
