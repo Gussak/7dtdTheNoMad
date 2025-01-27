@@ -44,7 +44,7 @@ trap 'read -n 1' ERR
 #cd "$(dirname "$0")"
 #pwd
 
-#help backup only minimal save data: chunks where there are landclaims and bedroll, so your hired NPCs shall be left in a chunk where there is a landclaim. beware tho, it will not backup nearby chunks so better do not leave the NPC in patrol mode?
+#help backup only minimal save data: chunks where there are landclaims and the last bedroll, so your hired NPCs shall be left in a chunk where there is a landclaim. beware tho, it will not backup nearby chunks so better do not leave the NPC in patrol mode?
 
 function FUNCbkp() {
 	if [[ ! -f "$strFlPlayersXml" ]];then echo "PROBLEM: file not found: $strFlPlayersXml" >/dev/stderr;return 1;fi
