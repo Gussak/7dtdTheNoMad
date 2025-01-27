@@ -1184,6 +1184,10 @@
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LT" value="@iGSKNearDeathShamanPowerLvl"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
+        <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
@@ -1195,6 +1199,9 @@
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="lvl decayed and reached 0, then the debuff begins. the max it reached, the more after debuff happens"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LT" value="1"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
