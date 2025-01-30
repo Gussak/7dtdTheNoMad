@@ -1208,6 +1208,10 @@
         <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
+        <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="0"/>
       </triggered_effect>
@@ -1215,6 +1219,11 @@
     <effect_group help="shamanPower:Debuff">
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="Equals" value="0"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
+      <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
+      <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+      <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+      <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
+      <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (fall down)."/>
     </effect_group>
