@@ -741,7 +741,6 @@
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShamanDebuff"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (ragdoll)."/>
       </effect_group>
     </buff>
   </append>
@@ -1217,20 +1216,31 @@
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="Equals" value="0"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (fall down)."/>
     </effect_group>
     <effect_group help="shamanPower:Pain">
       <requirement name="HoldingItemHasTags" tags="shamanpower"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GT" value="0"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryBleedingOne">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="1">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryBleedingOne">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="Equals" value="1"/>
         <requirement name="!HasBuff" buff="buffInjuryBleeding"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned01">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="2">
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned01">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="Equals" value="2"/>
         <requirement name="!HasBuff" buff="buffInjuryStunned00"/>
         <requirement name="!HasBuff" buff="buffInjuryStunned01"/>
         <requirement name="!HasBuff" buff="buffInjuryStunned02"/>
         <requirement name="!HasBuff" buff="buffInjuryStunned03"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (bleed,stun)." compare_type="or">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
   </append>
