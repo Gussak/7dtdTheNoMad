@@ -47,4 +47,23 @@
       </effect_group>
     </buff>
   </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="steroids long term effects">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKSteroidsLongTermEffect" operation="add" value="-0.00004" help="1/(7*3600)=0.0000396825 lasts 7 days">
+        <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GT" value="0"/>
+      </triggered_effect>
+      <passive_effect name="CarryCapacity" operation="base_add" value="@fGSKSteroidsLongTermEffect">
+        <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GTE" value="1"/>
+      </passive_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="set" value="@fGSKSteroidsLongTermEffect"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="divide" value="1000" help="having used enough steroids to add 100 slots will increase water and food consumption by 10%"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="set" value="@.fGSKSteroidsLongTermEffectFoodWaterTmp"/>
+      <passive_effect name="FoodLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+        <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+      </passive_effect>
+      <passive_effect name="WaterLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+        <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+      </passive_effect>
+    </effect_group>
+  </append>
 </GhussakTweaks>
