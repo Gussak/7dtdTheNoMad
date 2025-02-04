@@ -7264,43 +7264,6 @@
         <triggered_effect trigger="onSelfLandJump" action="RemoveBuff" buff="buffGSKFallOverLandingHit12"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKNPCSpiderTouchNet" help="TODO: remove when buffGSKNPCLeapHit works">
-      <stack_type value="replace"/>
-      <duration value="0"/>
-      <update_rate value="0.1"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKSpiderNet11" target="selfAOE" range="1">
-          <requirement name="!HasBuff" buff="buffGSKSpiderNet11"/>
-        </triggered_effect>
-      </effect_group>
-    </buff>
-    <buff name="buffGSKNPCLeapHit" help="TODO:ISSUE: are these events ever triggered for NPCs?">
-      <stack_type value="replace"/>
-      <duration value="0"/>
-      <update_rate value="0.2"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfLandJump" action="Ragdoll" duration="60" force="10" target="selfAOE" range="1" target_tags="zombie,animal,npc,bandit">
-          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfLandJump" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="2" target="selfAOE" range="1" target_tags="player">
-          <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" target="other" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfLandJump" action="AddBuff" buff="buffGSKSpiderNet11" target="selfAOE" range="1">
-          <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfLandJump" action="LogMessage" message="GSK:buffGSKNPCLeapHit"/>
-        <triggered_effect trigger="onSelfFallImpact" action="Ragdoll" duration="60" force="10" target="selfAOE" range="1" target_tags="zombie,animal,npc,bandit">
-          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="2" target="selfAOE" range="1" target_tags="player">
-          <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" target="other" operation="LTE" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfFallImpact" action="AddBuff" buff="buffGSKSpiderNet11" target="selfAOE" range="1">
-          <requirement name="EntityTagCompare" tags="animalSpider01,animalSpider02,animalSpider03"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfFallImpact" action="LogMessage" message="GSK:buffGSKNPCLeapHit"/>
-      </effect_group>
-    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffBeer']">
     <effect_group>
