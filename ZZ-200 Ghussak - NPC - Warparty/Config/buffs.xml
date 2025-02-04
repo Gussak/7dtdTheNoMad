@@ -510,6 +510,7 @@
       <effect_group help="RangedNPClimit: NPC control buff">
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCIDCurrent" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNPCHiredCountAboveMaxLimit" operation="set" value="1" target="selfAOE" range="60">
           <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
@@ -1759,6 +1760,12 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerNPCInfoMeleeOrRanged" operation="set" value="2" target="selfAOE" range="2.5" help="this means the tags needs fixing: or melee or ranged, not both">
           <requirement name="EntityTagCompare" tags="melee"/>
           <requirement name="EntityTagCompare" tags="ranged"/>
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="NUMBER: current info for NPC id">
+        <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCIDCurrent" operation="set" value="@_EntityID" target="selfAOE" range="2.5">
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@Leader"/>
         </triggered_effect>
       </effect_group>
