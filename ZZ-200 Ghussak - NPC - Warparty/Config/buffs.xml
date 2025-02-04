@@ -3594,10 +3594,16 @@
         <requirement name="CVarCompare" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="set" value="@iNPCAmmoSpent"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fNPCAmmoSpentPerc" operation="divide" value="@iNPCAmmoLimit"/>
-        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="#@modfolder(0-XNPCCore):Resources/Bugs.unity3d?p_Flies2_X" local_offset="0,0.5,0.3" local_rotation="0,0,0" parent_transform="Origin">
+        <!-- HELPGOOD: old but is failing to call attention
+				<triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="#@modfolder(0-XNPCCore):Resources/Bugs.unity3d?p_Flies2_X" local_offset="0,0.5,0.3" local_rotation="0,0,0" parent_transform="Origin">
+-->
+        <triggered_effect trigger="onSelfBuffStart" action="PlaySound" sound="flies_lp" play_in_head="false" help="TODO: the NPC could actually speak only once 'I am almost out of ammo', as flies is also a loop">
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="GTE" value="0.90"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="p_Flies2_X">
+        <!-- HELPGOOD: old
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveParticleEffectFromEntity" particle="p_Flies2_X">
+-->
+        <triggered_effect trigger="onSelfBuffStart" action="StopSound" sound="flies_lp" play_in_head="false">
           <requirement name="CVarCompare" cvar="fNPCAmmoSpentPerc" operation="LT" value="0.90"/>
         </triggered_effect>
       </effect_group>
