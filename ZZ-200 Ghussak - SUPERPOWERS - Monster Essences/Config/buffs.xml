@@ -813,7 +813,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerFeed"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" remove_on_death="false">
+    <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" help="at foe" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="0.05" help=""/>
@@ -839,6 +839,13 @@
         <requirement name="EntityTagCompare" tags="bandit"/>
         <requirement name="IsAlive"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKLowCostTeleportDebuffApply" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit the bandit">
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="shaman debuff">
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="1.0" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit it">
           <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
