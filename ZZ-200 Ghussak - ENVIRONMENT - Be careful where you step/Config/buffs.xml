@@ -58,4 +58,96 @@
       </effect_group>
     </buff>
   </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="ragdoll: player running with injured legs">
+      <requirement name="EntityHasMovementTag" tags="running"/>
+      <requirement name="!EntityHasMovementTag" tags="climbing" help="by also using the hands to climb vertical ladders, will prevent ragdoll, vanilla already applies other damages just cuz of running tho"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="25">
+        <requirement name="HasBuff" buff="buffLegBroken"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="10">
+        <requirement name="HasBuff" buff="buffLegSplinted" help="inferior quality than legcast"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="5">
+        <requirement name="HasBuff" buff="buffLegSprained" help="low chance because this cant be cured/improved"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="3">
+        <requirement name="HasBuff" buff="buffLegCast"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="divide" value="2">
+        <requirement name="HasBuff" buff="buffImpactBracing"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollDoIt" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollDoIt" operation="set" value="1">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@.iGSKRunInjureLegRagdollChance"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+        <requirement name="CVarCompare" cvar=".iGSKRunInjureLegRagdollDoIt" operation="Equals" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Running with an injured leg makes you stumble...">
+        <requirement name="CVarCompare" cvar=".iGSKRunInjureLegRagdollDoIt" operation="Equals" value="1"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="ragdoll: by fall impact">
+      <!-- HELPGOOD:
+        <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuckTst" operation="set" value="randomFloat(0,1)" help="This is not good, most of the time it results in 1.00"/>
+-->
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="set" value="randomInt(0,100)"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.15">
+        <requirement name="HasBuff" buff="buffLegBroken"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.35">
+        <requirement name="HasBuff" buff="buffLegSprained"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75" compare_type="or">
+        <requirement name="HasBuff" buff="buffLegSplinted"/>
+        <requirement name="HasBuff" buff="buffLegCast"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_fallSpeed"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_encumberedslots" help="_encumbrance may be high with just a few _encumberedslots if you have a lot of carry capacity right? so using _encumberedslots instead."/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@fGSKFatStaminaBlockage" help="more difficult to keep the balance"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="set" value="@_fallSpeed"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="multiply" value="100"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="1">
+        <requirement name="CVarCompare" cvar=".fGSKFallSpeedLastX100" operation="GT" value="@.fGSKFallSpeedRagDollCheckLuck"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95" help="TODO: let user config this +-0.025 min 0.50 max 1.00?"/>
+        <requirement name="!HasBuff" buff="buffImpactBracing"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.35"/>
+        <requirement name="HasBuff" buff="buffImpactBracing"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.10"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" help="is a more stable position"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.05"/>
+        <requirement name="HasBuff" buff="buffDrugSteroids"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="HasBuff" buff="buffGSKpowerImmuneLikeAWight"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
+        <requirement name="HasBuff" buff="buffGSKCosmicBloodMoon7"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="ragdoll: by fall impact">
+      <requirement name="CVarCompare" cvar=".bGSKDoRagdollFromFallImpact" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="[TNM] You don't land well and fall down..."/>
+      <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedLastX100"/>
+      <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedRagDollCheckLuck"/>
+    </effect_group>
+  </append>
 </GhussakTweaks>
