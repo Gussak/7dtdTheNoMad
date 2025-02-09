@@ -142,7 +142,7 @@ function FUNCbkp() {
 		
 		pwd
 		
-		if ! strKey="$(ls -l "${astrListFlToBkp[@]}")";then echo "preparing key failed, retring...";continue;fi
+		if ! strKey="$(ls -l "${astrListFlToBkp[@]}")";then declare -p astrListFlToBkp |tr '[' '\n';echo "preparing key failed, retring...";return 1;fi #once a .tpp.tmp was created and vanished (became .tpp probably, was a temp save b4 final file) so return instead of continue will refresh the file list
 		
 		rm -v "${strFlBkpBN}.tar"&&:
 		if ! tar -cf "${strFlBkpBN}.tar" "${astrListFlToBkp[@]}";then echo "tar failed, retring...";continue;fi
@@ -153,7 +153,7 @@ function FUNCbkp() {
 		
 		echo "[`date`] waiting no changes happen in 3s...";read -t 3 -n 1&&:
 		
-		if ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";then echo "checking key failed, retring...";continue;fi
+		if ! strKeyNew="$(ls -l "${astrListFlToBkp[@]}")";then echo "checking key failed, retrying...";continue;fi
 		if [[ "$strKeyNew" == "$strKey" ]];then
 			declare -p strKey; 
 			break; 
