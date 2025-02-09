@@ -94,16 +94,21 @@
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuckTst" operation="set" value="randomFloat(0,1)" help="This is not good, most of the time it results in 1.00"/>
 -->
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="set" value="randomInt(0,100)"/>
-      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.15">
+      <!--        HELPGOOD: luck limit-->
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="set" value="15">
+        <requirement name="CVarCompare" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="GT" value="15"/>
         <requirement name="HasBuff" buff="buffLegBroken"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.35">
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="set" value="35">
+        <requirement name="CVarCompare" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="GT" value="35"/>
         <requirement name="HasBuff" buff="buffLegSprained"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75" compare_type="or">
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="set" value="75" compare_type="or">
+        <requirement name="CVarCompare" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="GT" value="75"/>
         <requirement name="HasBuff" buff="buffLegSplinted"/>
         <requirement name="HasBuff" buff="buffLegCast"/>
       </triggered_effect>
+      <!--        HELPGOOD: worseners-->
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
         <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_fallSpeed"/>
       </triggered_effect>
@@ -111,16 +116,18 @@
         <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@_encumberedslots" help="_encumbrance may be high with just a few _encumberedslots if you have a lot of carry capacity right? so using _encumberedslots instead."/>
       </triggered_effect>
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuck" operation="multiply" value="0.75">
-        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@fGSKFatStaminaBlockage" help="more difficult to keep the balance"/>
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LT" value="@fGSKFatStaminaBlockage" help="more difficult to keep the body equilibrium"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="set" value="@_fallSpeed"/>
+      <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="set" value="@_fallSpeed" help="0.0 to 1.0"/>
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedLastX100" operation="multiply" value="100"/>
+      <!--        HELPGOOD: test luck vs fall speed-->
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0"/>
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="1">
         <requirement name="CVarCompare" cvar=".fGSKFallSpeedLastX100" operation="GT" value="@.fGSKFallSpeedRagDollCheckLuck"/>
       </triggered_effect>
+      <!--				HELPGOOD: prevent fall down in specific conditions-->
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
-        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95" help="TODO: let user config this +-0.025 min 0.50 max 1.00?"/>
+        <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GTE" value="0.95" help="in max health, prevents fall down TODO: let user config this +-0.025 min 0.50 max 1.00?"/>
         <requirement name="!HasBuff" buff="buffImpactBracing"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".bGSKDoRagdollFromFallImpact" operation="set" value="0">
@@ -145,7 +152,7 @@
     <effect_group help="ragdoll: by fall impact">
       <requirement name="CVarCompare" cvar=".bGSKDoRagdollFromFallImpact" operation="Equals" value="1"/>
       <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
-      <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="[TNM] You don't land well and fall down..."/>
+      <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="[TNM] You don't land well and fall down..." help="To land and don't fall down: be in good health, use impact bracing mod, crouch, use steroids, use wight powers, use cosmic blood moon power, dont be encumbered, keep body fat low, heal your legs and have good luck."/>
       <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedLastX100"/>
       <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedRagDollCheckLuck"/>
     </effect_group>
