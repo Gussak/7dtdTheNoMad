@@ -735,9 +735,17 @@
       <display_value value="iGSKShamanDebuffTm"/>
       <display_value_format value="time"/>
       <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (fall down).">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Shaman powers side effected can be countered by remaining under water.">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="set" value="@iGSKNearDeathShamanPowerLvlMax"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="multiply" value="3"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEssenceSideEffects" help="lvl decayed and reached 0, then the convunsioning debuff begins. the max it reached, the more after debuff happens"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEssenceSideEffects" help="lvl decayed and reached 0, then the convunsioning debuff begins til the max lvl reached. the max it reached, the more after debuff happens">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="add" value="-0.33" help="sync with update_rate"/>
       </effect_group>
       <effect_group>
@@ -1241,7 +1249,6 @@
       <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
       <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (fall down)."/>
     </effect_group>
     <effect_group help="shamanPower:Pain">
       <requirement name="HoldingItemHasTags" tags="shamanpower"/>
