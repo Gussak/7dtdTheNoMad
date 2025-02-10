@@ -931,14 +931,18 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartFeedPlayer"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKTeleToLastPlacedBedroll" remove_on_death="false">
-      <stack_type value="ignore"/>
+    <buff name="buffGSKTeleToLastPlacedBedroll" hidden="false" remove_on_death="true" name_key="TeleToBedroll" description_key="dkbedrollTeleportHelper" icon="7dtdTeleport" icon_blink="false" help="sometimes the step over block buff seems to not kick in, this shown icon will help know if/when it is working">
+      <stack_type value="replace"/>
       <duration value="10"/>
       <effect_group>
+        <requirement name="EntityTagCompare" tags="player"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-        <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport" help="this will grant some time before calling again the game event"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll" help="at 2nd second, as checks before adding god buff. this is important to wait NPC followers be put also in short time god mode for teleport">
+          <requirement name="HasBuff" buff="buffGSKGodModeForTeleport" help="at the 2nd second this will kick in"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="at 1st second">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport" help="this will grant some time before calling again the game event"/>
+        </triggered_effect>
       </effect_group>
     </buff>
   </append>
