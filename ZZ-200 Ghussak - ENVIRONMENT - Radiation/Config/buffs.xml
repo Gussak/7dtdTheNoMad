@@ -197,7 +197,7 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRadiationAuraTimeout" operation="add" value="-2.5"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKRadiationScrEffOff" hidden="true" help="this will make screen radiation bearable making everything visible for a short time. buffRadiation01 has update_rate 3s. The effects there have 2s fade in. this buff must work just after that (after 2s) and complement it (1s) before the next loop there.">
+    <buff name="buffGSKRadiationScrEffOff" hidden="true" help="this will make screen radiation bearable making everything visible for a short time (not being 0.0 is better to lower the contrast when it kicks in again). buffRadiation01 has update_rate 3s. The effects there have 2s fade in. this buff must work just after that (after 2s) and complement it (1s) before the next loop there.">
       <stack_type value="replace"/>
       <duration value="10"/>
       <update_rate value="2.0"/>
@@ -316,5 +316,10 @@
   <remove xpath="/buffs/buff[@name='buffRadiation01']/effect_group/passive_effect[@name='WaterMaxBlockage' and @operation='base_add' and @value='@$buffStatusRadiation']"/>
   <append xpath="/buffs/buff[@name='buffRadiation01']/effect_group[@name='Radiation']/triggered_effect[@trigger='onSelfBuffUpdate' and @action='PlaySound' and @sound='player#vomit']">
     <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GTE" value="20"/>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.0" fade="0.5" help="this grants almost no rads will completely disable the effect">
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LTE" value="1.0"/>
+    </triggered_effect>
   </append>
 </GhussakTweaks>
