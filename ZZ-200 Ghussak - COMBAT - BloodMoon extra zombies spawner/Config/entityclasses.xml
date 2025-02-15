@@ -117,4 +117,39 @@
       <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKzombieCrowd" operation="add" value="2" target="selfAOE" range="60" target_tags="player"/>
     </effect_group>
   </append>
+  <append xpath="/entity_classes/entity_class[@name='zombieBurnt']" help="Harder zombies">
+    <property name="Class" value="EntityZombieCop"/>
+    <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+    <property name="Explosion.ParticleIndex" value="10"/>
+    <property name="Explosion.Duration" value="8"/>
+    <property name="Explosion.BlastPower" value="35"/>
+    <property name="Explosion.DamageBonus.stone" value=".1"/>
+    <property name="Explosion.DamageBonus.metal" value="0"/>
+    <property name="Explosion.DamageBonus.earth" value="0"/>
+    <property name="Explosion.DamageBonus.water" value="0"/>
+    <property name="Explosion.DamageBonus.wood" value="6"/>
+    <property name="Explosion.RadiusBlocks" value="5"/>
+    <property name="Explosion.RadiusEntities" value="6"/>
+    <property name="Explosion.BlockDamage" value="10"/>
+    <property name="Explosion.EntityDamage" value="10"/>
+    <property name="Explosion.Buff" value="buffBurningMolotov"/>
+    <effect_group name="fire stuff">
+      <passive_effect name="BuffResistance" operation="base_set" value="200" tags="buffBurningZombie,buffBurningElement,buffBurningEnvironment,buffBurningEnvironmentHack,buffBurningFlamingArrow,buffBurningMolotov,buffIsOnFire,buffBurningWeapon"/>
+      <triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningElement" help="TODO: use buffEWBurningStrike of EffectiveWeapons">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="25"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfFirstSpawn" action="AddBuff" target="self" buff="buffGSKBurntZombFireParticle"/>
+    </effect_group>
+  </append>
+  <append xpath="/entity_classes/entity_class[@name='zombieFemaleFat' or @name='zombieFatHawaiian']" help="Harder zombies">
+    <property name="Class" value="EntityZombieCop"/>
+    <property name="SoundExplodeWarn" value="hulkexplodewarning"/>
+    <property name="Explosion.ParticleIndex" value="8"/>
+    <property name="Explosion.RadiusBlocks" value="3"/>
+    <property name="Explosion.RadiusEntities" value="4"/>
+    <property name="Explosion.BlockDamage" value="250"/>
+    <property name="Explosion.EntityDamage" value="25"/>
+    <property name="Explosion.DamageBonus.earth" value="0"/>
+    <triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1"/>
+  </append>
 </GhussakTweaks>

@@ -193,8 +193,6 @@
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
     <effect_group help="noob free bundles cfg">
       <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKAllFreeBundlesSumExpDebit" operation="set" value="105904" helpgencode="DoNotModify:run:createBundles.sh"/>
-      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="set" value="@fGSKAllFreeBundlesSumExpDebit"/>
-      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKExpDebtDecPerSec" operation="divide" value="50400" help="14days*3600s(1h), this means to deplet exp debit you need to wait needs 14 game days. Obs.: every resurrection do not let to +100% if opening all free bundles because the schematic ones can only be opened once! that is an advantage to the player (makes it easier) tho because 100% debit will never be reached again."/>
     </effect_group>
   </append>
   <append xpath="/buffs">
@@ -6580,44 +6578,6 @@
         <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LTE" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.0" fade="1.0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Blur" intensity="0.0" fade="1.0"/>
-      </effect_group>
-      <effect_group help="exp loss, temporary by opening free bundles">
-        <requirement name="CVarCompare" cvar="fGSKExpDebt" operation="GT" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKExpDebt" operation="subtract" value="@.fGSKExpDebtDecPerSec"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="@fGSKExpDebtMaxAllTime"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="multiply" value="0.10" help="every 100% exp debit (respawn and open all bundles) increases that on the debit cap"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="add" value="0.25" help="minimum exp perc debit cap"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtMaxPerc" operation="set" value="0.95" help="min+inc*7 (7 full bundles reaches max cap)">
-          <requirement name="CVarCompare" cvar=".fGSKExpDebtMaxPerc" operation="GT" value="0.95"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="set" value="@fGSKExpDebt"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="@.fGSKExpDebtDecPerSec" help="seconds"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="60" help="minutes"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtTmRemain" operation="divide" value="60" help="hours"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="@fGSKExpDebt"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="divide" value="@fGSKAllFreeBundlesSumExpDebit"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="set" value="@.fGSKExpDebtMaxPerc">
-          <requirement name="CVarCompare" cvar=".fGSKExpDebtPercTmp" operation="GT" value="@.fGSKExpDebtMaxPerc"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercTmp" operation="multiply" value="-1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPerc" operation="set" value="@.fGSKExpDebtPercTmp" help="to avoid varying values during above lines"/>
-        <passive_effect name="PlayerExpGain" operation="perc_add" value="@.fGSKExpDebtPerc" help="this final value is negative from 0.0 to -1.0"/>
-        <!-- HELPGOOD: This exp defit per death is easier than vanilla, but the game is overall a huge lot more difficult now. -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="set" value="0.01"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="multiply" value="@$LastPlayerLevel"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefPerDeathPerc" operation="set" value="0.10">
-          <requirement name="CVarCompare" cvar=".fGSKExpDefPerDeathPerc" operation="GT" value="0.10" help="limit is vanilla"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="set" value="0.05"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="multiply" value="@$LastPlayerLevel"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDefMaxPerc" operation="set" value="0.50">
-          <requirement name="CVarCompare" cvar=".fGSKExpDefMaxPerc" operation="GT" value="0.50" help="limit is vanilla"/>
-        </triggered_effect>
-        <passive_effect name="ExpDeficitPerDeathPercentage" operation="base_set" value="@.fGSKExpDefPerDeathPerc"/>
-        <passive_effect name="ExpDeficitMaxPercentage" operation="base_set" value="@.fGSKExpDefMaxPerc"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="set" value="@.fGSKExpDebtPerc"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKExpDebtPercx100" operation="multiply" value="100"/>
       </effect_group>
       <effect_group help="fix the imperfect god ;). put here only what is causing trouble in god mode...">
         <requirements compare_type="or">

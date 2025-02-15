@@ -4153,22 +4153,20 @@
         <requirement name="IsNight"/>
       </triggered_effect>
     </effect_group>
-    <!-- HELPGOOD: moved to entityclasses with onSelfCrouch onSelfStand
-      <effect_group help="NPCSneak: NPC start/stop carefully sneaking together with player">
-        <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
-        <requirement name="CVarCompare" cvar=".iGSKSneakWithPlayerAllowed" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStartSneak3">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" />
-          <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="Equals" value="2" help="fullcontrol"/>
-          <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3" />
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStopSneak3">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" />
-          <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="Equals" value="0" help="hunting"/>
-          <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3" />
-        </triggered_effect>
-      </effect_group>
--->
+    <effect_group help="NPCSneak: NPC start/stop carefully sneaking together with player">
+      <requirement name="CVarCompare" cvar="iGSKPlayerNPCFollowingCountCurrent" operation="GTE" value="1"/>
+      <requirement name="CVarCompare" cvar=".iGSKSneakWithPlayerAllowed" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStartSneak3">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="Equals" value="2" help="fullcontrol"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCsStopSneak3"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNPCsStopSneak3">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerNPCInfoOrdersHF" operation="Equals" value="0" help="hunting"/>
+        <requirement name="!HasBuff" buff="buffGSKNPCsStartSneak3"/>
+      </triggered_effect>
+    </effect_group>
     <effect_group help="NPCSneak: this is a workaround for a more dynamic combat order that will limit the range the NPCs will hunt somehow">
       <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="selfAOE" range="60" buff="buffNPCModFullControlMode" help="enables hunting mode. there is another place enable the hunting mode by removing that buff">
