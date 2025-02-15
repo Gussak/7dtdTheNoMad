@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <configs>
   <append xpath="/recipes">
+    <recipe name="resourceRepairKit" count="12">
+      <ingredient name="resourceForgedIron" count="8"/>
+      <ingredient name="resourceDuctTape" count="4"/>
+      <ingredient name="resourceSpring" count="4"/>
+      <ingredient name="resourceOilShale" count="3"/>
+      <ingredient name="resourceScrapPolymers" count="8"/>
+    </recipe>
+    <recipe name="resourceRepairKit" count="12" craft_area="workbench">
+      <ingredient name="resourceForgedIron" count="6"/>
+      <ingredient name="resourceDuctTape" count="3"/>
+      <ingredient name="resourceSpring" count="3"/>
+      <ingredient name="resourceOilShale" count="2"/>
+      <ingredient name="resourceScrapPolymers" count="6"/>
+    </recipe>
+  </append>
+  <append xpath="/recipes">
     <!-- HELPGOOD: 
   It is an average of 5 parts to create each gun, so each could repair 20%
     egrep 'name="gun[^"]*"|ingredient.*parts' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/recipes.xml |egrep 'recipe.*name="gun' -A1 |egrep 'ingredient.*parts' -i -B1 |egrep 'ingredient.*count="."'
@@ -59,8 +75,7 @@
     CODEGEN:
 		clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep -\-include="recipes.xml" '<recipe.*name="(gun|melee)[^"]*\>' -oiRhIa _NewestSavegamePath.IgnoreOnBackup/* |egrep -vi "parts|resource|repair|player" |sed -r 's@<recipe name="@@g' |egrep -o "^[^ ]*" |tr -d '"' |sort -u);for strNm in "${astrList[@]}";do echo "$strNm" |sed -r 's@.*@<recipe name="&Tier6Bundle" count="1" craft_time="3"><ingredient name="&" count="6" /></recipe>@';done;echo;for strNm in "${astrList[@]}";do echo "$strNm" |sed -r 's@.*@<item name="&Tier6Bundle"><property name="Extends" value="GSKTRBaseBundle" /><property name="CustomIcon" value="&" /><property class="Action0"><property name="Create_item" value="&" /><property name="Create_item_count" value="6" /></property></item>@';done
 -->
-    <!--
-	HELPGOOD:CODEGEN:
+    <!--	HELPGOOD:CODEGEN:
 	clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep -oi 'recipe name="gun[^"]*' _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/recipes.xml |egrep -vi "parts|pipe|primitive" |cut -d'"' -f2 |sort -u); \
 	#declare -p astrList >&2; \
 	for strNm in "${astrList[@]}";do
