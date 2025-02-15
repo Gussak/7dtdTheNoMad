@@ -360,6 +360,18 @@
     </buff>
   </append>
   <append xpath="/buffs">
+    <buff name="buffGSKTakingBathOnTheGo" icon="7dtdGskMiasma" icon_blink="true" hidden="false" remove_on_death="true" name_key="TakingBath" description_key="dkbuffGSKTakingBathOnTheGo">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="fGSKMiasmaDirty"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTakingBathOnTheGo">
+          <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
     <buff name="buffGSKHazardousWElementColdHook40" icon="7dtdGskHazardSnow" icon_blink="true" hidden="false" remove_on_death="true" name_key="HypothermyHazard" description_key="buffGSKHazardousWElementColdHookDESC">
       <damage_type value="Cold"/>
       <stack_type value="ignore"/>

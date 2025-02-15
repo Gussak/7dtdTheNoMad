@@ -69,12 +69,13 @@
       <property name="EconomicValue" value="100"/>
       <property class="Action0">
         <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="1000"/>
+        <requirement name="NotHasBuff" buff="buffGSKTakingBathOnTheGo"/>
         <property name="Class" value="Eat"/>
         <property name="Delay" value="0.5"/>
         <property name="Use_time" value="0.5"/>
       </property>
       <effect_group tiered="false">
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="10000" help="TODO: clean -10/s over time til it reaches 0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKTakingBathOnTheGo"/>
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="1.0" help="sync with bathtub"/>
       </effect_group>
       <effect_group name="Refreshing against heat" tiered="false">
