@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <set xpath="/buffs/buff[@name='Marker']/stack_type/@value">replace</set>
+  <set xpath="/buffs/buff[@name='Marker']/duration/@value">5</set>
   <append xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']">
     <!--
 		HELPGOOD: ISSUE: buffs apparently does not work anymore for loot bag entities and vehicles entities TODO: a backpack flat icon like prefab
@@ -14,14 +16,43 @@
 		HELPGOOD: try fix vanilla mod
 -->
     <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder:Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin">
-      <requirement name="EntityTagCompare" tags="bear"/>
-      <requirement name="IsAlive" target="self"/>
+      <requirement name="EntityTagCompare" tags="animal"/>
+      <requirement name="EntityTagCompare" tags="hostile"/>
+      <requirement name="IsAlive"/>
     </triggered_effect>
     <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" prefab="#@modfolder:Resources/tablet.unity3d?AnimalMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,0">
       <requirement name="EntityTagCompare" tags="animal"/>
-      <requirement name="!EntityTagCompare" tags="bear,dog,vulture"/>
-      <requirement name="IsAlive" target="self"/>
+      <requirement name="!EntityTagCompare" tags="hostile"/>
+      <requirement name="IsAlive"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?AllyMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="parent:Head is bad when they move only their head, Hips may be bad with other NPCs too. TODO: another color, may be blue">
+      <requirement name="EntityTagCompare" tags="backpack"/>
+      <requirement name="IsAlive"/>
     </triggered_effect>
   </append>
   <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger">onSelfBuffStart</set>
+  <append xpath="/buffs/buff[@name='TabletMarkers']/effect_group/triggered_effect[@buff='Marker']/@target_tags">,backpack</append>
+  <append xpath="/buffs">
+    <buff name="TabletSwapZoomInWorkaround" help="ISSUE:WORKAROUND: at CameraZoomedOut there is a zoom out animation that begins at CameraZoomedIn ending zoom value. CameraZoomedIn has a glitchy mask problem. The idea is to keep constantly removing and adding CameraZoomedOut in a way that only it's initial animation, at end zoom value of CameraZoomedIn, has a chance to be played, keeping the max zoom in it can.">
+      <stack_type value="ignore"/>
+      <update_rate value=".01"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="IsLocalPlayer"/>
+        <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Cam2">
+          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Cam">
+          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Cam" prefab="#@modfolder:Resources/tablet.unity3d?CameraZoomedOut" parentTransform="" localPos="0,0,0" localRot="0,0,0">
+          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='TabletSwap']/effect_group">
+    <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="TabletSwapZoomInWorkaround"/>
+  </append>
 </GhussakTweaks>
