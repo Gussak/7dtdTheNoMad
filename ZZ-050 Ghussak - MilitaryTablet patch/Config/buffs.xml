@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']">
+    <!--
+		HELPGOOD: ISSUE: buffs apparently does not work anymore for loot bag entities and vehicles entities TODO: a backpack flat icon like prefab
+-->
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?AllyMarker" local_offset="0,0,0" parent_transform="LOD0" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="parent_transform fails:Position,Origin;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
+      <requirement name="EntityTagCompare" tags="npc,hirable"/>
+      <requirement name="IsAlive"/>
+    </triggered_effect>
+  </append>
+  <append xpath="/buffs/buff[@name='TabletSwap']/effect_group">
+    <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="$TabletScreenTemp"/>
+  </append>
+</GhussakTweaks>
