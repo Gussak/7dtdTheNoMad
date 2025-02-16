@@ -9,7 +9,7 @@
     <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,45" local_scale="0.5,0.5,0.5" help="AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
       <requirement name="EntityTagCompare" tags="hirable"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="0,0,45">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="0,0,45" help="fail:EnemyMarker:too displaced">
       <requirement name="EntityTagCompare" tags="bandit"/>
     </triggered_effect>
     <!--
@@ -20,14 +20,13 @@
       <requirement name="EntityTagCompare" tags="hostile"/>
       <requirement name="IsAlive"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?AnimalMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,0">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,0" help="fail:AnimalMarker">
       <requirement name="EntityTagCompare" tags="animal"/>
       <requirement name="!EntityTagCompare" tags="hostile"/>
       <requirement name="IsAlive"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?AllyMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="parent:Head is bad when they move only their head, Hips may be bad with other NPCs too. TODO: another color, may be blue">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="fail:AllyMarker. parent:Head is bad when they move only their head, Hips may be bad with other NPCs too. TODO: another color, may be blue">
       <requirement name="EntityTagCompare" tags="backpack"/>
-      <requirement name="IsAlive"/>
     </triggered_effect>
   </append>
   <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger">onSelfBuffStart</set>
@@ -35,19 +34,22 @@
   <append xpath="/buffs">
     <buff name="TabletSwapZoomInWorkaround" help="ISSUE:WORKAROUND: at CameraZoomedOut there is a zoom out animation that begins at CameraZoomedIn ending zoom value. CameraZoomedIn has a glitchy mask problem. The idea is to keep constantly removing and adding CameraZoomedOut in a way that only it's initial animation, at end zoom value of CameraZoomedIn, has a chance to be played, keeping the max zoom in it can.">
       <stack_type value="ignore"/>
-      <update_rate value=".01"/>
+      <update_rate value=".05"/>
       <duration value="0"/>
       <effect_group>
         <requirement name="IsLocalPlayer"/>
         <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Cam2">
-          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+        <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Cam2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".CamZoomInFix" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".CamZoomInFix" operation="set" value="1">
+          <requirement name="CVarCompare" cvar=".CamZoomInFix" operation="Equals" value="3"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Cam">
-          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar=".CamZoomInFix" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Cam" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?CameraZoomedOut" parentTransform="" localPos="0,0,0" localRot="0,0,0">
-          <requirement name="CVarCompare" cvar="$TabletScreenTemp" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar=".CamZoomInFix" operation="Equals" value="2"/>
         </triggered_effect>
       </effect_group>
     </buff>
