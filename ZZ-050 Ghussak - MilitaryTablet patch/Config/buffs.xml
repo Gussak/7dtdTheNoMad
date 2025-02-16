@@ -6,7 +6,7 @@
     <!--
 		HELPGOOD: ISSUE: buffs apparently does not work anymore for loot bag entities and vehicles entities TODO: a backpack flat icon like prefab
 -->
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,45" local_scale="0.5,0.5,0.5" help="AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,65" local_scale="0.5,0.5,0.5" help="AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
       <requirement name="EntityTagCompare" tags="hirable"/>
     </triggered_effect>
     <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="0,0,45" help="fail:EnemyMarker:too displaced">
@@ -79,5 +79,41 @@
 		HELPGOOD:FAIL
 		<triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="TabletSwapZoomInWorkaround" help="FAIL"/>
 -->
+  </append>
+  <append xpath="/buffs/buff[@name='TabletCam']">
+    <!--
+		HELPGOOD: grepx 'ModifyScreenEffect.*effect_name="[^"]*"' -oh |cut -d: -f2 |sort -u |egrep -o "effect_name.*" |sort -u |cut -d= -f2 |tr -d '"' |egrep -v HELPER
+			Blur
+			Bright
+			Cold
+			Cold2
+			Dark
+			dead
+			Distortion
+			Drunk
+			FadeToBlack
+			Greyscale
+			Hot
+			Hot2
+			Infected
+			NightVision
+			Radiation
+			Stealth
+			Trippy
+			Vibrant
+			VibrantDeSat
+-->
+    <effect_group>
+      <requirement name="CVarCompare" cvar="$TabletCamTemp" operation="Equals" value="2"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="NightVision" intensity="1" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Infected" intensity="0.1" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Radiation" intensity="0.1" fade="0"/>
+    </effect_group>
+    <effect_group>
+      <requirement name="CVarCompare" cvar="$TabletCamTemp" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0"/>
+    </effect_group>
   </append>
 </GhussakTweaks>
