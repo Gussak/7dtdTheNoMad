@@ -4,12 +4,24 @@
     <!--
 		HELPGOOD: ISSUE: buffs apparently does not work anymore for loot bag entities and vehicles entities TODO: a backpack flat icon like prefab
 -->
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?AllyMarker" local_offset="0,0,0" parent_transform="LOD0" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="parent_transform fails:Position,Origin;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
-      <requirement name="EntityTagCompare" tags="npc,hirable"/>
-      <requirement name="IsAlive"/>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,45" local_scale="0.5,0.5,0.5" help="AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
+      <requirement name="EntityTagCompare" tags="hirable"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="0,0,45">
+      <requirement name="EntityTagCompare" tags="bandit"/>
+    </triggered_effect>
+    <!--
+		HELPGOOD: try fix vanilla mod
+-->
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder:Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin">
+      <requirement name="EntityTagCompare" tags="bear"/>
+      <requirement name="IsAlive" target="self"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" prefab="#@modfolder:Resources/tablet.unity3d?AnimalMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,0">
+      <requirement name="EntityTagCompare" tags="animal"/>
+      <requirement name="!EntityTagCompare" tags="bear,dog,vulture"/>
+      <requirement name="IsAlive" target="self"/>
     </triggered_effect>
   </append>
-  <append xpath="/buffs/buff[@name='TabletSwap']/effect_group">
-    <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="$TabletScreenTemp"/>
-  </append>
+  <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger">onSelfBuffStart</set>
 </GhussakTweaks>
