@@ -33,7 +33,12 @@
 		</triggered_effect>
 -->
   </append>
-  <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger">onSelfBuffStart</set>
+  <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger" help="to attach only once">onSelfBuffStart</set>
+  <append xpath="/buffs/buff[@name='Marker']/effect_group[@name='Cleanup on death']">
+    <triggered_effect trigger="onSelfDied" action="RemovePrefabFromEntity" parent_transform="Hips" target="self" prefab="/EnemyAltMarker"/>
+    <triggered_effect trigger="onSelfDied" action="RemovePrefabFromEntity" parent_transform="Origin" target="self" prefab="/EnemyAltMarker"/>
+  </append>
+  <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Cleanup on death']/triggered_effect[@action='RemovePrefabFromEntity']/@trigger" help="to attach only once">onSelfBuffRemove</set>
   <append xpath="/buffs/buff[@name='TabletMarkers']/effect_group/triggered_effect[@buff='Marker']/@target_tags">,backpack</append>
   <append xpath="/buffs">
     <buff name="TabletSwapZoomInWorkaround" help="FAIL. ISSUE:WORKAROUND: at CameraZoomedOut there is a zoom out animation that begins at CameraZoomedIn ending zoom value. CameraZoomedIn has a glitchy mask problem. The idea is to keep constantly removing and adding CameraZoomedOut in a way that only it's initial animation, at end zoom value of CameraZoomedIn, has a chance to be played, keeping the max zoom in it can.">
