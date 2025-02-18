@@ -25,6 +25,9 @@ clear;strEffectGroups='copy all effect groups of the item, remove the comments, 
   <append xpath="/items/item[@name='Tablet']/effect_group/triggered_effect[    @trigger='onSelfPrimaryActionStart' and     @action='AddBuff' and     @buff='TabletSwap']" help="to grant zoom in/out will continue working properly">
     <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="1" help="only in map mode"/>
   </append>
+  <append xpath="/items/item[@name='Tablet']/effect_group/triggered_effect[    @trigger='onSelfSecondaryActionStart' and     @action='AddBuff' and     @buff='TabletCam']">
+    <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+  </append>
   <append xpath="/items/item[@name='Tablet']/effect_group">
     <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKMTabConsumeEnergy"/>
     <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKMTabConsumeEnergy"/>
