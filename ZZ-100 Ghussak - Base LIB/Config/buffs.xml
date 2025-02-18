@@ -907,4 +907,49 @@
       <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:VanillaGodMode:OFF"/>
     </effect_group>
   </append>
+  <!--  HELPGOOD: improve buffShocked to be controlled also by iGSKbuffShockedDuration duration
+	<set xpath="/buffs/buff[@name='buffShocked']/duration/@value">0</set>
+	<insertAfter xpath="/buffs/buff[@name='buffShocked']/effect_group/passive_effect[@name='BuffBlink']">
+      <triggered_effect trigger="onSelfBuffStart" action="GetBuffDuration" reference=".buffShockedDurationStart" help="if it is 0 and a duration was set when the buff was called">
+        <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="4" help="if it was not set and also no duration was set when buff was called">
+        <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="@.buffShockedDurationStart"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="@.buffShockedDurationStart"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="0"/>
+      
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked">
+				<requirement name="CVarCompare" cvar="iGSKbuffShockedDuration" operation="LTE" value="0" />
+      </triggered_effect>
+      
+      <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="set" value="0"/>
+	</insertAfter>
+	 -->
+  <append xpath="/buffs">
+    <buff name="buffGSKShockedLoop" help="consumedParam: '.buffGSKShockedLoopDurationAdd'. TODO: update old code to use this instead of buffShocked">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="@.buffGSKShockedLoopDurationAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="@.buffGSKShockedLoopDurationAdd"/>
+        <!--				HELPGOOD: consume-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffShocked">
+          <requirement name="!HasBuff" buff="buffShocked"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffShockedLoopDuration" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShockedLoop"/>
+      </effect_group>
+    </buff>
+  </append>
 </GhussakTweaks>
