@@ -73,14 +73,15 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffGSKMTabAcquireAndShockNearbyEnemies" hidden="false" remove_on_death="true" name_key="ShockEnemies" description_key="dkbuffGSKMTabAcquireAndShockNearbyEnemies" icon="3tablet" icon_blink="true" icon_color="255,128,128">
+    <buff name="buffGSKMTabAcquireAndShockNearbyEnemies" hidden="false" remove_on_death="true" name_key="ShockEnemies" description_key="dkbuffGSKMTabAcquireAndShockNearbyEnemies" icon="7dtdShockTip" icon_blink="true" icon_color="255,128,128">
       <stack_type value="ignore"/>
       <update_rate value="1"/>
       <duration value="0"/>
-      <display_value value="iGSKMTabEndShockCounter"/>
-      <display_value_key value="{0:0}/7" help="sync max with iGSKMTabEndShockCounter limit below there"/>
+      <display_value value="iGSKMTabEndShockEnemiesCounter"/>
+      <display_value_key value="{0:0}/7" help="sync max with iGSKMTabEndShockEnemiesCounter limit below there"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMTabShockEnemyCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockEnemiesCounter" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMTabShockEnemiesTime" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockEnemiesTime" operation="add" value="1"/>
       </effect_group>
@@ -107,13 +108,13 @@
       </effect_group>
       <effect_group name="ApplyEnergyDebt">
         <requirement name="CVarCompare" cvar="iGSKMTabShockEnemiesTime" operation="GTE" value="2"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockCounter" operation="add" value="1">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockEnemiesCounter" operation="add" value="1">
           <requirement name="CVarCompare" cvar="iGSKMTabShockDurDebt" operation="Equals" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockCounter" operation="set" value="0">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockEnemiesCounter" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKMTabShockDurDebt" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockCounter" operation="add" value="1000" help="any big value to force it end now">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockEnemiesCounter" operation="add" value="1000" help="any big value to force it end now">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@iGSKMTabShockDurDebt"/>
@@ -121,9 +122,7 @@
       </effect_group>
       <effect_group name="TryToEnd">
         <requirement name="CVarCompare" cvar="iGSKMTabShockEnemiesTime" operation="GTE" value="3"/>
-        <requirement name="CVarCompare" cvar="iGSKMTabEndShockCounter" operation="GTE" value="7" help="sync with display_value_key"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabEndShockCounter" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
+        <requirement name="CVarCompare" cvar="iGSKMTabEndShockEnemiesCounter" operation="GTE" value="7" help="sync with display_value_key"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMTabAcquireAndShockNearbyEnemies"/>
         <!--				HELPGOOD: danger-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabShockSelfChance" operation="set" value="@iGSKMTabShockEnemyCount"/>
