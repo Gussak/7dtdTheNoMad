@@ -49,6 +49,15 @@
         <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
         <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="2"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMTabLowBattMsg" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Military Tablet needs battery energy to work.">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKMTabLowBattMsg" operation="Equals" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabLowBattMsg" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabLowBattMsg" operation="set" value="60">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+      </triggered_effect>
     </effect_group>
   </append>
   <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
