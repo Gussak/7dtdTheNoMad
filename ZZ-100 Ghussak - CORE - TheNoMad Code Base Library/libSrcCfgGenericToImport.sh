@@ -882,7 +882,7 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGGameFolder
   export strCFGGameFolderRegex="`CFGFUNCprepareRegex "$strCFGGameFolder"`" #help GameDir
   
-  : ${strCFGBaseLIBFolder:="$(find ../ -maxdepth 1 -type d -iname "*Ghussak - Base LIB*"&&:)"} #help
+  : ${strCFGBaseLIBFolder:="$(find ../ -maxdepth 1 -type d -iname "*Ghussak*TheNoMad*Code Base Library*"&&:)"} #help
   
   : ${strCFGAppDataFolder:="${WINEPREFIX-}/drive_c/users/$USER/Application Data/"}&&: #help
   : ${strCFG7dtdAppDataFolder:="${strCFGAppDataFolder}/7DaysToDie/"}&&: #help

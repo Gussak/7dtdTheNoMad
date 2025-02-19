@@ -35,7 +35,8 @@
 #trap 'read -p ERROR_HitAKeyToContinue -n 1' ERR
 #trap 'echo WARN_CtrlC_Pressed_ABORTING;exit 1' INT
 #if [[ -z "${bGskUnique895767852VarNameInitSourceConfigLoadedAlreadyOkYes-}" ]];then
-source ../*" Ghussak - Base LIB/libSrcCfgGenericToImport.sh"
+strBaseLibPath="$(ls -1d *"Ghussak"*"TheNoMad"*"Code Base Library")"
+source "../${strBaseLibPath}/libSrcCfgGenericToImport.sh"
 #fi
 
 #egrep "[#]help" $0
