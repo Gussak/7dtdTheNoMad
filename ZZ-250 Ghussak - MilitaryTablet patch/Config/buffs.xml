@@ -123,7 +123,12 @@
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="set" value="@iGSKMTabShockDur" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="add" value="@iGSKMTabShockDur" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
 -->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="add" value="10" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="add" value="10" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="add" value="10" target="selfAOE" range="10" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockDur" operation="add" value="-10"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockEnemiesStep" operation="set" value="300">
           <requirement name="CVarCompare" cvar="iGSKMTabShockDur" operation="LTE" value="0"/>
@@ -131,8 +136,18 @@
       </effect_group>
       <effect_group name="ShockEnemies:ApplyShockLoop">
         <requirement name="CVarCompare" cvar="iGSKMTabShockEnemiesStep" operation="Equals" value="300"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShockedLoop" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMTabRequestShockedEnergyDebt" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShockedLoop" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShockedLoop" target="selfAOE" range="10" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMTabRequestShockedEnergyDebt" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMTabRequestShockedEnergyDebt" target="selfAOE" range="10" target_tags="zombie,animal,bandit,mech">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockEnemiesStep" operation="set" value="400"/>
       </effect_group>
       <effect_group name="ApplyEnergyDebt">
@@ -152,7 +167,7 @@
       <effect_group name="TryToEnd">
         <requirement name="CVarCompare" cvar="iGSKMTabShockEnemiesStep" operation="GTE" value="400"/>
         <requirement name="CVarCompare" cvar="iGSKMTabEndShockEnemiesCounter" operation="GTE" value="7" help="sync with display_value_key"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked" target="selfAOE" range="50" target_tags="zombie,animal,bandit,mech" help="this is important to end the shock on foes in case battery is depleted"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked" target="selfAOE" range="1000" target_tags="zombie,animal,bandit,mech" help="this is important to end the shock on foes in case battery is depleted"/>
         <!--				HELPGOOD: danger-->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabShockSelfChance" operation="set" value="@iGSKMTabShockEnemyCount"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabShockSelfChance" operation="divide" value="@iGSKperkElectrocutionerLvl">
@@ -179,8 +194,8 @@
       <update_rate value="1"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMTabShockEnemyCount" operation="add" value="1" target="selfAOE" range="50" target_tags="player" help="sync with update_rate"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockEnergyDebt" operation="add" value="1" target="selfAOE" range="50" target_tags="player" help="sync with update_rate">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMTabShockEnemyCount" operation="add" value="1" target="selfAOE" range="1000" target_tags="player" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMTabShockEnergyDebt" operation="add" value="1" target="selfAOE" range="1000" target_tags="player" help="sync with update_rate">
           <requirement name="HasBuff" buff="buffShocked"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMTabShockedNotCount" operation="add" value="1" help="sync with update_rate">
