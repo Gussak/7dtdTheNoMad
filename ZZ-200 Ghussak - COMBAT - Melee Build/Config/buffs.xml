@@ -133,7 +133,63 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKfortGripDebuff" help="max rads is 100.0"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKPlayerFallLandingHit" hidden="true" help="TODO: should be just one right below the player">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_fallSpeed" operation="GTE" value="0.1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="10" force="10" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="subtract" value="50" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_fallSpeed" operation="GTE" value="0.5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="50" force="250" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="subtract" value="500" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="_fallSpeed" operation="GTE" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="120" force="350" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+          <requirement name="!EntityTagCompare" target="other" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="subtract" value="1000" target="selfAOE" range="0.55" target_tags="zombie,animal,bandit">
+          <requirement name="IsAlive" target="other"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie,animal,bandit"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKFallOverLandingHit12" hidden="true" help="are these ever triggered for the player?">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.2"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfLandJump" action="Ragdoll" duration="60" force="10" target="selfAOE" range="2" target_tags="zombie,animal,npc,bandit"/>
+        <triggered_effect trigger="onSelfLandJump" action="LogMessage" message="GSK:buffGSKFallOverLandingHit12"/>
+        <triggered_effect trigger="onSelfLandJump" action="RemoveBuff" buff="buffGSKFallOverLandingHit12"/>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="fall over enemy damage">
+      <!--HELPGOOD:
+        <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKFallOverLandingHit12"/>
+-->
+      <triggered_effect trigger="onSelfJump" action="AddBuff" buff="buffGSKPlayerFallLandingHit"/>
+    </effect_group>
   </append>
 </GhussakTweaks>
