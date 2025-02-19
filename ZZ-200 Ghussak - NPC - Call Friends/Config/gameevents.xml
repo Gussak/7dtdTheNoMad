@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/gameevents">
+    <action_sequence name="eventGSKSpwMeleeFriendly" help="least empty handed">
+      <!-- HELPGOOD:CODEGEN: ISSUE:npcBaker seems buggy
+      strISSUEskipRegex="|npcBaker";egrep '<entity_class.*name="npc[^"]*(Axe|Bat|Club|EmptyHand|Knife|Machete)[^"]*' -i _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/entityclasses.xml -o |egrep -vi "npcHarley|npcRaider|npcAdvanced|Template|EmptyHand${strISSUEskipRegex}" |sort -u |sed -r -e 's@<entity_class name="(.*)@\1@' |tr '\n' ','
+-->
+      <action class="SpawnEntity">
+        <property name="phase" value="10"/>
+        <property name="entity_names" value="npcNurseAxe,npcNurseBat,npcNurseClub,npcNurseKnife,npcNurseMachete,npcSoldierGBDAxe,npcSoldierGBDKnife,npcSoldierGDAxe,npcSoldierGDKnife,npcSoldierGHDAxe,npcSoldierGHDKnife,npcSoldierHD1Axe,npcSoldierHD1Knife,npcSoldierHD2Axe,npcSoldierHD2Knife"/>
+        <property name="spawn_count" value="1" param1="iCount"/>
+        <property name="safe_spawn" value="true"/>
+        <property name="spawn_from_position" value="true"/>
+        <property name="min_distance" value="2"/>
+        <property name="max_distance" value="2"/>
+      </action>
+    </action_sequence>
     <action_sequence name="eventGSKCallNPC_SpawnBanditMelee" template="eventGSKSpawnBanditMelee">
       <variable name="iMinDist" value="4"/>
       <variable name="iMaxDist" value="4"/>
