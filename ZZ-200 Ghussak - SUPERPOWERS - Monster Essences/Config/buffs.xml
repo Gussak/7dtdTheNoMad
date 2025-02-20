@@ -498,7 +498,7 @@
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="multiply" value="10"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKbulletExplosionPsyonic">
-          <requirement name="CVarCompare" cvar="iGSKstackPsyExplod" operation="GT" value="0" help="requires at least 2 hits to place the explosion charge"/>
+          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GT" value="0" help="requires at least 2 hits to place the explosion charge"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="set" value="0"/>
       </effect_group>
@@ -995,7 +995,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKbulletExplosionPsyonicUpdateCount" operation="add" value="1"/>
       </effect_group>
       <!--        HELPGOOD: sync dmg and range with values of gameevent (that are not working from there...)
-	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)-->
+	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)
+	but these damages below are non resistable... the explosion should not damage nearby entities in an uresistable way.
+	TODO: The event explosion should suffice for nearby entities.
+	-->
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="10"/>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="20"/>
@@ -1006,7 +1009,9 @@
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="20"/>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400"/>
+        <!--HELPGOOD: no
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="0.65"/>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="20"/>
@@ -1018,8 +1023,10 @@
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="30"/>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-800"/>
+        <!--HELPGOOD: no
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="1.50"/>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="30"/>
@@ -1031,9 +1038,11 @@
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="40"/>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1200"/>
+        <!--HELPGOOD: no
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-300" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-150" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-75" target="selfAOE" range="2.50"/>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="40"/>
@@ -1045,10 +1054,12 @@
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="50"/>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1600"/>
+        <!--HELPGOOD: no
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="2.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-50" target="selfAOE" range="3.00"/>
+-->
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="50"/>
@@ -1058,11 +1069,13 @@
         <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="50"/>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-2000"/>
+        <!--HELPGOOD: no
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-500" target="selfAOE" range="0.65"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-250" target="selfAOE" range="1.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-125" target="selfAOE" range="2.50"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-63" target="selfAOE" range="3.00"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-31" target="selfAOE" range="3.50"/>
+-->
       </effect_group>
       <effect_group>
         <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
