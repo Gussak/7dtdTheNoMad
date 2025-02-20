@@ -6,7 +6,7 @@
     <!--
 		HELPGOOD: ISSUE: buffs apparently does not work anymore for loot bag entities and vehicles entities TODO: a backpack flat icon like prefab
 -->
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,65" local_scale="0.5,0.5,0.5" help="AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="90,0,75" local_scale="0.5,0.5,0.5" help="The rotation 90 is to make it point correctly and 65 makes the arrow thinner making it easier to distinguish from enemies. AllyMarker gets totally displaced for NPCs, may only work for real players models. parent_transform fails:Position,Origin,LOD0;bad:Head is bad when they move only their head, Hips may be bad with other NPCs too;Spine1: bit bad too;try:,, TODO: another color, may be blue">
       <requirement name="EntityTagCompare" tags="hirable"/>
     </triggered_effect>
     <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Hips" local_rotation="0,0,45" help="fail:EnemyMarker:too displaced">
@@ -15,22 +15,14 @@
     <!--
 		HELPGOOD: try fix vanilla mod
 -->
-    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,45">
+    <triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,0">
       <requirement name="EntityTagCompare" tags="animal"/>
       <requirement name="EntityTagCompare" tags="hostile"/>
       <requirement name="IsAlive"/>
     </triggered_effect>
-    <!-- HELPGOOD: no
-		<triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker" local_offset="0,0,0" parent_transform="Origin"  local_rotation="0,0,45" help="fail:AnimalMarker">
-			<requirement name="EntityTagCompare" tags="animal"/>
-			<requirement name="!EntityTagCompare" tags="hostile"/>
-			<requirement name="IsAlive"/>
-		</triggered_effect>
--->
-    <!-- HELPGOOD: wont work
-		<triggered_effect trigger="onSelfBuffUpdate" action="AttachPrefabToEntity" target="self" prefab="#@modfolder(MilitaryTablet):Resources/tablet.unity3d?EnemyAltMarker"  local_offset="0,0,0" parent_transform="Origin" local_rotation="0,0,90" local_scale="0.5,0.5,0.5" help="fail:AllyMarker. parent:Head is bad when they move only their head, Hips may be bad with other NPCs too. TODO: another color, may be blue">
-			<requirement name="EntityTagCompare" tags="backpack"/>
-		</triggered_effect>
+    <!-- HELPGOOD:
+			dont mark non hostile animals, use the tracker perk
+			wont work with <requirement name="EntityTagCompare" tags="backpack"/>
 -->
   </append>
   <set xpath="/buffs/buff[@name='Marker']/effect_group[@name='Marquage']/triggered_effect[@action='AttachPrefabToEntity']/@trigger" help="to attach only once">onSelfBuffStart</set>
@@ -225,8 +217,8 @@
       <stack_type value="replace"/>
       <duration value="0.05"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="NightVision" intensity="0" fade="0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Greyscale" intensity="0" fade="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0"/>
       </effect_group>
     </buff>
   </append>
@@ -259,15 +251,15 @@
 			Vibrant
 			VibrantDeSat
 -->
-    <effect_group>
+    <effect_group help="see behind walls is meant to be difficult, the infected effect helps on that goal, but could be something else">
       <requirement name="CVarCompare" cvar="$TabletCamTemp" operation="Equals" value="2"/>
       <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Greyscale" intensity="1.00" fade="0"/>
-      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Radiation" intensity="1.00" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Infected" intensity="1.00" fade="0"/>
     </effect_group>
     <effect_group help="sync with buffGSKMTabClearEffects">
       <requirement name="CVarCompare" cvar="$TabletCamTemp" operation="Equals" value="1"/>
       <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Greyscale" intensity="0" fade="0"/>
-      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Radiation" intensity="0" fade="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyScreenEffect" effect_name="Infected" intensity="0" fade="0"/>
     </effect_group>
   </append>
 </GhussakTweaks>
