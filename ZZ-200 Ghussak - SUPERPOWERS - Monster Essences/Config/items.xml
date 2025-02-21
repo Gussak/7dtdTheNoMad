@@ -335,6 +335,7 @@
       <property name="Material" value="MresourceBone"/>
       <property name="CustomIcon" value="meleeWpnBladeT0BoneKnife"/>
       <property name="TintColor" value="128,180,220"/>
+      <property name="UMA.Overlay0Tint" value="255,0,0"/>
       <property name="EconomicValue" value="0"/>
       <property name="SoundUnholster" value="weapon_unholster"/>
       <property name="SoundHolster" value="weapon_holster"/>
@@ -399,6 +400,11 @@
         <!-- HELPGOOD:ISSUE: onSelfPrimaryActionRayHit seems to happen about like 8x for every strike, so the buff needs to be a ignore stack -->
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKShamanPowers">
           <requirement name="IsAlive" target="other"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKShamanPowers" help="workaround to speedup harvesting letting we not need to use another tool for that">
+          <requirement name="NotHasBuff" target="self" buff="buffGSKShamanPowers"/>
+          <requirement name="EntityTagCompare" target="other" tags="animal,zombie" help="zombie is to let Whisperers mod be helped too"/>
+          <requirement name="!IsAlive" target="other"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP"/>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainStamina"/>
