@@ -11,11 +11,15 @@
       </action>
       <!--			HELPGOOD:CODEGEN:KILLPLANTS:REPLACE (sync with blocks.xml)
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);
+astrList+=(plantedGoldenrod plantedChrysanthemum)
 for str in ${astrList[@]};do
+	strTo="$str"
+	if [[ "${str%Dead}" == plantedGoldenrod     ]];then strTo=plantedCoffeeDead;fi
+	if [[ "${str%Dead}" == plantedChrysanthemum ]];then strTo=plantedCoffeeDead;fi
 	echo '			<action class="BlockReplace"><property name="phase" value="2" />
 				<property name="min_offset" value="0,-1,0" /><property name="max_offset" value="0,1,0" />'
 	echo -e '				<property name="block_tags" value="'${str%Dead}'" />';
-	echo -e '				<property name="block_to"   value="'${str}'" />';
+	echo -e '				<property name="block_to"   value="'${strTo}'" />';
 	echo '			</action>';
 done
 -->
@@ -88,6 +92,20 @@ done
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantShrub"/>
         <property name="block_to" value="plantShrubDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedGoldenrod"/>
+        <property name="block_to" value="plantedCoffeeDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedChrysanthemum"/>
+        <property name="block_to" value="plantedCoffeeDead"/>
       </action>
     </action_sequence>
   </append>
