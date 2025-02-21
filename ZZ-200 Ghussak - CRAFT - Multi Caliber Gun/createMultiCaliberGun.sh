@@ -31,7 +31,8 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ../*" Ghussak - Base LIB/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
+strBaseLibPath="$(ls -1d *"Ghussak"*"TheNoMad"*"Code Base Library")"
+source "../${strBaseLibPath}/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
 
 #echo >>"${strFlGenIte}${strGenTmpSuffix}"
 

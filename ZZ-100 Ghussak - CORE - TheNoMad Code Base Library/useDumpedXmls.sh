@@ -75,7 +75,7 @@ function FUNCprepareDumpedCfgToOverrideAll() {
 	strGrp="$1";shift
 	strEntry="$1";shift
 	
-	: ${strNewestSaveGamePath:="../"*"Ghussak"*"Base LIB/_NewestSavegamePath.IgnoreOnBackup"} #help
+	: ${strNewestSaveGamePath:="${strCFGBaseLIBFolder}/_NewestSavegamePath.IgnoreOnBackup"} #help
 	strFlDumped="${strNewestSaveGamePath}/ConfigsDump/${strXmlFl}"
 	FUNCexecEcho ls -l "${strFlDumped}" # to error if not exist
 	

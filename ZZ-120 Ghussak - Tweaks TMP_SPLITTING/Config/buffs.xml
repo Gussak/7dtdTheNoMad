@@ -6129,30 +6129,6 @@
           <requirement name="!IsBloodMoon"/>
         </triggered_effect>
       </effect_group>
-      <effect_group help="track HP value">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerPrevHPforWarnSnd" operation="set" value="@iGSKplayerCurrentHP"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerCurrentHP" operation="add" value="1">
-          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKplayerCurrentHP"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerCurrentHP" operation="add" value="-1">
-          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@iGSKplayerCurrentHP"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="if HP is dropping, it will play pain sounds. TODO: what is lg (hard) and sm (weak)?">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.05"/>
-          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="@iGSKplayerPrevHPforWarnSnd"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painsm">
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.05"/>
-          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.10"/>
-          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="@iGSKplayerPrevHPforWarnSnd"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="GTE" value="50"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="1">
-          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="50"/>
-        </triggered_effect>
-      </effect_group>
       <effect_group help="WIP:TODO:TEMP:HELPER:REMOVELATER: log player stats: sometimes we seem to die for no good reason (usually during bloodmoon?), this tries to help understand what happened...">
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKplayerCurrentHP">
           <requirement name="IsBloodMoon"/>

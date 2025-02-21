@@ -31,7 +31,8 @@
 
 #PREPARE_RELEASE:REVIEWED:OK
 
-source ../*" Ghussak - Base LIB/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
+strBaseLibPath="$(ls -1d *"Ghussak"*"TheNoMad"*"Code Base Library")"
+source "../${strBaseLibPath}/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
 
 bAnnotate=false
 if CFGFUNCprompt -q "write (paint) the screenshot filename on the image data of the copied file? (you will see the filename when the game is loading on the bottom right corner) (tip: accept once, then move original Screenshots to a sub-folder there and move the files from LoadingScreens to the Screenshots folder and run this script again denying writing the filename on them (to create symlinks))";then
