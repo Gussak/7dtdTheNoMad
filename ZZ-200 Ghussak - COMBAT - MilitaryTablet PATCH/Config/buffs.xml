@@ -210,10 +210,15 @@
       <update_rate value="1"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="-0.333" help="detecting foes and good cam view">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="-0.333" help="detecting foes in map mode">
+          <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="1" help="map mode"/>
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="-0.1" help="just showing the map and very bad cam view">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="-1.0" help="see thru walls cam view is more costy, like night vision">
+          <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="2" help="camera mode"/>
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="-0.1" help="just showing the map, no cam view">
           <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
         </triggered_effect>
       </effect_group>
