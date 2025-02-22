@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <append xpath="/blocks/block[@name='cntCollapsedWorkbench' or @name='cntCollapsedWorkbenchEmpty']" help="ISSUE: just fails">
+  <append xpath="/blocks/block[@name='cntCollapsedWorkbench' or @name='cntCollapsedWorkbenchEmpty']">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="workbench"/>
       <property name="Item" value="resourceMechanicalParts"/>
@@ -8,6 +8,9 @@
       <property name="UpgradeHitCount" value="50"/>
     </property>
     <drop event="Harvest" name="workstationSkillMagazine" count="2,4" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
+  </append>
+  <append xpath="/blocks/block[@name='workbench']">
+    <property name="DowngradeBlock" value="cntCollapsedWorkbench"/>
   </append>
   <append xpath="/blocks/block[@name='cntCollapsedChemistryStation']" help="ok">
     <property class="UpgradeBlock">
@@ -18,6 +21,9 @@
     </property>
     <drop event="Harvest" name="workstationSkillMagazine" count="3,6" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
   </append>
+  <append xpath="/blocks/block[@name='chemistryStation']">
+    <property name="DowngradeBlock" value="cntCollapsedChemistryStation"/>
+  </append>
   <append xpath="/blocks/block[@name='cntForgeWorkstationBroken']" help="ok">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="forge"/>
@@ -26,6 +32,9 @@
       <property name="UpgradeHitCount" value="50"/>
     </property>
     <drop event="Harvest" name="workstationSkillMagazine" count="1,2" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
+  </append>
+  <append xpath="/blocks/block[@name='forge']">
+    <property name="DowngradeBlock" value="cntForgeWorkstationBroken"/>
   </append>
   <append xpath="/blocks/block[@name='cntCollapsedCementMixer']">
     <property class="UpgradeBlock">
@@ -36,6 +45,9 @@
     </property>
     <drop event="Harvest" name="workstationSkillMagazine" count="1,2" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
   </append>
+  <append xpath="/blocks/block[@name='cementMixer']">
+    <property name="DowngradeBlock" value="cntCollapsedCementMixer"/>
+  </append>
   <append xpath="/blocks/block[@name='cntCollapsedBatterybank']">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="batterybank"/>
@@ -44,6 +56,9 @@
       <property name="UpgradeHitCount" value="50"/>
     </property>
     <drop event="Harvest" name="electricianSkillMagazine" count="2,4" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
+  </append>
+  <append xpath="/blocks/block[@name='batterybank']">
+    <property name="DowngradeBlock" value="cntCollapsedBatterybank"/>
   </append>
   <append xpath="/blocks/block[@name='cntCollapsedGeneratorbank']">
     <property class="UpgradeBlock">
@@ -54,6 +69,9 @@
     </property>
     <drop event="Harvest" name="electricianSkillMagazine" count="1,3" tag="salvageHarvest" help="dismantling it helps understand how it was built"/>
   </append>
+  <append xpath="/blocks/block[@name='generatorbank']">
+    <property name="DowngradeBlock" value="cntCollapsedGeneratorbank"/>
+  </append>
   <append xpath="/blocks/block[@name='cntCollapsedDewCollector']" help="OK">
     <property class="UpgradeBlock">
       <property name="ToBlock" value="cntDewCollector"/>
@@ -61,6 +79,9 @@
       <property name="ItemCount" value="33"/>
       <property name="UpgradeHitCount" value="50"/>
     </property>
+  </append>
+  <append xpath="/blocks/block[@name='cntDewCollector']">
+    <property name="DowngradeBlock" value="cntCollapsedDewCollector"/>
   </append>
   <append xpath="/blocks/block[@name='cntCollapsedSolarbank']">
     <property class="UpgradeBlock">
@@ -76,6 +97,9 @@
       <property name="resourceScrapPolymers" value="2"/>
     </property>
     <drop event="Harvest" name="electricianSkillMagazine" count="3,6" tag="salvageHarvest" help="dismantling it helps understand how it was built. TODO: solar bank recipe should be unlocked on last electrician skill level, see nuclear power mod to tweak it too, also solarcell carbattery etc"/>
+  </append>
+  <append xpath="/blocks/block[@name='solarbank']">
+    <property name="DowngradeBlock" value="cntCollapsedSolarbank"/>
   </append>
   <set xpath="/blocks/block[starts-with(@name,'cntCollapsed') or @name='cntForgeWorkstationBroken']   /property[@class='UpgradeBlock']   /property[@name='UpgradeHitCount']   /@value" help="easy tweaker. needs some time to cleanup the mess and reconstruct the broken parts">20</set>
   <!-- HELPGOOD: see at items.xml the fix at Allowed_upgrade_items
@@ -99,7 +123,7 @@
         @name='batterybank' or
   -->
   <append xpath="/blocks/block[         @name='cntCollapsedSolarbank'       ]">
-    <property name="CanPickup" value="true"/>
+    <property name="CanPickup" value="true" help="because has no recipe to craft it in vanilla"/>
     <drop event="Harvest" name="solarCell" count="1,3" tag="salvageHarvest"/>
   </append>
 </GhussakTweaks>
