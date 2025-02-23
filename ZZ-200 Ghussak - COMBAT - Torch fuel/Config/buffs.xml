@@ -49,6 +49,13 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
     </buff>
+    <buff name="buffArmorFlamesConsumeFuel" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
+      </effect_group>
+    </buff>
     <buff name="buffToolFireConsumeFuelWork" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
@@ -88,6 +95,17 @@
           <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor" compare_type="or">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
           <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
           <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
         </triggered_effect>

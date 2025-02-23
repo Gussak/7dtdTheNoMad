@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']" help="sync with meleeToolTorch">
-    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
-    <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
-    <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
-    <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']" help="sync with meleeToolTorch">
+    <effect_group>
+      <requirement name="ItemHasTags" tags="longShaft"/>
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+      <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+    </effect_group>
+    <effect_group>
+      <requirement name="ItemHasTags" tags="armor"/>
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
+    </effect_group>
   </append>
   <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']/requirement[@name='RandomRoll']" help="sync with meleeToolTorch. TODO: both effect_group are identical, what about just remove one?">
     <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
@@ -25,9 +35,11 @@
 </append>
   <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group/triggered_effect[@parentTransform='#HeldItemRoot']" hepl="vanilla is to work only on melee with longShaft">
     <requirement name="ItemHasTags" tags="longShaft"/>
+    <requirement name="!ItemHasTags" tags="armor"/>
   </append>
   <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group/triggered_effect[@trigger='onSelfEquipStop' and @action='RemovePart' and @part='Flames']" hepl="vanilla is to work only on melee with longShaft">
     <requirement name="ItemHasTags" tags="longShaft"/>
+    <requirement name="!ItemHasTags" tags="armor"/>
   </append>
   <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
     <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
