@@ -24,15 +24,21 @@
     <requirement name="ItemHasTags" tags="longShaft"/>
   </append>
   <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
-    <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+    <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.1,0" localRot="-90,180,0">
       <requirement name="ItemHasTags" tags="armor"/>
     </triggered_effect>
+    <triggered_effect trigger="onSelfWaterSubmerge" action="RemovePart" part="FlamesArmor"/>
+    <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="FlamesArmor"/>
+    <triggered_effect trigger="onSelfDied" action="RemovePart" part="FlamesArmor"/>
   </append>
   <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light torch']">
-    <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+    <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.1,0" localRot="-90,180,0">
       <requirement name="ItemHasTags" tags="armor"/>
     </triggered_effect>
-    <triggered_effect trigger="onSelfSwimStop" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+    <triggered_effect trigger="onSelfEquipChanged" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.1,0" localRot="-90,180,0">
+      <requirement name="ItemHasTags" tags="armor"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfSwimStop" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.1,0" localRot="-90,180,0">
       <requirement name="ItemHasTags" tags="armor"/>
     </triggered_effect>
   </append>
