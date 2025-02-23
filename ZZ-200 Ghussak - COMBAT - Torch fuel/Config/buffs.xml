@@ -63,7 +63,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="0" help="swap back to torch to lit it up"/>
       </effect_group>
-      <effect_group>
+      <effect_group help="try douse: rain">
         <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
@@ -71,9 +71,23 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain doused the torch's fire..."/>
       </effect_group>
-      <effect_group>
+      <effect_group help="try douse: no flame mod nor torch on hand">
         <requirement name="!HasBuff" buff="buffTorchConsumeFuel"/>
         <requirement name="!HasBuff" buff="buffBurningShaftConsumeFuel"/>
+        <requirement name="!HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
+      </effect_group>
+      <effect_group help="try douse: armor flame during day">
+        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
+      </effect_group>
+      <effect_group help="try douse: armor flame and crouched(sneaking) at night">
+        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
@@ -104,19 +118,10 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor" compare_type="or">
           <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
-          <requirement name="!IsNight"/>
         </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
-        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
-        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
-        <requirement name="IsNight"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor">
-          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
