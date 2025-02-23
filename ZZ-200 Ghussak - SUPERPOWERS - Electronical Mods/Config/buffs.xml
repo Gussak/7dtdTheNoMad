@@ -1,6 +1,264 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffNightVisionUsesBatteries121" hidden="true" remove_on_death="false">
+      <update_rate value="0.25"/>
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="ConsumeEnergy ON"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffNightVisionReset" target="self"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="ConsumeEnergy OFF"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKDebug" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="bGSKEnergyHL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="bGSKEnergyWL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="bGSKEnergyNV"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKEnHL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKEnWL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKEnNV"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKBlinkAfterHL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKBlinkAfterWL"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKBlinkAfterNV"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKBatteryCharges"/>
+      </effect_group>
+      <effect_group name="Consume Battery Energy">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@fGSKEnNV">
+          <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@fGSKEnHL">
+          <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@fGSKEnWL">
+          <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="set" value="@iGSKBatteryCharges"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="divide" value="@fGSKBattMaxChargeCurrent"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="set" value="@fGSKBatteryChargePerc"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="multiply" value="100"/>
+      </effect_group>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATEENERGYBLINKS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createEnergyBlinks.sh ===== -->
+      <effect_group name="KEEP ON good condition for HL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="@iGSKDmgPercHLShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectHLON"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO"/>
+      </effect_group>
+      <effect_group help="TURN OFF on too damaged for HL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercHL" operation="GTE" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectHLOFF"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="Blink: Off then go ON for HL on low energy vs dmg">
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercHLShow"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectHLBlinkOffThenGoOn">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="0.002500">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterHL set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(0.25,10.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="multiply" value="@fGSKDmgPercHL" help="this makes the player want to keep it in good condition"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LT" value="@fGSKNVEnUseUpdRate"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="Blink: On then go Off for HL on no energy">
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectHLBlinkOnThenGoOff">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="@fGSKEnHLCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnHL" operation="set" value="0.002500">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterHL set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,2.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=60:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="set" value="randomFloat(0.25,2.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="blink countdown for HL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercHLShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterHL" operation="subtract" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterHL" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="KEEP ON good condition for WL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="@iGSKDmgPercWLShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectWLON"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO"/>
+      </effect_group>
+      <effect_group help="TURN OFF on too damaged for WL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercWL" operation="GTE" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectWLOFF"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="Blink: Off then go ON for WL on low energy vs dmg">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercWLShow"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectWLBlinkOffThenGoOn">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="0.003750">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterWL set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(0.25,10.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="multiply" value="@fGSKDmgPercWL" help="this makes the player want to keep it in good condition"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LT" value="@fGSKNVEnUseUpdRate"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="Blink: On then go Off for WL on no energy">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectWLBlinkOnThenGoOff">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="@fGSKEnWLCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnWL" operation="set" value="0.003750">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterWL set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,2.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=60:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="set" value="randomFloat(0.25,2.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="blink countdown for WL">
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercWLShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterWL" operation="subtract" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterWL" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="KEEP ON good condition for NV">
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="@iGSKDmgPercNVShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectNVON"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO"/>
+      </effect_group>
+      <effect_group help="TURN OFF on too damaged for NV">
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercNV" operation="GTE" value="0.95"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectNVOFF"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="Blink: Off then go ON for NV on low energy vs dmg">
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercNVShow"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectNVBlinkOffThenGoOn">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="0.025000">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterNV set randomFloat(0.25,10.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,10000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,10.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=36:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(0.25,10.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="multiply" value="@fGSKDmgPercNV" help="this makes the player want to keep it in good condition"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LT" value="@fGSKNVEnUseUpdRate"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="Blink: On then go Off for NV on no energy">
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVisualEffectNVBlinkOnThenGoOff">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="@fGSKEnNVCfgRO">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKEnNV" operation="set" value="0.025000">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKBlinkAfterNV set randomFloat(0.25,2.00)" trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,2000)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="@.fGSKFixTinyRandomFloatTmp" help="keep min value in sync with fGSKNVEnUseUpdRate;FixTinyRandomFloat: was randomFloat(0.25,2.00)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=60:        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="set" value="randomFloat(0.25,2.00)" help="keep min value in sync with fGSKNVEnUseUpdRate"> -->
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="blink countdown for NV">
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryChargePercShow" operation="LTE" value="@iGSKDmgPercNVShow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBlinkAfterNV" operation="subtract" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="fGSKBlinkAfterNV" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD:_AUTOGENCODE_CREATEENERGYBLINKS_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createEnergyBlinks.sh ===== -->
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryDmgTime" operation="subtract" value="@fGSKNVEnUseUpdRate">
+          <requirement name="CVarCompare" cvar="iGSKBatteryDmgTime" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNVGood" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNVGood" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectHLOFF" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectWLOFF" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVisualEffectNVOFF" target="self">
+          <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="bGSKEnergyNV" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" target="self" buff="buffNightVisionUsesBatteries121"/>
+      </effect_group>
+    </buff>
     <buff name="buffNightVisionReset" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0.05"/>
