@@ -35,21 +35,21 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKFireFuel"/>
       </effect_group>
     </buff>
-    <buff name="buffTorchConsumeFuel" hidden="true" remove_on_death="false">
+    <buff name="buffGSKmodActiveFlamesTorch" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
     </buff>
-    <buff name="buffBurningShaftConsumeFuel" hidden="true" remove_on_death="false">
+    <buff name="buffGSKmodActiveFlamesMeleeToolWeapon" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
     </buff>
-    <buff name="buffArmorFlamesConsumeFuel" hidden="true" remove_on_death="false">
+    <buff name="buffGSKmodActiveFlamesArmor" hidden="true" remove_on_death="false">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
@@ -72,20 +72,24 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain doused the torch's fire..."/>
       </effect_group>
       <effect_group help="try douse: no flame mod nor torch on hand">
-        <requirement name="!HasBuff" buff="buffTorchConsumeFuel"/>
-        <requirement name="!HasBuff" buff="buffBurningShaftConsumeFuel"/>
-        <requirement name="!HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
       <effect_group help="try douse: armor flame during day">
-        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
         <requirement name="!IsNight"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
       <effect_group help="try douse: armor flame and crouched(sneaking) at night">
-        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
         <requirement name="IsNight"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
@@ -97,26 +101,26 @@
           <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
         </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side">
-          <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames">
-          <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor">
-          <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="light up">
         <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
-          <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
-          <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-          <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
@@ -128,5 +132,15 @@
         </triggered_effect>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="try light up armor torch">
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffToolFireConsumeFuelWork">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
   </append>
 </GhussakTweaks>
