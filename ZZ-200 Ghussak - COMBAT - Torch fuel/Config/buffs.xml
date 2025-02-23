@@ -91,37 +91,32 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffToolFireConsumeFuelWork"/>
       </effect_group>
-      <effect_group>
-        <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side" compare_type="or">
+      <effect_group help="apply douse">
+        <requirements compare_type="or">
           <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
           <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side">
+          <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames">
+          <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor">
+          <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
         </triggered_effect>
       </effect_group>
-      <effect_group>
-        <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames" compare_type="or">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
-          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+      <effect_group help="light up">
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
+          <requirement name="HasBuff" buff="buffTorchConsumeFuel"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
-        </triggered_effect>
-      </effect_group>
-      <effect_group>
-        <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="FlamesArmor" compare_type="or">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
-          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+          <requirement name="HasBuff" buff="buffBurningShaftConsumeFuel"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
-          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+          <requirement name="HasBuff" buff="buffArmorFlamesConsumeFuel"/>
         </triggered_effect>
       </effect_group>
       <effect_group>
