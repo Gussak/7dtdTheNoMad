@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']" help="sync with meleeToolTorch">
+    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
+    <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
+  </append>
+  <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']/requirement[@name='RandomRoll']" help="sync with meleeToolTorch. TODO: both effect_group are identical, what about just remove one?">
+    <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
+    <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GTE" value="60"/>
+  </insertBefore>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']" help="sync with meleeToolTorch">
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar="fGSKFireFuel" operation="subtract" value="60"/>
+  </append>
+  <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with meleeToolTorch">60</set>
+  <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with meleeToolTorch">120</set>
+  <remove xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/item_property_overrides[     @name='meleeToolRepairT1ClawHammer' or     @name='meleeWpnSledgeT1IronSledgehammer'   ]"/>
+  <!-- HELPGOOD:TODO: these are not illuminating around the player, if it is fixed just remove this patch instruction -->
+  <!--	HELPGOOD: free hands light but with the fire nice effect TODO: small chance to put the player on fire every 60seconds random 0,100 LTE 5=feet,3=torso,2=hands,1=head, but also increases warmth -->
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/@installable_tags">,armorHead,armorChest,armorHands,armorFeet,armor
+</append>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group/triggered_effect[@parentTransform='#HeldItemRoot']" hepl="vanilla is to work only on melee with longShaft">
+    <requirement name="ItemHasTags" tags="longShaft"/>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
+    <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+      <requirement name="ItemHasTags" tags="armor"/>
+    </triggered_effect>
+  </append>
+  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light torch']">
+    <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+      <requirement name="ItemHasTags" tags="armor"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfSwimStop" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+      <requirement name="ItemHasTags" tags="armor"/>
+    </triggered_effect>
+  </append>
+</GhussakTweaks>
