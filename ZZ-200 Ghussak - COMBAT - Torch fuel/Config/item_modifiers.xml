@@ -8,13 +8,6 @@
       <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffBurningShaftConsumeFuel"/>
       <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffBurningShaftConsumeFuel"/>
     </effect_group>
-    <effect_group>
-      <requirement name="ItemHasTags" tags="armor"/>
-      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
-      <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
-      <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
-      <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
-    </effect_group>
   </append>
   <insertBefore xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']/requirement[@name='RandomRoll']" help="sync with meleeToolTorch. TODO: both effect_group are identical, what about just remove one?">
     <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
@@ -25,41 +18,48 @@
   </append>
   <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with meleeToolTorch">60</set>
   <set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='11']/@value" help="sync with meleeToolTorch">120</set>
-  <remove xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/item_property_overrides[     @name='meleeToolRepairT1ClawHammer' or     @name='meleeWpnSledgeT1IronSledgehammer'   ]"/>
-  <!-- HELPGOOD:TODO: these are not illuminating around the player, if it is fixed just remove this patch instruction -->
-  <!--	HELPGOOD: free hands light but with the fire nice effect
+  <!--	HELPGOOD: free hands light but with the fire nice effect, like old games dungeon lantern as you would probably drop it than douse when combat begins.
 	TODO: small chance to put the player on fire every 60seconds random 0,100 LTE 5=feet,3=torso,2=hands,1=head, but also increases warmth 
-	TODO: prevent Flames being shown when wielding melee weapons that have not modMeleeClubBurningShaft mod while an armor part has it. Or, create a new mod: modArmorTorch
 	-->
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/@installable_tags">,armorHead,armorChest,armorHands,armorFeet,armor
-</append>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group/triggered_effect[@parentTransform='#HeldItemRoot']" hepl="vanilla is to work only on melee with longShaft">
-    <requirement name="ItemHasTags" tags="longShaft"/>
-    <requirement name="!ItemHasTags" tags="armor"/>
-  </append>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group/triggered_effect[@trigger='onSelfEquipStop' and @action='RemovePart' and @part='Flames']" hepl="vanilla is to work only on melee with longShaft">
-    <requirement name="ItemHasTags" tags="longShaft"/>
-    <requirement name="!ItemHasTags" tags="armor"/>
-  </append>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light/douse torch always']">
-    <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
+  <item_modifier name="modArmorTorch" installable_tags="armorHead,armorChest" modifier_tags="fire" blocked_tags="noMods" type="attachment">
+    <property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
+    <property name="UnlockedBy" value="modMeleeClubBurningShaftSchematic"/>
+    <property name="TraderStageTemplate" value="modsTier2"/>
+    <property name="CustomIcon" value="modMeleeClubBurningShaft"/>
+    <property name="CustomIconTint" value="128,128,180"/>
+    <item_property_overrides name="*">
+      <property name="LightValue" value=".25"/>
+      <property name="LightSource" value="lightSource"/>
+      <property name="ActivateObject" value="lightSource"/>
+      <property name="AlwaysActive" value="true"/>
+      <property name="FlameEffect" value="@:ItemModEffects/mod_flame_defaultPrefab.prefab"/>
+      <property name="MatEmission" value="1"/>
+    </item_property_overrides>
+    <effect_group tiered="false" name="SpecialEffects">
+      <passive_effect name="LightMultiplier" operation="base_add" value=".28"/>
+      <passive_effect name="HypothermalResist" operation="base_add" value="1">
+        <requirement name="CVarCompare" cvar="_underwater" operation="LT" value="1"/>
+      </passive_effect>
+    </effect_group>
+    <effect_group name="light/douse torch always" tiered="false">
       <requirement name="ItemHasTags" tags="armor"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfWaterSubmerge" action="RemovePart" part="FlamesArmor"/>
-    <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="FlamesArmor">
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.2,0" localRot="-90,180,0"/>
+      <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSurface" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.2,0" localRot="-90,180,0"/>
+      <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfWaterSubmerge" action="RemovePart" part="FlamesArmor"/>
+      <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="FlamesArmor"/>
+      <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffArmorFlamesConsumeFuel"/>
+      <triggered_effect trigger="onSelfDied" action="RemovePart" part="FlamesArmor"/>
+    </effect_group>
+    <effect_group name="light torch" tiered="false">
+      <requirement name="CVarCompare" cvar="_underwater" operation="LT" value="1"/>
       <requirement name="ItemHasTags" tags="armor"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfDied" action="RemovePart" part="FlamesArmor"/>
-  </append>
-  <append xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']/effect_group[@name='light torch']">
-    <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-      <requirement name="ItemHasTags" tags="armor"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfEquipChanged" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-      <requirement name="ItemHasTags" tags="armor"/>
-    </triggered_effect>
-    <triggered_effect trigger="onSelfSwimStop" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0">
-      <requirement name="ItemHasTags" tags="armor"/>
-    </triggered_effect>
-  </append>
+      <triggered_effect trigger="onSelfEquipStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.2,0" localRot="-90,180,0"/>
+      <triggered_effect trigger="onSelfEquipChanged" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.2,0" localRot="-90,180,0"/>
+      <triggered_effect trigger="onSelfSwimStop" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.2,0" localRot="-90,180,0"/>
+    </effect_group>
+  </item_modifier>
 </GhussakTweaks>
