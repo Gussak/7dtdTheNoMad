@@ -5,7 +5,7 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0,0.3,0" localRot="-90,180,0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0.2,0.3,0" localRot="-90,180,0"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemovePart" part="FlamesArmor"/>
       </effect_group>
     </buff>
@@ -64,7 +64,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKFlamesConsumeFuel"/>
       </effect_group>
     </buff>
-    <buff name="buffGSKFlamesConsumeFuel" hidden="true" remove_on_death="false">
+    <buff name="buffGSKFlamesConsumeFuel" hidden="false" remove_on_death="false" name_key="FlamesConsumeFuel" description_key="dkbuffGSKFlamesConsumeFuel">
       <stack_type value="ignore"/>
       <duration value="0"/>
       <update_rate value="1"/>
@@ -72,7 +72,6 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="0" help="swap back to torch to lit it up"/>
       </effect_group>
       <effect_group help="try douse: rain check">
-        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,400" operation="LTE" value="@$WetTempModifierDisplay" help="0-100 shown wetness. 0-400 means max 25% chance to douse."/>
