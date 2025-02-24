@@ -6,75 +6,121 @@
   <!--
 	HELPGOOD:CODEGEN:KILLPLANTS:TAGS  (sync with gameevents.xml)
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
-astrList+=(plantedGoldenrod plantedChrysanthemum plantedMushroom plantedGraceCorn plantedPumpkin);\
-for str in ${astrList[@]};do\
+astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);\
+for strDead in ${astrList[@]};do\
 	if [[ 
-			"${str%Dead}" == plantHedge || 
-			"${str%Dead}" == plantShrub 
+			"${strDead%Dead}" == plantHedge || 
+			"${strDead%Dead}" == plantShrub 
 	]];then
-		echo -e '	<append xpath="/blocks/block[@name='"'"${str%Dead}"'"']"><property name="Tags" value="'${str%Dead}'"/></append>'
+		echo -e '	<append xpath="/blocks/block[@name='"'"${strDead%Dead}"'"']"><property name="Tags" value="'${strDead%Dead}'"/></append>'
 	else
-		echo -e '	<append xpath="/blocks/block[@name='"'"${str%Dead}1"'"']/property[@name='"'"Tags"'"']/@value">,'${str%Dead}'</append>'
-		echo -e '	<append xpath="/blocks/block[@name='"'"${str%Dead}3Harvest"'"']"><property name="Tags" value="'${str%Dead}'"/></append>'
+		echo -e '	<append xpath="/blocks/block[@name='"'"${strDead%Dead}1"'"']/property[@name='"'"Tags"'"']/@value">,'${strDead%Dead}'</append>'
+		echo -e '	<append xpath="/blocks/block[@name='"'"${strDead%Dead}3Harvest"'"']"><property name="Tags" value="'${strDead%Dead}'"/></append>'
 	fi
+	echo -e '	<append xpath="/blocks/block[@name='"'"${strDead}"'"']"><property name="Tags" value="'${strDead}'"/></append>'
 done
 -->
   <append xpath="/blocks/block[@name='plantedAloe1']/property[@name='Tags']/@value">,plantedAloe</append>
   <append xpath="/blocks/block[@name='plantedAloe3Harvest']">
     <property name="Tags" value="plantedAloe"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedAloeDead']">
+    <property name="Tags" value="plantedAloeDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedBlueberry1']/property[@name='Tags']/@value">,plantedBlueberry</append>
   <append xpath="/blocks/block[@name='plantedBlueberry3Harvest']">
     <property name="Tags" value="plantedBlueberry"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedBlueberryDead']">
+    <property name="Tags" value="plantedBlueberryDead"/>
   </append>
   <append xpath="/blocks/block[@name='plantedCoffee1']/property[@name='Tags']/@value">,plantedCoffee</append>
   <append xpath="/blocks/block[@name='plantedCoffee3Harvest']">
     <property name="Tags" value="plantedCoffee"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedCoffeeDead']">
+    <property name="Tags" value="plantedCoffeeDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedCorn1']/property[@name='Tags']/@value">,plantedCorn</append>
   <append xpath="/blocks/block[@name='plantedCorn3Harvest']">
     <property name="Tags" value="plantedCorn"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedCornDead']">
+    <property name="Tags" value="plantedCornDead"/>
   </append>
   <append xpath="/blocks/block[@name='plantedCotton1']/property[@name='Tags']/@value">,plantedCotton</append>
   <append xpath="/blocks/block[@name='plantedCotton3Harvest']">
     <property name="Tags" value="plantedCotton"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedCottonDead']">
+    <property name="Tags" value="plantedCottonDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedHop1']/property[@name='Tags']/@value">,plantedHop</append>
   <append xpath="/blocks/block[@name='plantedHop3Harvest']">
     <property name="Tags" value="plantedHop"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedHopDead']">
+    <property name="Tags" value="plantedHopDead"/>
   </append>
   <append xpath="/blocks/block[@name='plantedPotato1']/property[@name='Tags']/@value">,plantedPotato</append>
   <append xpath="/blocks/block[@name='plantedPotato3Harvest']">
     <property name="Tags" value="plantedPotato"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedPotatoDead']">
+    <property name="Tags" value="plantedPotatoDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedYucca1']/property[@name='Tags']/@value">,plantedYucca</append>
   <append xpath="/blocks/block[@name='plantedYucca3Harvest']">
     <property name="Tags" value="plantedYucca"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedYuccaDead']">
+    <property name="Tags" value="plantedYuccaDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantHedge']">
     <property name="Tags" value="plantHedge"/>
   </append>
+  <append xpath="/blocks/block[@name='plantHedgeDead']">
+    <property name="Tags" value="plantHedgeDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantShrub']">
     <property name="Tags" value="plantShrub"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantShrubDead']">
+    <property name="Tags" value="plantShrubDead"/>
   </append>
   <append xpath="/blocks/block[@name='plantedGoldenrod1']/property[@name='Tags']/@value">,plantedGoldenrod</append>
   <append xpath="/blocks/block[@name='plantedGoldenrod3Harvest']">
     <property name="Tags" value="plantedGoldenrod"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedGoldenrodDead']">
+    <property name="Tags" value="plantedGoldenrodDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedChrysanthemum1']/property[@name='Tags']/@value">,plantedChrysanthemum</append>
   <append xpath="/blocks/block[@name='plantedChrysanthemum3Harvest']">
     <property name="Tags" value="plantedChrysanthemum"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedChrysanthemumDead']">
+    <property name="Tags" value="plantedChrysanthemumDead"/>
   </append>
   <append xpath="/blocks/block[@name='plantedMushroom1']/property[@name='Tags']/@value">,plantedMushroom</append>
   <append xpath="/blocks/block[@name='plantedMushroom3Harvest']">
     <property name="Tags" value="plantedMushroom"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedMushroomDead']">
+    <property name="Tags" value="plantedMushroomDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedGraceCorn1']/property[@name='Tags']/@value">,plantedGraceCorn</append>
   <append xpath="/blocks/block[@name='plantedGraceCorn3Harvest']">
     <property name="Tags" value="plantedGraceCorn"/>
   </append>
+  <append xpath="/blocks/block[@name='plantedGraceCornDead']">
+    <property name="Tags" value="plantedGraceCornDead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedPumpkin1']/property[@name='Tags']/@value">,plantedPumpkin</append>
   <append xpath="/blocks/block[@name='plantedPumpkin3Harvest']">
     <property name="Tags" value="plantedPumpkin"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedPumpkinDead']">
+    <property name="Tags" value="plantedPumpkinDead"/>
   </append>
 </GhussakTweaks>
