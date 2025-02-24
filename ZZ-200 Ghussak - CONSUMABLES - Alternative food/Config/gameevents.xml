@@ -7,17 +7,25 @@
         <property name="sound" value="plantdestroy"/>
         <property name="can_disable" value="false"/>
       </action>
-      <!--			HELPGOOD:CODEGEN:KILLPLANTS:REPLACE (sync with blocks.xml), ISSUE: yucca and aloe wont work
-clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);
-astrList+=(plantedGoldenrod plantedChrysanthemum plantedMushroom)
-for strDead in ${astrList[@]};do
+      <!--			HELPGOOD:CODEGEN:KILLPLANTS:REPLACE (sync with blocks.xml)
+	TODO: if a new dead plant model is created for a missing one on the added list below, remove them from the manually tweaked if list
+clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
+astrList+=(plantedGoldenrod plantedChrysanthemum plantedMushroom plantedGraceCorn plantedPumpkin);\
+for strDead in ${astrList[@]};do\
 	strTo="$strDead"
 	bHasDead=true
-	if [[ "${strDead%Dead}" == plantedGoldenrod     ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
-	if [[ "${strDead%Dead}" == plantedChrysanthemum ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
-	if [[ "${strDead%Dead}" == plantedMushroom      ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
-	if [[ "${strDead%Dead}" == plantedGraceCorn     ]];then strTo=plantedCornDead  ;bHasDead=false;fi
-	if [[ "${strDead%Dead}" == plantedPumpkin1      ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
+	case "${strDead%Dead}" in
+		plantedGoldenrod)     strTo=plantedCoffeeDead;bHasDead=false;;
+		plantedChrysanthemum) strTo=plantedCoffeeDead;bHasDead=false;;
+		plantedMushroom)      strTo=plantedCoffeeDead;bHasDead=false;;
+		plantedGraceCorn)     strTo=plantedCornDead  ;bHasDead=false;;
+		plantedPumpkin)       strTo=plantedCoffeeDead;bHasDead=false;;
+	esac
+#	if [[ "${strDead%Dead}" == plantedGoldenrod     ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
+#	if [[ "${strDead%Dead}" == plantedChrysanthemum ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
+#	if [[ "${strDead%Dead}" == plantedMushroom      ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
+#	if [[ "${strDead%Dead}" == plantedGraceCorn     ]];then strTo=plantedCornDead  ;bHasDead=false;fi
+#	if [[ "${strDead%Dead}" == plantedPumpkin       ]];then strTo=plantedCoffeeDead;bHasDead=false;fi
 	nRandom=75;
 	if [[ 
 			"${strDead%Dead}" == plantHedge || 
@@ -315,6 +323,30 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedMushroom"/>
+        <property name="block_to" value="plantedCoffeeDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="75"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedGraceCorn"/>
+        <property name="block_to" value="plantedCornDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="75"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedPumpkin"/>
         <property name="block_to" value="plantedCoffeeDead"/>
       </action>
     </action_sequence>

@@ -5,9 +5,9 @@
   </append>
   <!--
 	HELPGOOD:CODEGEN:KILLPLANTS:TAGS  (sync with gameevents.xml)
-IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);
-astrList+=(plantedGoldenrod plantedChrysanthemum plantedMushroom)
-for str in ${astrList[@]};do
+clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
+astrList+=(plantedGoldenrod plantedChrysanthemum plantedMushroom plantedGraceCorn plantedPumpkin);\
+for str in ${astrList[@]};do\
 	if [[ 
 			"${str%Dead}" == plantHedge || 
 			"${str%Dead}" == plantShrub 
@@ -68,5 +68,13 @@ done
   <append xpath="/blocks/block[@name='plantedMushroom1']/property[@name='Tags']/@value">,plantedMushroom</append>
   <append xpath="/blocks/block[@name='plantedMushroom3Harvest']">
     <property name="Tags" value="plantedMushroom"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedGraceCorn1']/property[@name='Tags']/@value">,plantedGraceCorn</append>
+  <append xpath="/blocks/block[@name='plantedGraceCorn3Harvest']">
+    <property name="Tags" value="plantedGraceCorn"/>
+  </append>
+  <append xpath="/blocks/block[@name='plantedPumpkin1']/property[@name='Tags']/@value">,plantedPumpkin</append>
+  <append xpath="/blocks/block[@name='plantedPumpkin3Harvest']">
+    <property name="Tags" value="plantedPumpkin"/>
   </append>
 </GhussakTweaks>

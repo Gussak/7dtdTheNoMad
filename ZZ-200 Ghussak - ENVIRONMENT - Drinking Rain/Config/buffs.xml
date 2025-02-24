@@ -51,29 +51,10 @@
         </triggered_effect>
       </effect_group>
     </buff>
-    <buff name="buffDrinkRainWater78" hidden="true" remove_on_death="true">
+    <buff name="buffGSKRainingOnPlayerDetector" hidden="true" remove_on_death="true">
       <stack_type value="ignore"/>
       <duration value="0"/>
-      <update_rate value="1"/>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffDrinkRainWater78'"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffDrinkRainWater78'"/>
-      </effect_group>
-      <effect_group help="this is the wetness the player is really tracking">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="@$WetTempModifierDisplay"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="0">
-          <requirement name="CVarCompare" cvar="$WetTempModifierActive" operation="LT" value="1"/>
-          <!-- HELPGOOD: keep in sync with buffElementWet -->
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="divide" value="100"/>
-      </effect_group>
-      <effect_group>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iPreventDrinkRainDelay" operation="set" value="60">
-          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="0.12345678912"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="0"/>
-      </effect_group>
+      <update_rate value="3" help="sync a bit bigger than buffElementWet"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="0"/>
       </effect_group>
@@ -84,6 +65,32 @@
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
         <requirement name="CVarCompare" cvar="iPreventDrinkRainDelay" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKIsRainingOnPlayer" operation="set" value="1"/>
+      </effect_group>
+    </buff>
+    <buff name="buffDrinkRainWater78" hidden="true" remove_on_death="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffDrinkRainWater78'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffDrinkRainWater78'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRainingOnPlayerDetector">
+          <requirement name="!HasBuff" buff="buffGSKRainingOnPlayerDetector"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="this is the wetness the player is really tracking">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="@$WetTempModifierDisplay"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="$WetTempModifierActive" operation="LT" value="1" help="keep in sync with buffElementWet"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKShownWetnessPerc" operation="divide" value="100"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iPreventDrinkRainDelay" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRainDebug" operation="set" value="0.12345678912"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKDrinkingRain" operation="set" value="0"/>
       </effect_group>
       <effect_group help="muffled noises by rain, unfortunately this only works if the player is in rain thru the _wetness value">
         <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
@@ -178,5 +185,30 @@
       <stack_type value="ignore"/>
       <duration value="0"/>
     </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="extinguish all region fire: cancel">
+      <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="extinguish all region fire: if it is raining, takes time, low chance, you have to be in rain. there is a initial count up">
+      <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCountTo" operation="set" value="@$WetTempModifierDisplay"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCountTo" operation="multiply" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCountTo" operation="add" value="100" help="the target value is the complement, so if raining at 20%, will count up to 80"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireCount" operation="GT" value="@.iTryExtinguishAllRegionFireCountTo"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="add" value="1">
+        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireCount" operation="LT" value="@.iTryExtinguishAllRegionFireCountTo"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireChance" operation="set" value="@$WetTempModifierDisplay"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireChance" operation="divide" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveFire, SCore" target="positionAOE" range="256" help="range is integer. 256 may cover a whole chunk, w/e tho... just need be near the player anyway, but 200 took 5s I think, so lowering may be more performant, may be just 50, so 100 diameter covers a whole POI?">
+        <requirement name="CVarCompare" cvar="$WetTempModifierDisplay" operation="GTE" value="20"/>
+        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireCount" operation="GTE" value="@.iTryExtinguishAllRegionFireCountTo"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iTryExtinguishAllRegionFireChance"/>
+      </triggered_effect>
+    </effect_group>
   </append>
 </GhussakTweaks>
