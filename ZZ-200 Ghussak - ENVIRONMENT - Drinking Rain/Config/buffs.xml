@@ -204,10 +204,17 @@
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireChance" operation="set" value="@$WetTempModifierDisplay"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireChance" operation="divide" value="10"/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveFire, SCore" target="positionAOE" range="256" help="range is integer. 256 may cover a whole chunk, w/e tho... just need be near the player anyway, but 200 took 5s I think, so lowering may be more performant, may be just 50, so 100 diameter covers a whole POI?">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireNow" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireNow" operation="set" value="1">
         <requirement name="CVarCompare" cvar="$WetTempModifierDisplay" operation="GTE" value="20"/>
         <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireCount" operation="GTE" value="@.iTryExtinguishAllRegionFireCountTo"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iTryExtinguishAllRegionFireChance"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveFire, SCore" target="positionAOE" range="256" help="range is integer. 256 may cover a whole chunk, w/e tho... just need be near the player anyway, but 200 took 5s I think, so lowering may be more performant, may be just 50, so 100 diameter covers a whole POI?">
+        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireNow" operation="Equals" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="set" value="0" help="cool down b4 next extinguishion">
+        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireNow" operation="Equals" value="1"/>
       </triggered_effect>
     </effect_group>
   </append>
