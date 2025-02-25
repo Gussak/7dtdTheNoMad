@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
-  <append xpath="/blocks/block[starts-with(@name,'plant')]">
+  <append xpath="/blocks/block[starts-with(@name,'plant') or starts-with(@name,'mushroom')]">
     <property name="BuffsWhenWalkedOn" value="buffGSKkillCrop" help="plantedAloe1 plantedYucca1 wont trigger this"/>
   </append>
   <append xpath="/blocks/block[starts-with(@name,'plantedYuccaDead')]" help="dead and alive look the same, so...">
@@ -25,12 +25,8 @@
       <property name="Mesh" value="grass"/>
       <property name="Texture" value="201,306,371,201,306,371" help="244"/>
     </block>
-    <block name="plantedMushroomDead">
-      <property name="Extends" value="plantedCropDeadMaster"/>
-      <property name="Shape" value="ModelEntity"/>
-      <property name="Model" value="Entities/OutdoorDecor/mushroom_02Prefab"/>
-      <property name="ModelOffset" value="0,-0.05,0"/>
-      <property name="TintColor" value="16,0,0" help="ISSUE: doesnt work :("/>
+    <block name="plantedMushroomDead" help="ISSUE: TintColor wont work, ModelOffset wont be precise">
+      <property name="Extends" value="treeShortGrass"/>
     </block>
     <block name="plantedGraceCornDead">
       <property name="Extends" value="plantedCropDeadMaster"/>
@@ -47,13 +43,16 @@
   <!--
 	HELPGOOD:CODEGEN:KILLPLANTS:TAGS  (sync with gameevents.xml)
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
-#astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);\
+astrList+=(mushroom01Dead mushroom02Dead);\
 astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
 for strDead in ${astrList[@]};do\
 	strAlive="${strDead%Dead}"
 	case "${strAlive}" in
 		plantHedge|plantShrub) # these have no tags property
 			echo -e '	<append xpath="/blocks/block[@name='"'"${strAlive}"'"']"><property name="Tags" value="'${strAlive}'"/></append>'
+			;;
+		mushroom01|mushroom02) # these have no tags property
+			echo -e '	<append xpath="/blocks/block[@name='"'"${strAlive}"'"']"><property name="Tags" value="plantedMushroom"/></append>'
 			;;
 		*)
 			if [[ "${strAlive}" == plantedGraceCorn ]];then #have no tags property
@@ -68,6 +67,18 @@ for strDead in ${astrList[@]};do\
 	echo -e '	<append xpath="/blocks/block[@name='"'"${strDead}"'"']"><property name="Tags" value="'${strDead}'"/></append>'
 done
 -->
+  <append xpath="/blocks/block[@name='mushroom01']">
+    <property name="Tags" value="plantedMushroom"/>
+  </append>
+  <append xpath="/blocks/block[@name='mushroom01Dead']">
+    <property name="Tags" value="mushroom01Dead"/>
+  </append>
+  <append xpath="/blocks/block[@name='mushroom02']">
+    <property name="Tags" value="plantedMushroom"/>
+  </append>
+  <append xpath="/blocks/block[@name='mushroom02Dead']">
+    <property name="Tags" value="mushroom02Dead"/>
+  </append>
   <append xpath="/blocks/block[@name='plantedAloe1']/property[@name='Tags']/@value">,plantedAloe</append>
   <append xpath="/blocks/block[@name='plantedAloe3Harvest']">
     <property name="Tags" value="plantedAloe"/>

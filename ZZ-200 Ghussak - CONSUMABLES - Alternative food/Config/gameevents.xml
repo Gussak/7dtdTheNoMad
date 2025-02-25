@@ -12,17 +12,13 @@
       <!--			HELPGOOD:CODEGEN:KILLPLANTS:REPLACE (sync with blocks.xml)
 	TODO: if a new dead plant model is created for a missing one on the added list below, remove them from the manually tweaked if list
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
-#astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);\
+#astrList+=(mushroom01 mushroom02);\
 astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
 for strDead in ${astrList[@]};do\
 	strTo="$strDead"
 	bHasDead=true # has related dead model, otherwise will re-use from another plant
 #	case "${strDead%Dead}" in
-#		plantedGoldenrod)     strTo=plantedCoffeeDead;bHasDead=false;;
-#		plantedChrysanthemum) strTo=plantedCoffeeDead;bHasDead=false;;
-#		plantedMushroom)      strTo=plantedCoffeeDead;bHasDead=false;; # this makes no sense but..
-#		plantedGraceCorn)     strTo=plantedCornDead  ;bHasDead=false;;
-#		plantedPumpkin)       strTo=plantedCoffeeDead;bHasDead=false;; # this dont look good too if potatoes grew
+#		mushroom01|mushroom02) strTo=plantedMushroom;bHasDead=false;;
 #	esac
 	case "${strDead%Dead}" in
 		plantHedge|plantShrub) nRandom=5;;
