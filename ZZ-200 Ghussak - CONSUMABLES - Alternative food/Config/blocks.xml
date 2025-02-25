@@ -3,10 +3,41 @@
   <append xpath="/blocks/block[starts-with(@name,'plant')]">
     <property name="BuffsWhenWalkedOn" value="buffGSKkillCrop" help="plantedAloe1 plantedYucca1 wont trigger this"/>
   </append>
+  <append xpath="/blocks/block[starts-with(@name,'plantedYuccaDead')]" help="dead and alive look the same, so...">
+    <property name="TintColor" value="64,32,32"/>
+  </append>
+  <append xpath="/blocks">
+    <block name="plantedCropDeadMaster">
+      <property name="Extends" value="cropsHarvestableMaster"/>
+      <property name="Shape" value="ModelEntity"/>
+      <property name="Model" value="Entities/Plants/plant_yucca_deadPrefab"/>
+      <property name="TintColor" value="64,32,32"/>
+      <drop event="Destroy" name="resourceYuccaFibers" count="3,8"/>
+    </block>
+    <block name="plantedGoldenrodDead">
+      <property name="Extends" value="plantedCropDeadMaster"/>
+    </block>
+    <block name="plantedChrysanthemumDead">
+      <property name="Extends" value="plantedCropDeadMaster"/>
+    </block>
+    <block name="plantedMushroomDead">
+      <property name="Extends" value="plantedCropDeadMaster"/>
+      <property name="Model" value="Entities/OutdoorDecor/mushroomHarvestPrefab"/>
+    </block>
+    <block name="plantedGraceCornDead">
+      <property name="Extends" value="plantedCropDeadMaster"/>
+      <property name="Model" value="Entities/OutdoorDecor/cornStalkSuperPrefab"/>
+    </block>
+    <block name="plantedPumpkinDead">
+      <property name="Extends" value="plantedCropDeadMaster"/>
+      <property name="Model" value="Entities/Plants/pumpkinHarvestPrefab"/>
+    </block>
+  </append>
   <!--
 	HELPGOOD:CODEGEN:KILLPLANTS:TAGS  (sync with gameevents.xml)
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
-astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
+#astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);\
+astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
 for strDead in ${astrList[@]};do\
 	strAlive="${strDead%Dead}"
 	case "${strAlive}" in
@@ -14,7 +45,7 @@ for strDead in ${astrList[@]};do\
 			echo -e '	<append xpath="/blocks/block[@name='"'"${strAlive}"'"']"><property name="Tags" value="'${strAlive}'"/></append>'
 			;;
 		*)
-			if [[ "${strAlive}" == plantedGraceCorn ]];then
+			if [[ "${strAlive}" == plantedGraceCorn ]];then #have no tags property
 				echo -e '	<append xpath="/blocks/block[@name='"'"${strAlive}1"'"']"><property name="Tags" value="'${strAlive}'"/></append>'
 			else
 				echo -e '	<append xpath="/blocks/block[@name='"'"${strAlive}1"'"']/property[@name='"'"Tags"'"']/@value">,'${strAlive}'</append>'

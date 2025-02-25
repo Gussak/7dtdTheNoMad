@@ -12,17 +12,18 @@
       <!--			HELPGOOD:CODEGEN:KILLPLANTS:REPLACE (sync with blocks.xml)
 	TODO: if a new dead plant model is created for a missing one on the added list below, remove them from the manually tweaked if list
 clear;IFS=$'#\n' read -d '' -r -a astrList < <(egrep '"plant[^"]*dead"' -\-include=*.xml * -iRhIao |tr -d '"' |sort -u);\
-astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
+#astrList+=(plantedGoldenrodDead plantedChrysanthemumDead plantedMushroomDead plantedGraceCornDead plantedPumpkinDead);\
+astrList=($(echo "${astrList[@]}" |tr ' ' '\n' |sort -u));\
 for strDead in ${astrList[@]};do\
 	strTo="$strDead"
 	bHasDead=true # has related dead model, otherwise will re-use from another plant
-	case "${strDead%Dead}" in
-		plantedGoldenrod)     strTo=plantedCoffeeDead;bHasDead=false;;
-		plantedChrysanthemum) strTo=plantedCoffeeDead;bHasDead=false;;
-		plantedMushroom)      strTo=plantedCoffeeDead;bHasDead=false;; # this makes no sense but..
-		plantedGraceCorn)     strTo=plantedCornDead  ;bHasDead=false;;
-		plantedPumpkin)       strTo=plantedCoffeeDead;bHasDead=false;; # this dont look good too if potatoes grew
-	esac
+#	case "${strDead%Dead}" in
+#		plantedGoldenrod)     strTo=plantedCoffeeDead;bHasDead=false;;
+#		plantedChrysanthemum) strTo=plantedCoffeeDead;bHasDead=false;;
+#		plantedMushroom)      strTo=plantedCoffeeDead;bHasDead=false;; # this makes no sense but..
+#		plantedGraceCorn)     strTo=plantedCornDead  ;bHasDead=false;;
+#		plantedPumpkin)       strTo=plantedCoffeeDead;bHasDead=false;; # this dont look good too if potatoes grew
+#	esac
 	case "${strDead%Dead}" in
 		plantHedge|plantShrub) nRandom=5;;
 		plantedGraceCorn) nRandom=15;;
@@ -34,7 +35,7 @@ for strDead in ${astrList[@]};do\
 	echo -e '				<property name="block_tags" value="'${strDead%Dead}'" />'
 	echo -e '				<property name="block_to"   value="'${strTo}'" />'
 	echo -e '			</action>'
-	if $bHasDead;then
+	if $bHasDead;then #see at blocks.xml, it is better to just create the Dead plant, so them all have dead
 		echo -e '			<action class="BlockReplace"><property name="phase" value="2" />'
 		echo -e '				<requirement class="RandomRoll"><property name="min_max" value="0,100" /><property name="operation" value="LT" /><property name="value" value="5" /></requirement>'
 		echo -e '				<property name="min_offset" value="0,-1,0" /><property name="max_offset" value="0,1,0" />'
@@ -102,7 +103,19 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedChrysanthemum"/>
-        <property name="block_to" value="plantedCoffeeDead"/>
+        <property name="block_to" value="plantedChrysanthemumDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="5"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedChrysanthemumDead"/>
+        <property name="block_to" value="air"/>
       </action>
       <action class="BlockReplace">
         <property name="phase" value="2"/>
@@ -186,7 +199,19 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedGoldenrod"/>
-        <property name="block_to" value="plantedCoffeeDead"/>
+        <property name="block_to" value="plantedGoldenrodDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="5"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedGoldenrodDead"/>
+        <property name="block_to" value="air"/>
       </action>
       <action class="BlockReplace">
         <property name="phase" value="2"/>
@@ -198,7 +223,19 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedGraceCorn"/>
-        <property name="block_to" value="plantedCornDead"/>
+        <property name="block_to" value="plantedGraceCornDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="5"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedGraceCornDead"/>
+        <property name="block_to" value="air"/>
       </action>
       <action class="BlockReplace">
         <property name="phase" value="2"/>
@@ -234,7 +271,19 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedMushroom"/>
-        <property name="block_to" value="plantedCoffeeDead"/>
+        <property name="block_to" value="plantedMushroomDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="5"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedMushroomDead"/>
+        <property name="block_to" value="air"/>
       </action>
       <action class="BlockReplace">
         <property name="phase" value="2"/>
@@ -270,7 +319,19 @@ done
         <property name="min_offset" value="0,-1,0"/>
         <property name="max_offset" value="0,1,0"/>
         <property name="block_tags" value="plantedPumpkin"/>
-        <property name="block_to" value="plantedCoffeeDead"/>
+        <property name="block_to" value="plantedPumpkinDead"/>
+      </action>
+      <action class="BlockReplace">
+        <property name="phase" value="2"/>
+        <requirement class="RandomRoll">
+          <property name="min_max" value="0,100"/>
+          <property name="operation" value="LT"/>
+          <property name="value" value="5"/>
+        </requirement>
+        <property name="min_offset" value="0,-1,0"/>
+        <property name="max_offset" value="0,1,0"/>
+        <property name="block_tags" value="plantedPumpkinDead"/>
+        <property name="block_to" value="air"/>
       </action>
       <action class="BlockReplace">
         <property name="phase" value="2"/>
