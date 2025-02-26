@@ -76,6 +76,7 @@
         <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,400" operation="LTE" value="@$WetTempModifierDisplay" help="0-100 shown wetness. 0-400 means max 25% chance to douse."/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="set" value="randomInt(0,300)"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain doused the torch's fire..."/>
       </effect_group>
       <effect_group help="try douse: no flame mod nor torch on hand">
@@ -142,7 +143,20 @@
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <effect_group help="try light up armor torch">
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOutSub" operation="set" value="randomInt(0,100)"/>
+    </effect_group>
+    <effect_group help="try light up armor torch">
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="GT" value="0"/>
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOutSub" operation="GT" value="@fGSKFireFuel"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,600" operation="LTE" value="@fGSKFireFuel" help="sync max with initial firefuel limit"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="subtract" value="@.iGSKFireDousedByRainTimeOutSub"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="subtract" value="@.iGSKFireDousedByRainTimeOutSub" help="consumes more fuel to try to light up torch again after wet by rain TODO: could just consume more fuel in rain? but would not be dramatic ;)"/>
+    </effect_group>
+    <effect_group help="try light up armor torch">
       <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="LTE" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
         <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
       </triggered_effect>
