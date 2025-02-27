@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffNVBatteryCreateConsumeEnergy">
+      <stack_type value="ignore" help="this is good to prevent double consumption"/>
+      <duration value="0.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@.iGSKNVBatteryCreateConsumeEnergy">
+          <requirement name="CVarCompare" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="0"/>
+      </effect_group>
+    </buff>
     <buff name="buffNVBattChargerPostX1" hidden="true">
       <stack_type value="ignore"/>
       <update_rate value="0.05"/>
