@@ -1,6 +1,79 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
+    <buff name="buffNVBattChargerPostX1" hidden="true">
+      <stack_type value="ignore"/>
+      <update_rate value="0.05"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeMultTmp" operation="set" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNVBattChargerPostWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNVBattChargerPostX1"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNVBattChargerPostX2" hidden="true">
+      <stack_type value="ignore"/>
+      <update_rate value="0.05"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeMultTmp" operation="set" value="2.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNVBattChargerPostWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNVBattChargerPostX2"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNVBattChargerPostX4" hidden="true">
+      <stack_type value="ignore"/>
+      <update_rate value="0.05"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeMultTmp" operation="set" value="4.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffNVBattChargerPostWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNVBattChargerPostX4"/>
+      </effect_group>
+    </buff>
+    <buff name="buffNVBattChargerPostWork" description_key="dkbuffNVBattChargerPost" tooltip_key="tkbuffNVBattChargerPost" icon="ui_game_symbol_electric_power" name_key="nkbuffNVBattChargerPost" icon_color="0,255,0">
+      <damage_type value="Electrical"/>
+      <stack_type value="duration"/>
+      <update_rate value="0.25" help="the block update rate is hard coded in 1s. the max lines affecting a single block is 4 (from 8 charging posts surrounding it). But the 4 electric lines didnt seem to stack up ? even with 4, the charging speed remains the same of a single line :("/>
+      <duration value="0.25" help="was 0.05. min real delay to block buff seems 0.5s?"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="solarpanel_off" play_in_head="true"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="FadeOutSound" sound="solarpanel_off" play_in_head="true"/>
+        <triggered_effect trigger="onSelfLeaveGame" action="StopSound" sound="solarpanel_off" play_in_head="true"/>
+      </effect_group>
+      <effect_group help="the initial calc was 10/s, based on some fuel consumption calc (I think). but... with some progress is more fun.">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="10">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="11">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="2"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="12">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="3"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="13">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="4"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="set" value="14">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBattChargeTmp" operation="multiply" value="@.iGSKBattChargeMultTmp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="add" value="@.iGSKBattChargeTmp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="set" value="@fGSKBattMaxChargeCurrent">
+          <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="@fGSKBattMaxChargeCurrent"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffFinish" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs">
     <buff name="buffNightVisionUsesBatteries121" hidden="true" remove_on_death="false">
       <update_rate value="0.25"/>
       <stack_type value="ignore"/>
