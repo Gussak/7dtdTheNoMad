@@ -186,7 +186,7 @@
       <duration value="0"/>
     </buff>
   </append>
-  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']" help="TODO:minimod: Rain extinguish fire">
     <effect_group help="extinguish all region fire: cancel">
       <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="set" value="0"/>
@@ -210,12 +210,12 @@
         <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireCount" operation="GTE" value="@.iTryExtinguishAllRegionFireCountTo"/>
         <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iTryExtinguishAllRegionFireChance"/>
       </triggered_effect>
-      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveFire, SCore" target="positionAOE" range="256" help="range is integer. 256 may cover a whole chunk, w/e tho... just need be near the player anyway, but 200 took 5s I think, so lowering may be more performant, may be just 50, so 100 diameter covers a whole POI?">
-        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireNow" operation="Equals" value="1"/>
-      </triggered_effect>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="set" value="0" help="cool down b4 next extinguishion">
-        <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireNow" operation="Equals" value="1"/>
-      </triggered_effect>
+    </effect_group>
+    <effect_group>
+      <requirement name="CVarCompare" cvar=".iTryExtinguishAllRegionFireNow" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveFire, SCore" target="positionAOE" range="256" help="range is integer. 256 may cover a whole chunk, w/e tho... just need be near the player anyway, but 200 took 5s I think, so lowering may be more performant, may be just 50, so 100 diameter covers a whole POI?"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iTryExtinguishAllRegionFireCount" operation="set" value="0" help="cool down b4 next extinguishion"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain finally extinguish all the fire."/>
     </effect_group>
   </append>
 </GhussakTweaks>
