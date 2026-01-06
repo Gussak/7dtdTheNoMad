@@ -1,0 +1,1319 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs" help="mutants powers">
+    <buff name="buffGSKPsyExplosion">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPsyExplosion"/>
+        <triggered_effect trigger="onSelfBuffStack" action="CallGameEvent" event="eventGSKPsyExplosion"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPsyResistWork28" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="fGSKPsyResistDur"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".fGSKPResAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="add" value="@.fGSKPResAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork28">
+          <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutant_ChkAndApplyOnMobs21" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutant_WorkOnMob" target="selfAOE" range="60" target_tags="zombie,animal,bandit,npc" help="blind apply w/o feedback">
+          <requirement name="!HasBuff" target="other" buff="buffGSKMutant_WorkOnMob"/>
+          <requirement name="CVarCompare" target="other" cvar="iGSKMutantMode" operation="GT" value="0" help="TODO: this target_other check must be inside a triggered_effect with target_selfAOE right?"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="_buffGSKMutant_RequestToPlayer" help="TODO: buffs and debuffs on mobs seem to only work thru player interaction or request? TODO: this seems to never work... may be require melee atk the player? wont work then.">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutant_RequestCount" operation="add" value="1" target="selfAOE" range="60" target_tags="player">
+          <requirement name="!HasBuff" buff="buffGSKMutant_WorkOnMob"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutant_RequestToPlayer">
+          <requirement name="HasBuff" buff="buffGSKMutant_WorkOnMob"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutant_WorkOnMob" help="TODO: an indirect buff or debuff will work on mob? or has to be applied directly from the player?">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="2.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantTeleportSelf" help="this wont work right?"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantFlashSpeed" help="workaround to not being able to teleport mobs, no explosions tho :( TODO: not working anyway.."/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantZombies">
+      <stack_type value="ignore"/>
+      <duration value="10"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantRage" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRabbits"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantZombies"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantFlashSpeed" help="TODO: is this working? is there a limit to perc_add?">
+      <stack_type value="ignore"/>
+      <duration value="0.5"/>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKMutFlash" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="CVarCompare" cvar=".bGSKMutFlash" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".bGSKMutFlash"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="10"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="20"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantTeleportSelf" help="TODO: events dont work with mobs?">
+      <stack_type value="ignore"/>
+      <duration value="1.0"/>
+      <update_rate value="0.05"/>
+      <effect_group help="random teleport in front nearby TODO: does not work on mobs?">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho TODOB: use new TeleportToTarget, targetting the player"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:STARTED:buffGSKMutantTeleportSelf:eventGSKMutantTeleport"/>
+      </effect_group>
+      <effect_group help="random teleport in front nearby rage TODO: does not work on mobs?">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="CVarCompare" cvar="iGSKMutantRage" operation="Equals" value="1"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutTeleRnd" operation="set" value="randomInt(1,2)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport" help="was eventGSKElctrnTele1NoMutant not working tho">
+          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKMutantTeleport2" help="was eventGSKElctrnTele1NoUpMutant not working tho">
+          <requirement name="CVarCompare" cvar=".iGSKMutTeleRnd" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKMutTeleRnd"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantTeleportSelf"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantRabbits">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="2.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMutantMode" operation="set" value="randomint(1,2)"/>
+      </effect_group>
+      <!-- HELPGOOD: do NOT do this, will create a huge lot of log and mess the game!!!!
+      <effect_group help="Mode:RadiationAura">
+        <requirement name="EntityTagCompare" tags="mutant"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="RadiatedParticlesOnMesh" param1="SetShapeToMesh0">
+          <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55" />
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="RadiatedParticlesOnMesh">
+          <requirement name="HasBuff" buff="buffGSKSnakePoisonWork55" />
+        </triggered_effect>
+      </effect_group>
+-->
+      <effect_group help="Mode:RadiationAura">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKRadiationAura">
+          <requirement name="!HasBuff" buff="buffGSKRadiationAura"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="Mode:Miasma">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <requirement name="CVarCompare" cvar="iGSKMutantMode" operation="Equals" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKRadiationAura">
+          <requirement name="HasBuff" buff="buffGSKRadiationAura"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(100,250)" target="selfAOE" range="5" target_tags="player" help="it is the sum for all distances on nearest">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(35,100)" target="selfAOE" range="10" target_tags="player">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomFloat(15,35)" target="selfAOE" range="30" target_tags="player"/>
+      </effect_group>
+      <effect_group help="RandomChaos">
+        <requirement name="!HasBuff" buff="buffGSKSnakePoisonWork55"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.45" target="selfAOE" range="5" target_tags="player" help="it is the sum for all distances on nearest"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="15" target_tags="player"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="add" value="0.25" target="selfAOE" range="30" target_tags="player"/>
+      </effect_group>
+      <effect_group help="timeout reinit">
+        <requirement name="CVarCompare" cvar=".iGSKMutantRabbits" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="set" value="10">
+          <requirement name="!InBiome" biome="3" help="not at pineforest (all monsters thrive more difficultly)"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="set" value="7.5">
+          <requirement name="InBiome" biome="3" help="pineforest (all monsters thrive easier)"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="timeout update">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantRabbits" operation="add" value="-2.5"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs" help="monster powers for the player">
+    <buff name="buffGSKpsyonicDeath" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpsyonicDeathDelayed1s" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="1.25"/>
+      <update_rate value="1.00"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpsyonicMutantCountNPCBUFF" hidden="false" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="3.0"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPsyonicMarkedToDie" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="1" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="rabbit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="2" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="vulture"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="3" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker" has_all_tags="true"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="4" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker,feral" has_all_tags="true"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="add" value="5" target="selfAOE" range="60" target_tags="player">
+          <requirement name="EntityTagCompare" tags="zombie,walker,feral,radiated" has_all_tags="true"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPsyonicMarkedToDie" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicMarkedToDie" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpsyonicAttackLikeAMutant" hidden="false" remove_on_death="true" icon="7dtdMutantRabbit" icon_blink="false" icon_color="0,255,0" description_key="dkGSKpsyonicAttackLikeAMutant">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKpsyKillTime"/>
+      <display_value_format value="time"/>
+      <update_rate value="3.0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKpsyKillTime" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKpsyKillTime" operation="add" value="-3" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKpsyonicAttackLikeAMutant">
+          <requirement name="CVarCompare" cvar=".iGSKpsyKillTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMutantNearbyCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="30" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="40" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="40"/>
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="50" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="50"/>
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" target="selfAOE" range="60" action="AddBuff" buff="buffGSKpsyonicMutantCountNPCBUFF" target_tags="mutant" help="this range is the real power range request, other ranges are just answers">
+          <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You focus all your PsyPower in nearby mutants"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKNearDeathPsyPowerTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GTE" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" target="selfAOE" range="60" action="AddBuff" buff="buffGSKpsyonicDeath" help="now is 60 range in case they moved away">
+          <requirement name="EntityTagCompare" target="other" tags="mutant"/>
+          <requirement name="CVarCompare" cvar=".iGSKPsyonicMarkedToDie" target="other" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="subtract" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicPermanentPowerAddTmp" operation="set" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".iGSKPsyonicPermanentPowerAddTmp" operation="divide" value="100"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="fGSKPsyonicPermanentPower" operation="add" value="@.iGSKPsyonicPermanentPowerAddTmp">
+          <requirement name="CVarCompare" cvar="fGSKPsyonicPermanentPower" operation="LT" value="75" help="so it requires 7500 points to resist chance max of 75% on the RandomRolls"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] You killed all nearby mutants."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="LT" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="subtract" value="@.iGSKMutantNearbyCount"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] Your PsyPower is not enough to kill'em all..."/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKMutantNearbyCount" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] You sense no mutants nearby."/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleportLikeAMutant" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="20" help="slow machines may need this much?"/>
+      <update_rate value="0.5"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".bGSKEventFeedbackTeleportCompleted" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="7"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="14"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele1No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-7"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="14"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="21"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele2No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-14"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="21"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="28"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele3No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-21"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="28"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="35"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele4No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-28"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="35"/>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LT" value="42"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele5No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-35"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GTE" value="42"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKElctrnTele6No"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-42"/>
+      </effect_group>
+      <effect_group help="wait teleport and finish">
+        <requirement name="CVarCompare" cvar=".bGSKEventFeedbackTeleportCompleted" operation="Equals" value="1" help="after teleport phase"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".bGSKEventFeedbackTeleportCompleted"/>
+        <triggered_effect trigger="onSelfBuffUpdate" target="selfAOE" range="4" action="AddBuff" buff="buffGSKTeleportExplosionDisintegrateFoes">
+          <requirement name="!EntityTagCompare" target="other" tags="player"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKTeleportLikeAMutant"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKpowerImmuneLikeAWight" hidden="false" remove_on_death="false" name_key="PowerWightDmgImmunity" description_key="dkGSKpowerImmuneLikeAWight" icon="7dtdShockTip" icon_blink="false">
+      <stack_type value="effect"/>
+      <display_value value="iGSKpowerWightPlayerTime"/>
+      <display_value_format value="time"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpowerWightPlayerTime" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKpowerImmuneLikeAWight">
+          <requirement name="CVarCompare" cvar="iGSKpowerWightPlayerTime" operation="LTE" value="0"/>
+        </triggered_effect>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="BuffResistance" operation="base_add" value="100" tags="buffAbrasionCatch,buffArmBroken,buffArmorShredding,buffArmSprained,buffArmSprainedCHTrigger,buffBurning,buffBurningElement,buffBurningEnvironment,buffBurningEnvironmentHack,buffBurningFlamingArrow,buffBurningMolotov,buffFatiguedTrigger,buffInjuryBleeding,buffInjuryBleedingBarbedWire,buffInjuryBleedingTwo,buffInjuryConcussion,buffInjuryCrippled01,buffInjuryKnockdown01,buffInjuryStunned00,buffInjuryStunned01,buffInjuryStunned01CHTrigger,buffInjuryStunned01Shotgun,buffInjuryStunned02,buffInjuryStunned02Shotgun,buffInjuryStunned03,buffInjuryStunned03Shotgun,buffInjuryUnconscious,buffLaceration,buffLegBroken,buffLegSprainedCHTrigger,buffLegSprainedFallTrigger,BuffResistance,buffShocked,buffStayDownKO" help="protection for all things that cause almost instantaneous damage, lower max HP and make the player slow down. is this 0-100 or a percent like 0.0-1.0? but why there is value 5 and also value -0.04? DidntAdd: buffDrowning01,buffDrowning02,buffInfection01Main,buffInfectionCatch"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="$buffDrugOhShitzDropsDuration" operation="set" value="60">
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffDrugOhShitzDrops" help="it seems only fall damage can kill player now? so this fix it">
+          <requirement name="NotHasBuff" buff="buffDrugOhShitzDrops"/>
+          <requirement name="CVarCompare" cvar="$buffDrugOhShitzDropsDuration" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs" help="monster powers for monsters">
+    <buff name="buffGSKWightPower" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKWightPowerDisable"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="1000" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="33" help="even with this, if you shoot it a lot (50+), the EffectiveWeapons mod will set a high iEWBleedAmount that is probably what is letting it be killed w/o using the glowstick light, but that is ok as will have to spend a lot of bullets."/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="8.0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="8.0" help="here as entityclass' MoveSpeedAggro seems to change nothing, why? too big values also seem to not work?"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightPowerDisable" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="60"/>
+      <effect_group>
+        <requirement name="EntityTagCompare" tags="wight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="9" force="0" target="self"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="1.00,0.95,0" duration="0,45,60"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="1.00,0.95,0" duration="0,45,60"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!EntityTagCompare" tags="wight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKWightPowerDisable"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampPower" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKVampireBuff" operation="add" value="50" help="is 5/s, sync with update_rate">
+          <requirement name="StatCompareCurrent" stat="Health" operation="LT" value="@iGSKVampireBuffMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="50" help="sync with above"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs" help="Monster Essences powers for PLAYER">
+    <buff name="buffGSKShamanPowers" hidden="true">
+      <duration value="0.05" help="btw, there is a quick adding that happens when it is 0.05s for onSelfPrimaryActionRayHit, no problem now tho"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.25" help="+4 strikes">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="1.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.10" help="+10">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="2.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.05" help="+20">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="3.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.0333" help="+30">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="4.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.025" help="+40">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="5.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.01" help="+100 per lvl above 5, requires a huge horde to reach this">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="5.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="set" value="@iGSKNearDeathShamanPowerLvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="add" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKallPowers5s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKShamanPowerPermBonus" operation="add" value="0.001" help="TODO: use with something"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKallPowers5s" hidden="true">
+      <duration value="0.05"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKPsyResist5s"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKWightEssence5s"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKVampireEssence5s"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKMutantEssence5s"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPsyResist5s" hidden="true">
+      <duration value="0.05"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPsyResistWork28"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKWightEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampireEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVampireEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantEssence5s" hidden="true">
+      <duration value="0.05"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKMutantEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPsyExplosionDelayed6s" hidden="true">
+      <duration value="6"/>
+      <stack_type value="effect"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" local_offset="0,0,0" parent_transform="Hips" help="TODO: could be some kind of highlight like the dynamite has"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="demolitionz_beep" play_in_head="false" help="TODO: some not electronical, but magical sound"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="@iGSKstackPsyExplod" help="starts in 1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKbulletExplosionPsyonic">
+          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GT" value="0" help="requires at least 2 hits to place the explosion charge"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKstackPsyExplod" operation="set" value="0"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMonsterMixEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,255,128" description_key="dkGSKMonsterEssence">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1.0" help="make it sure it is slower than each other essence buff"/>
+      <display_value value="iGSKMonsterMixJuiceStep"/>
+      <display_value_key value="{0:0}/15"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKWightEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKVampireEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="5"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantEssence">
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="10"/>
+          <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="LT" value="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKMonsterMixJuiceStep" operation="GTE" value="15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKMonsterMixJuiceStep" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMonsterMixEssence"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKWightEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="0,0,255" description_key="dkbuffGSKWightEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.33"/>
+      <display_value value="iGSKbuffGSKWightEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="1.0"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceWight add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16896:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="randomFloat(0.5,1.5)"/> -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceWightPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKEssenceSideEffects">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <passive_effect name="StaminaMax" operation="base_add" value="@iGSKEssenceWight"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@.iGSKbuffGSKWightEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@.iGSKbuffGSKWightEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="@iGSKEssenceWight" help="the more you use the better it becomes"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="add" value="-0.33" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKWightEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKWightEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKEssenceWightMinHP"/>
+        <requirement name="StatCompareModMax" stat="Stamina" operation="GTE" value="@.iGSKEssenceWightModMaxStam"/>
+        <requirement name="StatCompareCurrent" stat="Stamina" operation="LT" value="@iGSKEssenceWightMinStam"/>
+        <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="0.33" help="otherwise it would just keep lowering player HP til minimum"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="@.iGSKEssenceWightAddStam"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="-0.01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="use player#painsm ? player#death is too loud if play_in_head, keep false. TODO: some other sound? and/or some screen effect?"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKVampireEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="128,0,255" description_key="dkbuffGSKVampireEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.33"/>
+      <display_value value="iGSKbuffGSKVampireEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="1.0"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceVampire add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16932:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="randomFloat(0.5,1.5)"/> -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceVampirePermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKEssenceSideEffects">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <passive_effect name="HealthMax" operation="base_add" value="@iGSKEssenceVampire"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@.iGSKbuffGSKVampireEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@.iGSKbuffGSKVampireEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="@iGSKEssenceVampire"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="add" value="-0.33" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKVampireEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKVampireEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKPlayerVampireStrikeCount" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPlayerVampireStrikeCount" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-0.05"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKMutantEssence" hidden="false" icon="ui_game_symbol_critical" icon_color="220,180,64" description_key="dkbuffGSKMutantEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="5"/>
+      <display_value value="iGSKbuffGSKMutantEssenceTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="1.0"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKEssenceMutant add randomFloat(0.5,1.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16966:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="randomFloat(0.5,1.5)"/> -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKEssenceMutantPermBonus" operation="add" value="0.1">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="AddBuff" buff="buffGSKEssenceSideEffects">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0" help="will become default add from potions"/>
+        </triggered_effect>
+        <passive_effect name="HealthMax" operation="base_add" value="@iGSKEssenceMutant">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </passive_effect>
+        <passive_effect name="StaminaMax" operation="base_add" value="@iGSKEssenceMutant">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="2">
+          <requirement name="IsNight"/>
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="1">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </passive_effect>
+        <passive_effect name="JumpStrength" operation="perc_add" value="1">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </passive_effect>
+        <passive_effect name="AttacksPerMinute" operation="perc_add" value="1">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </passive_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKRadiationMessDNA subtract randomFloat(0.05,0.10)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.10)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16998:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKRadiationMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"> -->
+          <requirement name="CVarCompare" cvar="fGSKRadiationMessDNA" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect help="FixTinyRandomFloat:was fGSKCosmicRadMessDNA subtract randomFloat(0.05,0.10)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(50,100)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.05,0.10)">
+          <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=17001:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKCosmicRadMessDNA" operation="subtract" value="randomFloat(0.05,0.10)"> -->
+          <requirement name="CVarCompare" cvar="fGSKCosmicRadMessDNA" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@.iGSKbuffGSKMutantEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="60">
+          <requirement name="CVarCompare" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@.iGSKbuffGSKMutantEssenceTmAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="@iGSKEssenceMutant"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="add" value="-5" help="sync with udpate_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.005" help="sync with udpate_rate">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.005" help="sync with udpate_rate">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning01"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning02"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffDrowning03"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffGSKMutantEssenceTm" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKMutantEssence">
+          <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKEssenceSideEffects">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
+        <!-- HELPGOOD: the essence item already adds chem use thru a patch here -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,10" operation="LT" value="@iGSKEssenceStack"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,10" operation="LT" value="@iGSKEssenceStack"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKShamanDebuff" hidden="false" icon="ui_game_symbol_critical" icon_color="128,180,180" description_key="dkbuffGSKWightEssence">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.33" help="3 ragdollings per second works well to keep the player down"/>
+      <display_value value="iGSKShamanDebuffTm"/>
+      <display_value_format value="time"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (fall down).">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Shaman powers side effected can be countered by remaining under water.">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="set" value="@iGSKNearDeathShamanPowerLvlMax"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="multiply" value="3"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKEssenceSideEffects" help="lvl decayed and reached 0, then the convunsioning debuff begins til the max lvl reached. the max it reached, the more after debuff happens">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="add" value="-0.33" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKShamanDebuffTm" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShamanDebuff"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs" help="Monster Essences powers thru thrown weapons and bullets for PLAYER">
+    <buff name="_buffGSKThrownBoneDartMarkTargetToDrain" help="ISSUE: setting a zombie cvar with players EntityID doesnt work">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="5">
+          <requirement name="EntityTagCompare" target="self" tags="zombie"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="15">
+          <requirement name="EntityTagCompare" target="self" tags="animal"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainHP" operation="set" value="20">
+          <requirement name="EntityTagCompare" target="self" tags="bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKdrainStamina" operation="set" value="40"/>
+        <!--					HELPGOOD: TODO: feed only the player attacking the zombie, but requires being able to read player ID into a cvar and comparing later, this works already? -->
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedHP" operation="add" value="@iGSKdrainHP" target="selfAOE" range="300" target_tags="player">
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKentityToFeed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedStamina" operation="add" value="@iGSKdrainStamina" target="selfAOE" range="300" target_tags="player">
+          <requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKentityToFeed"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartFeedPlayer" target="selfAOE" range="300" target_tags="player">
+          <requirement name="EntityTagCompare" target="self" compare_type="or" tags="hostile,zombie,bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="subtract" value="@iGSKdrainHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="subtract" value="@iGSKdrainStamina"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToDrain" help="when it is working enable this"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerDrainHP">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrain"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrainHP"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerDrainStamina">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="-40"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrain"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerDrainStamina"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKessencePowerFeed">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="10">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="40">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKessencePowerFeed"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKThrownBoneDartMarkTargetToTeleport" help="at foe" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05" help=""/>
+      <effect_group>
+        <passive_effect name="DismemberChance" operation="base_set" value="100" help="TODO: check if it is being fully dismembered by the explosion (actually the torso should explode like the zombie cop, and limbs should fly away)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="0"/>
+      </effect_group>
+      <!-- HELPGOOD: as friendly NPCs may move in front of our shooting line suddenly, better not enable this.
+			<effect_group>
+				<requirement name="CVarCompare" cvar="Leader" operation="NotEquals" value="0" help="a hired NPC is NOT protected from damage but can become a teleport target too. trick: shotgun shooting a fox will not damage it and will make it fly very far, but the direction is not where you aim, it is based on the position on the terrain, so move around until it flies where you want to teleport. But only throwing weapon can trigger the teleport, bullets wont trigger in friendlies."/>
+				<requirement name="IsAlive"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
+			</effect_group>
+-->
+      <effect_group help="low psy targets. All organic neutral or foe TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier..">
+        <requirement name="EntityTagCompare" compare_type="or" tags="animal,hostile,zombie,TeleportPlayerToMe"/>
+        <requirement name="!EntityTagCompare" tags="mech"/>
+        <requirement name="!EntityTagCompare" tags="flying" help="ISSUE: for some reason flying entities will flood the log with errors even with air_spawn allowed at eventGSKpullPlayerToMe.. but it will work when animalHelperTeleportPlayerToMe2GSK calls this buff... why!?!??! :o :O, tho nothing happens with non hostile flying entities, the buff seems to not be applied.."/>
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="high psy targets cause debuff">
+        <requirement name="EntityTagCompare" tags="bandit"/>
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKLowCostTeleportDebuffApply" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit the bandit">
+          <!--HELPGOOD:FAIL:This seems to fail when trying to set a cvar from @EntityID from a buff, but seems to work when doing that from an item only :(					<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID" />-->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="shaman debuff">
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="1.0" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit it">
+          <!--HELPGOOD:FAIL					<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID" />-->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryBleedingTwo" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit it">
+          <!--HELPGOOD:FAIL					<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID" />-->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03" target="selfAOE" range="1000" target_tags="player" help="TODO: should be only the player that hit it">
+          <!--HELPGOOD:FAIL					<requirement name="CVarCompare" target="other" cvar="EntityID" operation="Equals" value="@.iGSKTeleToMeEntityID" />-->
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCheckAliveCanTeleToMe"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".fGSKDartTeleDoIt" operation="Equals" value="1"/>
+        <requirement name="IsAlive"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="10" help="ISSUE: this is to try to prevent the not so rare TeleportToTarget random error flood on the log"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpullPlayerToMe"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKpsyonicDeathDelayed1s" help="this grants the target causing the flood of errors on the log will be killed as it would already with the teleport ISSUE: the teleport may not happen. and happens so many log errors of failing to kick in game event action TeleportToTarget. Seems to happen much more often when hitting npcHarleyPipeRifle npcHarleySniperRifle ? or just NPCs? but happened also with a desert fox? and a zombie I think..."/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKCheckAliveCanTeleToMe" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="0">
+          <requirement name="!IsAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="1">
+          <requirement name="IsAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar=".iGSKCanTeleportToMe" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="RemoveBuff" buff="buffGSKCheckAliveCanTeleToMe"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="15"/>
+      <update_rate value="0.1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollBegin" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollEnd" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="ragdollBegin" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="Ragdoll" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="ragdollEnd" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKThrownBoneDartMarkTargetToTeleport"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollEnd" operation="set" value="2"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="ragdollEnd" operation="GTE" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="ragdollEnd" operation="add" value="1"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="ragdollEnd" operation="GTE" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKKillSelfWhenRagdollEndsAndTelePlayerToMe"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000" help="TODO: this should actually just dismember torso making it explode leaving only limbs on the ground"/>
+      </effect_group>
+    </buff>
+    <buff name="_buffGSKThrownBoneDartFeedPlayer">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="@iGSKfeedHP">
+          <requirement name="HasBuff" buff="buffGSKVampireEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="@iGSKfeedStamina">
+          <requirement name="HasBuff" buff="buffGSKWightEssence"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedHP" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfeedStamina" operation="set" value="0"/>
+        <!-- HELPGOOD: fails
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToTarget">
+					<requirement name="HasBuff" buff="buffGSKMutantEssence" />
+				</triggered_effect>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKThrownBoneDartFeedPlayer"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTeleToLastPlacedBedroll" hidden="false" remove_on_death="true" name_key="TeleToBedroll" description_key="dkbedrollTeleportHelper" icon="7dtdTeleport" icon_blink="false" help="sometimes the step over block buff seems to not kick in, this shown icon will help know if/when it is working">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <effect_group>
+        <requirement name="EntityTagCompare" tags="player"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll" help="at 2nd second, as checks before adding god buff. this is important to wait NPC followers be put also in short time god mode for teleport">
+          <requirement name="HasBuff" buff="buffGSKGodModeForTeleport" help="at the 2nd second this will kick in"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="at 1st second">
+          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport" help="this will grant some time before calling again the game event"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffStatusCheck01']/effect_group/triggered_effect[@action='AddBuff' and @buff='buffDrowning01']" help="Monster Essences: mutant essence lets you breath underwater">
+    <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+  </append>
+  <append xpath="/buffs" help="explosive bullets target based">
+    <buff name="buffGSKbulletExplosionPsyonic">
+      <stack_type value="effect"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStack" action="CVarLogValue" cvar=".iGSKbulletExplosionStack"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar=".iGSKbulletExplosionStack" operation="GTE" value="1"/>
+        <requirement name="NotHasBuff" buff="buffGSKbulletExplosionPsyonicWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKbulletExplosionPsyonicWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKbulletExplosionStack" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionStack"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+    <buff name="buffGSKbulletExplosionPsyonicWork">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic">
+          <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKbulletExplosionPsyonicPower"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbulletExplosionPsyonicUpdateCount" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKbulletExplosionPsyonicUpdateCount" operation="add" value="1"/>
+      </effect_group>
+      <!--        HELPGOOD: sync dmg and range with values of gameevent (that are not working from there...)
+	these damages below are a workaround for the not working damages from game events (as zombies cant run an event that damages other zombies?)
+	but these damages below are non resistable... the explosion should not damage nearby entities in an uresistable way.
+	TODO: The event explosion should suffice for nearby entities.
+	-->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="10"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="20"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic10"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="10"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="20"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400"/>
+        <!--HELPGOOD: no
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="0.65"/>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="20"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="30"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic20"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="20"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="30"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-800"/>
+        <!--HELPGOOD: no
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="0.65"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="1.50"/>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="30"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="40"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic30"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="30"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="40"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1200"/>
+        <!--HELPGOOD: no
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-300" target="selfAOE" range="0.65"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-150" target="selfAOE" range="1.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-75" target="selfAOE" range="2.50"/>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="40"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="50"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic40"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="40"/>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="LT" value="50"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-1600"/>
+        <!--HELPGOOD: no
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-400" target="selfAOE" range="0.65"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-200" target="selfAOE" range="1.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-100" target="selfAOE" range="2.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-50" target="selfAOE" range="3.00"/>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="50"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKbulletExplosionPsyonic50"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbulletExplosionPsyonicPower" operation="GTE" value="50"/>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-2000"/>
+        <!--HELPGOOD: no
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-500" target="selfAOE" range="0.65"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-250" target="selfAOE" range="1.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-125" target="selfAOE" range="2.50"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-63" target="selfAOE" range="3.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-31" target="selfAOE" range="3.50"/>
+-->
+      </effect_group>
+      <effect_group>
+        <requirement name="HasBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbulletExplosionPsyonicPower" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKbulletExplosionPsyonicWork"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKBulletExplosionPsyonicCanDamageNow"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".iGSKbulletExplosionPsyonicUpdateCount"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']/effect_group[@name='onSelfDied:Work']">
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="set" value="0" help="resurrection completely removes essences DNA mutations"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="set" value="0" help="resurrection completely removes essences DNA mutations"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKEssenceWight" operation="set" value="0" help="resurrection completely removes essences DNA mutations"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0"/>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <!--
+	HELPGOOD: TODO: at permanent generic check buff, there are stuff for essences and monsters spawns, move to here too
+-->
+    <effect_group help="apply mutant random chaos on player">
+      <requirement name="CVarCompare" cvar="fGSKMutantRandomChaos" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKMutantRandomChaos">
+        <requirement name="NotHasBuff" buff="buffGSKMutantRandomChaos"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0.0,1.0" operation="LT" value="@fGSKMutantRandomChaos"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantRandomChaos" operation="set" value="0" help="consume"/>
+    </effect_group>
+    <effect_group help="Essences bonus">
+      <passive_effect name="HealthMax" operation="base_add" value="@fGSKEssenceVampirePermBonus"/>
+      <passive_effect name="StaminaMax" operation="base_add" value="@fGSKEssenceWightPermBonus"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMutantPermBonusTmp" operation="set" value="@fGSKEssenceMutantPermBonus"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMutantPermBonusTmp" operation="divide" value="100"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMutantPermBonus" operation="set" value="@.fGSKMutantPermBonusTmp"/>
+      <passive_effect name="HealthMax" operation="base_add" value="@fGSKMutantPermBonus" help="just a bit"/>
+      <passive_effect name="StaminaMax" operation="base_add" value="@fGSKMutantPermBonus" help="just a bit"/>
+      <passive_effect name="RunSpeed" operation="perc_add" value="@fGSKMutantPermBonus"/>
+      <passive_effect name="JumpStrength" operation="perc_add" value="@fGSKMutantPermBonus"/>
+      <passive_effect name="AttacksPerMinute" operation="perc_add" value="@fGSKMutantPermBonus"/>
+    </effect_group>
+    <effect_group help="Essences stack">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar="iGSKEssenceStack" operation="GT" value="0"/>
+        <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="Vampire: summon thrawls at night if hit the player TODO: only players can call events? it could call a buff that inc the cvar on player, but how to position the thrawls near it?">
+      <requirement name="IsNight"/>
+      <requirement name="CVarCompare" cvar=".iGSKVampCallsThrawl" operation="GTE" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnZombieDogNearby"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKVampCallsThrawl" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="VampireSpawn: granted once every night">
+      <requirement name="IsNight"/>
+      <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="0"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,300" operation="LTE" value="1" help="may take some time to happen, but probably will. sync with update_rate"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnVampire"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnZombieDogX3"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel a Vampire is nearby!"/>
+    </effect_group>
+    <effect_group help="VampireSpawn:clear cooldown">
+      <requirement name="!IsNight"/>
+      <requirement name="CVarCompare" cvar="iGSKSpawnVampireCooldown" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnVampireCooldown" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="WightSpawn: granted once per day TODOA: check if wight spawned, if not keep retring, this problem may probably happen if player is underground">
+      <requirement name="!IsNight"/>
+      <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="0"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,300" operation="LTE" value="1" help="may take some time to happen, but probably will. sync with update_rate"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKSpawnWight"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You feel a Wight is nearby!"/>
+    </effect_group>
+    <effect_group help="WightSpawn:clear cooldown">
+      <requirement name="IsNight"/>
+      <requirement name="CVarCompare" cvar="iGSKSpawnWightCooldown" operation="Equals" value="1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnWightCooldown" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="Summon animals cooldown">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSummonAnimalCooldown" operation="add" value="-1">
+        <requirement name="CVarCompare" cvar="iGSKSummonAnimalCooldown" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="slowly decreases essences values">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="-0.001" help="temporary psy power slowly decreases with time">
+        <requirement name="CVarCompare" cvar="iGSKPsyonicChemUseCount" operation="GT" value="0.001"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceWight" operation="add" value="-0.001">
+        <requirement name="CVarCompare" cvar="iGSKEssenceWight" operation="GT" value="0.001"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="add" value="-0.001">
+        <requirement name="CVarCompare" cvar="iGSKEssenceVampire" operation="GT" value="0.001"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="add" value="-0.001">
+        <requirement name="CVarCompare" cvar="iGSKEssenceMutant" operation="GT" value="0.001"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="stamina pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Stamina" operation="LTE" value="0.25"/>
+      <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-50"/>
+    </effect_group>
+    <effect_group help="stamina pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Stamina" operation="LTE" value="0.50"/>
+      <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-25"/>
+    </effect_group>
+    <effect_group help="stamina pool">
+      <requirement name="StatComparePercCurrentToModMax" stat="Stamina" operation="LTE" value="0.75"/>
+      <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-10"/>
+    </effect_group>
+    <effect_group help="stamina pool: slowly deplet">
+      <requirement name="CVarCompare" cvar="iGSKstaminaPool" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="stamina pool: clear">
+      <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKstaminaPool" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="CVarCompare" cvar="iGSKplayerHealableHP" operation="GTE" value="50"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GTE" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerHealableHP" operation="add" value="-50"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-50"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="CVarCompare" cvar="iGSKplayerHealableHP" operation="GTE" value="25"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GTE" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerHealableHP" operation="add" value="-25"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-25"/>
+    </effect_group>
+    <effect_group help="HP pool">
+      <requirement name="CVarCompare" cvar="iGSKplayerHealableHP" operation="GTE" value="10"/>
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GTE" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerHealableHP" operation="add" value="-10"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-10"/>
+    </effect_group>
+    <effect_group help="HP pool: slowly deplet">
+      <requirement name="CVarCompare" cvar="iGSKHitpointsPool" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="HP pool: clear">
+      <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsPool" operation="set" value="0"/>
+    </effect_group>
+    <effect_group help="psyonicBulletVanish">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="add" value="-1"/>
+    </effect_group>
+    <effect_group help="psyonicBulletVanish">
+      <requirement name="CVarCompare" cvar="iGSKpsyBulletVanishTimeout" operation="LTE" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpsyonicBulletVanish"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="set" value="60"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKpsyBulletVanishTimeout" operation="add" value="@iGSKPsyonicChemUseCount"/>
+    </effect_group>
+    <effect_group help="shamanPower:Decay">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="@iGSKNearDeathShamanPowerLvl">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="1.00"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="LT" value="@iGSKNearDeathShamanPowerLvl"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
+        <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
+        <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+        <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
+        <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="shamanPower:Debuff">
+      <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="Equals" value="0"/>
+      <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlMax" operation="GTE" value="1"/>
+      <requirement name="!HasBuff" buff="buffGSKPsyResistWork28"/>
+      <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
+      <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
+      <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
+      <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
+    </effect_group>
+    <effect_group help="shamanPower:Pain">
+      <requirement name="HoldingItemHasTags" tags="shamanpower"/>
+      <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="1">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryBleedingOne">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="Equals" value="1"/>
+        <requirement name="!HasBuff" buff="buffInjuryBleeding"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="2">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned01">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="Equals" value="2"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned00"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned01"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned02"/>
+        <requirement name="!HasBuff" buff="buffInjuryStunned03"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Using shaman powers have it's price (bleed,stun)." compare_type="or">
+        <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
+    <effect_group help="shamanPower:Init">
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanDecayStep" operation="set" value="0.03" help="0.03 is 167s 2min37s. 0.20 is 25s for lvl 5. 0.05 is 100s. This taking some time to end is good to make the player consider using it or spending other weapon ammo."/>
+    </effect_group>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPlayerVomit']/effect_group">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceVampire" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWight" operation="set" value="0"/>
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="set" value="0"/>
+  </append>
+</GhussakTweaks>

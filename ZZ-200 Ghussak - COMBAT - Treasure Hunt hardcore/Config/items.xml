@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="repairTreasureChest" help="this is just a workaround to help treasure chest raider ambush be started as soon the player wants the treasure">
+      <property name="Extends" value="resourceScrapIron"/>
+      <property name="CustomIcon" value="resourceScrapIron"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="RepairTime" value="0.1"/>
+      <property name="RepairAmount" value="65535"/>
+    </item>
+    <item name="GSKspawnGuardedTreasure" help="no crafting">
+      <property name="DescriptionKey" value="dkGSKspawnGuardedTreasure"/>
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="Candrop" value="false"/>
+      <property name="CustomIcon" value="cntStorageGeneric"/>
+      <property name="CustomIconTint" value="180,150,128"/>
+      <property name="Stacknumber" value="10"/>
+      <property class="Action0">
+        <requirement name="NotHasBuff" buff="buffGSKSpawnTreasureAmbush15"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasure15"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSpawnTreasureAmbush15"/>
+      </effect_group>
+    </item>
+    <item name="GSKDBGTweakTreasureDiggingCount">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTreasureDiggingCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTreasureDiggingCount" operation="add" value="-1"/>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>

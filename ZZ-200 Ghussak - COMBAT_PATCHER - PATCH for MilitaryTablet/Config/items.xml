@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <set xpath="/items/item[@name='Tablet' or @name='Smartphone']/property[@name='Material']/@value">MmeleeWpnBladeParts</set>
+  <append xpath="/items/item[@name='Tablet']">
+    <property name="HoldType" value="44"/>
+  </append>
+  <append xpath="/items/item[@name='Tablet']">
+    <property name="Stacknumber" value="7"/>
+  </append>
+  <!--HELPGOOD: all these are not perfect (the position of the tablet is not nice) but look much better when using map zoom in than HoldType 14
+	<append xpath="/items/item[@name='Tablet']"><property name="HoldType" value="30"/></append>
+	<append xpath="/items/item[@name='Tablet']"><property name="HoldType" value="44"/></append>
+	<append xpath="/items/item[@name='Tablet']"><property name="HoldType" value="77"/></append>
+	<append xpath="/items/item[@name='Tablet']"><property name="HoldType" value="81"/></append>
+-->
+  <append xpath="/items/item[@name='Smartphone']">
+    <property name="HoldType" value="44"/>
+  </append>
+  <append xpath="/items/item[@name='Smartphone']">
+    <property name="Stacknumber" value="21"/>
+  </append>
+  <append xpath="/items">
+    <!--
+HELPGOOD:CODEGEN:TestAllHoldTypes:
+clear;strEffectGroups='copy all effect groups of the item, remove the comments, remove newlines \r\n, and paste here';egrep '"holdtype"' * -iRIah -\-include="items.xml" |sed -r -e 's@.*value="([0-9]*)".*@\1@g' |sort -un |sed -r -e 's\.*\<item name="Tablet&"><property name="Extends" value="Tablet" /><property name="HoldType" value="&"/>'"${strEffectGroups}"'</item>\g'
+-->
+  </append>
+  <append xpath="/items/item[@name='Tablet']" help="TODO: consume energy">
+  </append>
+  <remove xpath="/items/item[@name='Tablet']/property[@class='Action0']/requirement[@cvar='$TabletCam']" help="to let PRIMARY work with camera mode on"/>
+  <append xpath="/items/item[@name='Tablet']/effect_group/triggered_effect[    @trigger='onSelfPrimaryActionStart' and     @action='AddBuff' and     @buff='TabletSwap']" help="to grant zoom in/out will continue working properly">
+    <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="1" help="only in map mode"/>
+  </append>
+  <append xpath="/items/item[@name='Tablet']/effect_group/triggered_effect[    @trigger='onSelfSecondaryActionStart' and     @action='AddBuff' and     @buff='TabletCam']">
+    <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+  </append>
+  <append xpath="/items/item[@name='Tablet']/effect_group">
+    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKMTabConsumeEnergy"/>
+    <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKMTabConsumeEnergy"/>
+    <triggered_effect trigger="onSelfEquipStop" action="AddBuff" target="self" buff="buffGSKMTabClearEffects"/>
+    <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="self" buff="buffGSKMTabAcquireAndShockNearbyEnemies">
+      <requirement name="CVarCompare" cvar="$TabletCam" operation="Equals" value="2" help="only in camera mode"/>
+      <requirement name="!HasBuff" buff="buffGSKMTabAcquireAndShockNearbyEnemies"/>
+      <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0"/>
+    </triggered_effect>
+  </append>
+</GhussakTweaks>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <set xpath="/entity_classes/entity_class[@name='0animalmagpie']/effect_group/passive_effect[@name='HealthMax' and @operation='base_set']/@value" help="A vulture is 30hp, a magpie, despite smaller seems tuff, but should be 1 hit kill with any weapon/gun.   TODO: The ideal would be if    we equip a torch it flees flying,   or hit it once with piercing (bullets or knife etc) it flees,   or its HP drops below 75% it flees,    the magpie drops to ground and starts running fleeing.    if it would just flee flying, should be slowed to 1/3 of it's speed if it is hurt so we can capture/harvest it, or twice speed if scared of fire, then the HP could remain at 100 that is near a radiated vulture.">20</set>
+  <append xpath="/entity_classes/entity_class[@name='npcAnimalMeleeTemplate']">
+    <property name="Names" value="(Pet)Buster,(Pet)Sally,(Pet)Fluffy,(Pet)BusterB,(Pet)SallyB,(Pet)FluffyB,(Pet)BusterC,(Pet)SallyC,(Pet)FluffyC" help="less chances to clash as we cant rename them TODO: let just respawn them (kill/spawn new)"/>
+  </append>
+  <!--	HELPGOOD: more variety to raiders
+	TODO: add males too.
+	TODO: these should be PShotgun
+  <entity_class name="npcRaiderNpcwestern7" extends="npcRaiderJaynePistol">
+		<property name="Mesh" value="#@modfolder(1_EndZ_WesternEntityPack):Resources/westernnpcsbundle.unity3d?EndZ1cowgirl"/>
+  </entity_class>
+  <entity_class name="npcRaiderNpcwestern8" extends="npcRaiderJaynePistol">
+		<property name="Mesh" value="#@modfolder(1_EndZ_WesternEntityPack):Resources/westernnpcsbundle.unity3d?EndZ2cowgirl"/>
+  </entity_class>
+  TODO: add to entitygroups that spawn raiders.
+  TODO: add to script that places raiders in prefabs
+  
+  <entity_class name="npcRaiderNpcwestern9Pistol" extends="npcRaiderJaynePistol">
+		<property name="Mesh" value="#@modfolder(1_EndZ_WesternEntityPack):Resources/westernnpcsbundle.unity3d?EndZ3cowgirl"/>
+  </entity_class>
+  <entity_class name="npcRaiderNpcwestern10Pistol" extends="npcRaiderJaynePistol">
+		<property name="Mesh" value="#@modfolder(1_EndZ_WesternEntityPack):Resources/westernnpcsbundle.unity3d?EndZ4cowgirl"/>
+  </entity_class>
+-->
+  <append xpath="/entity_classes/entity_class[@name='npcwestern7' or @name='npcwestern8' or @name='npcwestern9' or @name='npcwestern10']">
+    <property name="SoundHurt" value="player2painlg"/>
+    <property name="SoundHurtSmall" value="player2painsm"/>
+    <property name="SoundDeath" value="player2death"/>
+    <property name="SoundStamina" value="player2stamina"/>
+    <property name="SoundDrownPain" value="player2drownpain"/>
+    <property name="SoundWaterSurface" value="player2drownsurface"/>
+    <property name="SoundDrownDeath" value="player2drowndeath"/>
+    <property name="SoundJump" value="player2Jump"/>
+    <property name="SoundLandSoft" value="player2LandSoft"/>
+    <property name="SoundLandHard" value="player2LandHard"/>
+  </append>
+  <append xpath="/entity_classes/entity_class[starts-with(@name,'npcwestern') or starts-with(@name,'npcSoldier')]/property[@name='Tags']/@value" help="allows them using all weapons">,Knife,Machete,ClubWood,BatWood,Axe,Spear,SMG,PipePistol,PipeShotgun,PipeRifle,PipeMG,M60,Pistol,DPistol,Ak47,TRifle,HRifle,SRifle,LBow,XBow,PShotgun,AShotgun,RocketL</append>
+  <remove xpath="/entity_classes/entity_class[starts-with(@name,'npcwestern')]/effect_group[@name='Base Effects']/passive_effect[@name='HealthMax']" help="western NPCs are with much lower HP than others, it is probably the perc_set I guess. This should solve it."/>
+  <csv xpath="/entity_classes/entity_class[   @name='0animalmagpie' or   @name='animalAlcatraz' or   @name='animalEagle' or   @name='animalBats' or   @name='animalTemplateTimidFlying' or   @name='animalTemplateHostileFlying' or   @name='animalCrow' or   @name='animalZombieVulture' or   @name='animalZombieVultureRadiated'  ]/property[@name='Tags']/@value" delim="," op="add">flying</csv>
+</GhussakTweaks>

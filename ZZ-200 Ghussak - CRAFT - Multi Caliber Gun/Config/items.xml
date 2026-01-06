@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="gunMultiCaliberT0" help="pipe low grade quality range damage etc, easy to craft">
+      <property name="Extends" value="gunRifleT2LeverActionRifle"/>
+      <property name="CustomIcon" value="gunRifleT2LeverActionRifle"/>
+      <property name="CustomIconTint" value="180,180,128"/>
+      <property name="RepairTools" value="resourceMetalPipe"/>
+      <property name="Material" value="MresourceMetalPipe"/>
+      <property class="Action0">
+        <!--				HELPGOOD:CODEGEN:
+				egrep -iRhI -\-include="*.xml" '<item.*name="ammo[^"]*"' ../* |egrep -oi 'name="[^"]*"' |cut -d= -f2 |tr -d '"' |tr ',' '\n' |sort -u |egrep -i "shotgun|bullet|junk" |egrep -vi "parts|npc|bundle"|sed 's@.*@&,@' |tr -d '\n'
+				
+				ISSUES: the hard limit seems to be 12, but the on-screen selection shows only 9 or 10(if you previously selected a melee weapon) (the not fitting overlap glitchly). accepted 15 here, and trying 22 crashes on loading. Anything above 10 will cause log errors.
+				The max of 10 selectable ammo options on screen wont bug.
+				
+				<property name="Magazine_items" value="ammo44MagnumBulletAP,ammo44MagnumBulletBall,ammo44MagnumBulletExplosive,ammo44MagnumBulletHP,ammo44MagnumBulletPsyonic,ammo762mmBulletAP,ammo762mmBulletBall,ammo762mmBulletExplosive,ammo762mmBulletHP,ammo762mmBulletPsyonic,ammo9mmBulletAP,ammo9mmBulletBall,ammo9mmBulletExplosive,ammo9mmBulletHP,ammo9mmBulletPsyonic,ammoJunkTurretAP,ammoJunkTurretRegular,ammoJunkTurretShell,ammoShotgunBreachingSlug,ammoShotgunExplosive,ammoShotgunShell,ammoShotgunSlug">
+				
+				<property name="Magazine_items" value="ammo44MagnumBulletAP,ammo44MagnumBulletBall,ammo44MagnumBulletExplosive,ammo44MagnumBulletHP,ammo44MagnumBulletPsyonic,ammo762mmBulletAP,ammo762mmBulletBall,ammo762mmBulletExplosive,ammo762mmBulletHP,ammo762mmBulletPsyonic,ammo9mmBulletAP,ammo9mmBulletBall,ammo9mmBulletExplosive,ammo9mmBulletHP,ammo9mmBulletPsyonic">
+				
+				<property name="Magazine_items" help="12 errors when trying to change ammo" value="ammo44MagnumBulletAP,ammo44MagnumBulletBall,ammo44MagnumBulletExplosive,ammo44MagnumBulletHP,ammo44MagnumBulletPsyonic,ammo762mmBulletAP,ammo762mmBulletBall,ammo762mmBulletExplosive,ammo762mmBulletHP,ammo762mmBulletPsyonic,ammo9mmBulletAP,ammo9mmBulletBall">
+-->
+        <property name="Magazine_items" help="10 ok (11 ok too, got added later thru patch). put all that are usually found on loot. add some extra of best quality (AP). added my psyonic special bullets that work based on active monster essences. Customize to what you prefer, the engine limit is 10 for now." value="ammo44MagnumBulletBall,ammo44MagnumBulletAP,ammo44MagnumBulletPsyonic,ammo762mmBulletBall,ammo762mmBulletAP,ammo762mmBulletPsyonic,ammo9mmBulletBall,ammo9mmBulletAP,ammo9mmBulletPsyonic,ammoShotgunShell">
+				</property>
+      </property>
+      <effect_group name="gunRifleT2LeverActionRifle" help="just a copy of the rifle, and then further patch it on the next group below">
+        <passive_effect name="MaxRange" operation="base_set" value="150" tags="perkDeadEye"/>
+        <passive_effect name="DamageFalloffRange" operation="base_set" value="69" tags="perkDeadEye"/>
+        <passive_effect name="DamageFalloffRange" operation="perc_add" value="-.1,.05" tier="1,6" tags="perkDeadEye"/>
+        <passive_effect name="BlockDamage" operation="base_add" value="-1" tags="perkDeadEye"/>
+        <passive_effect name="RoundsPerMinute" operation="base_set" value="82" tags="perkDeadEye"/>
+        <passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkDeadEye"/>
+        <passive_effect name="MagazineSize" operation="base_set" value="5" tags="perkDeadEye"/>
+        <passive_effect name="ReloadSpeedMultiplier" operation="base_set" value="1" tags="perkDeadEye"/>
+        <passive_effect name="ModSlots" operation="base_set" value="3,3,3,4,4,4" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="EntityDamage" operation="base_add" value="29" tags="perkDeadEye"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.02,.02" tags="perkDeadEye"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".05,.25" tier="2,6" tags="perkDeadEye"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.08,.08" tags="perkDeadEye"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDeadEye"/>
+        <passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDeadEye"/>
+        <passive_effect name="SpreadDegreesVertical" operation="base_set" value="6" tags="perkDeadEye"/>
+        <passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="6" tags="perkDeadEye"/>
+        <passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".066" tags="perkDeadEye"/>
+        <passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkDeadEye"/>
+        <passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkDeadEye"/>
+        <passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2" tags="perkDeadEye"/>
+        <passive_effect name="KickDegreesVerticalMin" operation="base_set" value="1.5" tags="perkDeadEye"/>
+        <passive_effect name="KickDegreesVerticalMax" operation="base_set" value="3.0" tags="perkDeadEye"/>
+        <passive_effect name="KickDegreesHorizontalMin" operation="base_set" value="-.2" tags="perkDeadEye"/>
+        <passive_effect name="KickDegreesHorizontalMax" operation="base_set" value=".2" tags="perkDeadEye"/>
+        <passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="11" tags="perkDeadEye"/>
+        <passive_effect name="WeaponHandling" operation="base_set" value=".7" tags="perkDeadEye"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="400,700" tier="1,6" tags="perkDeadEye"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDeadEye"/>
+        <passive_effect name="DamageModifier" operation="base_add" value="100" tags="head"/>
+      </effect_group>
+      <effect_group tiered="false" help="patch the rifle here">
+        <passive_effect name="MagazineSize" operation="base_set" value="3" tags="perkDeadEye"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,1,1,2,2,3" tier="1,2,3,4,5,6"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="200,600" tier="1,6" tags="perkDeadEye"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDeadEye"/>
+        <passive_effect name="MaxRange" operation="base_set" value="75" tags="perkDeadEye"/>
+        <passive_effect name="EntityDamage" operation="base_add" value="15" tags="perkDeadEye"/>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>

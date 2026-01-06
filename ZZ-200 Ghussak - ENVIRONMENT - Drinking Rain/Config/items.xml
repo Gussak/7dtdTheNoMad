@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="GSKbucketDrinkableWaterBundle">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="CustomIconTint" value="128,128,180"/>
+      <property name="CustomIcon" value="bucketRiverWater"/>
+      <property name="ItemTypeIcon" value="bundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="bucketEmpty,drinkJarBoiledWater,foodRottingFlesh" help="TODO: foodRottingFlesh should be dirt removed from the contamined water"/>
+        <property name="Create_item_count" value="1,30,1"/>
+        <property name="Random_item" value="modArmorWaterPurifier,electronicsParts,resourceForgedSteel" help="choses only one? resourceForgedSteel is like recovering just parts of modArmorWaterPurifier"/>
+        <property name="Random_item_count" value="0-1,1,3-5"/>
+      </property>
+    </item>
+    <item name="GSKCFGDrinkRainAllowed">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGDrinkRainAllowed"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKDrinkRainAllowed" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKDrinkRainAllowed" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKDrinkRainAllowed"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKDrinkRainAllowed"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKmeltSnowBallx10">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="drinkJarRiverWater"/>
+      <property name="CustomIconTint" value="220,220,220"/>
+      <property name="Material" value="Mglass"/>
+      <property name="DescriptionKey" value="dkGSKmeltSnowBall"/>
+      <property class="Action0">
+        <requirement name="!InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        <requirement name="CVarCompare" cvar="iGSKDenyMeltSnowBall" operation="LTE" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="player_drinking"/>
+        <property name="Create_item" value="drinkJarRiverWater"/>
+        <property name="Create_item_count" value="10"/>
+      </property>
+      <effect_group tiered="false">
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="90">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="30">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="60">
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="IsNight"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="180">
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="60">
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyMeltSnowBall" operation="set" value="120">
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKcollectRainWater">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="drinkJarRiverWater"/>
+      <property name="CustomIconTint" value="128,180,180"/>
+      <property name="Material" value="Mglass"/>
+      <property name="DescriptionKey" value="dkGSKcollectRainWater"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKDenyCollectRainTime" operation="LTE" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1"/>
+        <property name="Use_time" value="..."/>
+        <property name="Create_item" value="drinkJarRiverWater"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKDenyCollectRainTime" operation="set" value="1800" help="10mins to be able only to collect once per rain, but 30min to collect 2x per day like in being able to fill a whole jar only that much thru the day with many rains, so keeps dew collector still useful"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[    @name='apparelPlantFiberHat' or    @name='apparelPressboyCap' or    @name='apparelCowboyHat'   ]" help="rationale: the hat covering edge prevents rain touching the lens or eyes. Sync with item_modifiers.xml">
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfEquipStart" action="AddBuff" target="self" buff="buffGSKAntiRainBlurVision"/>
+      <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" target="self" buff="buffGSKAntiRainBlurVision"/>
+    </effect_group>
+  </append>
+  <!--	HELPGOOD:TODO:split into fire extinguish mini mod? this needs more tests to grant random mode is working and if selfAOE is necessary -->
+  <append xpath="/items/item[@name='meleeToolShovelT0StoneShovel']" help="based on sphereExtinguish item">
+    <effect_group name="chance to extinguish fire in one target block" tiered="false">
+      <triggered_effect trigger="onSelfDamagedBlock" action="RemoveFire, SCore" target="positionAOE" range="2" help="range is integer">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="65"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeToolShovelT1IronShovel']" help="based on sphereExtinguish item">
+    <effect_group name="chance to extinguish fire in one target block" tiered="false">
+      <triggered_effect trigger="onSelfDamagedBlock" action="RemoveFire, SCore" target="positionAOE" range="2" help="range is integer">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="80"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='meleeToolShovelT2SteelShovel']" help="based on sphereExtinguish item">
+    <effect_group name="chance to extinguish fire in one target block" tiered="false">
+      <triggered_effect trigger="onSelfDamagedBlock" action="RemoveFire, SCore" target="positionAOE" range="2" help="range is integer">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="95"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='bucketRiverWater']" help="based on sphereExtinguish item">
+    <effect_group name="chance to extinguish fire in one target block" tiered="false">
+      <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveFire, SCore" target="positionAOE" range="5" help="range is integer"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>

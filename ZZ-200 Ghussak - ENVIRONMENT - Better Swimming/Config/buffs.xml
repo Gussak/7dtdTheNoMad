@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKProperSwimming45" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimming45'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimming45'"/>
+        <triggered_effect trigger="onSelfSwimStart" action="AddBuff" buff="buffGSKProperSwimmingWork45" help="denied during bloodmoon as player would just avoid all zombies on water">
+          <requirement name="!IsBloodMoon"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKProperSwimmingWork45" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0" help="TODO: find a way to improve swimming up, is still ultra slow">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.25"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimmingWork45'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimmingWork45'"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="1.75" help="was 2.0, a bit too fast">
+          <requirement name="!IsBloodMoon"/>
+        </passive_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="5.0" help="must be much more to work well. was 7.5, too fast. in god mode where it is 15, is too fast tho for normal gameplay">
+          <requirement name="!IsBloodMoon"/>
+        </passive_effect>
+        <triggered_effect trigger="onSelfSwimStop" action="RemoveBuff" buff="buffGSKProperSwimmingWork45"/>
+      </effect_group>
+    </buff>
+    <buff name="_buffGSKProperSwimming45" hidden="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimming45'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimming45'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKProperSwimmingWork45">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="1"/>
+          <requirement name="!HasBuff" buff="buffGSKProperSwimmingWork45"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="_buffGSKProperSwimmingWork45" hidden="false" icon="ui_game_symbol_oxygen" icon_color="250,250,0">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.25"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKProperSwimmingWork45'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:'buffGSKProperSwimmingWork45'"/>
+        <passive_effect name="WalkSpeed" operation="perc_add" value="2.0"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="2.5"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKProperSwimmingWork45">
+          <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>

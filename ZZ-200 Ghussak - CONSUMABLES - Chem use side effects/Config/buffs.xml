@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKNearDeathChemUse" hidden="false" remove_on_death="true" description_key="dkbuffGSKNearDeathChemUse" icon="ui_game_symbol_steroids" icon_blink="true" icon_color="255,0,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value="iGSKNearDeathChemUse"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <update_rate value="60"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="set" value="@iGSKNearDeathChemUse"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNDCUStunChance" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffInjuryStunned03">
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKNDCUStunChance"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKHealthTreatment" hidden="false" remove_on_death="true" description_key="dkdrugGSKHealthTreatment" icon="ui_game_symbol_steroids" icon_blink="false" icon_color="0,255,0">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="0.001"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKHealthTreatment">
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKChemUseSideEffects31" hidden="true" remove_on_death="false">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="10"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHPBCUSTmp" operation="set" value="@fGSKHitpointsBlockageChemUse"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKHPBCUSTmp" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHitpointsBlockageChemUseShow" operation="set" value="@.iGSKHPBCUSTmp"/>
+        <passive_effect name="HealthMaxBlockage" operation="base_add" value="@iGSKHitpointsBlockageChemUseShow" help="TODO: wont work with perc_add?">
+          <requirement name="CVarCompare" cvar="iGSKHitpointsBlockageChemUseShow" operation="GT" value="0"/>
+        </passive_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="0.001" help="natural recovering from toxity"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="steroids long term effects">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKSteroidsLongTermEffect" operation="add" value="-0.00004" help="1/(7*3600)=0.0000396825 lasts 7 days">
+        <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GT" value="0"/>
+      </triggered_effect>
+      <passive_effect name="CarryCapacity" operation="base_add" value="@fGSKSteroidsLongTermEffect">
+        <requirement name="CVarCompare" cvar="fGSKSteroidsLongTermEffect" operation="GTE" value="1"/>
+      </passive_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="set" value="@fGSKSteroidsLongTermEffect"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWaterTmp" operation="divide" value="1000" help="having used enough steroids to add 100 slots will increase water and food consumption by 10%"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="set" value="@.fGSKSteroidsLongTermEffectFoodWaterTmp"/>
+      <passive_effect name="FoodLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+        <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+      </passive_effect>
+      <passive_effect name="WaterLossPerStaminaPointGained" operation="perc_add" value="@.fGSKSteroidsLongTermEffectFoodWater">
+        <requirement name="CVarCompare" cvar=".fGSKSteroidsLongTermEffectFoodWater" operation="GTE" value="0.01"/>
+      </passive_effect>
+    </effect_group>
+  </append>
+</GhussakTweaks>

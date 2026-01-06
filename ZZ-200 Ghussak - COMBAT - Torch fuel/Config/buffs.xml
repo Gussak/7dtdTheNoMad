@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKFlamesArmor" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddPart" part="FlamesArmor" prefab="property?FlameEffect" parentTransform="CameraNode" localPos="0.2,0.3,0" localRot="-90,180,0" help="ISSUE: after joining the game, the only way is to unequip and re-equip armor (just drag a bit and drop) or this wont work, why? if the buff is removed and added while sneaking/standing at night, this should work."/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemovePart" part="FlamesArmor"/>
+      </effect_group>
+    </buff>
+    <buff name="buffFireAddFuel" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="3600">
+          <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="GT" value="3600"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuel" operation="add" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuel" operation="set" value="@fGSKFireFuelMax">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="@fGSKFireFuelMax"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffFireAddFuelFull" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="3"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:buffFireAddFuelFull"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:ENDED:buffFireAddFuelFull"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffFireAddFuel">
+          <requirement name="CVarCompare" cvar="iGSKfireFuelAdd" operation="GT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfireFuelAdd" operation="subtract" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffFireAddFuelFull">
+          <requirement name="CVarCompare" cvar="iGSKfireFuelAdd" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKfireFuelAdd" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKfireFuelAdd" operation="LT" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="iGSKfireFuelAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar="fGSKFireFuel"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKmodActiveFlamesTorch" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKFlamesConsumeFuel"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKmodActiveFlamesMeleeToolWeapon" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKFlamesConsumeFuel"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKmodActiveFlamesArmor" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKFlamesConsumeFuel"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKFlamesConsumeFuel" hidden="false" remove_on_death="false" name_key="FlamesConsumeFuel" description_key="dkbuffGSKFlamesConsumeFuel">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group help="try douse: init">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="0" help="swap back to torch to lit it up"/>
+      </effect_group>
+      <effect_group help="try douse: rain check">
+        <requirement name="CVarCompare" cvar=".iGSKIsRainingOnPlayer" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKShownWetnessPerc" operation="GT" value="0"/>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,400" operation="LTE" value="@$WetTempModifierDisplay" help="0-100 shown wetness. 0-400 means max 25% chance to douse."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="set" value="randomInt(0,300)"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The rain doused the torch's fire..."/>
+      </effect_group>
+      <effect_group help="try douse: no flame mod nor torch on hand">
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+      </effect_group>
+      <effect_group help="try douse: armor flame during day">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        <requirement name="!IsNight"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The sun rises, auto dousing armor torch."/>
+      </effect_group>
+      <effect_group help="try douse: armor flame and crouched(sneaking) at night">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Sneaking at night, auto dousing armor torch."/>
+      </effect_group>
+      <effect_group help="apply douse">
+        <requirements compare_type="or">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LTE" value="0"/>
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveParticleEffectFromEntity" particle="torch02_firePrefab" parent_transform="Side">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemovePart" part="Flames">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKFlamesArmor">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKFlamesConsumeFuel"/>
+      </effect_group>
+      <effect_group help="light up">
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+        <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AttachParticleEffectToEntity" particle="torch02_firePrefab" parent_transform="Side">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddPart" part="Flames" prefab="property?FlameEffect" parentTransform="#HeldItemRoot">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesArmor">
+          <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="try light up armor torch">
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOutSub" operation="set" value="randomInt(0,100)"/>
+    </effect_group>
+    <effect_group help="try light up armor torch">
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="GT" value="0"/>
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOutSub" operation="GT" value="@fGSKFireFuel"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,600" operation="LTE" value="@fGSKFireFuel" help="sync max with initial firefuel limit"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDousedByRainTimeOut" operation="subtract" value="@.iGSKFireDousedByRainTimeOutSub"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFireFuel" operation="subtract" value="@.iGSKFireDousedByRainTimeOutSub" help="consumes more fuel to try to light up torch again after wet by rain TODO: could just consume more fuel in rain? but would not be dramatic ;)"/>
+    </effect_group>
+    <effect_group help="try light up armor torch">
+      <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GT" value="0"/>
+      <requirement name="CVarCompare" cvar=".iGSKFireDousedByRainTimeOut" operation="LTE" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+</GhussakTweaks>

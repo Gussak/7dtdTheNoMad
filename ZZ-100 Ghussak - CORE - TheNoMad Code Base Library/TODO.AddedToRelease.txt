@@ -1,0 +1,13 @@
+#### TODO ####
+
+#### MAY BE, ON DEMAND ####
+# fix/update mesh files paths, this will show them with the wrong values
+#clear;egrep -iRnIa 'mesh.*[#].*[?]' * --include="*.xml" -c |grep -v :0 #NOT GOOD, is matching lines with "modfolder"
+clear;egrep -iRnIa 'mesh.*value="[#][a-zA-Z0-9/]*[?]' * --include="*.xml" # shows problems
+#clear;egrep -iRnIa 'mesh.*value="[#][a-zA-Z0-9/]*[?]' * --include="*.xml" |sed -r -e 's!(property.*mesh.*value=")#!\1@:!i' -e 's!(property.*mesh.*value="@:[^?]*)[?]!\1/!i' # test: the '#' becomes '@:' and '?' becomes '/'
+#NO clear;egrep -iRnIa 'mesh.*value="[#][a-zA-Z0-9/]*[?]' * --include="*.xml" -c |grep -v :0 |cut -d: -f1 |while read strFl;do echo sed -i -r -e 's!(property.*mesh.*value=")#!\1@:!i' -e 's!(property.*mesh.*value="@:[^?]*)[?]!\1/!i' "$strFl";done
+clear;egrep -iRnIa 'mesh.*value="[#][a-zA-Z0-9/]*[?]' * --include="*.xml" -c |grep -v :0 |cut -d: -f1 |while read strFl;do echo sed -i -r -e 's!(property.*mesh.*value=")#([a-zA-Z0-9/]*)[?]!\1@:\2/!i' "$strFl";done # the '#' becomes '@:' and '?' becomes '/'
+
+# tho... ex.: <property name="Mesh" value="#@modfolder:Resources/XythNPCs.unity3d?NurseNancy_X"/> for example works..., may be value="@:..." is only for vanilla assets?
+
+#### DONE ####

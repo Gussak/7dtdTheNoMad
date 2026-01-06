@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items/item[@name='resourceMechanicalParts']">
+    <property name="RepairTime" value=".5"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
+  <append xpath="/items/item[@name='resourceElectricParts']">
+    <property name="RepairTime" value=".5"/>
+    <property name="RepairAmount" value="100"/>
+  </append>
+  <set xpath="/items/item[@name='meleeToolSalvageT1Wrench']/property[@name='RepairTools']/@value">resourceMechanicalParts</set>
+  <append xpath="/items">
+    <item name="meleeToolSalvageT0MakeshiftWrench">
+      <property name="Extends" value="meleeToolSalvageT1Wrench" help="you still need to copy the effect groups from meleeToolSalvageT1Wrench of vanilla xml tho, and patch after in the end"/>
+      <effect_group name="meleeToolSalvageT1Wrench">
+        <passive_effect name="AttacksPerMinute" operation="base_set" value="50"/>
+        <passive_effect name="StaminaLoss" operation="base_set" value="16.5" tags="primary"/>
+        <passive_effect name="DegradationMax" operation="base_set" value="200,700" tier="1,6" tags="perkSalvageOperations"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkSalvageOperations"/>
+        <passive_effect name="MaxRange" operation="base_set" value="2.4" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockRange" operation="base_set" value="3.5" tags="perkSalvageOperations"/>
+        <passive_effect name="ModSlots" operation="base_set" value="1,1,1,2,2,3" tier="1,2,3,4,5,6"/>
+        <passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage"/>
+        <passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue"/>
+        <passive_effect name="EntityDamage" operation="base_set" value="16.5" tags="perkSalvageOperations"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value="-.04,.04" tags="perkSalvageOperations"/>
+        <passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="base_set" value="39" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="-.04,.04" tags="perkSalvageOperations"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkSalvageOperations"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="wood"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.75" tags="earth"/>
+        <passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="stone"/>
+        <passive_effect name="HarvestCount" operation="base_set" value="1" tags="salvageHarvest"/>
+      </effect_group>
+      <effect_group name="Power Attack">
+        <passive_effect name="EntityDamage" operation="perc_add" value="1" tags="secondary"/>
+        <passive_effect name="BlockDamage" operation="perc_add" value="1" tags="secondary"/>
+        <passive_effect name="StaminaLoss" operation="base_set" value="25" tags="secondary"/>
+      </effect_group>
+      <!-- HELPGOOD: patch for makeshift -->
+      <property name="CustomIcon" value="meleeToolSalvageT1Wrench"/>
+      <property name="CustomIconTint" value="255,180,70"/>
+      <property name="RepairTools" value="resourceMechanicalParts"/>
+      <property name="DegradationBreaksAfter" value="true"/>
+      <property name="EconomicValue" value="25" help="just to be used to calc in case of being added to free kits"/>
+      <property name="SellableToTrader" value="false"/>
+      <effect_group name="meleeToolSalvageT0MakeshiftWrench">
+        <passive_effect name="DegradationMax" operation="base_set" value="200" tier="1"/>
+        <passive_effect name="DegradationPerUse" operation="base_set" value="4" help="this is to require more parts to repair it at degradation"/>
+      </effect_group>
+    </item>
+  </append>
+</GhussakTweaks>

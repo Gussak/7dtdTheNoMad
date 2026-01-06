@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <!-- HELPGOOD: this moves the ammo, scrap results etc up enough to fit the hud below it -->
+  <setattribute xpath="/windows/window[@name='HUDRightStatBars']" name="pos">0,160</setattribute>
+  <append xpath="/windows" help="this is a helper hint about radiation level, for some reason I keep ignoring it even with the strong screen effect...">
+    <window name="HUDGSKRadiationHint">
+      <rect name="hud" pos="-225,515" rows="1" cols="1" width="150" side="right">
+        <label depth="0" pos="0,25" name="RadHint" width="450" height="150" pivot="center" justify="center" text="RAD:{cvar($buffStatusRadiation:0)}% {cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}{cvar(iGSKRadHintDummy:0)}" font_size="100" color="255,255,128,80" controller="HUDStatBar" tooltip_key="xuiGSKRadHint" help="linebreak '\n' seems to make no difference, put a space and let it auto break the line. the repeated dummies are intended to auto shrink the font when they have big numbers."/>
+      </rect>
+    </window>
+  </append>
+  <!--HELPGOOD: The NoMAD HUD-->
+  <append xpath="/windows" help="The NoMAD HUD: devices status, tactical info, biometric scanner (TODO: unfortunately no bar graphs possible to show cvar values?)">
+    <window name="HUDGSKElctrnEnergy">
+      <rect name="hud" pos="-225,115" rows="1" cols="1" width="450" side="right">
+        <sprite depth="1" name="border" color="0,128,255,128" type="sliced" fillcenter="false"/>
+        <sprite depth="2" name="windowIcon" width="460" height="173" pos="-235,55" sprite="7dtdGskElctrnHud4" color="[iconColor]" foregroundlayer="false" help="width is rectWidth+10, pos is rectPos-10 (btw rect pos x is already negative)"/>
+        <label depth="3" pos="0,25" name="ElctrnHeroMode" width="450" height="42" pivot="center" justify="center" text="HL!{cvar(bGSKEnergyHL)},WL!{cvar(bGSKEnergyWL)},NV!{cvar(bGSKEnergyNV)},TT!{cvar(bGSKEnergyTT)},TS!{cvar(bGSKEnergyTS)},TA:{cvar(bGSKEnergyTA)},TH:{cvar(bGSKEnergyTH)}/!{cvar(iGSKElctrnHeroMode)}!,TR:{cvar(bGSKEnergyTR)},TP:{cvar(bGSKEnergyTP)},TB:{cvar(bGSKEnergyTB)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiGSKEnergyEnabledModes"/>
+        <label depth="3" pos="0,0" name="ElctrnHeroLvl" width="450" height="42" pivot="center" justify="center" text="CFG({cvar(.fGSKCFGTMPval1:0.00)},{cvar(.fGSKCFGTMPval2:0.00)}),TP(DI:{cvar(iGSKElctrnTeleportDistIndex:0)},UD:{cvar(iGSKElctrnTeleportMixUpDown:0)},SI:{cvar(iGSKElctrnTeleSkyDistIndex:0)},B:{cvar(iGSKTeleportedToSpawnPointBiomeId:0)}),XL:{cvar(.fGSKExpDebtPercx100:0)}%,{cvar(.fGSKExpDebtTmRemain:0)}h,MP:{cvar(iGSKMeleeParryChance:0)}%,MO:{cvar(fGSKPoisonedMeleePiercing:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiGSKEnergyLvls"/>
+        <label depth="3" pos="0,-25" name="LightsDamageConditions" width="450" height="42" pivot="center" justify="center" text="Dmg%HL:{cvar(iGSKDmgPercHLShow:0)},WL:{cvar(iGSKDmgPercWLShow:0)},NV:{cvar(iGSKDmgPercNVShow:0)},TT:{cvar(iGSKDmgPercTTShow:0)},TS:{cvar(iGSKDmgPercTSShow:0)},TA:{cvar(iGSKDmgPercTAShow:0)},TH:{cvar(iGSKDmgPercTHShow:0)},TR:{cvar(iGSKDmgPercTRShow:0)},TP:{cvar(iGSKDmgPercTPShow:0)},TB:{cvar(iGSKDmgPercTBShow:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiEnergyWiringDamageConditions"/>
+        <label depth="3" pos="0,-50" name="NVBattery" width="450" height="42" pivot="center" justify="center" text="Battery:{cvar(iGSKBatteryChargePercShow:0)}%,({cvar(iGSKBatteryCharges:0.00)}/{cvar(fGSKBattMaxChargeCurrent:0)}),FF:{cvar(fGSKFireFuel:0)}/{cvar(fGSKFireFuelMax:0)},DC:{cvar(.fGSKDmgColdProtx100:0)},DH:{cvar(.fGSKDmgHeatProtx100:0)},GM:{cvar(iGSKMiasmaBlockPercExtra:0.0)},B:{cvar(.iGSKBiomeId:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiNVBatteryEnergy"/>
+        <label depth="3" pos="0,-75" name="NVBattBar" width="450" height="42" pivot="center" justify="center" text="DR:{cvar(iGSKDrinkingRain:0)},IB:{cvar(fGSKinfectionCounterBkp:0)},IC:{cvar(fGSKinfectionCureCounterBkp:0)},NPD:{cvar(fNPCPreventDismissSecs:0)},NRA:{cvar(fRepairNPCArmor:0.00)},HM:{cvar(fGSKMiasmaDirty:0)},RR:{cvar(fGSKRadResPerc:0.00)},HS:{cvar(fGSKHazmatSuitIntegrity:0.00)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiHiddenStats"/>
+        <!-- HELPGOOD:TemporarilyRemovedWontFit:notSoUseful:AlreadyInBuffs: ND:{cvar(iGSKNearDeath:0.0)},HW:{cvar(iGSKNDHWTime:0)},GH:{cvar(bGSKAllowGoreHarvest:0)},WB:{cvar(fGSKWaterPercBkp:0.00)} -->
+        <label depth="3" pos="0,-100" name="NVBattBar" width="450" height="42" pivot="center" justify="center" text="SD:{cvar(_shaded:0.00)},UW:{cvar(_underwater:0)},WT:{cvar(_wetness:0.00)},SW:{cvar(fGSKShownWetnessPerc:0.00)},SH:{cvar(_sheltered:0.00)},CT:{cvar(_coretemp:0)},BR:{cvar(_biomeradiation:0.0)},BL:{cvar(fGSKBloodLossShow:0)},HC:{cvar(iGSKHitpointsBlockageChemUseShow:0)}" font_size="21" color="[green]" controller="HUDStatBar" tooltip_key="xuiHiddenStats2"/>
+        <!--HELPGOOD:    not working, fill cant be cvar? :( 
+    <filledsprite depth="14" name="BarBattMax" color="[red]"   width="77" height="5" type="filled" fill="1.0" 
+      pos="-1,-29" pivot="center" justify="center"/>
+    <filledsprite depth="15" name="BarBatt"    color="[green]" width="75" height="3" type="filled" fill="{cvar(fGSKBatteryChargePerc)}" 
+      pos="0,-30" pivot="center" justify="center"/>
+    -->
+      </rect>
+    </window>
+  </append>
+  <!--HELPGOOD: inventories improvements-->
+  <setattribute xpath="/windows/window[@name='windowBackpack']/panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnSort']" name="defaultcolor">255,180,180,128</setattribute>
+  <remove xpath="/windows/window[@name='windowBackpack']/sprite[@name='spriteDesign1001']" help="cleans the view"/>
+  <remove xpath="/windows/window[@name='windowVehicleStorage']//sprite[@name='spriteDesign1003']" help="cleans the view"/>
+  <!-- HELPGOOD: better places some buttons to avoid missclicking -->
+  <set xpath="/windows/window[@name='windowLooting' or @name='windowVehicleStorage']/     panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnSort']/@pos">84, -22</set>
+  <set xpath="/windows/window[@name='windowLooting' or @name='windowVehicleStorage']/     panel[@name='header']/rect[@controller='ContainerStandardControls']/button[@name='btnMoveFillAndSmart']/@pos">174, -22</set>
+  <setattribute xpath="//button[@name='btnMoveAll']" name="defaultcolor">[red]</setattribute>
+  <setattribute xpath="//button[@name='btnMoveFillAndSmart']" name="defaultcolor">255,255,0,255</setattribute>
+  <!--
+HELPGOOD:
+
+  just a failed test to let more items be stored, it ends just bugging out, item's icons wont scale to the new inv size
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cols">24</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@rows">20</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cell_width">35</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/@cell_height">35</set>
+  <set xpath="/windows/window[@name='windowVehicleStorage']/grid[@name='queue']/item_stack/@name">3</set>
+  
+  no paging happens even after inv is full
+	<append xpath="/windows/window[@name='windowVehicleStorage']">
+				<panel depth="100" pos="540,0" width="104" height="43" disableautobackground="true" visible="{paging_visible}">
+					<pager name="pager" pos="4,-6" />
+				</panel>
+</append>
+
+storage stops working when looting or from NPC invs
+<set xpath="/windows/window[@name='windowLooting']/@controller">VehicleContainer</set>
+-->
+  <!-- HELPGOOD: show blockages clearly. patch for HUD Improved - 100 - AGF-A20HUDPlus1.4.1 -->
+  <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/sprite[@name='background' and @type='sliced']/@color" help="must be the filled background that shows the blockage">200,250,0,255</set>
+  <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/filledsprite[@name='background' and @color='110,110,110,128']/@color" help="must be opaque to not let yellow pass thru">0,0,0,255</set>
+  <set xpath="/windows/window[@name='HUDLeftStatBars']/rect[@name='hud']/rect[@stat_type='Health' or @stat_type='Stamina' or @stat_type='Food' or @stat_type='Water']/label[@name='TextContent']/@color" help="the text must contrast with all backgrounds to be clearly readable">[green]</set>
+  <append xpath="/windows/window[@name='HUDLeftStatBars']" help="drain pools">
+    <rect name="drainHud" depth="50" anchor="RightTop" pos="225,100" width="300" side="right" controller="HUDStatBar">
+      <label depth="0" pos="0,0" name="DrainedHP" width="100" height="20" pivot="left" justify="left" text="HP: {cvar(iGSKHitpointsPool:0)}" font_size="20" color="255,200,200,255" tooltip_key="xuiGSKDrainPool"/>
+      <label depth="0" pos="0,-25" name="DrainedStam" width="150" height="20" pivot="left" justify="left" text="Stam: {cvar(iGSKstaminaPool:0)}" font_size="20" color="200,200,255,255" tooltip_key="xuiGSKDrainPool"/>
+      <label depth="0" pos="0,-50" name="EssencesStack" width="150" height="20" pivot="left" justify="left" text="EsStk: {cvar(iGSKEssenceStack:0)}" font_size="20" color="200,200,255,255" tooltip_key="xuiGSKDrainPool"/>
+      <label depth="0" pos="0,-75" name="ShamanPower" width="300" height="20" pivot="left" justify="left" text="Pw/Mx/EsL: {cvar(iGSKNearDeathShamanPowerLvl:0.00)} / {cvar(iGSKNearDeathShamanPowerLvlMax:0.00)} / {cvar(iGSKShamanPowerLimit:0)}" font_size="20" color="200,200,255,255" tooltip_key="xuiGSKDrainPool"/>
+    </rect>
+  </append>
+  <!--HELPGOOD: buffs display improvement-->
+  <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@rows">19</set>
+  <set xpath="/windows/window[@name='ActiveBuffsWindow']/panel[@name='content']/grid[@name='buffs']/@depth" help="in a normal gameplay, if there are too many things there, the top ones would become unclickable with vanilla">50</set>
+  <!-- HELPGOOD: more space for items descriptions TODO: review later if needed/useful, this seem to depend on other mod that changes vanilla layout
+  <set xpath="//rect[@name='description']/@width">908</set>
+  <setattribute xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']/panel[@name='header']" name="width" help="better readable big title or name">913</setattribute>
+  <setattribute xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']/panel[@name='header']/label[@style='header.name']" name="width"  help="better readable big title or name">913</setattribute>
+  <set xpath="//window[@name='craftingInfoPanel' or @name='buffInfoPanel' or @name='itemInfoPanel']//rect[@name='description' and not(@visible='{showstatanddescription}')]/sprite[@name='backgroundMain' and @fillcenter='false']/@width">913</set>
+  <remove xpath="//window[@name='itemInfoPanel']//rect[@name='description' and @visible='{showstatanddescription}']/sprite[@name='backgroundMain' and @fillcenter='false']" help="the stat remaining short dont look good with the large border line"/>
+  <set xpath="//label[@name='descriptionText' and (@text='{itemdescription}' or @text='{buffdescription}')]/@width">900</set>
+  <remove xpath="//rect[starts-with(@name,'content')]//sprite[@width='603' and @name='backgroundMain' and @sprite='menu_empty3px' and @fillcenter='false']" help="wont look good but wont be over the text at least"/>
+-->
+  <!-- HELPGOOD: more space for recipes names TODO: this needs to be sync with controls.xml:recipe_entry
+  <set xpath="//window[@name='windowCraftingList']/panel[@name='content']/grid[@name='recipes']/@width" help="was 390">440</set>
+  <set xpath="//window[@name='windowCraftingList']/panel[@name='content']/grid[@name='recipes']/@cell_width" help="was 390">440</set>
+  <set xpath="//window[@name='windowCraftingList']/panel[@name='content']/grid[@name='recipes']/@pos" help="was 3,-98">-47,-98</set>
+-->
+  <!--  HELPGOOD: extra player's stats bars to not need to look at bottom left always.-->
+  <append xpath="//window[@name='windowToolbelt']" help="Extra HP Stamina bars">
+    <rect pos="3,-1" width="500" anchor="CenterBottom" height="3" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}">
+      <filledsprite depth="20" name="BarContent" color="64,128,255,255" width="1120" type="filled" fill="0"/>
+    </rect>
+    <rect pos="3,-75" width="500" anchor="CenterBottom" height="3" controller="HUDStatBar" stat_type="Health" visible="{statvisible}">
+      <filledsprite depth="20" name="BarContent" color="255,0,0,255" width="1120" type="filled" fill="0"/>
+    </rect>
+  </append>
+  <append xpath="//window[@name='onScreenIcons']" help="Extra HP Stamina bars, +-aligned with crosshairs">
+    <filledsprite depth="18" pos="36,7" width="30" anchor="CenterCenter" height="3" name="background" color="255,255,0,255" type="filled" fill="1" help="background yellow to show blockage"/>
+    <rect pos="36,7" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}" help="good pos=21,7. new pos is to let the damaged icon not be over it.">
+      <filledsprite depth="19" name="statModMax" color="0,255,255,255" width="30" type="filled" fill="{statmodifiedmax}" help="cyan to show current max"/>
+      <filledsprite depth="20" name="BarContent" color="0,0,255,255" width="30" type="filled" fill="0" help="name=BarContent is hardcoded identifier?"/>
+    </rect>
+    <filledsprite depth="18" pos="-66,7" width="30" anchor="CenterCenter" height="3" name="background" color="255,255,0,255" type="filled" fill="1" help="background yellow to show blockage"/>
+    <rect pos="-66,7" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Health" visible="{statvisible}" help="TODO: make it draw inverted (from right to left) how? good pos=-51,7">
+      <filledsprite depth="19" name="statModMax" color="0,255,255,255" width="30" type="filled" fill="{statmodifiedmax}" help="cyan to show current max"/>
+      <filledsprite depth="20" name="BarContent" color="255,0,0,255" width="30" type="filled" fill="0" help="name=BarContent is hardcoded identifier?"/>
+    </rect>
+  </append>
+  <!-- HELPGOOD: did not show up?
+  <append xpath="/windows" help="Extra HP Stamina bars">
+    <window name="extraHpAndStaminaBarsOnCrosshair" width="2080" height="1024" anchor="CenterCenter" controller="CompassWindow" cursor_area="false" depth="-290">
+      <filledsprite depth="19" pos="35,0" width="30" anchor="CenterCenter" height="3" name="background" color="0,0,0,200" type="filled" fill="1"/>
+      <rect pos="5,0" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}">
+        <filledsprite depth="20" name="BarContent" color="0,0,255,200" width="30" type="filled" fill="0" />
+      </rect>
+      <filledsprite depth="19" pos="-35,0" width="30" anchor="CenterCenter" height="3" name="background" color="0,0,0,200" type="filled" fill="1"/>
+      <rect pos="-35,0" width="30" anchor="CenterCenter" height="3" controller="HUDStatBar" stat_type="Health" visible="{statvisible}">
+        <filledsprite depth="20" name="BarContent" color="255,0,0,200" width="30" type="filled" fill="0" />
+      </rect>
+    </window>
+  </append>
+-->
+  <!-- HELPGOOD: BloodMoon HINT-->
+  <append xpath="//window[@name='windowCompass']" help="BloodMoonHighlyVisibleAlertHINT: trying to call more attention to blood moon day by placing a highly visible hint in a location that the player will always look at.">
+    <!-- HELPGOOD: increases easy difficulties into challenging 
+  xml help: 
+    < is &lt;
+    > is &gt;
+    <= is &lt;=
+    >= is &gt;=
+    != is !=
+    == is ==
+    
+    HELPGOOD: nothing works for cvar comparisons?
+		<rect name="hintLowHP" pos="-420,-1025" width="200" height="45" rows="1" cols="1" visible="{{cvar(iGSKplayerLowHP:0)} == 1}" help="TODO:RM: this is a test to try to make low HP be clearly visible all the time">
+			<filledsprite depth="4" name="borderHintLowHP" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
+		</rect>
+		<rect name="hintLowHP" pos="-420,-1025" width="200" height="45" rows="1" cols="1" visible="{{cvar(iGSKplayerCurrentHP:0)} &lt; '50'}" help="TODO:RM: this is a test to try to make low HP be clearly visible all the time">
+			<filledsprite depth="4" name="borderHintLowHP" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
+		</rect>
+		<rect name="hintHighHP" pos="-420,-925" width="200" height="45" rows="1" cols="1" visible="{{cvar(iGSKplayerCurrentHP:0)} &gt;= 50}" help="TODO:Just remove this">
+			<filledsprite depth="4" name="borderHintHighHP" color="0,128,255,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center"/>
+		</rect>
+-->
+    <rect name="hintBloodMoon" pos="-300,-1250" width="200" height="44" rows="1" cols="1" visible="{#daycolor == 'FF0000'}" help="old: pos=-300,-1000 for vanilla?">
+      <filledsprite depth="3" name="BackgroundBloodMoonHint" color="255,0,0,64" type="filled" fill="1.0" pivot="center" justify="center"/>
+      <filledsprite depth="4" name="borderBloodMoonHint" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center" help="ISSUE: at low res monitor 1280x720, the top or bottom line will not be drawn depending on the height or y position of the external rectangle, so modifying them may be difficult to precisely fix this. FAIL: h46,45,44 y-1250 "/>
+      <filledsprite depth="4" name="borderBloodMoonHint" height="42" color="255,128,0,255" type="filled" fillcenter="false" fill="1.0" pivot="center" justify="center" help="trying workaround to above issue, create border a 2nd time"/>
+      <label depth="5" text="[888888]BloodMoon[000000]Tonight" font_size="28" pivot="center" effect="outline" justify="center" color="255,255,255,220" help="the color attrib RGB components seems to work like brightness over colors at text attrib. {daycolor} expands to FF0000 (on bloodmoon) or FFFFFF strings"/>
+    </rect>
+  </append>
+</GhussakTweaks>

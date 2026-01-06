@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <set xpath="/items/item[@name='meleeHandAnimalWolf' or @name='meleeHandAnimalDireWolf']/effect_group[@name='meleeHandAnimalWolf']/triggered_effect[@trigger='onSelfAttackedOther' and @action='AddBuff']/@weights" help="was: .11,.07,.07,.05,.29,.36,.11 this is to make being bitten on the leg much harder to deal with">.11,.07,.33,.05,.29,.36,.11</set>
+  <append xpath="/items/item[starts-with(@name,'meleeHandAnimal') and      (       contains(@name,'Dog') or        contains(@name,'Wolf') or        contains(@name,'Coyote') or        contains(@name,'Bear') or       contains(@name,'Lion')      )]" help="boars too, they use meleeHandAnimalWolf">
+    <effect_group help="Fang hold up">
+      <requirement name="NotHasBuff" target="self" buff="buffGSKSnakePoisonWork55"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffGSKBeastFangsHoldup">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group help="strong push and ragdoll">
+      <requirement name="NotHasBuff" target="self" buff="buffGSKSnakePoisonWork55" help="as it weakens"/>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="1">
+        <requirement name="EntityTagCompare" tags="boar" target="self"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="2">
+        <requirement name="EntityTagCompare" tags="mountainlion" target="self"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar=".iGSKTryRagdollSelf" operation="add" value="3">
+        <requirement name="EntityTagCompare" tags="bear" target="self"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+</GhussakTweaks>

@@ -1,0 +1,994 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKGodModeMinimum" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,250,180" help="minimum help to player. put here only stuff that do not heal nor feed etc, things that do not prevent spending resources after the god mode ends">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.33"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Stamina" operation="add" value="100" help="this let player move and fight"/>
+        <passive_effect name="CarryCapacity" operation="base_set" value="160"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PlayerExpGain" operation="perc_add" value="-1.00" help="this prevent player abuse the god mode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKRadiationBkpGodModeMin" operation="set" value="@$buffStatusRadiation" help="the player may try to heal radiation, this copes with it">
+          <requirement name="CVarCompare" cvar="fGSKRadiationBkpGodModeMin" operation="GT" value="@$buffStatusRadiation"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="@fGSKRadiationBkpGodModeMin" help="prevents increasing the radiation">
+          <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="@fGSKRadiationBkpGodModeMin"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeForEnterGameDuringBloodMoon" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after entering the game during a blood moon and being instantly received by many zombies surrouding.">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeEGDBM"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="set" value="150"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeEGDBM" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeEGDBM" operation="LTE" value="0"/>
+        </triggered_effect>
+        <passive_effect name="RunSpeed" operation="perc_add" value="3.00" help="do not increase walkspeed to let player decide if wanna run"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="3.00"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
+          <requirement name="!HasBuff" buff="buffGSKGodModeMinimum"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeMinimum"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeForEnterGameDuringBloodMoon'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeFull" hidden="false" help="do not create a recipe to activate this duh. You can place super powers here, this is NOT meant to protect the player in a normal gameplay in special moments" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,250,155">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="god">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <passive_effect name="RunSpeed" operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="5"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFull'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodMode" hidden="false" help="do not create a recipe to activate this duh. DO NOT PUT SUPER POWERS HERE, this is meant just to protect the player in special moments in a normal gameplay" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="132,180,180">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="100"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0" help="or it is unplayable at ND lvl 5, but ND lvls will kick in after god mode ends"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKPoisonDur" operation="set" value="0" help="or it will kick in as soon god mode ends. this is equivalent to using antidote tho..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveAllNegativeBuffs"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeMinimum">
+          <requirement name="!HasBuff" buff="buffGSKGodModeMinimum"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeMinimum"/>
+        <!-- HELPGOOD: DO NOT PUT SUPER POWERS HERE, this is meant to protect the player too in special moments in a normal gameplay
+        <passive_effect name="WalkSpeed" operation="perc_add" value="5.0"/>
+        <passive_effect name="RunSpeed"  operation="perc_add" value="15.0" help="do not add extra walk speed to keep this buff more usable, if you want extra speed you just run, best when flying in dev mode"/>
+-->
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodMode'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeRespawn" hidden="false" help="do not create a recipe to activate this duh. " tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="100,250,200" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0" help="controlled by .iGSKGodModeRespawnTm tho"/>
+      <update_rate value="1"/>
+      <display_value value=".iGSKGodModeRespawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="LT" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnRespawnCount" operation="GTE" value="1" help="only on respawns"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="set" value="15" help="it may take some seconds to generate the world in the new location, also about 5s for the engine wakeup animation, and the player may need time to decide to use the teleport to backpack item before dieing again. shall not be enough time to the player get back the backpack"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeRespawnTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodMode">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+          <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode">
+          <requirement name="!HasBuff" buff="buffGSKGodModeFirstSpawn"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeRespawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeRespawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Rise from your grave!"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeRespawn'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeFirstSpawn" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200" icon_blink="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <requirements>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+      </requirements>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="1st spawn only"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeNewbie"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="GT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeFirstSpawn">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeFirstSpawn'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeNewbie" hidden="false" help="do not create a recipe to activate this duh. " description_key="dkbuffGSKGodModeFirstSpawn" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,200">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeFirstSpawnTm"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeFirstSpawnTm" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeNewbie">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeFirstSpawnTm" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeNewbie'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeDeusExBless" hidden="false" description_key="dkbuffGSKGodModeDeusExBless" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="32,250,250">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <display_value value=".iGSKGodModeDeusExBless"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="set" value="66"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKGodModeDeusExBless" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKGodModeDeusExBless">
+          <requirement name="CVarCompare" cvar=".iGSKGodModeDeusExBless" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodMode"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:STARTED:'buffGSKGodModeDeusExBless'"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKGodModeForTeleport" hidden="false" description_key="buffGodModeDesc" tooltip_key="buffGodModeTooltip" icon="ui_game_symbol_add" icon_color="220,220,180" help="sometimes the player may die just after teleporting, this is to prevent that. for player and NPCs following him/her.">
+      <stack_type value="replace"/>
+      <duration value="10"/>
+      <update_rate value="0.05"/>
+      <display_value_key value="buffGodModeNameShort"/>
+      <display_value value="xxx"/>
+      <effect_group>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="ElementalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200"/>
+        <passive_effect name="PhysicalDamageResist" operation="base_add" value="200" tags="coredamageresist,cold,heat,electrical"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" target="selfAOE" range="1000" help="protects NPCs following the player from teleport explosion">
+          <requirement name="EntityTagCompare" tags="player"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="EntityTagCompare" target="other" tags="npc"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDetectEnterGame">
+      <stack_type value="ignore"/>
+      <duration value="0.15" help="to happen only one update as fast as possible. keep like this so other buffs can be added from here by using onSelfBuffUpdate thru append modlet patch too"/>
+      <update_rate value="0.10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnEnterGameCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnEnterGameCount"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="add" value="60" help="prevent swarming the player just after join">
+          <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LT" value="60"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You should Teleport Underground right now!">
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1"/>
+        </triggered_effect>
+        <!-- HELPGOOD: mmm...
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForEnterGameDuringBloodMoon" help="ISSUE: can only add another buff onSelfBuffUpdate right? would fail onSelfBuffStart right? TODO: could instead just kill all zombies, but prevent dropping loot then">
+					<requirement name="IsBloodMoon"/>
+				</triggered_effect>
+-->
+      </effect_group>
+    </buff>
+    <buff name="buffGSKDetectRespawn">
+      <stack_type value="ignore"/>
+      <duration value="0.15" help="to happen only one update as fast as possible. keep like this so other buffs can be added from here by using onSelfBuffUpdate thru append modlet patch too"/>
+      <update_rate value="0.10"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKOnRespawnFreeBundlesLimit" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKBMCountToHold" operation="set" value="-1" help="init the bloodmoon extra zombies hold timer"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar="iGSKOnRespawnCount"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKConfigGeneric" help="here is a good place for the end user further tweak some configurations. Only place CVARs config here! Even if they are used by other mods, the point is them all shall depend on the base lib. Setup only many cvars has no problem.">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group id="GSKConfigConstants" help="do not change the id as is used by scripts etc!!! TODO: most of these pseudo constants dont need to be saved. so add a dot in front of their names and update everywhere">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRadHintFrom" operation="set" value="10">
+          <requirement name="CVarCompare" cvar="iGSKRadHintFrom" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportEnergy" operation="set" value="420" helpgencode="DoNotModify:run:createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattEnergy" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattStrongEnergy" operation="set" value="1200"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBattSuperOverchargeEnergy" operation="set" value="19200"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKStarvingHPBlockageLimit" operation="set" value="25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKMaxCouriersNearby" operation="set" value="3"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDeusExAllowSpawnFriendly" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKDeusExAllowSpawnFriendly" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMargin" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="set" value="@.iGSKDeusExTimeoutMargin"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExTimeoutMarginX2" operation="multiply" value="2"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFriendlyWaitDelay" operation="set" value="20" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeWaitDelay" operation="set" value="30" help="must be more than the delay at eventGSKSpawnDeusExBase"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKDeusExFoeSoonHintPlayer" operation="set" value="600"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKpowerCostWight" operation="set" value="21"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinStam" operation="set" value="35" help="todo: make a cfg item">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWightMinStam" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightAddStam" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="set" value="@iGSKEssenceWightMinStam"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKEssenceWightModMaxStam" operation="add" value="@.iGSKEssenceWightAddStam"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceWightMinHP" operation="set" value="5" help="todo: make a cfg item">
+          <requirement name="CVarCompare" cvar="iGSKEssenceWightMinHP" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCSneakBehaveLikePlayer" operation="set" value="11" help="default is ON">
+          <requirement name="CVarCompare" cvar="iGSKNPCSneakBehaveLikePlayer" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPlayerAttackedDisableNPCSneakTimeTransfer" operation="set" value="6" help="must be more than update_rate of buffLeaderLimitsHiredNPCsAmount106"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPlayerNPCCurrentOrder" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKPlayerNPCCurrentOrder" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMax" operation="set" value="16">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMax" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKDmgSafePercTP" operation="set" value="0.25"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="set" value="@fGSKDmgSafePercTP"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKDmgSafePercTPShow" operation="multiply" value="100"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndexMax" operation="set" value="6" helpgencode="DoNotModify:run:createTeleportRanges.sh" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportBaseDist" operation="set" value="7" helpgencode="DoNotModify:run:createTeleportRanges.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyDistIndexMax" operation="set" value="6" help="Elctrn mod is from 0 to 5, allowing 6 indexes"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleportBaseToSkyDist" operation="set" value="2000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnFIRST" operation="set" value="50001" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnLAST" operation="set" value="50162" helpgencode="DoNotModify:run:createSpawnPoints.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMin" operation="set" value="0.15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMinx100" operation="set" value="15" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMax" operation="set" value="0.42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKHPBlkChemUseMaxx100" operation="set" value="42" helpgencode="DoNotModify:run:createNearDeathCalcs.sh"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTTUnderFreeDelay" operation="set" value="11"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPseudoSlowFallTimeoutLim" operation="set" value="3" help="test results provided 50 blocks falldown in 3s"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSlowFallConsumeEnergy" operation="set" value="15"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKRadHintDummy" operation="set" value="8888888888" help="max integer is 4294967295 tho, but many large 8 makes the line less confusing"/>
+      </effect_group>
+      <effect_group help="TELEPORT: all below are teleport sections up to integer limit 65535">
+        <!-- HELPGOOD: all nearby directions are below .iGSKElctrnTeleSpecialBEGIN value -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionBEGIN" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleNearDirectionBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleNearDirectionEND" operation="set" value="9999"/>
+        <!-- HELPGOOD: special tele destinations, shall have no clashes with createTeleportRanges.sh max value too. can be sorted now -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBEGIN" operation="set" value="10000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSpecialBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBackpack" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBackpack"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBeacon" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBeacon"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialBedroll" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialBedroll"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialLandClaim" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialLandClaim"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialZero" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialZero"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpecialEND" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpecialEND"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundBEGIN" operation="set" value="30000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundIndexMin" operation="set" value="30001"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleUndergroundIndexMax" operation="set" value="30127" helpgencode="DoNotModify:run:rwgImprovePOIs.sh"/>
+        <!-- HELPGOOD: PLACE NEW SECTIONS ABOVE HERE -->
+        <!-- HELPGOOD: ALL SKY SECTIONS MUST BE BELOW HERE!-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyBEGIN" operation="set" value="40000"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="set" value="@.iGSKElctrnTeleSkyBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyLastSpawn" operation="set" value="@.iGSKTTStmp" help="previous or last spawn location at sky"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyLastSpawn"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAbove" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAbove"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyAboveButLower" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyAboveButLower"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKTTStmp" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSkyEND" operation="set" value="@.iGSKTTStmp"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSkyEND"/>
+        <!-- HELPGOOD: random spawns will be prepared by createSpawnPoints.sh, so put nothing after .iGSKElctrnTeleSpawnBEGIN -->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnBEGIN" operation="set" value="50000" help="random spawn location at sky. TODO: keep in sync with createSpawnPoints.sh using xml starlet"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnRANDOM" operation="set" value="@.iGSKElctrnTeleSpawnBEGIN"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnRANDOM"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleSpawnEND" operation="set" value="59999"/>
+        <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKElctrnTeleSpawnEND"/>
+        <!-- HELPGOOD: LIMIT is 65535? -->
+      </effect_group>
+      <effect_group help="CONDITIONAL CONFIGS: where value 0 means invalid and the user may use a cfg tool in-game.  or other reasons">
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bGSKRespawnSchematicsOnlyOnce" operation="set" value="1" help="after used, it will become 2 and be disabled forever">
+          <requirement name="CVarCompare" cvar="bGSKRespawnSchematicsOnlyOnce" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKFreeBundlesRemaining" operation="set" value="666" help="can be configured in-game using special items. but.. the increasing cost based on how many of each kind was opened and the increasing xp loss also based on it makes it uninteresting to open too many. So that high value may feel like endless. Was 9, 13, 33.">
+          <requirement name="CVarCompare" cvar="iGSKOnEnterGameCount" operation="Equals" value="1" help="must set this on 1st spawn only"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="set" value="5" help="Desert">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointBiomeId" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKAllowMiasmaIndicator" operation="set" value="2" help="1 off, 2 on">
+          <requirement name="CVarCompare" cvar=".iGSKAllowMiasmaIndicator" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKAllowExtraBloodMoonSpawns" operation="set" value="3" help="1 off, 2 on, 3 on and automatic values based on player level">
+          <requirement name="CVarCompare" cvar="iGSKAllowExtraBloodMoonSpawns" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBMFoeAliveMin" operation="set" value="2">
+          <requirement name="CVarCompare" cvar="iGSKBMFoeAliveMin" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="set" value="600">
+          <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="600"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKCfgBMCountOnHoldLimit" operation="set" value="-15">
+          <requirement name="CVarCompare" cvar="iGSKCfgBMCountOnHoldLimit" operation="GTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="set" value="2" help="2on 1off">
+          <requirement name="CVarCompare" cvar="iGSKNPCproperSneakingWorkaroundAllowed" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKUpdateBiomeID" hidden="true">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group help="Biome: current ID. desert5 snow1 forest3 wasteland8 burntForest9">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="1">
+          <requirement name="InBiome" biome="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="2">
+          <requirement name="InBiome" biome="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="3">
+          <requirement name="InBiome" biome="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="4">
+          <requirement name="InBiome" biome="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="5">
+          <requirement name="InBiome" biome="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="6">
+          <requirement name="InBiome" biome="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="7">
+          <requirement name="InBiome" biome="7"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="8">
+          <requirement name="InBiome" biome="8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="9">
+          <requirement name="InBiome" biome="9"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="10">
+          <requirement name="InBiome" biome="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="11">
+          <requirement name="InBiome" biome="11"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="12">
+          <requirement name="InBiome" biome="12"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="13">
+          <requirement name="InBiome" biome="13"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="14">
+          <requirement name="InBiome" biome="14"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKBiomeId" operation="set" value="15">
+          <requirement name="InBiome" biome="15"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKUpdateBiomeID"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPermanentGenericCheck21" hidden="true" name_key="nkbuffGSKPermanentGenericCheck" description_key="dkbuffGSKPermanentGenericCheck" remove_on_death="false" help="TODO: move things that dont neeed to be updated so often to other slower update buff or other related buffs">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <!-- HELPGOOD: from other mini mods, just append effec groups here! -->
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="set" value="10" help="if it is lagging or low FPS, NPCs, zombies etc may take a long time to answer">
+          <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="add" value="-1" help="sync with update_rate"/>
+      </effect_group>
+      <effect_group help="FoesNearby30m: count nearby foes (must be after the count check otherwise it would always be 0 there)">
+        <requirement name="CVarCompare" cvar=".iGSKNearbyFoeAliveCount30mKeepDelay" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveTotal30m" operation="set" value="@.iGSKNearbyFoeAliveCount30m"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNPCNearbyFoeAliveCount30m" operation="set" value="@.iGSKNearbyFoeAliveTotal30m" target="selfAOE" range="60" target_tags="npc">
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearbyFoeAliveCount30m" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKCountNearbyFoes30m" target="selfAOE" range="30" compare_type="or">
+          <requirement name="EntityTagCompare" target="other" tags="animal,hostile" has_all_tags="true"/>
+          <requirement name="EntityTagCompare" target="other" tags="zombie"/>
+          <requirement name="EntityTagCompare" target="other" tags="bandit"/>
+          <requirement name="EntityTagCompare" target="other" tags="enemy"/>
+          <requirement name="EntityTagCompare" target="other" tags="hostile"/>
+          <requirement name="EntityTagCompare" target="other" tags="DeusExAngry"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="update biome id">
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKUpdateBiomeID"/>
+      </effect_group>
+      <effect_group help="lowcost teleport neardeath sideeffects">
+        <requirement name="CVarCompare" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="GT" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="-12" help="sync with update_rate for 20s total duration from lvl 5 300s to 1 60s: (300-60=240s) 240s/20 is -12/s"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="subtract" value="@iGSKEnergyLvlTP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="set" value="@fGSKNearDeathLowCostTeleportTimeout"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKNearDeathLowCostTeleportLvlTmp" operation="divide" value="60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="@.iGSKNearDeathLowCostTeleportLvlTmp"/>
+      </effect_group>
+      <effect_group help="warn HP value">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerPrevHPforWarnSnd" operation="set" value="@iGSKplayerCurrentHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painlg" help="if HP is dropping, it will play pain sounds. TODO: what is lg (hard) and sm (weak)?">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.05"/>
+          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="@iGSKplayerPrevHPforWarnSnd"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="PlaySound" sound="player#painsm">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="GT" value="0.05"/>
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="0.10"/>
+          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="@iGSKplayerPrevHPforWarnSnd"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="GTE" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerLowHP" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKplayerCurrentHP" operation="LT" value="50"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group name="onSelfDied:Work" help="will be filled by mini mods based on this group name">
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKDeathCount" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfDied" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="0"/>
+      </effect_group>
+      <effect_group name="NearDeathApply">
+        <requirements compare_type="or" help="TODO: split below in mini mods">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathCriticalHitLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRadiationLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
+        </requirements>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
+          <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="!HasBuff" buff="god"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKTrackHpValue" hidden="true" remove_on_death="false">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerCurrentHP" operation="add" value="1">
+          <requirement name="StatCompareCurrent" stat="health" operation="GT" value="@iGSKplayerCurrentHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerCurrentHP" operation="add" value="-1">
+          <requirement name="StatCompareCurrent" stat="health" operation="LT" value="@iGSKplayerCurrentHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerModMaxHP" operation="add" value="1">
+          <requirement name="StatCompareModMax" stat="health" operation="GT" value="@iGSKplayerModMaxHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerModMaxHP" operation="add" value="-1">
+          <requirement name="StatCompareModMax" stat="health" operation="LT" value="@iGSKplayerModMaxHP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerHealableHP" operation="set" value="@iGSKplayerModMaxHP"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKplayerHealableHP" operation="subtract" value="@iGSKplayerCurrentHP"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKNearDeath40" hidden="false" remove_on_death="true" icon="ui_game_symbol_near_death_trauma" icon_color="255,128,128" icon_blink="true" description_key="buffGSKNearDeathDesc" name_key="NearDeathLevels">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <display_value value="iGSKNearDeath"/>
+      <display_value_key value="{0:0.0}/5"/>
+      <requirements>
+        <requirement name="EntityTagCompare" tags="player"/>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god" help="TODO: why does not work?"/>
+      </requirements>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0"/>
+      </effect_group>
+      <effect_group help="limit all near death cvars TODO: split below in mini mods">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathLowCostTeleportLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathLowCostTeleportLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathCriticalHitLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathCriticalHitLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPsyPowerLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPsyPowerLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloodLossLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloodLossLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathMiasmaLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFreezingLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFreezingLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathDryHotLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRadiationLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathPoisonLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathPoisonLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathHazadousWeatherLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathHazadousWeatherLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathFrostbyteLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathFrostbyteLvl" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathBloated" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathOverhydrated" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathChemUse" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GT" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRewindTime" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRewindTime" operation="GT" value="5"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group help="update main near death controller TODO: split below in mini mods">
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathLowCostTeleportLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathLowCostTeleportLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathCriticalHitLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathCriticalHitLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPsyPowerLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPsyPowerLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathShamanPowerLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathShamanPowerLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloodLossLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloodLossLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathMiasmaLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathMiasmaLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathFreezingLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathFreezingLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathDryHotLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathDryHotLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRadiationLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRadiationLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathPoisonLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathPoisonLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathHazadousWeatherLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathHazadousWeatherLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathFrostbyteLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathFrostbyteLvl"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathBloated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathBloated"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathOverhydrated">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathOverhydrated"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathChemUse">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathChemUse"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRewindTime">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRewindTime"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathProtectionCBM" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="set" value="28" help="max is 75% of this value, so 21"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <!-- HELPGOOD: existing ModifyScreenEffect options (?) from resources.assets, read also Data/Config/XML.txt
+				ISSUE: how is the bleeding ModifyScreenEffect applied? there is nothing there... could be thru the damage_type=bloodloss? TODO: use bleeding screen effect to hint when stepping over pointy fences, losing HP cuz of neardeath conditions or when using wight power. May be call a new buff buffInjuryBleedingMinor like buffInjuryBleedingOne but with bleedcounter=0.25 and force a duration of 1s only?
+        AtDeath (MAYBE)
+        Beer (no)
+        Bright (no)
+        Cold (no)
+        Crouched
+        Crouching
+        Dark (weak)
+        Death (MAYBE.no, only 1.0?)
+        Drugs
+        FireSmallLoop ?
+        HalfHealth (may be?)
+        Painkillers
+        Spawn
+        SpawnIn
+        Stealth
+        Tonemapping ?
+        Vibrant
+        VibrantDeSat (nice but too bright at 1.0)
+      -->
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="2"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.20"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" compare_type="or" help="vibrant actually helps on darkening the screen. intensity was 0.80 but becomes too dark at night">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.60" fade="5.0" compare_type="or" help="vibrant actually helps on darkening the screen. intensity was 0.80 but becomes too dark at night">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.76" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.68" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.80" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.10" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="2"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="3"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.40"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.30"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.15"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.75" fade="5.0" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.63" fade="5.0" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.70" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.89" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.20" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="3"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="4"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.60"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.45"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.45"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.78" fade="5.0" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.66" fade="5.0" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.88" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.93" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="0.40" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="4"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="5"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.80"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.60"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.25"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.81" fade="5.0" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.69" fade="5.0" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.90" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.74" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.95" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="0.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="GTE" value="5"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="CrouchSpeed" operation="perc_subtract" value="0.90"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fHWBlockageStamTmp" operation="multiply" value="0.75"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKHPLossWithEffectIndicator" operation="add" value="-0.33"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.84" fade="5.0" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.72" fade="5.0" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
+          <requirement name="InBiome" biome="8" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.92" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="!IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.76" fade="5.0" help="with 0.96 we cant see the floor at night on desert" compare_type="or">
+          <requirement name="IsNight"/>
+          <requirement name="InBiome" biome="5" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0.98" fade="5.0" compare_type="or">
+          <requirement name="InBiome" biome="1" help="desert5 snow1 forest3 wasteland8"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Drunk" intensity="1.00" fade="5.0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyScreenEffect" effect_name="Distortion" intensity="1.00" fade="5.0"/>
+      </effect_group>
+      <effect_group>
+        <requirement name="!HasBuff" buff="buffGSKGodMode"/>
+        <requirement name="!HasBuff" buff="god"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fNearDeathBlockageStam" operation="set" value="@.fHWBlockageStamTmp" help="must be set after calc on the tmp to prevent it varying"/>
+        <passive_effect name="StaminaMaxBlockage" operation="base_add" value="@fNearDeathBlockageStam"/>
+      </effect_group>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKNearDeath40" compare_type="or">
+          <requirement name="HasBuff" buff="buffGSKGodMode"/>
+          <requirement name="HasBuff" buff="god"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Vibrant" intensity="0" fade="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Drunk" intensity="0" fade="10"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyScreenEffect" effect_name="Distortion" intensity="0" fade="10"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKLowCostTeleportDebuffApply">
+      <stack_type value="ignore"/>
+      <duration value="0"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] This cheap teleport makes you feel dizzy..."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKNearDeathLowCostTeleportTimeout" operation="add" value="300" help="lvl5=60s*5 sync with time per lvl"/>
+        <!-- HELPGOOD: being in ragdoll prevents teleport right?
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" />
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKLowCostTeleportDebuffApply"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKJumpPad" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="3"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Jump pad activated, hold jump now!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffBurningElement"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="10"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKJumpPadx3a" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="3"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Jump pad activated, hold jump now!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffBurningElement"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="30"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKJumpPadx9a" hidden="false" description_key="dkbuffGSKJumpPad">
+      <stack_type value="ignore"/>
+      <duration value="3"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Jump pad activated, hold jump now!"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$buffBurningElementDuration" operation="set" value="2"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffBurningElement"/>
+        <passive_effect name="JumpStrength" operation="perc_add" value="90"/>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKBkpWaterVal73" hidden="true" remove_on_death="true">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:START:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="GSK:REMOVED:'buffGSKBkpWaterVal73'"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKwaterAmountAddBkp" operation="set" value="@$waterAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="$fGSKfoodAmountAddBkp" operation="set" value="@$foodAmountAdd"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="add" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GT" value="@fGSKWaterPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="subtract" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LT" value="@fGSKWaterPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="add" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Food" operation="GT" value="@fGSKFoodPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="subtract" value="0.025">
+          <requirement name="StatComparePercCurrentToMax" stat="Food" operation="LT" value="@fGSKFoodPercBkp"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKFoodPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="0">
+          <requirement name="NotHasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCounterBkp" operation="set" value="@infectionCounter">
+          <requirement name="HasBuff" buff="buffInfectionMain"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCureCounterBkp" operation="set" value="@$infectionCureCounter"/>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='god']">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="BUFF:VanillaGodMode:ON"/>
+      <triggered_effect trigger="onSelfBuffRemove" action="LogMessage" message="BUFF:VanillaGodMode:OFF"/>
+    </effect_group>
+  </append>
+  <!--  HELPGOOD: improve buffShocked to be controlled also by iGSKbuffShockedDuration duration
+	<set xpath="/buffs/buff[@name='buffShocked']/duration/@value">0</set>
+	<insertAfter xpath="/buffs/buff[@name='buffShocked']/effect_group/passive_effect[@name='BuffBlink']">
+      <triggered_effect trigger="onSelfBuffStart" action="GetBuffDuration" reference=".buffShockedDurationStart" help="if it is 0 and a duration was set when the buff was called">
+        <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="4" help="if it was not set and also no duration was set when buff was called">
+        <requirement name="CVarCompare" cvar=".buffShockedDurationStart" operation="LTE" value="0" />
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="@.buffShockedDurationStart"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="@.buffShockedDurationStart"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".buffShockedDurationStart" operation="set" value="0"/>
+      
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="add" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked">
+				<requirement name="CVarCompare" cvar="iGSKbuffShockedDuration" operation="LTE" value="0" />
+      </triggered_effect>
+      
+      <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKbuffShockedDuration" operation="set" value="0"/>
+	</insertAfter>
+	 -->
+  <append xpath="/buffs">
+    <buff name="buffGSKShockedLoop" help="consumedParam: '.buffGSKShockedLoopDurationAdd'. TODO: update old code to use this instead of buffShocked">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="@.buffGSKShockedLoopDurationAdd"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="@.buffGSKShockedLoopDurationAdd"/>
+        <!--				HELPGOOD: consume-->
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".buffGSKShockedLoopDurationAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKbuffShockedLoopDuration" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffShocked">
+          <requirement name="!HasBuff" buff="buffShocked"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group>
+        <requirement name="CVarCompare" cvar="iGSKbuffShockedLoopDuration" operation="LTE" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffShocked"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShockedLoop"/>
+      </effect_group>
+    </buff>
+  </append>
+</GhussakTweaks>

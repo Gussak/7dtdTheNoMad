@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="GSKfireFuel">
+      <property name="Tags" value="gasoline"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="ammoGasCan"/>
+      <property name="CustomIconTint" value="ff0000"/>
+      <property name="DescriptionKey" value="dkGSKfireFuel"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MFuelBarrelMetal"/>
+      <property name="Stacknumber" value="100"/>
+      <property name="FuelValue" value="2"/>
+      <property name="EconomicValue" value="10"/>
+      <property name="EconomicBundleSize" value="100"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals,Ammo"/>
+      <property name="CraftingIngredientTime" value=".05"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="@fGSKFireFuelMax"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffFireAddFuel"/>
+      </effect_group>
+    </item>
+    <item name="GSKfireFuelFull">
+      <property name="Tags" value="gasoline"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="ammoGasCan"/>
+      <property name="DescriptionKey" value="dkGSKfireFuel"/>
+      <property name="CustomIconTint" value="ffa000"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MFuelBarrelMetal"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="FuelValue" value="2"/>
+      <property name="EconomicValue" value="100"/>
+      <property name="EconomicBundleSize" value="100"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals,Ammo"/>
+      <property name="CraftingIngredientTime" value=".05"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="LT" value="@fGSKFireFuelMax"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKfireFuelAdd" operation="add" value="10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffFireAddFuelFull"/>
+      </effect_group>
+    </item>
+    <item name="GSKfireFuelMaxAdd">
+      <property name="Tags" value="gasoline"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="ammoGasCan"/>
+      <property name="CustomIconTint" value="ffa0a0"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MFuelBarrelMetal"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="FuelValue" value="2"/>
+      <property name="EconomicValue" value="10"/>
+      <property name="EconomicBundleSize" value="100"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals,Ammo"/>
+      <property name="CraftingIngredientTime" value=".05"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKFireFuelMax" operation="LT" value="3600"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="add" value="30"/>
+      </effect_group>
+    </item>
+    <item name="GSKfireFuelMaxAddMore">
+      <property name="Tags" value="gasoline"/>
+      <property name="HoldType" value="45"/>
+      <property name="CustomIcon" value="ammoGasCan"/>
+      <property name="CustomIconTint" value="ffa0a0"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MFuelBarrelMetal"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="FuelValue" value="2"/>
+      <property name="EconomicValue" value="10"/>
+      <property name="EconomicBundleSize" value="100"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals,Ammo"/>
+      <property name="CraftingIngredientTime" value=".05"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKFireFuelMax" operation="add" value="60"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[@name='meleeToolTorch']/effect_group[@name='light/douse torch flame']" help="sync with modMeleeClubBurningShaft">
+    <triggered_effect trigger="onSelfEquipStart" action="AddBuff" buff="buffGSKmodActiveFlamesTorch"/>
+    <triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffGSKmodActiveFlamesTorch"/>
+    <triggered_effect trigger="onSelfWaterSurface" action="AddBuff" buff="buffGSKmodActiveFlamesTorch"/>
+    <triggered_effect trigger="onSelfWaterSubmerge" action="RemoveBuff" buff="buffGSKmodActiveFlamesTorch"/>
+  </append>
+  <insertBefore xpath="/items/item[@name='meleeToolTorch']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']/requirement[@name='RandomRoll']" help="sync with modMeleeClubBurningShaft. TODO: both effect_group are identical, what about just remove one?">
+    <requirement name="CVarCompare" cvar=".iGSKFireDoused" operation="Equals" value="0" help="fire must be lit"/>
+    <requirement name="CVarCompare" cvar="fGSKFireFuel" operation="GTE" value="60"/>
+  </insertBefore>
+  <append xpath="/items/item[@name='meleeToolTorch']/effect_group[@name='new Fire Proc' or @name='always refresh existing Fire Proc']" help="sync with modMeleeClubBurningShaft">
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="self" cvar="fGSKFireFuel" operation="subtract" value="60"/>
+  </append>
+  <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='10']/@value" help="sync with modMeleeClubBurningShaft">60</set>
+  <set xpath="/items/item[@name='meleeToolTorch']//triggered_effect[@cvar='$buffBurningElementDuration' and @value='12']/@value" help="sync with modMeleeClubBurningShaft">120</set>
+</GhussakTweaks>

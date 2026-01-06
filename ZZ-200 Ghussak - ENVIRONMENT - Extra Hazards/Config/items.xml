@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items/item[@name='medicalBloodBag']">
+    <property class="Action0">
+      <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0"/>
+      <property name="Class" value="Eat"/>
+      <property name="Delay" value="1.0"/>
+      <property name="Use_time" value="..."/>
+      <property name="Sound_start" value="player_ointment"/>
+    </property>
+    <effect_group tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss subtract randomFloat(0.12,0.16)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(120,160)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.12,0.16)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=20764:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="randomFloat(0.12,0.16)"/> -->
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items">
+    <item name="GSKDbgTestMiasmaAdd">
+      <property name="Extends" value="GSKDbgBASE"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="500"/>
+      </effect_group>
+    </item>
+    <item name="medicalBloodBagEmpty">
+      <property name="DescriptionKey" value="dkGSKmedicalBloodBagEmpty"/>
+      <property name="CustomIcon" value="medicalBloodBag"/>
+      <property name="CustomIconTint" value="70,70,70"/>
+      <property name="Tags" value="medical"/>
+      <property name="DisplayType" value="medical"/>
+      <property name="HoldType" value="31"/>
+      <property name="Meshfile" value="@:Other/Items/Health/bandage.fbx"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="Weight" value="5"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Stacknumber" value="60"/>
+      <property name="EconomicValue" value="1"/>
+      <property class="Action0">
+        <requirement name="NotHasBuff" buff="buffGSKGodMode"/>
+        <requirement name="NotHasBuff" buff="buffGSKCosmicBloodMoon7"/>
+        <requirement name="NotHasBuff" buff="buffGSKDeusExFriendlyIsNearbyPLAYERBUFF"/>
+        <requirement name="CVarCompare" cvar="iGSKPoisonDur" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="infectionCounter" operation="LTE" value="0"/>
+        <requirement name="CVarCompare" cvar="fGSKBloodBagTimeout" operation="LTE" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="player_ointment"/>
+        <property name="Create_item" value="medicalBloodBag"/>
+      </property>
+      <property name="Group" value="Science,CFChemicals,Medical"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Health" operation="add" value="-14.0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="add" value="0.01"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodBagTimeout" operation="add" value="3600" help="should be once every 2 months tho :P"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKHazardousWBloodLoss53"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffInjuryStunned01"/>
+      </effect_group>
+    </item>
+    <item name="bathKit">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="DescriptionKey" value="dkbathKit"/>
+      <property name="CustomIcon" value="foodHoney"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="EconomicValue" value="100"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="GT" value="1000"/>
+        <requirement name="NotHasBuff" buff="buffGSKTakingBathOnTheGo"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" target="self" buff="buffGSKTakingBathOnTheGo"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKMiasmaBlockPercExtra" operation="add" value="1.0" help="sync with bathtub"/>
+      </effect_group>
+      <effect_group name="Refreshing against heat" tiered="false">
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNearDeathDryHotTime" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKNDHWTime" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathDryHotLvl" operation="GT" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKfixHazmatSuit">
+      <property name="Extends" value="resourceDuctTape"/>
+      <property name="DescriptionKey" value="dkGSKRadiationInfo"/>
+      <property name="CustomIcon" value="resourceDuctTape"/>
+      <property name="CustomIconTint" value="220,200,128"/>
+      <property name="CraftingIngredientTime" value="3"/>
+      <property name="Stacknumber" value="100"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="LT" value="1.00"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group name="GSKfixHazmatSuit" tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHazmatSuitIntegrity" operation="add" value="0.25"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHazmatSuitIntegrity" operation="set" value="1.00">
+          <requirement name="CVarCompare" cvar="fGSKHazmatSuitIntegrity" operation="GT" value="1.00"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="apparelHazmatMask">
+      <property name="Extends" value="armorEnforcerHelmet"/>
+    </item>
+    <item name="apparelHazmatJacket">
+      <property name="Extends" value="armorEnforcerOutfit" param1="CustomIcon"/>
+    </item>
+    <item name="apparelHazmatGloves">
+      <property name="Extends" value="armorEnforcerGloves" param1="CustomIcon"/>
+    </item>
+    <item name="apparelHazmatBoots">
+      <property name="Extends" value="armorEnforcerBoots" param1="CustomIcon"/>
+    </item>
+    <item name="RepairColdProt">
+      <property name="HoldType" value="45"/>
+      <property name="DescriptionKey" value="dkRepairColdProt"/>
+      <property name="CustomIcon" value="modArmorInsulatedLiner"/>
+      <property name="CustomIconTint" value="00ff00"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapIron"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgColdProt" operation="GT" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgColdProt" operation="subtract" value="0.3333"/>
+      </effect_group>
+    </item>
+    <item name="RepairHeatProt">
+      <property name="HoldType" value="45"/>
+      <property name="DescriptionKey" value="dkRepairHeatProt"/>
+      <property name="CustomIcon" value="modArmorCoolingMesh"/>
+      <property name="CustomIconTint" value="00ff00"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapIron"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgHeatProt" operation="GT" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="fGSKDmgHeatProt" operation="subtract" value="0.3333"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'food')]" help="rationale: anything you use to feed">
+    <effect_group name="regen a bit of blood loss" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKBloodLoss subtract randomFloat(0.001,0.002)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(1,2)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="TODO? could alternatively heal a tiny bit every time food bar is consumed;FixTinyRandomFloat: was randomFloat(0.001,0.002)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=5:			<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKBloodLoss" operation="subtract" value="randomFloat(0.001,0.002)" help="TODO? could alternatively heal a tiny bit every time food bar is consumed"> -->
+        <requirement name="CVarCompare" cvar="fGSKBloodLoss" operation="GT" value="0.0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drinkJarYuccaJuice' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarRedTea' or       @name='drinkYuccaJuiceSmoothie' or       @name='drinkCanMegaCrush' or       @name='drinkJarCoffee' or       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBeer' or       @name='drinkJarGrandpasMoonshine' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarGrandpasLearningElixir' or       @name='drinkJarGrandpasForgettingElixir'     ]">
+    <effect_group name="CleanMiasma" tiered="false" help="will clean a bit when drinking">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(350,550)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'foodCrop')]">
+    <effect_group name="CleanMiasma" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="subtract" value="randomFloat(100,200)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirty" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <!-- HELPGOOD: ================================================================
+		tweaks for fGSKHitpointsBlockageChemUse
+	-->
+  <!-- HELPGOOD:
+		do not for these:
+			@name='drugGSKsnakePoisonAntidote' it is an antidote that is 100% good (right?)
+			@name='medicalBloodBagEmpty' it is just a blood bag, no chem on it
+			
+		CODEGEN:HELPER: clear;egrep '<item name="(drug|med|food)[^" ]*"' ../* -iRIwho -\-include="items.xml" 2>/dev/null |sort -u |egrep -v "Schem|Desc|Admin" |sed -r 's#<item name=(.*)#@name=\1 or#' |tr '"' "'"
+	-->
+  <append xpath="/items/item[    @name='GSKsimpleBeer'         or    @name='drinkJarBeer'          or    @name='drugAtomJunkies'       or    @name='drugCovertCats'        or    @name='drugEyeKandy'          or    @name='drugFortBites'         or    @name='drugGSKAntiRadiation'        or    @name='drugGSKmutantEssence'        or    @name='drugGSKPsyonicsResist'       or    @name='drugGSKRadiationResist'      or    @name='drugGSKvampireEssence'       or    @name='drugGSKwightEssence'         or    @name='drugHackers'           or    @name='drugJailBreakers'      or    @name='drugNerdTats'          or    @name='drugOhShitzDrops'      or    @name='drugRecog'             or    @name='drugRockBusters'       or    @name='drugSkullCrushers'     or    @name='drugSugarButts'        or    @name='resourceAnimalFat'        ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+    <effect_group name="ADD chem use hp block" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.01,0.02)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(10,20)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.01,0.02)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=21172:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.01,0.02)"/> -->
+    </effect_group>
+  </append>
+  <append xpath="/items/item[    @name='drugGSKAntiRadiationSlow'    or    @name='drugGSKAntiRadiationStrong'  or    @name='drugSteroids'                or    @name='resourceAnimalFatBall'          ]" help="rationale: dmg inc and dmgres inc and extra powers or anesthesics, anything that could be considered unnatural or harmful in some way">
+    <effect_group name="ADD chem use hp block" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse add randomFloat(0.025,0.050)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(25,50)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="despite many times stronger, these are cooked therefore improved so wont be too high chem block here.;FixTinyRandomFloat: was randomFloat(0.025,0.050)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=21182:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="add" value="randomFloat(0.025,0.050)" help="despite many times stronger, these are cooked therefore improved so wont be too high chem block here."/> -->
+    </effect_group>
+  </append>
+  <!-- HELPGOOD: do not for these
+			@name='medicalPlasterCast'      # no chem on it
+			@name='medicalSplint'           # no chem on it
+			@name='drinkJarGrandpasForgettingElixir' # ?
+			@name='drinkJarGrandpasLearningElixir' # ?
+			@name='drinkJarGrandpasMoonshine' # ?
+-->
+  <append xpath="/items/item[    @name='drinkJarBlackStrapCoffee' or    @name='drinkJarBoiledWater'     or    @name='drinkJarCoffee' or    @name='drinkJarGoldenRodTea' or    @name='drinkJarGrandpasAwesomeSauce' or    @name='drinkJarPureMineralWater' or    @name='drinkJarRedTea'         or    @name='drinkJarYuccaCocktail'       or    @name='drinkJarYuccaJuice'          or    @name='drugAntibiotics'         or    @name='drugHealthBar'           or    @name='drugHerbalAntibiotics'   or    @name='drugPainkillers'         or    @name='drugVitamins'            or    @name='medicalAloeCream'        or    @name='medicalBandage'          or    @name='medicalBloodBag'         or    @name='medicalFirstAidBandage'  or    starts-with(@name,'food')   ]" help="rationale: anything ingestible that is used to actively heal or feed">
+    <effect_group name="SUB chem use hp block: weak" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse subtract randomFloat(0.025,0.050)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(25,50)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.025,0.050)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=21233:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.025,0.050)"> -->
+        <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[    @name='medicalFirstAidKit'        ]" help="rationale: professional direct healing intent">
+    <effect_group name="SUB chem use hp block: good" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was fGSKHitpointsBlockageChemUse subtract randomFloat(0.15,0.33)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(150,330)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.15,0.33)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=21242:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKHitpointsBlockageChemUse" operation="subtract" value="randomFloat(0.15,0.33)"> -->
+        <requirement name="CVarCompare" cvar="fGSKHitpointsBlockageChemUse" operation="GT" value="0.0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHand') and (contains(@name,'Zombie') or contains(@name,'AnimalZombie'))]/effect_group">
+    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(50,100)" target_tags="player"/>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammoProjectile') and (contains(@name,'Zombie') or contains(@name,'Vomit'))]/effect_group">
+    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,350)" target="otherAOE" range="0.05" target_tags="player"/>
+  </append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,medicalBloodBagEmpty,bathKit</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value" help="use just as reinforcement to survive, if you cant hire it">,13,10</append>
+  <append xpath="/items/item[       @name='meleeToolRepairT0StoneAxe' or       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT1IronKnuckles' or       @name='meleeWpnKnucklesT3SteelKnuckles'       ]">
+    <effect_group name="gore harvest" tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
+        <requirement name="EntityTagCompare" tags="player" target="self"/>
+        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
+        <requirement name="!IsAlive" target="other"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfSecondaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
+        <requirement name="EntityTagCompare" tags="player" target="self"/>
+        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
+        <requirement name="!IsAlive" target="other"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="self" buff="buffGSKGoreHazard">
+        <requirement name="EntityTagCompare" tags="player" target="self"/>
+        <requirement name="EntityTagCompare" tags="zombie,animal" has_all_tags="false" target="other"/>
+        <requirement name="!IsAlive" target="other"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+</GhussakTweaks>

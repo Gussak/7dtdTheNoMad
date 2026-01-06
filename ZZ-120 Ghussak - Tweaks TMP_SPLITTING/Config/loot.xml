@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/lootcontainers/lootgroup[@name='groupZpackReg']">
+    <item group="groupGSKStuff" loot_prob_template="veryLow"/>
+  </append>
+  <append xpath="/lootcontainers/lootgroup[@name='groupZpackStrong']">
+    <item group="groupGSKStuff" loot_prob_template="low"/>
+  </append>
+  <append xpath="/lootcontainers/lootgroup[@name='groupZpackBoss']">
+    <item group="groupGSKStuff" loot_prob_template="medLow"/>
+  </append>
+  <setattribute xpath="/lootcontainers/lootcontainer[contains(@name,'Crate')]" name="count">3</setattribute>
+  <set xpath="/lootcontainers/lootcontainer[@name='buriedTreasure']/@count">7</set>
+  <setattribute xpath="/lootcontainers/lootcontainer[       starts-with(@name,'reinforcedChest') or       starts-with(@name,'hardenedChest')     ]" name="count">15</setattribute>
+  <set xpath="/lootcontainers/lootcontainer[@name='airDrop']/@count">25</set>
+  <setattribute xpath="/lootcontainers/lootcontainer[       @name='smallSafes' or        @name='shamwaySafe' or        @name='brewSafe']" name="count">11</setattribute>
+  <setattribute xpath="/lootcontainers/lootcontainer[@name='gunSafe']" name="count">15</setattribute>
+  <!-- HELPGOOD: these are things left out there, there are clearly things there, so this is to make it coherent and cool. The min value 4 required is probably because I set loot amount to 25% right? shamwayDrinks is all non empty freezers.-->
+  <setattribute xpath="/lootcontainers/lootcontainer[(contains(@name,'BagSmall') or contains(@name,'PileSmall') or contains(@name,'bookPile') or @name='shoesShelves' or @name='shamwayDrinks' or @name='shamwayShelves' or @name='shirts' or @name='pants' or @name='mopowerShelves' or @name='armorRack' or @name='ammoDisplay') and not(contains(@name,'Empty'))]" name="count">6</setattribute>
+  <setattribute xpath="/lootcontainers/lootcontainer[(contains(@name,'BagMedium') or contains(@name,'PileMedium') or contains(@name,'RackMedium') or @name='cntPillCaseClosed') and not(contains(@name,'Empty'))]" name="count">6,8</setattribute>
+  <setattribute xpath="/lootcontainers/lootcontainer[(contains(@name,'BagLarge') or contains(@name,'PileLarge') or contains(@name,'RackLarge')) and not(contains(@name,'Empty'))]" name="count">6,10</setattribute>
+  <!-- HELPGOOD: these nice looking blocks should vanish after collecting items from it. the idea is to stop showing items where there are none -->
+  <setattribute xpath="/lootcontainers/lootcontainer[(     contains(@name,'BagLarge') or contains(@name,'PileLarge') or contains(@name,'RackLarge') or     contains(@name,'BagMedium') or contains(@name,'PileMedium') or contains(@name,'RackMedium') or     contains(@name,'BagSmall') or contains(@name,'PileSmall') or contains(@name,'RackSmall') or      contains(@name,'ClothesRack') or contains(@name,'BookPile') or @name='cntPillCaseClosed'   ) and not(contains(@name,'Empty'))]" name="destroy_on_close">true</setattribute>
+  <!-- HELPGOOD: Larger storage craftable containers and a few others -->
+  <set xpath="/lootcontainers/lootcontainer[       @name='buriedSuppliesT1' or        @name='buriedSuppliesT2' or        @name='buriedTreasure' or        @name='cntDropBag' or        @name='gunSafe' or        @name='hardenedChestT4' or        @name='hardenedChestT5' or        @name='heroChest' or        @name='playerDrawer' or        @name='prefabEditorBox' or        @name='reinforcedChestT1' or        @name='reinforcedChestT2' or        @name='reinforcedChestT3' or        @name='storageCrate' or        @name='toolTestLoot' or        @name='weaponTestLoot' or        @name='wineBarrel' or       @name='traderNPC'     ]/@size">8,12</set>
+  <!-- HELPGOOD: for hirable NPCs -->
+  <set xpath="/lootcontainers/lootcontainer[@name='traderNPC']/@size">8,12</set>
+  <!-- HELPGOOD: for traders TODO: find a way to prevent them selling everything -->
+  <set xpath="/lootcontainers/lootcontainer[@name='traderNPC']/@loot_quality_template">qualQ1Template</set>
+  <append xpath="/lootcontainers">
+    <lootcontainer id="873" name="lootDeusExMachina" count="50" size="8,12" sound_open="UseActions/chest_tier5_open" sound_close="UseActions/chest_tier5_close" loot_quality_template="qualPlus1Template">
+      <!--      HELPGOOD: this final list is the things that are meant to be rare and unpredictable-->
+      <item name="gunExplosivesT3RocketLauncher" count="1" prob="0.01"/>
+      <item name="solarCell" count="1" prob="0.005"/>
+      <item name="meleeToolWireTool" count="1" prob="0.001"/>
+      <item group="booksAllScaled" prob="0.005"/>
+      <item group="booksRareOnlyScaled" prob="0.001"/>
+      <item name="modGSKEnergyThorns" count="1" prob="0.01"/>
+      <item name="modGSKEnergyShield" count="1" prob="0.01"/>
+      <item name="modGSKEnergyHarvest" count="1" prob="0.01"/>
+      <item name="modGSKElctrnHero" count="1" prob="0.01"/>
+      <item name="modGSKElctrnTeleport" count="1" prob="0.01"/>
+      <item name="modGSKElctrnShockArrow" count="1" prob="0.05"/>
+      <item name="modGSKElctrnBattery" count="1" prob="0.01"/>
+      <item name="GSKUpgElctrnParts" count="1" prob="0.10"/>
+      <item name="GSKRepElctrnParts" count="1" prob="0.10"/>
+      <item name="NightVisionBattery" count="1" prob="0.05"/>
+      <item name="NightVisionBatteryStrong" count="1" prob="0.01"/>
+      <item name="GSKPOIProgressInc" count="1" prob="0.01"/>
+      <item name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="0.01"/>
+      <!-- HELPGOOD: initial list but results are too unpredictable
+      <item name="ammoRocketHE" count="1" prob="0.50"/>
+      <item name="ammoRocketFrag" count="1" prob="0.50"/>
+      <item name="gunExplosivesT3RocketLauncherParts" count="1" prob="0.05"/>
+      <item name="gunExplosivesT3RocketLauncher" count="1" prob="0.01"/>
+      
+      <item name="electronicsParts" count="1" prob="0.50"/>
+      <item name="resourceForgedSteel" count="1" prob="0.25"/>
+      <item name="solarCell" count="1" prob="0.005"/>
+      <item name="meleeToolWireTool" count="1" prob="0.001"/>
+      
+      <item group="booksAllScaled" prob="0.005" />
+      <item group="booksRareOnlyScaled" prob="0.001" />
+      
+      <item name="modGSKEnergyThorns" count="1" prob="0.01"/>
+      <item name="modGSKEnergyShield" count="1" prob="0.01"/>
+      <item name="modGSKEnergyHarvest" count="1" prob="0.01"/>
+      <item name="modGSKElctrnHero" count="1" prob="0.01"/>
+      <item name="modGSKElctrnTeleport" count="1" prob="0.01"/>
+      <item name="modGSKElctrnShockArrow" count="1" prob="0.05"/>
+      <item name="modGSKElctrnBattery" count="1" prob="0.01"/>
+      <item name="GSKUpgElctrnParts" count="1" prob="0.10"/>
+      <item name="GSKRepElctrnParts" count="1" prob="0.10"/>
+      <item name="NightVisionBattery" count="1" prob="0.05"/>
+      <item name="NightVisionBatteryStrong" count="1" prob="0.01"/>
+      
+      <item name="GSKPOIProgressInc" count="1" prob="0.01"/>
+      <item name="GSKPOIProgressUndergroundPOIsInc" count="1" prob="0.01"/>
+-->
+      <!-- HELPGOOD:ISSUE: this would be for harvesting but would require only one DeusEx to be spawned per time, anyway this moved to create_item at GSKDeusExRewardBundle
+      <item name="resourceMechanicalParts" count="30" prob="1.0"/>
+      <item name="resourceScrapIron" count="27" prob="1.0"/>
+      <item name="resourceScrapIron" count="9,21" prob="1.0"/>
+      <item name="resourceScrapIron" count="3,45" prob="1.0"/>
+      <item name="resourceElectricParts" count="36" prob="1.0"/>
+      <item name="resourceScrapPolymers" count="27" prob="1.0"/>
+      <item name="resourceMetalPipe" count="3" prob="1.0"/>
+      <item name="carBattery" count="0,3" prob="1.0"/>
+      <item name="resourceSpring" count="6,12" prob="1.0"/>
+      -->
+    </lootcontainer>
+  </append>
+  <append xpath="/lootcontainers">
+    <lootcontainer id="890" name="GSKnotReinforcedChestT1" count="3" size="8,12" sound_open="UseActions/chest_tier1_open" sound_close="UseActions/chest_tier1_close" loot_quality_template="qualPlus1Template">
+      <item group="groupReinforcedChestT1"/>
+    </lootcontainer>
+    <lootcontainer id="891" name="GSKnotReinforcedChestT2" count="3" size="8,12" sound_open="UseActions/chest_tier2_open" sound_close="UseActions/chest_tier2_close" loot_quality_template="qualPlus1Template">
+      <item group="groupReinforcedChestT2"/>
+    </lootcontainer>
+    <lootcontainer id="896" name="traderNPCanimal" count="0" size="3,1" sound_open="UseActions/open_shopping_basket" open_time="0" sound_close="UseActions/close_shopping_basket" loot_quality_template="qualQ1Template"/>
+    <lootcontainer id="897" name="traderNPCtinyBackpack" count="0" size="8,1" sound_open="UseActions/open_shopping_basket" open_time="0" sound_close="UseActions/close_shopping_basket" loot_quality_template="qualQ1Template" help="like only pockets"/>
+    <lootcontainer id="898" name="traderNPCsmallBackpack" count="0" size="8,4" sound_open="UseActions/open_shopping_basket" open_time="0" sound_close="UseActions/close_shopping_basket" loot_quality_template="qualQ1Template"/>
+    <lootcontainer id="899" name="traderNPCmediumBackpack" count="0" size="8,8" sound_open="UseActions/open_shopping_basket" open_time="0" sound_close="UseActions/close_shopping_basket" loot_quality_template="qualQ1Template"/>
+    <lootcontainer id="900" name="traderNPCbigBackpack" count="0" size="8,12" sound_open="UseActions/open_shopping_basket" open_time="0" sound_close="UseActions/close_shopping_basket" loot_quality_template="qualQ1Template"/>
+  </append>
+</GhussakTweaks>

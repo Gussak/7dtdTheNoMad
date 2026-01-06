@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items">
+    <item name="neonGas" help="TODO: use on dosimeter recipe">
+      <property name="Extends" value="resourceMetalPipe"/>
+      <property name="CustomIcon" value="resourceMetalPipe"/>
+      <property name="CustomIconTint" value="180,128,180"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="NoScrapping" value="true"/>
+    </item>
+    <item name="drugGSKRadiationResist">
+      <property name="Extends" value="resourceTestosteroneExtract"/>
+      <property name="CustomIcon" value="7dtdRadShield"/>
+      <property name="CustomIconTint" value="180,180,180"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals"/>
+      <property name="CraftingIngredientTime" value="2"/>
+      <property name="Stacknumber" value="25"/>
+      <property name="EconomicValue" value="50"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResist" help="ISSUE: this buff is not adding 'buffGSKRadResistWork34' from itself"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadResistWork34"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
+      </effect_group>
+    </item>
+    <item name="drugGSKAntiRadiation">
+      <property name="Extends" value="resourceTestosteroneExtract"/>
+      <property name="DescriptionKey" value="dkGSKRadiationInfo"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="180,180,255"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals"/>
+      <property name="CraftingIngredientTime" value="2"/>
+      <property name="Stacknumber" value="100"/>
+      <property name="EconomicValue" value="10"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmVal" operation="add" value="randomFloat(2.5,5.0)"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover33"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="2"/>
+      </effect_group>
+    </item>
+    <item name="drugGSKAntiRadiationStrong">
+      <property name="Extends" value="resourceTestosteroneExtract"/>
+      <property name="DescriptionKey" value="dkGSKRadiationInfo"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="255,255,128"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals"/>
+      <property name="CraftingIngredientTime" value="2"/>
+      <property name="EconomicValue" value="100"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmVal" operation="add" value="50" help="this cooked has best results"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadRemover33"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="15" help="this cooked reqs less water from the body"/>
+      </effect_group>
+    </item>
+    <item name="drugGSKAntiRadiationSlow">
+      <property name="Extends" value="resourceTestosteroneExtract"/>
+      <property name="DescriptionKey" value="dkGSKRadiationInfo"/>
+      <property name="CustomIcon" value="7dtdLowerRadiation"/>
+      <property name="CustomIconTint" value="220,64,220"/>
+      <property name="Group" value="Resources,Chemicals,CFChemicals"/>
+      <property name="CraftingIngredientTime" value="2"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="EconomicValue" value="75"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.5"/>
+        <property name="Use_time" value="0.5"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKRadRmDur" operation="add" value="300"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRadLowerSlow23"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'meleeHand') and (contains(@name,'Zombie') or contains(@name,'AnimalZombie'))]/effect_group">
+    <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation add randomFloat(0.25,1.0)" trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(250,1000)"/>
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="@.fGSKFixTinyRandomFloatTmp" target="other" target_tags="player" help="FixTinyRandomFloat: was randomFloat(0.25,1.0)">
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=16283:    <triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(0.25,1.0)" target="other" target_tags="player"> -->
+      <requirement name="!HoldingItemHasTags" target="self" tags="radiated"/>
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfAttackedOther" target="other" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(1.5,2.5)" target_tags="player">
+      <requirement name="HoldingItemHasTags" target="self" tags="radiated"/>
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffRadiation01" target_tags="player">
+      <requirement name="NotHasBuff" buff="god"/>
+      <requirement name="NotHasBuff" buff="buffRadSuit"/>
+    </triggered_effect>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'ammoProjectile') and (contains(@name,'Zombie') or contains(@name,'Vomit'))]/effect_group">
+    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(1,2)" target="otherAOE" range="0.05" target_tags="player">
+      <requirement name="!HoldingItemHasTags" target="self" tags="radiated"/>
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
+    </triggered_effect>
+    <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$buffStatusRadiation" operation="add" value="randomfloat(3.5,7)" target="otherAOE" range="0.05" target_tags="player">
+      <requirement name="HoldingItemHasTags" target="self" tags="radiated"/>
+      <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="100" target="other"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfAttackedOther" target="other" action="AddBuff" buff="buffRadiation01" target_tags="player">
+      <requirement name="NotHasBuff" buff="god"/>
+      <requirement name="NotHasBuff" buff="buffRadSuit"/>
+    </triggered_effect>
+  </append>
+  <append xpath="/items/item[       @name='drinkJarPureMineralWater' or       @name='drinkJarYuccaJuice' or       @name='drinkJarGoldenRodTea' or       @name='drinkJarRedTea' or       @name='drinkYuccaJuiceSmoothie' or       @name='drinkCanMegaCrush' or       @name='drinkJarCoffee' or       @name='drinkJarBlackStrapCoffee' or       @name='drinkJarBeer' or       @name='drinkJarGrandpasMoonshine' or       @name='drinkJarGrandpasAwesomeSauce' or       @name='drinkJarGrandpasLearningElixir' or       @name='drinkJarGrandpasForgettingElixir'     ]">
+    <effect_group name="CleanRad" tiered="false" help="will clean a bit when drinking">
+      <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.5,1.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,1500)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,1.5)"/>
+      <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=20270:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.5,1.5)"/> -->
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="LT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[starts-with(@name,'foodCrop')]">
+    <effect_group name="CleanRad" tiered="false">
+      <triggered_effect help="FixTinyRandomFloat:was $buffStatusRadiation subtract randomFloat(0.1,0.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(100,500)"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.1,0.5)">
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=20283:      <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffStatusRadiation" operation="subtract" value="randomFloat(0.1,0.5)"> -->
+        <requirement name="CVarCompare" cvar="$buffStatusRadiation" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,drugGSKAntiRadiationSlow</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value">,10</append>
+</GhussakTweaks>

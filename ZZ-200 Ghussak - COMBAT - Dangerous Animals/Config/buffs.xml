@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <buff name="buffGSKBeastFangsHoldup" hidden="false" description_key="dkbuffGSKBeastFangsHoldup" name_key="BeastFangsHoldUp" icon="7dtdGskFangHoldUp" icon_blink="true">
+    <stack_type value="replace"/>
+    <duration value="3" help="like perm holdup if a new hit happens in less than that time"/>
+    <update_rate value="0.33"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKBeastFangsHoldup">
+        <requirement name="!IsAlive" target="other" help="the idea is that if the one who applied this buff dies, the holdup ends"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKBeastFangsHoldup">
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@fGSKFatStaminaBlockage" help="heavy weight helps on preventing holdups"/>
+      </triggered_effect>
+      <passive_effect name="RunSpeed" operation="perc_subtract" value="0.90"/>
+      <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.90"/>
+    </effect_group>
+  </buff>
+  <buff name="buffGSKStrongPushAndRagdoll" hidden="true">
+    <stack_type value="ignore"/>
+    <duration value="1"/>
+    <update_rate value="0.05"/>
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffStart" action="CVarLogValue" cvar=".iGSKTryRagdollSelf"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKSPRRagdollChanceFromCount" operation="set" value="@.iGSKTryRagdollSelf"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKSPRRagdollChanceFromCount" operation="multiply" value="25"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKSPRRagdollChanceFromCount" operation="set" value="0">
+        <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="GTE" value="1"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKPhaseSPAR" operation="add" value="1"/>
+    </effect_group>
+    <!-- HELPGOOD: push may trigger this (bug?): "INF PlayerSpawnedInWorld (reason: Teleport, position: 0, 36, 0): localplayer" instead of a short teleport offset it will teleport to an absolute location in the center of the world apparently. Try again on new game releases, spawn 6 boars and wait...
+      <effect_group>
+        <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="85" />
+        <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="1" />
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKStrongPushAndRagdoll:eventGSKPlayerGotPushed"/>
+        <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="[TNM] You got pushed by a strong beast..."/>
+      </effect_group>
+      -->
+    <effect_group>
+      <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="2"/>
+      <requirement name="CVarCompare" cvar="iGSKKnockDownCoolDown" operation="LTE" value="0"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@.iGSKSPRRagdollChanceFromCount"/>
+      <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="GT" value="@fGSKFatStaminaBlockage" help="heavy weight helps on preventing these knockdowns"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKKnockDownCoolDown" operation="set" value="randomInt(6,9)"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKStrongPushAndRagdoll:eventGSKPlayerRagdoll"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] You got knocked down by a strong enemy..."/>
+    </effect_group>
+    <effect_group>
+      <requirement name="CVarCompare" cvar=".iGSKPhaseSPAR" operation="Equals" value="3"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKTryRagdollSelf" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKStrongPushAndRagdoll"/>
+    </effect_group>
+  </buff>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="ragdoll: player got ragdolled by foe">
+      <requirement name="CVarCompare" cvar=".iGSKTryRagdollSelf" operation="GT" value="0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKStrongPushAndRagdoll"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>

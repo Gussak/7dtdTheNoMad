@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs">
+    <buff name="buffGSKShowWaterBkp22" hidden="false" remove_on_death="true" description_key="dkbuffGSKBkpWaterVal" icon="ui_game_symbol_water" icon_color="0,0,255">
+      <duration value="0"/>
+      <display_value value="fGSKWaterPercBkp"/>
+      <display_value_key value="{0:0.00}"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="set" value="@fGSKWaterPercBkp"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKWaterBkpL5" operation="add" value="-0.05"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShowWaterBkp22">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="GTE" value="@.fGSKWaterBkpL5"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <!-- HELPGOOD:
+  <append xpath="/buffs/buff[@name='buffNearDeathRegen']">
+		<effect_group>
+			<passive_effect name="WaterChangeOT" operation="base_add" value="1">
+				<requirement name="StatComparePercCurrentToMax" stat="Water" operation="LTE" value="@$NearDeathRegenWater"/>
+			</passive_effect>
+		</effect_group>
+  </append>
+-->
+  <!--
+    HELPGOOD: vanilla already keeps infection after death in injured ressurect mode
+  <append xpath="/buffs/buff[@name='buffNearDeathTraumaTrigger']/effect_group">
+    <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="infectionCounter" operation="set" value="@fGSKinfectionCounterBkp">
+      <requirement name="CVarCompare" cvar="fGSKinfectionCounterBkp" operation="GT" value="@infectionCounter"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="$infectionCureCounter" operation="set" value="@fGSKinfectionCureCounterBkp">
+      <requirement name="CVarCompare" cvar="fGSKinfectionCureCounterBkp" operation="GT" value="@$infectionCureCounter"/>
+    </triggered_effect>
+    <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffInfectionMain">
+      <requirement name="NotHasBuff" buff="buffInfectionMain"/>
+      <requirement name="CVarCompare" cvar="fGSKinfectionCounterBkp" operation="GT" value="@infectionCounter"/>
+    </triggered_effect>
+  </append>
+-->
+  <!-- HELPGOOD:
+    let buff be removed:
+    if you managed to drink somehting AND...
+  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/requirement[
+      @name='StatComparePercCurrentToMax' and
+      @stat='Water' and
+      @operation='GTE'
+    ]/@value">@fGSKWaterPercBkp</set>
+-->
+  <!-- HELPGOOD:
+    ...AND if you managed to heal yourself a bit
+  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group/requirement[
+      @name='StatComparePercCurrentToModMax' and
+      @stat='Health' and
+      @operation='GTE'
+    ]/@value">0.75</set>
+-->
+  <!-- HELPGOOD:
+    resets the duration if died again b4 buff ends
+  <set xpath="/buffs/buff[@name='buffNearDeathRegen']/stack_type/@value">replace</set>    
+-->
+  <remove xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group" help="this buff seems to be called directly by the engine hardcoded, so just disable it's effects but do not remove the buff to avoid breaking other mods and the engine"/>
+  <append xpath="/buffs/buff[@name='buffNearDeathRegen']/effect_group">
+    <effect_group>
+      <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKANewSurvivorFindsYourLoot"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffNearDeathRegen">
+        <requirement name="NotHasBuff" buff="buffGSKANewSurvivorFindsYourLoot"/>
+      </triggered_effect>
+    </effect_group>
+  </append>
+  <append xpath="/buffs">
+    <buff name="buffGSKANewSurvivorFindsYourLoot" name_key="buffNearDeathTraumaName" icon="ui_game_symbol_near_death_trauma" icon_color="0,255,0" hidden="true" help="you are not resurrecting now, you are another survivor that is almost as badly injured as the one that just died, you are barely alive only, but food and water above minimum are kept">
+      <stack_type value="replace"/>
+      <duration value="600"/>
+      <display_value_key value="NDR {0}"/>
+      <display_value value="fGSKPercBarelyAlive"/>
+      <stack_type value="ignore"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffInjuryBleeding,buffInjuryBleedingOne,buffInjuryBleedingTwo,buffInternalBleeding,buffEWLethalBleeding,buffEWBleed" help="TODO: remove only killing buffs like bleeding, radiation etc. Not sure if all these I already put here are really required to be removed, would have to test it."/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKWaterPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKWaterPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKFoodPercBkp" operation="set" value="@fGSKPercBarelyAlive">
+          <requirement name="CVarCompare" cvar="fGSKFoodPercBkp" operation="LT" value="@fGSKPercBarelyAlive"/>
+        </triggered_effect>
+        <passive_effect name="HealthChangeOT" operation="base_add" value="1">
+          <requirement name="StatComparePercCurrentToModMax" stat="health" operation="LTE" value="@fGSKPercBarelyAlive"/>
+        </passive_effect>
+        <passive_effect name="FoodChangeOT" operation="base_add" value="1">
+          <requirement name="StatComparePercModMaxToMax" stat="Food" operation="LTE" value="@fGSKFoodPercBkp"/>
+        </passive_effect>
+        <passive_effect name="WaterChangeOT" operation="base_add" value="1">
+          <requirement name="StatComparePercCurrentToMax" stat="Water" operation="LTE" value="@fGSKWaterPercBkp"/>
+        </passive_effect>
+      </effect_group>
+    </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']/effect_group[@id='GSKConfigConstants']">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKPercBarelyAlive" operation="set" value="0.10" help="ressurrect helper"/>
+  </append>
+</GhussakTweaks>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <set xpath="/quests/quest[starts-with(@id,'treasure_')]/objective/property[@name='distance']/@value" help="100 is far enough to have not had yet generated world there right? but anyway I think it is an world override (like POI reset) and could be lower than 100.">0-1250</set>
+  <append xpath="/quests/quest[starts-with(@id,'treasure_')]">
+    <!-- HELPGOOD:CODEGEN:clear;egrep "spawner" _NewestSavegamePath.IgnoreOnBackup/ConfigsDump/gamestages.xml |egrep 'spawner *name="[^"]*"' -oi |egrep -o '"[^"]*"' |tr -d '"' |egrep -i zombie |sort -u |egrep -vi "horde|list" |sed 's@.*@<action type="SpawnGSEnemy" id="&" value="0-1" />@' -->
+    <!-- HELPGOOD: this ends up being like a mini bloodmoon somehow :) -->
+    <event type="TreasureRadiusReduction" chance="1.00" help="TODOA: is there some way to know if player is near a treasure dig place? this trick still let the patient player to lure zombs on other foes.">
+      <action type="SpawnGSEnemy" id="animalChickenTreasureRadiusReductionIndicator" value="1"/>
+    </event>
+    <event type="TreasureRadiusReduction" chance="0.75">
+      <action type="SpawnGSEnemy" id="SleeperGSList" value="3-6"/>
+      <action type="SpawnGSEnemy" id="animalZombieDog" value="1-2"/>
+      <action type="SpawnGSEnemy" id="zombieFatCop" value="1" help="ISSUE?: 0-1 is not like 50% chance, ends up being like 5% chance? the random is a trunc float not an integer nor a round nearest float?"/>
+      <action type="SpawnGSEnemy" id="zombieMutated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieScreamer" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFatHawaiian" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFemaleFat" value="1"/>
+    </event>
+    <event type="TreasureRadiusReduction" chance="0.50">
+      <action type="SpawnGSEnemy" id="SleeperGSList" value="3-6"/>
+      <action type="SpawnGSEnemy" id="animalZombieDog" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFatCopFeral" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieMutatedFeral" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieScreamerFeral" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFatHawaiianFeral" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFemaleFatFeral" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieWightFeral" value="1"/>
+    </event>
+    <event type="TreasureRadiusReduction" chance="0.25">
+      <action type="SpawnGSEnemy" id="SleeperGSList" value="3-6"/>
+      <action type="SpawnGSEnemy" id="animalZombieVultureRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFatCopRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieMutatedRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieScreamerRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFatHawaiianRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieFemaleFatRadiated" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieWightRadiated" value="1"/>
+    </event>
+    <event type="TreasureRadiusReduction" chance="0.05">
+      <action type="SpawnGSEnemy" id="SleeperGSList" value="3-6"/>
+      <action type="SpawnGSEnemy" id="animalZombieBear" value="1"/>
+      <action type="SpawnGSEnemy" id="zombieDemolition" value="1"/>
+    </event>
+    <!-- HELPGOOD:TODO: random spawn raiders on objective completion, just after player gets stuff from chest, but how to link quest code with buffs and gameevents? -->
+  </append>
+  <append xpath="/quests/quest[       starts-with(@id,'treasure_') or        starts-with(@id,'tier')     ]">
+    <property name="difficulty" value="insane"/>
+    <property name="difficulty_tier" value="1" help="!!!IMPORTANT!!! other than 1 prevents interacting with traders! DO NOT CHANGE THIS!"/>
+  </append>
+  <insertAfter xpath="//objective[@type='ReturnToNPC']" help="the phase must match the objective's phase. it shall happen after opening the chest and getting stuff to retrieve. Dont spawn too many as they also drop good loot. TODO: create a bash script to use the correct phase in case it may differ than 4 in some vanilla update or to fit other player's mods">
+    <action type="SpawnGSEnemy" id="NPCBanditsBossHorde" value="1" phase="4" chance="0.10"/>
+    <action type="SpawnGSEnemy" id="NPCBanditsRangedHorde" value="1" phase="4"/>
+    <action type="SpawnGSEnemy" id="NPCBanditsMeleeHorde" value="1-3" phase="4"/>
+  </insertAfter>
+  <append xpath="/quests/quest[starts-with(@id,'treasure_')]/objective[@type='TreasureChest']" help="TODO: is there some way to addbuff or write a cvar when the treasure quest BEGINS!? the idea is to prevent npc sneak workaround that is quite powerful while treasure quest is running.">
+    <property name="complete_event" value="eventQuestTreasureSpawnRaiders" help="this may only work using the default locked non pickable chest (that morphs from secure to insecure after unlocking or breaking the lock), the quest seems hardcoded linked to the opening event of that chest or when items are picked up from it right? TODO: so.. this doesnt work. using workaround from pickupable treasure chest"/>
+    <property name="block" value="blkGSKburiedTreasure" help="this is the pickupable chest that can be opened elsewhere and will trigger raiders' ambush"/>
+    <property name="alt_block" value="blkGSKburiedTreasure"/>
+  </append>
+</GhussakTweaks>

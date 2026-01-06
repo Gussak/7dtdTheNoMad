@@ -1,0 +1,1364 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/items/item[@name='meleeToolFlashlight02']">
+    <effect_group tiered="false">
+      <requirement name="IsLocalPlayer"/>
+      <triggered_effect trigger="onSelfItemActivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="1"/>
+      <triggered_effect trigger="onSelfItemActivate" action="AddBuff" target="self" buff="buffNightVisionUsesBatteries121"/>
+      <triggered_effect trigger="onSelfItemDeactivate" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
+      <triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" target="self" cvar="bGSKEnergyWL" operation="set" value="0"/>
+    </effect_group>
+  </append>
+  <append xpath="/items">
+    <item name="GSKDbgNVBatteryCreate" help="lvl1 car battery with full energy using the charger post will let u create 2 strong NV (40 weak nv). lvl6 will be 4 strong nv.">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="60,120,40"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreateDbg"/>
+      <property name="Stacknumber" value="1"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="60"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="LT" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NVBatteryCreate,NightVisionBattery"/>
+        <property name="Create_item_count" value="1,1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="1200"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NVBatteryCreate,NightVisionBatteryStrong"/>
+        <property name="Create_item_count" value="1,1"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="1200"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+      </effect_group>
+    </item>
+    <item name="NVBatteryCreate">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="EconomicValue" value="13"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="60,120,40"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreate"/>
+      <property name="Stacknumber" value="65535"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="60"/>
+        <requirement name="!HasBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NightVisionBattery"/>
+        <property name="Create_item_count" value="1"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="60"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+      </effect_group>
+    </item>
+    <item name="NVBatteryCreateStrong">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="60,180,150"/>
+      <property name="DescriptionKey" value="dkNVBatteryCreateStrong"/>
+      <property name="Stacknumber" value="65535"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="1200"/>
+        <requirement name="!HasBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="NightVisionBatteryStrong,electronicsParts"/>
+        <property name="Create_item_count" value="1,0-1"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKNVBatteryCreateConsumeEnergy" operation="set" value="1200"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNVBatteryCreateConsumeEnergy"/>
+      </effect_group>
+    </item>
+    <item name="silver01gram">
+      <property name="CustomIcon" value="resourceSilverNugget"/>
+      <property name="Stacknumber" value="311"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="HoldType" value="45"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+    </item>
+    <item name="gold01gram">
+      <property name="CustomIcon" value="resourceGoldNugget"/>
+      <property name="Stacknumber" value="311"/>
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="HoldType" value="45"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="Mmetal"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="SellableToTrader" value="false"/>
+    </item>
+    <item name="electronicsParts">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property name="DescriptionKey" value="dkelectronicsParts"/>
+      <property name="CreativeMode" value="Player"/>
+      <property name="CustomIconTint" value="FFFF00"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="ItemTypeIcon" value="bundle"/>
+      <property name="Stacknumber" value="150"/>
+      <property name="EconomicValue" value="100" help="electronic parts shall not be craftable, player should not sell it, but if needs it has some value"/>
+      <property name="SellableToTrader" value="true"/>
+      <property class="Action0">
+        <property name="Create_item" value="silver01gram,gold01gram,resourceElectricParts,resourceScrapPolymers,resourceScrapIron"/>
+        <property name="Create_item_count" value="3,1,2,3,10"/>
+      </property>
+    </item>
+    <item name="NightVisionBatteryBase">
+      <property name="CreativeMode" value="None"/>
+      <property name="HoldType" value="31"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapLeadLarge"/>
+      <property name="Stacknumber" value="60"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="NightVisionBatteryBase2">
+      <property name="CreativeMode" value="None"/>
+      <property name="HoldType" value="31"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property name="Tags" value="junk"/>
+      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab"/>
+      <property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+      <property name="Material" value="MresourceScrapLeadLarge"/>
+      <property name="Stacknumber" value="60"/>
+      <property name="Weight" value="1"/>
+      <property name="EconomicValue" value="30"/>
+      <property name="SellableToTrader" value="false"/>
+      <property name="Group" value="Resources,Chemicals"/>
+      <property name="DegradationBreaksAfter" value="false"/>
+      <property class="Action0">
+        <property name="Class" value="OpenBundle"/>
+        <property name="Delay" value="0.25"/>
+        <property name="Use_time" value="0.25"/>
+        <property name="Create_item" value="resourceWood"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="NightVisionBattery">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBattery"/>
+      <property name="CustomIconTint" value="0,255,0"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="3"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryCharge"/>
+      </effect_group>
+    </item>
+    <item name="NightVisionBatteryStrong">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBatteryStrong"/>
+      <property name="CustomIconTint" value="0,255,255"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Random_item" value="resourceScrapLead"/>
+        <property name="Random_item_count" value="45-90"/>
+        <property name="Random_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeStrong"/>
+      </effect_group>
+    </item>
+    <item name="NightVisionBatterySuperOvercharge">
+      <property name="Extends" value="NightVisionBatteryBase2"/>
+      <property name="DescriptionKey" value="dkNightVisionBatterySuperOvercharge"/>
+      <property name="CustomIconTint" value="255,0,0"/>
+      <property class="Action0">
+        <property name="Create_item" value="resourceScrapLead"/>
+        <property name="Create_item_count" value="0"/>
+        <property name="Random_item" value="resourceScrapLead"/>
+        <property name="Random_item_count" value="720-1440"/>
+        <property name="Random_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffNightVisionAddBatteryChargeSuperOvercharge"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnHeroToggle">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeSlow"/>
+      <property name="DescriptionKey" value="dkGSKElctrnHeroToggle"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="CustomIcon" value="7dtdHero"/>
+      <property name="CustomIconTint" value="128,128,128"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnHero">
+          <requirement name="HasBuff" buff="buffGSKElctrnHeroEnabled"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKElctrnHero"/>
+      </effect_group>
+    </item>
+    <item name="GSKRepairElctrnBase">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
+      <property name="CustomIconTint" value="0,200,200"/>
+      <property name="DescriptionKey" value="dkModUpgOrFixInfo"/>
+      <property class="Action0">
+        <property name="Class" value="Melee" help="melee just to prevent player destroying it before using to craft specific object"/>
+        <property name="Range" value="0"/>
+        <property name="Sphere" value="0"/>
+        <property name="Block_range" value="0"/>
+        <property name="DamageEntity" value="0"/>
+        <property name="DamageBlock" value="0"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="GSKRepElctrnParts">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="CustomIconTint" value="0,150,150"/>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKRepairTT">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTS">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTA">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTH">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTP">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GT" value="0.01"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTR">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GT" value="0.01"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="LT" value="0.0"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKRepairTB">
+      <property name="Extends" value="GSKRepElctrnParts"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GT" value="0.01"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="1.0"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="subtract" value="0.10"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0">
+          <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="LT" value="0.0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceElctrnMods">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="1"/>
+      <property name="DescriptionKey" value="dkGSKReplaceElctrnMods"/>
+      <property name="CustomIconTint" value="0,150,250"/>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKReplaceTA">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTA" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTA" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTB">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTB" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTB" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTH">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTH" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTH" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTP">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTP" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTR">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTR" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTR" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTS">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTS" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTS" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKReplaceTT">
+      <property name="Extends" value="GSKReplaceElctrnMods"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTT" operation="GTE" value="0.95"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="fGSKDmgPercTT" operation="set" value="0.0"/>
+      </effect_group>
+    </item>
+    <item name="GSKUpgElctrnParts">
+      <property name="Extends" value="GSKRepairElctrnBase"/>
+      <property name="Stacknumber" value="100"/>
+      <property name="CustomIconTint" value="250,200,100"/>
+      <property class="Action1">
+        <property name="Class" value="OpenBundle"/>
+        <property name="Create_item" value="resourceElectricParts,gold01gram,silver01gram,electronicsParts"/>
+        <property name="Create_item_count" value="1,30,60,1"/>
+      </property>
+    </item>
+    <!-- HELPGOOD: these will be further patched below! here is just specific configs! -->
+    <item name="GSKUpgradeTT">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="modMeleeClubBarbedWire"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTT" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTT" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTS">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="armorSteelSetParts"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTS" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTS" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTA">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="meleeWpnBladeT1HuntingKnife"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTA" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTA" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTH">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="modArmorImpactBracing"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTH" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTH" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTP">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTP" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTP" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTR">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="resourceArrowHeadSteelAP"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTR" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTR" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKUpgradeTB">
+      <property name="Extends" value="GSKUpgElctrnParts"/>
+      <property name="CustomIcon" value="carBattery"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="@iGSKperkElectrLvl"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.0625">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="4.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="5.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.125">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="3.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="4.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.25">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="2.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="3.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="0.5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="1.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="2.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GTE" value="0.0"/>
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="LT" value="1.0"/>
+          <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" target="self" cvar="iGSKEnergyLvlTB" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKEnergyLvlTB" operation="GT" value="4.9375"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKCFGElctrnTeleChangeQuadrantIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleChangeQuadrantIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <property name="Tags" value="teleportquadrant"/>
+      <property class="Action0">
+        <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="3"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <effect_group tiered="false" help="Quadrant X standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantX" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false" help="Quadrant Z standing">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantZ" operation="add" value="-1"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="!EntityHasMovementTag" tags="running"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantCalc"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="EntityHasMovementTag" tags="running"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="CVarCompare" cvar="iGSKExplrUndPOIcredit" operation="GTE" value="1" help="sync with buffGSKTeleQuadrantStart"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleQuadrantStart">
+          <requirement name="NotHasBuff" buff="buffGSKTeleQuadrantDeny"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleQuadrantStart"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGElctrnTeleChangeSpawnIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleChangeSpawnIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKElctrnTeleSpawnLAST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="-10">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKElctrnTeleSpawnFIRST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKElctrnTeleSpawnLAST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKElctrnTeleSpawnFIRST"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKElctrnTeleSpawnLAST">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="GT" value="@.iGSKElctrnTeleSpawnLAST"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTeleportedToSpawnPointIndex" operation="set" value="@.iGSKElctrnTeleSpawnFIRST">
+          <requirement name="CVarCompare" cvar="iGSKTeleportedToSpawnPointIndex" operation="LT" value="@.iGSKElctrnTeleSpawnFIRST"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId" help="sets .fGSKCFGTMPval2"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnLog"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleSpawnBiomeId" help="sets .fGSKCFGTMPval2"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTeleportedToSpawnPointIndex"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportUndergroundFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod. TODO: allow this only on the first game day, to prevent using it on bloodmoons.">
+      <property name="Extends" value="GSKBaseActivatorConsumableFast"/>
+      <property name="EconomicValue" value="999"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportUndergroundFreeAndSafeCall"/>
+      <property name="CustomIconTint" value="80,80,128"/>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="PlayerLevel" operation="LT" value="2" help="only meant to be used just after joining"/>
+        <requirement name="!IsBloodMoon" help="this is not enough, player may use it just before bloodmoon kicks in.. TODO:ISSUE?: the engine may even not spawn zombs properly if player is that far away underground?"/>
+        <property name="Class" value="Eat" help="because 2nd actiom must also consume!"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportUndergroundFree"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="0">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="50">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="40">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="30">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="20">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="10"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleUndDist" operation="set" value="10">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKTeleUndDist"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@.iGSKTeleUndDist"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety50">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="50"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety40">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="40"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety30">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="30"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety20">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="20"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="CallGameEvent" event="eventGSKTeleUndergroundFirstSpawnSafety10">
+          <requirement name="CVarCompare" cvar=".iGSKTeleUndDist" operation="Equals" value="10"/>
+        </triggered_effect>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToBiomeFreeAndSafeCall" help="do not allow crafting as this dont use energy nor dmgs the mod.">
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="EconomicValue" value="999"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToBiomeFreeAndSafeCall"/>
+      <property name="CustomIconTint" value="80,80,80"/>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCWarpartyCountCurrent" operation="Equals" value="0"/>
+        <requirement name="PlayerLevel" operation="LT" value="2" help="only meant to be used just after joining"/>
+        <property name="Class" value="Eat" help="to be consumed at secondary action"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCycleBiomeChoice"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKTeleRndSpwChBioIdAllowTeleport" operation="set" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKGodModeNewbie"/>
+        <!-- HELPGOOD: this tho is not chaotic as buffGSKTeleRandomQuadrantTilMatchBiome
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
+-->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGElctrnTeleportToBiome" help="keep it equal to GSKElctrnTeleportToBiomeFreeAndSafeCall least the 2nd action">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleportToBiome"/>
+      <property name="CustomIconTint" value="80,80,80"/>
+      <property class="Action1">
+        <property name="Class" value="Eat" help="to be consumed at secondary action"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCycleBiomeChoice"/>
+        <!-- HELPGOOD: this tho is not chaotic as buffGSKTeleRandomQuadrantTilMatchBiome
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleportToRandomSpawnUsingChosenBiomeId"/>
+-->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKTeleRandomQuadrantTilMatchBiome"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGElctrnTeleportToSkyDistIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleportToSkyDistIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="LT" value="@iGSKEnergyLvlTP"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="@.iGSKElctrnTeleSkyDistIndexMax">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="GT" value="@.iGSKElctrnTeleSkyDistIndexMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleSkyDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleSkyDistIndex" operation="LT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleSkyDistIndex"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleSkyDistIndex"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@.iGSKElctrnTeleSkyDistIndexMax"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@.iGSKElctrnTeleSkyDistIndexMax"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGElctrnTeleportDistIndex">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="DescriptionKey" value="dkGSKCFGElctrnTeleportDistIndex"/>
+      <property name="CustomIconTint" value="0,0,255"/>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="add" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="LT" value="@iGSKEnergyLvlTP" help="this shall change if there are more indexes"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="@iGSKElctrnTeleportDistIndexMax">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="GT" value="@iGSKElctrnTeleportDistIndexMax"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportDistIndex" operation="set" value="1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="LT" value="1"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsCfgOptsMsgs_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 1">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 2">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 2">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 3">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 3">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 4">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 4">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 5">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 5">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 6">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Distance index 6">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsCfgOptsMsgs_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+      </effect_group>
+      <effect_group tiered="false">
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportMixUpDown" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportMixUpDown" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="GT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Diagonal In-Front and UP">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ShowToolbeltMessage" message="Teleport Straight In-Front">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportMixUpDown" operation="add" value="-1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKElctrnTeleportMixUpDown" operation="set" value="0">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="LT" value="-1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Diagonal In-Front and DOWN">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ShowToolbeltMessage" message="Teleport Straight In-Front">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleportDistIndex"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKElctrnTeleportDistIndex"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="@iGSKElctrnTeleportMixUpDown"/>
+      </effect_group>
+    </item>
+    <item name="GSKCFGTeleUndergroundFreeDelay">
+      <property name="ItemTypeIcon" value="computer"/>
+      <property name="Extends" value="GSKBaseActivatorReqMeleeConfiguratorFast"/>
+      <property name="EconomicValue" value="1"/>
+      <property name="DescriptionKey" value="dkGSKCFGTeleUndergroundFreeDelay"/>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKTTUnderFreeDelay" operation="add" value="1"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar="iGSKTTUnderFreeDelay" operation="add" value="-1">
+          <requirement name="CVarCompare" cvar="iGSKTTUnderFreeDelay" operation="GT" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTTUnderFreeDelay"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval1" operation="set" value="@iGSKTTUnderFreeDelay"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKCFGTMPval2" operation="set" value="0"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportBase">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleport"/>
+      <property name="CustomIcon" value="7dtdTeleport"/>
+      <property name="CustomIconTint" value="128,128,128"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+    </item>
+    <item name="GSKElctrnTeleport" help="TODO:RMMAJORVERSION">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="GSKElctrnTeleportDirection"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+    </item>
+    <item name="GSKElctrnTeleportDir" help="TODO:RMMAJORVERSION">
+      <property name="Extends" value="GSKTRBaseBundle"/>
+      <property class="Action0">
+        <property name="Create_item" value="GSKElctrnTeleportDirection"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+    </item>
+    <item name="GSKElctrnTeleportDirection">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <effect_group tiered="false" help="Teleport in-front">
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="101" help="1: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="111" help="1: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="121" help="1: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="201" help="2: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="211" help="2: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="221" help="2: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="301" help="3: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="311" help="3: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="321" help="3: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="401" help="4: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="411" help="4: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="421" help="4: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="501" help="5: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="511" help="5: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="521" help="5: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="601" help="6: North Dn">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="-1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="611" help="6: North ">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="621" help="6: North Up">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportMixUpDown" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirections_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+      </effect_group>
+      <effect_group tiered="false" help="Teleport up or down">
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsUPDOWN_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="109">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="129">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="1"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="209">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="229">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="2"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="309">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="329">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="3"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="409">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="429">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="4"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="509">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="529">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="5"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="609">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="629">
+          <requirement name="CVarCompare" cvar="iGSKElctrnTeleportDistIndex" operation="Equals" value="6"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <!-- HELPGOOD:_AUTOGENCODE_CREATETELEPORTRANGES_TeleDirectionsUPDOWN_END ABOVE:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createTeleportRanges.sh ===== -->
+      </effect_group>
+      <effect_group tiered="false" help="Teleport but not">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialZero" help="PRIMARY: pseudo tele 0,0,0 to xplod more">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false" help="common">
+        <!-- HELPGOOD: SECONDARY -->
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="0.5"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="0.5"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToSpecial">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToSpecial"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBackpack">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+      </effect_group>
+      <effect_group tiered="false" help="common">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToBedrollLowCost">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
+      <property class="Action0">
+        <requirement name="!IsBloodMoon"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKTeleportLowCost"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="NotHasBuff" buff="buffGSKDeusExEnemyIsNearbyPLAYERBUFF"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="Equals" value="@iGSKPlayerNPCFollowingCountCurrent" help="crouching will make them activelly follow and allow this (right?)"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost" help="this is part of being low cost"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <!-- HELPGOOD
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar=".GSKDummy" operation="Equals" value="1986295" help="any random value just to block this Action1 to prevent player destroying this item by mistake"/>
+      </property>
+-->
+      <property class="Action1" help="cancels the delayed teleport">
+        <requirement name="HasBuff" buff="buffGSKTeleportLowCost"/>
+        <property name="Create_item" value="GSKElctrnTeleportToBedrollLowCost"/>
+        <property name="Create_item_count" value="1"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="1" help="forces bedroll"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialBedroll"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToLandClaimLowCost">
+      <property name="Extends" value="GSKElctrnTeleportToBedrollLowCost"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="Equals" value="@iGSKPlayerNPCFollowingCountCurrent" help="crouching will make them activelly follow and allow this (right?)"/>
+        <property name="Create_item" value="GSKElctrnTeleportToLandClaimLowCost"/>
+      </property>
+      <property class="Action1" help="cancels the delayed teleport">
+        <property name="Create_item" value="GSKElctrnTeleportToLandClaimLowCost"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKLowCostTeleportTarget" operation="set" value="0" help="forces landclaim"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpecialLandClaim"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToHomeAndBack">
+      <property name="Extends" value="GSKElctrnTeleportToBedrollLowCost"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToHomeAndBack"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="Equals" value="@iGSKPlayerNPCFollowingCountCurrent" help="crouching will make them activelly follow and allow this (right?)"/>
+        <property name="Create_item" value="GSKElctrnTeleportToHomeAndBack" help="this is part of being low cost"/>
+      </property>
+      <property class="Action1" help="cancels the delayed teleport">
+        <property name="Create_item" value="GSKElctrnTeleportToHomeAndBack"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKTeleportLowCost"/>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="RemoveBuff" buff="buffGSKTeleportLowCost"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnTeleportToSky">
+      <property name="Extends" value="GSKElctrnTeleportBase"/>
+      <property name="DescriptionKey" value="dkGSKElctrnTeleportToSky"/>
+      <property name="CustomIconTint" value="128,180,220"/>
+      <property class="Action0">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="Equals" value="@iGSKPlayerNPCFollowingCountCurrent" help="crouching will make them activelly follow and allow this (right?)"/>
+      </property>
+      <property class="Action1">
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="fGSKDmgPercTP" operation="LT" value="1.0"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GT" value="0" help="it can become negative as long it is positive"/>
+        <requirement name="NotHasBuff" buff="buffGSKElctrnTeleportAndDebuff"/>
+        <requirement name="CVarCompare" cvar="iGSKPlayerNPCSpecialFollowCountCurrent" operation="Equals" value="@iGSKPlayerNPCFollowingCountCurrent" help="crouching will make them activelly follow and allow this (right?)"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSkyAbove">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSkyAboveButLower">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportToSky"/>
+        <!-- HELPGOOD: secondary -->
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSpawnRANDOM">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="ModifyCVar" cvar=".iGSKElctrnTeleDir" operation="set" value="@.iGSKElctrnTeleSkyLastSpawn">
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfSecondaryActionEnd" action="AddBuff" buff="buffGSKElctrnTeleportToSky"/>
+      </effect_group>
+    </item>
+    <item name="GSKElctrnSlowFall">
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="CustomIcon" value="7dtdShockTip"/>
+      <property name="DescriptionKey" value="dkGSKElctrnSlowFall"/>
+      <property class="Action0">
+        <requirement name="NotHasBuff" buff="buffGSKParachuteSQN"/>
+        <requirement name="CVarCompare" cvar="bGSKEnergyTP" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKBatteryCharges" operation="GTE" value="@iGSKSlowFallConsumeEnergy"/>
+        <requirement name="CVarCompare" cvar=".bGSKSimpleSlowFall" operation="Equals" value="0"/>
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1.0"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="nightvision_toggle"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKSlowFallDelay" operation="set" value="2" help="player has 2s to jump"/>
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKSlowFallSimple"/>
+      </effect_group>
+    </item>
+  </append>
+  <append xpath="/items/item[     starts-with(@name,'GSKRepairT') or      starts-with(@name,'GSKUpgradeT') or      starts-with(@name,'GSKReplaceT')    ]">
+    <!-- HELPGOOD: make it sure tho not change the base item that is used to craft specific repairs-->
+    <property class="Action0">
+      <property name="Class" value="Eat"/>
+    </property>
+    <effect_group tiered="false">
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKRecalcDegradations"/>
+      <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKCalcLightsPercRound"/>
+    </effect_group>
+  </append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,GSKElctrnTeleportToBiomeFreeAndSafeCall,GSKElctrnTeleportUndergroundFreeAndSafeCall</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value" help="there is 2 because the underground teleport may be impossible to use initially where the player was random spawned, if player is below 60 ground elevation and unable to flee enough from enemies, but these are lvl 1 use only and there is also the teleY50">,2,2</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,trapTeleportPadY50</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value">,1</append>
+</GhussakTweaks>
