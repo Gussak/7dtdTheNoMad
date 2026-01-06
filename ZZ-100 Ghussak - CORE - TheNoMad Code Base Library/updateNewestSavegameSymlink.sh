@@ -4,6 +4,14 @@
 
 source ./libSrcCfgGenericToImport.sh
 
+if [[ "${1-}" != --deldone ]];then
+	if CFGFUNCprompt -q "To properly update I need to trash the symlink to the existing one, do it now?";then
+		CFGFUNCtrash _NewestSavegamePath.IgnoreOnBackup
+		$0 --deldone
+		exit
+	fi
+fi
+
 declare -p strCFGSavesPathIgnorable
 ls -ltr "$strCFGSavesPathIgnorable"
 

@@ -893,16 +893,19 @@ export strCFGScriptNameAsID="`CFGFUNCfixId "${strScriptName}"`"
   export strCFGGeneratedWorldsFolder
   export strCFGGeneratedWorldsFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldsFolder"`" #help RwgDir
   
+  #HolyAir6876872628 Ratuuna Mountains
+  : ${strCFGGeneratedWorldSpecificDataAsID:="WorldSeedHolyAir43246_Size10240_TownsNone_WildPOIsMany_RiversMany_CratersMany_CracksMany_LakesMany_Plains0_Hills50_Mountains50"} #help these are all the values used in RWG config screen. Use the biome png file later instead.
+  #HolyAir43246
+  export strCFGGeneratedWorldSpecificDataAsID
+
   if [[ -z "${strCFGGeneratedWorldTNM-}" ]];then
 		if [[ -d "_NewestSavegamePath.IgnoreOnBackup" ]];then
 			strCFGGeneratedWorldTNM="$(readlink _NewestSavegamePath.IgnoreOnBackup |sed -r -e 's@.*/Saves/([^/]*)/.*@\1@g')"
 		fi
   fi
-  : ${strCFGGeneratedWorldTNM:="West Bogacuyu Valley"} #help
+  : ${strCFGGeneratedWorldTNM:="Diluko Mountains"} #help
   export strCFGGeneratedWorldTNM
   export strCFGGeneratedWorldTNMFixedAsID="`CFGFUNCfixId "$strCFGGeneratedWorldTNM"`"
-  : ${strCFGGeneratedWorldSpecificDataAsID:="SeedHolyAir2_Size10240_TownsFew_WildPOIsMany_RiversMany_CratersMany_CracksMany_LakesMany_Plains0_Hills10_Mountains10_Random3"} #help these are all the values used in RWG config screen
-  export strCFGGeneratedWorldSpecificDataAsID
   
   export strCFGGeneratedWorldTNMFolder="$strCFGGeneratedWorldsFolder/$strCFGGeneratedWorldTNM/"
   export strCFGGeneratedWorldTNMFolderRegex="`CFGFUNCprepareRegex "$strCFGGeneratedWorldTNMFolder"`" #help RwgTNMDir
