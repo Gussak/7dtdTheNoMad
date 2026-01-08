@@ -1,7 +1,19 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
   <append xpath="/buffs">
-	</append>
+    <buff name="buffGSKragdollFollowerFarAway" remove_on_death="true">
+      <stack_type value="ignore"/>
+      <duration value="0.05"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="0.5" force="200" target="selfAOE" range="1000" target_tags="npc">
+          <requirement name="!EntityTagCompare" target="other" tags="bandit"/>
+          <requirement name="CVarCompare" target="other" cvar="Leader" operation="Equals" value="@EntityID"/>
+          <requirement name="CVarCompare" target="other" cvar="CurrentOrder" operation="Equals" value="1" help="is buffOrderFollow"/>
+          <requirement name="CVarCompare" target="other" cvar="iGSKNPCLeaderPseudoDistance" operation="GT" value="5" help="only followers stuck far away"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
+  </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
     <effect_group help="ragdoll follower if too close">
       <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="0.5" force="100" target="selfAOE" range="1.25" target_tags="npc" help="the tiny force is also good to push it a bit helping on placing blocks as it moves away. range was 0.65, but may not work if it is above the player..">
