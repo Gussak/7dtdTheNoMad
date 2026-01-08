@@ -61,6 +61,11 @@
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffInjuryStunned01"/>
       </effect_group>
     </item>
+    <item name="GSKbiomeUnlockAllGear">todob
+      <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
+      <property name="DescriptionKey" value="dkGSKbiomeUnlockAllGear"/>
+      <effect_group tiered="false"><triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="biomeWeatherItem1" operation="set" value="1"/><triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="biomeWeatherItem2" operation="set" value="1"/><triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="biomeWeatherItem3" operation="set" value="1"/><triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="biomeWeatherItem4" operation="set" value="1"/></effect_group>
+    </item>
     <item name="bathKit">
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="DescriptionKey" value="dkbathKit"/>
@@ -258,8 +263,8 @@
   <append xpath="/items/item[starts-with(@name,'ammoProjectile') and (contains(@name,'Zombie') or contains(@name,'Vomit'))]/effect_group">
     <triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="fGSKMiasmaDirty" operation="add" value="randomfloat(150,350)" target="otherAOE" range="0.05" target_tags="player"/>
   </append>
-  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,medicalBloodBagEmpty,bathKit</append>
-  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value" help="use just as reinforcement to survive, if you cant hire it">,13,10</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item']/@value">,medicalBloodBagEmpty,bathKit,GSKbiomeUnlockAllGear</append>
+  <append xpath="/items/item[@name='GSKTNMstarterKit']/property[@class='Action0']/property[@name='Create_item_count']/@value">,13,10,1</append>
   <append xpath="/items/item[       @name='meleeToolRepairT0StoneAxe' or       @name='meleeToolAxeT1IronFireaxe' or       @name='meleeWpnBladeT0BoneKnife' or       @name='meleeWpnBladeT1HuntingKnife' or       @name='meleeWpnBladeT1CandyKnife' or       @name='meleeWpnBladeT3Machete' or       @name='meleeWpnKnucklesT1IronKnuckles' or       @name='meleeWpnKnucklesT3SteelKnuckles'       ]">
     <effect_group name="gore harvest" tiered="false">
       <triggered_effect trigger="onSelfPrimaryActionStart" action="AddBuff" target="self" buff="buffGSKGoreHazard">
