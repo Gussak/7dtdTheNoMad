@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="bastille">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKbastilleDmgProt" operation="add" value="0.10">
+        <requirement name="EntityHasMovementTag" tags="idle" help="climbing,floating,idle,jumping,running,swimming,walking"/>
+        <requirement name="CVarCompare" cvar="fGSKbastilleDmgProt" operation="LT" value="1.0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKbastilleDmgProt" operation="set" value="0">
+        <requirement name="!EntityHasMovementTag" tags="idle" help="climbing,floating,idle,jumping,running,swimming,walking"/>
+      </triggered_effect>
+      <passive_effect name="PhysicalDamageResist" operation="perc_add" value="@fGSKbastilleDmgProt"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>

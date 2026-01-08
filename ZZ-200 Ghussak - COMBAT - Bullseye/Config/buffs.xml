@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<GhussakTweaks>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="bullseye">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKbullseyeIncDmg" operation="add" value="randomFloat(0.16,0.33)">
+        <requirement name="EntityHasMovementTag" tags="idle" help="climbing,floating,idle,jumping,running,swimming,walking"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="Equals" value="0" help="used as indicator to holding melee weapon"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKbullseyeIncDmg" operation="set" value="1.0">
+        <requirement name="CVarCompare" cvar="fGSKbullseyeIncDmg" operation="GT" value="1.0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKbullseyeIncDmg" operation="set" value="0">
+        <requirements compare_type="or">
+          <requirement name="!EntityHasMovementTag" tags="idle" help="climbing,floating,idle,jumping,running,swimming,walking"/>
+          <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          <requirement name="CVarCompare" cvar="iGSKMeleeParryChance" operation="GT" value="0" help="used as indicator to holding melee weapon"/>
+        </requirements>
+      </triggered_effect>
+      <passive_effect name="EntityDamage" operation="perc_add" value="@fGSKbullseyeIncDmg"/>
+    </effect_group>
+  </append>
+</GhussakTweaks>
