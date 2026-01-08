@@ -114,16 +114,20 @@ tail -F "$strFlLog" |while read strLine;do
 		done
 		CFGFUNCexec --noErrorExit pkill -SIGCONT -fe "${strExecRegex}"
 	elif [[ "$strLine" =~ ${strChkButtonSpawn} ]];then
-		CFGFUNCinfo "skipping spawn button" # the ;\ below is just to help test on terminal, becomes one line to fix.
-		nWID="$(xdotool search "Default - Wine desktop")";\
-		strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
-		eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;\
-		for((i=0;i<5;i++));do # so while you are using the PC it will try to continue anyway
-			echo -n .
-			xdotool mousemove -w $nWID $nX $nY;
-			xdotool click --repeat 3 --window $nWID 1
-			#xdotool click --repeat 3 --delay 200 --window $nWID 1
-		done
+		CFGFUNCinfo "skipping spawn button (or use regedit)" # the ;\ below is just to help test on terminal, becomes one line to fix.
+		echo 'Using regedit: [HKEY_USERS\...\Software\The Fun Pimps\7 Days To Die] "SkipSpawnButton..."=dword:00000001'
+		nSkipSpawnButton="$(egrep -i "SkipSpawnButton" "$WINEPREFIX/user.reg" |tr -d '\n'|tail -c 1)"
+		if((nSkipSpawnButton==0));then
+			nWID="$(xdotool search "Default - Wine desktop")";\
+			strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
+			eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;\
+			for((i=0;i<5;i++));do # so while you are using the PC it will try to continue anyway
+				echo -n .
+				xdotool mousemove -w $nWID $nX $nY; #x:685 y:323 
+				xdotool click --repeat 3 --window $nWID 1
+				#xdotool click --repeat 3 --delay 200 --window $nWID 1
+			done
+		fi
 	elif [[ "$strLine" =~ ${strChkCrash} ]];then
 		CFGFUNCinfo "![CRASH] !!! $strLine !!!"
 		FUNCsuspendPopup "The game CRASHED!!! the engine must be restarted.\n\n${strLine}"
