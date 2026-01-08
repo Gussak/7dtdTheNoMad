@@ -5,26 +5,43 @@
       <property name="Extends" value="GSKBaseActivatorConsumableSlow"/>
       <property name="CustomIcon" value="7dtdPsyShield"/>
       <property name="CustomIconTint" value="180,180,180"/>
+      <property name="DisplayType" value="drugSteroids"/>
+      <property name="HoldType" value="86"/>
+      <property name="Meshfile" value="@:Other/Items/Health/syringeMedical_01Prefab.prefab"/>
+      <property name="Group" value="Science,Medical,TCMedical"/>
+      <property name="SoundPickup" value="steroids_grab"/>
+      <property name="SoundPlace" value="steroids_place"/>
       <property name="DescriptionKey" value="PsyonicsResistanceDesc"/>
-      <property name="Group" value="Resources,Chemicals,CFChemicals"/>
       <property name="CraftingIngredientTime" value="2"/>
       <property name="Stacknumber" value="125"/>
       <property name="EconomicValue" value="50"/>
-      <property name="Meshfile" value="@:Other/Items/Health/syringeMedical_01Prefab.prefab"/>
       <property name="Material" value="Mglass"/>
       <property class="Action0">
         <property name="Class" value="Eat"/>
         <property name="Delay" value="0.5"/>
         <property name="Use_time" value="0.5"/>
-        <property name="Sound_start" value="nightvision_toggle"/>
+        <property name="Sound_start" value="player_syringe"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWork28"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
-        <triggered_effect help="FixTinyRandomFloat:was iGSKPsyonicChemUseCount add randomFloat(0.5,6.5)" trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,6500)"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
-        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,6.5)"/>
-        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=40651:        <triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="randomFloat(0.5,6.5)"/> -->
+      </effect_group>
+    </item>
+    <item name="drugGSKPsyonicsResistX10">
+      <property name="Extends" value="drugGSKPsyonicsResist"/>
+      <property name="CustomIcon" value="drugSteroids"/>
+      <property name="CustomIconTint" value="220,220,220"/>
+      <property name="Stacknumber" value="10"/>
+      <property name="DescriptionKey" value="PsyonicsResistanceDesc"/>
+      <property name="EconomicValue" value="500"/>
+      <property name="SellableToTrader" value="true"/>
+      <property class="Action0">
+        <property name="Class" value="Eat"/>
+        <property name="Delay" value="1"/>
+        <property name="Use_time" value="..."/>
+        <property name="Sound_start" value="player_syringe"/>
+      </property>
+      <effect_group tiered="false">
+        <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKPsyResistWorkX10loop"/>
       </effect_group>
     </item>
     <item name="drugGSKwightEssence">
@@ -39,7 +56,7 @@
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1"/>
         <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_drinking"/>
+        <property name="Sound_start" value="player_syringe"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKWightEssence"/>
@@ -57,7 +74,7 @@
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1"/>
         <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_drinking"/>
+        <property name="Sound_start" value="player_syringe"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKVampireEssence"/>
@@ -75,7 +92,7 @@
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1"/>
         <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_drinking"/>
+        <property name="Sound_start" value="player_syringe"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKMutantEssence"/>
@@ -95,7 +112,7 @@
         <property name="Class" value="Eat"/>
         <property name="Delay" value="1"/>
         <property name="Use_time" value="..."/>
-        <property name="Sound_start" value="player_drinking"/>
+        <property name="Sound_start" value="player_syringe"/>
       </property>
       <effect_group tiered="false">
         <triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffGSKMonsterMixEssence"/>

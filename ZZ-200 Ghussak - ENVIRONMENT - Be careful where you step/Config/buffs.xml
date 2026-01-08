@@ -3,11 +3,11 @@
   <append xpath="/buffs">
     <buff name="buffGSKStumbleOnThingsOnTheGround" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
       <stack_type value="ignore"/>
-      <duration value="6" help="player takes 3s to get up so 6s is like a cooldown safety to let player move away"/>
-      <update_rate value="7"/>
+      <duration value="0.05"/>
       <effect_group>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0" help="stand up"/>
         <requirement name="CVarCompare" cvar="_underwater" operation="Equals" value="0" help="ugh"/>
+        <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGcoolDown" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmpChk" operation="set" value="6">
           <requirement name="!EntityHasMovementTag" tags="running"/>
         </triggered_effect>
@@ -27,6 +27,7 @@
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] You stumble in something on the ground (crouch to prevent this)"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-1"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGtmp" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGcoolDown" operation="set" value="@.iGSKStumbleOTOTGcoolDownCfg"/>
       </effect_group>
     </buff>
     <buff name="buffGSKtrashLandmine" hidden="false" help="visible mainly to check on buffs list if all blocks are working">
@@ -59,7 +60,7 @@
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
-    <effect_group help="ragdoll: player running with injured legs">
+    <effect_group help="ragdoll: player running with injured legs (has no cooldown to prevent it becoming a super power. it is not about adrenaline focus, it is about mechanical malfuntioning)">
       <requirement name="EntityHasMovementTag" tags="running"/>
       <requirement name="!EntityHasMovementTag" tags="climbing" help="by also using the hands to climb vertical ladders, will prevent ragdoll, vanilla already applies other damages just cuz of running tho"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKRunInjureLegRagdollChance" operation="set" value="-1"/>
@@ -89,7 +90,11 @@
         <requirement name="CVarCompare" cvar=".iGSKRunInjureLegRagdollDoIt" operation="Equals" value="1"/>
       </triggered_effect>
     </effect_group>
+    <effect_group help="ragdoll: by fall impact and stumble cooldown">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKStumbleOTOTGcoolDown" operation="add" value="-1"/>
+    </effect_group>
     <effect_group help="ragdoll: by fall impact">
+      <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGcoolDown" operation="LTE" value="0"/>
       <!-- HELPGOOD:
         <triggered_effect trigger="onSelfFallImpact" action="ModifyCVar" cvar=".fGSKFallSpeedRagDollCheckLuckTst" operation="set" value="randomFloat(0,1)" help="This is not good, most of the time it results in 1.00"/>
 -->
@@ -150,9 +155,11 @@
       </triggered_effect>
     </effect_group>
     <effect_group help="ragdoll: by fall impact">
+      <requirement name="CVarCompare" cvar=".iGSKStumbleOTOTGcoolDown" operation="LTE" value="0"/>
       <requirement name="CVarCompare" cvar=".bGSKDoRagdollFromFallImpact" operation="Equals" value="1"/>
       <triggered_effect trigger="onSelfFallImpact" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
       <triggered_effect trigger="onSelfFallImpact" action="ShowToolbeltMessage" message="[TNM] You don't land well and fall down..." help="To land and don't fall down: be in good health, use impact bracing mod, crouch, use steroids, use wight powers, use cosmic blood moon power, dont be encumbered, keep body fat low, heal your legs and have good luck."/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKStumbleOTOTGcoolDown" operation="set" value="@.iGSKStumbleOTOTGcoolDownCfg"/>
       <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedLastX100"/>
       <triggered_effect trigger="onSelfFallImpact" action="CVarLogValue" cvar=".fGSKFallSpeedRagDollCheckLuck"/>
     </effect_group>

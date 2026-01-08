@@ -27,10 +27,25 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="add" value="@.fGSKPResAdd"/>
         <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyStats" stat="Water" operation="subtract" value="3"/>
+        <triggered_effect help="FixTinyRandomFloat:was iGSKPsyonicChemUseCount add randomFloat(0.5,6.5)" trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="set" value="randomInt(500,6500)"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".fGSKFixTinyRandomFloatTmp" operation="divide" value="1000" help="FixTinyRandomFloat"/>
+        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="@.fGSKFixTinyRandomFloatTmp" help="FixTinyRandomFloat: was randomFloat(0.5,6.5)"/>
+        <!-- HELPGOOD:FixTinyRandomFloat:OriginalLineData:LineNumber=34:        <triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar="iGSKPsyonicChemUseCount" operation="add" value="randomFloat(0.5,6.5)"/> -->
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKPsyResistDur" operation="subtract" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKPsyResistWork28">
           <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LTE" value="0"/>
         </triggered_effect>
+      </effect_group>
+    </buff>
+    <buff name="buffGSKPsyResistWorkX10loop" icon="7dtdPsyShield" name_key="PsyonicsResistance" description_key="PsyonicsResistanceDesc" remove_on_death="false">
+      <stack_type value="duration"/>
+      <duration value="11.5"/>
+      <update_rate value="1"/>
+      <display_value value="fGSKPsyResistDur"/>
+      <display_value_key value="{0:0}s"/>
+      <effect_group>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKPsyResistWork28"/>
       </effect_group>
     </buff>
     <buff name="buffGSKMutant_ChkAndApplyOnMobs21" hidden="true">
