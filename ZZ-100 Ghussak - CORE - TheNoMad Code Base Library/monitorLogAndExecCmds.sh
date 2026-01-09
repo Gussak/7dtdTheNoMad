@@ -54,7 +54,7 @@ export strExecRegex
 
 function FUNCpromptGfx() {
 	if which yad;then
-		while ! CFGFUNCexec --noErrorExit yad --title "7DTD Log Monitor" --on-top --center --text "$@.\n\nYou need to click OK to continue checking the log.";do :;done
+		while ! CFGFUNCexec --noErrorExit yad --selectable-labels --title "7DTD Log Monitor" --on-top --center --text "$@.\n\nYou need to click OK to continue checking the log.";do :;done
 	else
 		CFGFUNCprompt "$@"
 	fi
@@ -194,7 +194,7 @@ tail -F "$strFlLog" |while read strLine;do
 					CFGFUNCinfo "$strInfo";
 					if ! pgrep "yad.*TNMMonLog:FrozenBlocks" -fa;then
 						function FUNCyad_FrozenShapes() {
-							if yad --title "TNMMonLog:FrozenBlocks" --text "$strInfo" --on-top --centered --no-focus;then
+							if yad --selectable-labels --title "TNMMonLog:FrozenBlocks" --text "$strInfo" --on-top --centered --no-focus;then
 								xterm -title "TNMMonLog:FrozenBlocks" -e wineserver -k
 							fi
 						};export -f FUNCyad_FrozenShapes

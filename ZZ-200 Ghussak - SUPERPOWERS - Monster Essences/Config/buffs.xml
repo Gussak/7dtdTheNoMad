@@ -743,6 +743,10 @@
         <!-- HELPGOOD: the essence item already adds chem use thru a patch here -->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceStack" operation="add" value="1"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKPlayerRagdoll">
+          <requirements compare_type="or" help="if standing up or moving">
+            <requirement name="!EntityHasMovementTag" tags="idle"/>
+            <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+          </requirements>
           <requirement name="RandomRoll" seed_type="Random" min_max="0,10" operation="LT" value="@iGSKEssenceStack"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryStunned03">
@@ -1280,6 +1284,11 @@
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
         <requirement name="!HoldingItemHasTags" tags="shamanPower"/>
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
+        <requirement name="EntityHasMovementTag" tags="idle"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
