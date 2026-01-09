@@ -973,12 +973,14 @@
       <effect_group>
         <requirement name="EntityTagCompare" tags="player"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <requirement name="HoldingItemHasTags" tags="shamanPower"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKTeleToLastPlacedBedroll" help="at 2nd second, as checks before adding god buff. this is important to wait NPC followers be put also in short time god mode for teleport">
           <requirement name="HasBuff" buff="buffGSKGodModeForTeleport" help="at the 2nd second this will kick in"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="at 1st second">
           <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport" help="this will grant some time before calling again the game event"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="randomFloat(1.0,5.0)" help="TODO: should add 1.0 per 25M distance teleported but is there a way to know that?"/>
       </effect_group>
     </buff>
   </append>
@@ -1277,7 +1279,7 @@
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="subtract" value="@iGSKShamanDecayStep">
-        <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
+        <requirement name="!HoldingItemHasTags" tags="shamanPower"/>
         <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="0"/>
       </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="set" value="0">
@@ -1291,11 +1293,11 @@
       <requirement name="!HasBuff" buff="buffGSKVampireEssence"/>
       <requirement name="!HasBuff" buff="buffGSKMutantEssence"/>
       <requirement name="!HasBuff" buff="buffGSKWightEssence"/>
-      <requirement name="!HoldingItemHasTags" tags="shamanpower"/>
+      <requirement name="!HoldingItemHasTags" tags="shamanPower"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKShamanDebuff"/>
     </effect_group>
     <effect_group help="shamanPower:Pain">
-      <requirement name="HoldingItemHasTags" tags="shamanpower"/>
+      <requirement name="HoldingItemHasTags" tags="shamanPower"/>
       <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GT" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="0"/>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKShamanPain" operation="set" value="1">
