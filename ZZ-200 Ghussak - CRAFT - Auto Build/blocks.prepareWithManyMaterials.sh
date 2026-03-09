@@ -89,10 +89,10 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	strVariant="${astrVariant[j]}"
 	#iMaxGrow="${astrVarGrowMax[j]}"
 	if [[ "$strVariant" == A ]];then
-		astrShape=(railing railing ladderSquare plateCornerRound1m plateCornerRound1m catwalkPlate)
+		astrShape=(catwalkV2RailSinglePlain railing ladderSquare plateCornerRound1m plateCornerRound1m catwalkPlate) #the base must resist your own shots, so it must cover the ground below! because if the terrain is soft it may destroy everything after a few shotgun shots!
 	fi
 	if [[ "$strVariant" == B ]];then
-		astrShape=(railing railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3")
+		astrShape=(catwalkV2RailSinglePlain railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3")
 	fi
 	if [[ "$strVariant" == C ]];then
 		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed ladderSquare)
@@ -103,8 +103,8 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	bStairsToHeaven=false
 	if [[ "$strVariant" == E ]];then # stairs to heaven
 		astrShape=(
-			# railing railing  # these 2 makes make it difficult for zombies to climb, but then they will try to break them making it more difficult to defent this structure
-			$(for((i=0;i<150;i++));do echo ladderSquare;done) 
+			catwalkV2RailSinglePlain railing # these 2 makes make it difficult for zombies to climb, but then they will try to break them making it more difficult to defent this structure
+			$(for((i=2;i<150;i++));do echo ladderSquare;done) 
 			$(egrep -iRhI --include=*.xml '<block.*cnt[^"]*' ../* |egrep -o 'cntShippingCrate[^"]*|cntHardenedChestSecure' |sort -ur |sed 's!.*!@&!' |tr '\n' ' ') # all possible simpler containers that accept placing another block over them ex.: "@cntShippingCrateHero" , this will keep the player more time there, increasing the challenge of not falling to death # dont use as they do not fill 100% the block space: cntLootChestHero cntLootChestHeroInsecureT1
 			"@cntMedicLootPileB"
 		) #the last is a chance to find ohShitzDropz
