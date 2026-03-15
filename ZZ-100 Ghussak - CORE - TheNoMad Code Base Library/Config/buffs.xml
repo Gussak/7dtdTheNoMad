@@ -941,6 +941,25 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKinfectionCureCounterBkp" operation="set" value="@$infectionCureCounter"/>
       </effect_group>
     </buff>
+    <buff name="buffGSKragdollEnemySafely" hidden="true" remove_on_death="true" help="ragdoll will cause flood log errors with some enemies (mainly from mods)">
+      <stack_type value="replace"/>
+      <duration value="0"/>
+      <update_rate value="1.0"/>
+      <effect_group help="proper ragdoll">
+        <requirement name="!EntityTagCompare" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        <triggered_effect trigger="onSelfBuffStart" action="Ragdoll" duration="@.buffGSKragdollEnemySafelyDuration"/>
+      </effect_group>
+      <effect_group help="equivalent to ragdoll in terms of combat">
+        <requirement name="EntityTagCompare" compare_type="or" tags="animalSpider01,animalSpider02,animalSpider03"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="AttacksPerMinute" operation="perc_subtract" value="0.99"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKragdollEnemySafelyDuration" operation="add" value="-1.0" help="sync with update_rate"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKragdollEnemySafely">
+          <requirement name="CVarCompare" cvar=".buffGSKragdollEnemySafelyDuration" operation="LTE" value="0"/>
+        </triggered_effect>
+      </effect_group>
+    </buff>
   </append>
   <append xpath="/buffs/buff[@name='god']">
     <effect_group>

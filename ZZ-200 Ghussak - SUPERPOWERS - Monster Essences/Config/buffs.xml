@@ -454,9 +454,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvl" operation="add" value="0.01" help="+100 per lvl above 5, requires a huge horde to reach this">
           <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvl" operation="GTE" value="5.0"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="set" value="@iGSKNearDeathShamanPowerLvl"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="add" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerLimit" operation="multiply" value="10"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerTimeLimit" operation="set" value="@iGSKNearDeathShamanPowerLvl"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerTimeLimit" operation="add" value="1.0"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKShamanPowerTimeLimit" operation="multiply" value="10"/>
         <triggered_effect trigger="onSelfBuffRemove" action="AddBuff" buff="buffGSKallPowers5s"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="fGSKShamanPowerPermBonus" operation="add" value="0.001" help="TODO: use with something"/>
       </effect_group>
@@ -475,7 +475,7 @@
       <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <requirement name="CVarCompare" cvar="fGSKPsyResistDur" operation="LT" value="@iGSKShamanPowerTimeLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKPResAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKPsyResistWork28"/>
       </effect_group>
@@ -484,7 +484,7 @@
       <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKWightEssenceTm" operation="LT" value="@iGSKShamanPowerTimeLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKWightEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKWightEssence"/>
       </effect_group>
@@ -493,7 +493,7 @@
       <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKVampireEssenceTm" operation="LT" value="@iGSKShamanPowerTimeLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKVampireEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKVampireEssence"/>
       </effect_group>
@@ -502,7 +502,7 @@
       <duration value="0.05"/>
       <stack_type value="ignore"/>
       <effect_group>
-        <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LT" value="@iGSKShamanPowerLimit"/>
+        <requirement name="CVarCompare" cvar="iGSKbuffGSKMutantEssenceTm" operation="LT" value="@iGSKShamanPowerTimeLimit"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKbuffGSKMutantEssenceTmAdd" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffGSKMutantEssence"/>
       </effect_group>
@@ -750,7 +750,7 @@
           <requirement name="RandomRoll" seed_type="Random" min_max="0,10" operation="LT" value="@iGSKEssenceStack"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryStunned03">
-          <requirement name="RandomRoll" seed_type="Random" min_max="0,10" operation="LT" value="@iGSKEssenceStack"/>
+          <requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LT" value="@iGSKEssenceStack"/>
         </triggered_effect>
       </effect_group>
     </buff>
@@ -780,7 +780,9 @@
         <requirement name="CVarCompare" cvar="iGSKShamanDebuffTm" operation="LTE" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShamanDebuffTm" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlMax" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKShamanPowerTimeLimit" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKShamanDebuff"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ShowToolbeltMessage" message="[TNM] Super natural beings are satisfied now." help="Shaman powers calm down"/>
       </effect_group>
     </buff>
   </append>
@@ -866,7 +868,7 @@
 -->
       <effect_group help="low psy targets. All organic neutral or foe TODO: should only work with organic foe targets, we could have IsOrganic IsHostile instead of only being able to compare with tags, can we at least check for factions or faction friendlity? should add tags to them like organic, hostile, organicHostile? would be easier..">
         <requirement name="EntityTagCompare" compare_type="or" tags="animal,hostile,zombie,TeleportPlayerToMe"/>
-        <requirement name="!EntityTagCompare" tags="mech"/>
+        <requirement name="!EntityTagCompare" tags="mech" help="not organic"/>
         <requirement name="!EntityTagCompare" tags="flying" help="ISSUE: for some reason flying entities will flood the log with errors even with air_spawn allowed at eventGSKpullPlayerToMe.. but it will work when animalHelperTeleportPlayerToMe2GSK calls this buff... why!?!??! :o :O, tho nothing happens with non hostile flying entities, the buff seems to not be applied.."/>
         <requirement name="IsAlive"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKDartTeleDoIt" operation="set" value="1"/>
@@ -898,7 +900,8 @@
       <effect_group>
         <requirement name="CVarCompare" cvar=".fGSKDartTeleDoIt" operation="Equals" value="1"/>
         <requirement name="IsAlive"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="Ragdoll" duration="10" help="ISSUE: this is to try to prevent the not so rare TeleportToTarget random error flood on the log"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".buffGSKragdollEnemySafelyDuration" operation="set" value="10"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKragdollEnemySafely" help="ISSUE: this is to try to prevent the not so rare TeleportToTarget random error flood on the log"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKpullPlayerToMe"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKpsyonicDeathDelayed1s" help="this grants the target causing the flood of errors on the log will be killed as it would already with the teleport ISSUE: the teleport may not happen. and happens so many log errors of failing to kick in game event action TeleportToTarget. Seems to happen much more often when hitting npcHarleyPipeRifle npcHarleySniperRifle ? or just NPCs? but happened also with a desert fox? and a zombie I think..."/>
       </effect_group>
