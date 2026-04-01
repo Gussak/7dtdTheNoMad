@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <GhussakTweaks>
+  <!--	HELPGOOD: find possible missing mesh or texture , may be sound and other resources references about errors with "Other/Items" in my mods
+	clear;IFS=$'\n' read -d '' -r -a astrList < <(egrep -\-color -iRIoh -\-include="*.xml" -\-exclude-dir="*_NewestSavegamePath*" -\-exclude-dir="*_ReleasePackageFiles_*" -\-exclude-dir="_TMP_DISABLE_MODS_" 'Other/Items[^"]*' ZZ-*Ghussak* |sort -u)&&:;for str in "${astrList[@]}";do echo "$str:$(grep -i "$str" ../Data/Config/*.xml -h |wc -l)";done |grep :0
+
+	IFS=$'\n' read -d '' -r -a astrList < <(egrep -\-color -iRI -\-include="*.xml" -oh 'Other/Items[^"]*' ZZ-*Ghussak* |egrep -v "_NewestSavegamePath|_ReleasePackageFiles_" |sort -u)&&:; for str in "${astrList[@]}";do echo "$str:$(grep -i "$str" ../Data/Config/*.xml -h |wc -l)";done |grep :0
+-->
   <append xpath="/items" help="base easy activators">
     <item name="GSKBaseActivator">
       <property name="NoScrapping" value="true"/>
@@ -54,7 +59,7 @@
     </item>
     <item name="GSKBaseActivatorConsumableSlow" help="can be used from inventory, no need to be in the hand">
       <property name="Extends" value="GSKBaseActivator"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Meshfile" value="@:Other/Items/Food/parcelGenericPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
       <property name="Stacknumber" value="10"/>
       <property class="Action0" help="base must have no requirements">
         <property name="Class" value="Eat" help="Could be also class Activate? No, Activate requires melee."/>
@@ -94,7 +99,7 @@
     </item>
     <item name="GSKBaseActivatorFromInventorySlow" help="can be used from inventory, no need to be in the hand, but create_item must be set for each extending identical to self!">
       <property name="Extends" value="GSKBaseActivatorFromInventoryFast"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
+      <property name="Meshfile" value="@:Other/Items/Food/parcelGenericPrefab.prefab" help="this forces a slow animation, good to be balanced during combat"/>
       <property name="Stacknumber" value="1"/>
       <property class="Action0">
         <property name="Create_item" value="GSKBaseActivatorFromInventorySlow" help="THIS NEEDS TO BE OVERRIDEN!!!"/>
@@ -106,7 +111,7 @@
     </item>
     <item name="GSKBaseActivatorReqMeleeSlow">
       <property name="Extends" value="GSKBaseActivatorReqMeleeFast"/>
-      <property name="Meshfile" value="@:Other/Items/Misc/parcelPrefab.prefab" help="this forces a slow animation, good to be even"/>
+      <property name="Meshfile" value="@:Other/Items/Food/parcelGenericPrefab.prefab" help="this forces a slow animation, good to be even"/>
       <property name="Stacknumber" value="1"/>
     </item>
     <item name="GSKBaseActivatorReqMeleeConfiguratorFast">
