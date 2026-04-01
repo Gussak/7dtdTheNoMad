@@ -116,8 +116,8 @@ tail -F "$strFlLog" |while read strLine;do
 	elif [[ "$strLine" =~ ${strChkButtonSpawn} ]];then
 		CFGFUNCinfo "skipping spawn button (or use regedit)" # the ;\ below is just to help test on terminal, becomes one line to fix.
 		echo 'Using regedit: [HKEY_USERS\...\Software\The Fun Pimps\7 Days To Die] "SkipSpawnButton..."=dword:00000001'
-		nSkipSpawnButton="$(egrep -i "SkipSpawnButton" "$WINEPREFIX/user.reg" |tr -d '\n'|tail -c 1)"
-		if((nSkipSpawnButton==0));then
+		nSkipSpawnButton="$(egrep -i "SkipSpawnButton" "$WINEPREFIX/user.reg" |tr -d '\n' |tail -c 1)"
+		if((nSkipSpawnButton==0));then #TODO is not positioning well...
 			nWID="$(xdotool search "Default - Wine desktop")";\
 			strToEval="$(xwininfo -id $nWID|egrep -i "absolute|width|height" |tr -d ' -'|tr ':\n' '=;')";\
 			eval "$strToEval";nX=$((Width/2));nY=$((Height/2));declare -p nX nY;\
