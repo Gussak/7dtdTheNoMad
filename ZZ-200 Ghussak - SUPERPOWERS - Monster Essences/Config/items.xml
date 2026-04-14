@@ -418,14 +418,15 @@
       <effect_group tiered="false" help="monster essence powers">
         <!-- HELPGOOD:ISSUE: onSelfPrimaryActionRayHit seems to happen about like 8x for every strike, so the buff needs to be a ignore stack -->
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKShamanPowers">
-          <requirement name="IsAlive" target="other"/>
+          <requirement name="!EntityTagCompare" target="other" tags="mech" help="only organic"/>
+          <requirement name="IsAlive" target="other" help="like in is active and moving even if it is a dead zombie"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKallPowers5s" help="workaround to speedup harvesting letting we not need to use another tool for that, could also be considered a necromantic art">
+        <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="self" buff="buffGSKallPowers5s" help="workaround to speedup harvesting organics letting we not need to use another tool for that, could also be considered a necromantic art">
           <requirement name="NotHasBuff" target="self" buff="buffGSKPsyResistWork28"/>
           <requirement name="NotHasBuff" target="self" buff="buffGSKMutantEssence"/>
           <requirement name="NotHasBuff" target="self" buff="buffGSKVampireEssence"/>
           <requirement name="NotHasBuff" target="self" buff="buffGSKWightEssence"/>
-          <requirement name="EntityTagCompare" target="other" tags="animal,zombie" help="zombie is to let Whisperers mod be helped too"/>
+          <requirement name="!EntityTagCompare" target="other" tags="mech" help="only organic"/>
           <requirement name="!IsAlive" target="other"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" target_tags="zombie,animal,bandit,hostile" buff="buffGSKessencePowerDrainHP"/>
@@ -487,7 +488,7 @@
       </effect_group>
     </item>
   </append>
-  <append xpath="/items" help="psyonic bullets are meant to be almost useless without using essences">
+  <append xpath="/items" help="psyonic bullets are meant to be almost useless without using essences. they are like a workaround to ranged psyonic powers.">
     <item name="ammo9mmBulletPsyonic">
       <property name="Extends" value="ammo9mmBulletBall"/>
       <property name="CustomIcon" value="ammo9mmBulletBall"/>
