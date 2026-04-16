@@ -53,10 +53,12 @@
       <stack_type value="ignore"/>
       <update_rate value="0.5" help="to hold player ragdolled if did not step over portal"/>
       <duration value="3.0"/>
-      <effect_group help="means player already teleported and is at destination portal">
+      <effect_group help="OK:means player already teleported and is at destination portal">
         <requirement name="HasBuff" buff="buffGSKteleportPortalStepOver"/>
-        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated:Start(StepOver:YES),Explosion"/>
+        <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated:Start(StepOver:YES),Explosion,SUCCESS"/>
         <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="30" help="per 25 distance. when we be able to place farer, increase this"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="5"/>
       </effect_group>
       <effect_group help="enforces player stepped over the teleporter">
         <requirement name="!HasBuff" buff="buffGSKteleportPortalStepOver"/>
@@ -64,12 +66,19 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated: [TNM] Portal Paradox (you did not step over it and died)!"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Portal Paradox (you did not step over it and died)!"/>
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="p_electric_shock" parent_transform="Spine1" local_offset="0,-.2,0"/>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="5" help="any coherent neardeath will do the trick"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="5"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="this is essential to make it work properly. a player in ragdoll will NOT teleport!!! to teleport the player must step over first!"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_electric_shock"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
       </effect_group>
     </buff>
+  </append>
+  <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group help="Rewind time">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="add" value="-0.75" help="6s with update_rate of 1s from nd lvl 5.0">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathTelePortalLvl" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
   </append>
 </GhussakTweaks>

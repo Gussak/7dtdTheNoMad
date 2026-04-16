@@ -503,6 +503,8 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathBloated" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathOverhydrated" operation="GTE" value="1"/>
           <requirement name="CVarCompare" cvar="iGSKNearDeathChemUse" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathRewindTime" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar="iGSKNearDeathTelePortalLvl" operation="GTE" value="1"/>
         </requirements>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKNearDeath40">
           <requirement name="!HasBuff" buff="buffGSKGodMode"/>
@@ -594,6 +596,9 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathRewindTime" operation="set" value="5">
           <requirement name="CVarCompare" cvar="iGSKNearDeathRewindTime" operation="GT" value="5"/>
         </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="5">
+          <requirement name="CVarCompare" cvar="iGSKNearDeathTelePortalLvl" operation="GT" value="5"/>
+        </triggered_effect>
       </effect_group>
       <effect_group help="update main near death controller TODO: split below in mini mods">
         <requirement name="!HasBuff" buff="buffGSKGodMode"/>
@@ -645,6 +650,9 @@
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathRewindTime">
           <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathRewindTime"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="@iGSKNearDeathTelePortalLvl">
+          <requirement name="CVarCompare" cvar="iGSKNearDeath" operation="LT" value="@iGSKNearDeathTelePortalLvl"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeath" operation="set" value="0">
           <requirement name="CVarCompare" cvar="iGSKNearDeathProtectionCBM" operation="Equals" value="1"/>
