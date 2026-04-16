@@ -61,16 +61,14 @@
       <effect_group help="OK:means player already teleported and is at destination portal">
         <requirement name="HasBuff" buff="buffGSKteleportPortalStepOver"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated:Start(StepOver:YES),Explosion,SUCCESS"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="add" value="1"/>
         <!--HELPGOOD:
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="set" value="0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="add" value="1" />
+				<triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal ISSUE: this may happen before the teleport? exploding again below"/>
 -->
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal ISSUE: this may happen before the teleport? exploding again below"/>
-        <!--HELPGOOD:
-				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal, this shall happen after the teleport only once">
-					<requirement name="CVarCompare" cvar=".GSKtelePortalPhaseActiv" operation="GTE" value="1" help="GTE may be overkill"/>
-				</triggered_effect>
--->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal, this shall happen after the teleport only once">
+          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseActiv" operation="Equals" value="2"/>
+        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="30" help="per 25 distance. when we be able to place farer, increase this"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="5"/>
       </effect_group>
