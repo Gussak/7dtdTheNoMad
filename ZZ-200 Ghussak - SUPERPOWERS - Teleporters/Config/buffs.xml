@@ -6,23 +6,14 @@
       <update_rate value="0.25" help="you have less than one second to activate the teleporter"/>
       <duration value="0" help="1.0 is actually the fixed hardcoded pulse delay of stepping over blocks right? so cant happen more often than that, but shall be less than the portal delay 1s at blocks.xml to happen before teleporting"/>
       <effect_group>
-        <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKteleportPortalExplosionBefore">
-          <requirement name="HasBuff" buff="buffGSKteleportPortalKeepPlayerAlive" help="prevents exploding the target portal on arrival, so move away fast"/>
-        </triggered_effect>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhaseIn" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseIn" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] Activate the Portal NOW!">
-          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="1"/>
-        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Activate the Portal NOW!"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKteleportPortalKeepPlayerAlive">
-          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="2"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport">
-          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="5"/>
-          <requirement name="!HasBuff" buff="buffGSKGodModeForTeleport"/>
+          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="1" help="must enable god mode before explosion. god mode is enabled only after 0.25s thru onSelfBuffUpdate at buffGSKteleportPortalKeepPlayerAlive, what will be at .GSKtelePortalPhaseIn=2 here"/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys origin portal">
-          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="5" help="5-2=3;3*.25=.75;.75s to explode, but will wait up to 1.25s to teleport, so Delay at block must be 1500ms to teleport after explosion!"/>
+          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="Equals" value="5" help="waits 1.25s to explode, so Delay at block must be 1500ms to teleport after explosion! Waiting too much to activate the portal (like if at 1.25s) will make you wait there after the explosion up to 1500ms."/>
         </triggered_effect>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKteleportPortalExplosionBefore">
           <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseIn" operation="GTE" value="6"/>
@@ -31,7 +22,15 @@
     </buff>
     <buff name="buffGSKteleportPortalKeepPlayerAlive" hidden="false" icon="7dtdTeleport" icon_blink="true" icon_color="215,180,220">
       <stack_type value="ignore"/>
-      <duration value="5.0"/>
+      <update_rate value="0.25"/>
+      <duration value="3.0" help="consider 1500ms after activation of the portal Delay"/>
+      <effect_group help="holds player above the teleporter">
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.99"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.99"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="this keeps refreshing duration there"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeForTeleport"/>
+      </effect_group>
     </buff>
     <buff name="buffGSKteleportPortalArrive" hidden="false" icon="7dtdTeleport" icon_blink="true" icon_color="155,180,255">
       <stack_type value="ignore"/>
