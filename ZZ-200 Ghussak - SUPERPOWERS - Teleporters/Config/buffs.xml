@@ -39,12 +39,22 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="this keeps refreshing duration there">
           <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="1"/>
+          <requirement name="EntityTagCompare" compare_type="or" tags="player,npc,hireable"/>
+          <requirement name="!EntityTagCompare" tags="bandit"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseSO" operation="set" value="4">
+          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="LT" value="4"/>
+          <requirement name="HasBuff" buff="buffGSKteleportPortalActivated" help="speedup if activated"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="player must activate the portal before the explosion, will have 1.25s for that">
         <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="Equals" value="5" help="ExplodesHere"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Explosion"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys origin portal"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="-32000" help="because ExplodeTarget gameevent causes no damage?">
+          <requirement name="EntityTagCompare" compare_type="or" tags="zombie,animal,bandit,hostile"/>
+          <requirement name="!EntityTagCompare" tags="hireable"/>
+        </triggered_effect>
       </effect_group>
       <effect_group>
         <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="17" help="OR keeps god mode for extra 17-5=12;12*0.25=3.0s safety in case of gameevent explosion doesnt happen immediately and buffGSKteleportPortalActivated was not called."/>
