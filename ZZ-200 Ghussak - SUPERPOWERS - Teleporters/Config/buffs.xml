@@ -2,9 +2,9 @@
 <GhussakTweaks>
   <append xpath="/buffs">
     <buff name="buffGSKteleportPortalStepOver" hidden="false" icon="7dtdTeleport" icon_blink="true" icon_color="255,180,120">
-      <stack_type value="ignore"/>
+      <stack_type value="effect"/>
       <update_rate value="0.25"/>
-      <duration value="0" help="remember that 1.0s is the fixed engine hardcoded pulse delay of stepping over blocks, right?"/>
+      <duration value="0" help="1.0s is still the fixed engine hardcoded pulse delay of stepping over blocks? stack_type:effect seems to be happening on every update loop now!"/>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Start(Debug)"/>
       </effect_group>
@@ -17,9 +17,14 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Start(OK)">
           <requirement name="!HasBuff" buff="buffGSKteleportPortalActivated"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhase" operation="set" value="0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhase" operation="add" value="1"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".GSKtelePortalPhase"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhaseSO" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseSO" operation="add" value="1"/>
+        <!--HELPGOOD
+				<triggered_effect trigger="onSelfBuffStack" action="ModifyCVar" cvar=".GSKtelePortalPhaseSO" operation="set" value="4" help="to re-explode til player moves away, sync with ExplodesHere-1 (even the update being before, it happens after stack)">
+					<requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="17"/>
+				</triggered_effect>
+-->
+        <triggered_effect trigger="onSelfBuffUpdate" action="CVarLogValue" cvar=".GSKtelePortalPhaseSO"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Activate the Portal NOW!">
@@ -27,26 +32,26 @@
         </triggered_effect>
       </effect_group>
       <effect_group help="hold player above teleporter for the explosion to destroy it">
-        <passive_effect name="RunSpeed" operation="perc_subtract" value="0.9999"/>
-        <passive_effect name="WalkSpeed" operation="perc_subtract" value="0.9999"/>
-        <passive_effect name="JumpStrength" operation="perc_subtract" value="0.9999"/>
+        <passive_effect name="RunSpeed" operation="perc_subtract" value="1.0"/>
+        <passive_effect name="WalkSpeed" operation="perc_subtract" value="1.0"/>
+        <passive_effect name="JumpStrength" operation="perc_subtract" value="1.0"/>
       </effect_group>
       <effect_group>
         <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKGodModeForTeleport" help="this keeps refreshing duration there">
-          <requirement name="CVarCompare" cvar=".GSKtelePortalPhase" operation="GTE" value="1"/>
+          <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="1"/>
         </triggered_effect>
       </effect_group>
       <effect_group help="player must activate the portal before the explosion, will have 1.25s for that">
-        <requirement name="CVarCompare" cvar=".GSKtelePortalPhase" operation="Equals" value="5"/>
+        <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="Equals" value="5" help="ExplodesHere"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Explosion"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys origin portal"/>
       </effect_group>
       <effect_group>
-        <requirement name="CVarCompare" cvar=".GSKtelePortalPhase" operation="GTE" value="17" help="OR keeps god mode for extra 17-5=12;12*0.25=3.0s safety in case of gameevent explosion doesnt happen immediately and buffGSKteleportPortalActivated was not called."/>
+        <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="17" help="OR keeps god mode for extra 17-5=12;12*0.25=3.0s safety in case of gameevent explosion doesnt happen immediately and buffGSKteleportPortalActivated was not called."/>
         <requirement name="!HasBuff" buff="buffGSKteleportPortalActivated" help="or waits that buff end to remove god mode and self"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKteleportPortalStepOver"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveBuff" buff="buffGSKGodModeForTeleport"/>
-        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".GSKtelePortalPhase" operation="set" value="0"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar=".GSKtelePortalPhaseSO" operation="set" value="0"/>
       </effect_group>
     </buff>
     <buff name="buffGSKteleportPortalActivated" hidden="false" icon="7dtdTeleport" icon_blink="true" icon_color="155,180,255">
@@ -56,7 +61,16 @@
       <effect_group help="OK:means player already teleported and is at destination portal">
         <requirement name="HasBuff" buff="buffGSKteleportPortalStepOver"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated:Start(StepOver:YES),Explosion,SUCCESS"/>
-        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal"/>
+        <!--HELPGOOD:
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".GSKtelePortalPhaseActiv" operation="add" value="1" />
+-->
+        <triggered_effect trigger="onSelfBuffStart" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal ISSUE: this may happen before the teleport? exploding again below"/>
+        <!--HELPGOOD:
+				<triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleportPortalExplosion" help="destroys destination portal, this shall happen after the teleport only once">
+					<requirement name="CVarCompare" cvar=".GSKtelePortalPhaseActiv" operation="GTE" value="1" help="GTE may be overkill"/>
+				</triggered_effect>
+-->
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="30" help="per 25 distance. when we be able to place farer, increase this"/>
         <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="set" value="5"/>
       </effect_group>
@@ -75,7 +89,7 @@
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
-    <effect_group help="Rewind time">
+    <effect_group help="Portal">
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathTelePortalLvl" operation="add" value="-0.75" help="6s with update_rate of 1s from nd lvl 5.0">
         <requirement name="CVarCompare" cvar="iGSKNearDeathTelePortalLvl" operation="GT" value="0"/>
       </triggered_effect>
