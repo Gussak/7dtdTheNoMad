@@ -8,7 +8,7 @@
       <effect_group>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Start(Debug)"/>
       </effect_group>
-      <effect_group help="ISSUE:WORKAROUND: activating the portal when you are below it, may trigger block:BuffsWhenWalkedOn calling this buff, why? anyway, if that happens, just deny this buff until that one ends. The correct usage order is 1st:buffGSKteleportPortalStepOver 2nd:buffGSKteleportPortalActivated">
+      <effect_group help="ISSUE:WORKAROUND: activating the portal when you are below it, may trigger block:BuffsWhenWalkedOn calling this buff, why? anyway, if that happens, just deny this buff until that one ends. The correct usage order is 1st:buffGSKteleportPortalStepOver 2nd:buffGSKteleportPortalActivated. The issue may be related to player ragdolling just after activating it wrongly, a player in ragdoll mode will not teleport, but somehow the player seems to be placed briefly in the destination portal, what apparently triggers the destination portal block:BuffsWhenWalkedOn! righ? So to grant this will continue working, ragdolling the player if not stepping over the portal is essential!!!">
         <requirement name="HasBuff" buff="buffGSKteleportPortalActivated"/>
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalStepOver:Start(WRONG)(Issue:ActivatedBeforeStepOver:Why?)(UsingWorkAround:Cancel)"/>
         <triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffGSKteleportPortalStepOver"/>
@@ -64,7 +64,9 @@
         <triggered_effect trigger="onSelfBuffStart" action="LogMessage" message="GSK:buffGSKteleportPortalActivated: [TNM] Portal Paradox (you did not step over it and died)!"/>
         <triggered_effect trigger="onSelfBuffStart" action="ShowToolbeltMessage" message="[TNM] Portal Paradox (you did not step over it and died)!"/>
         <triggered_effect trigger="onSelfBuffStart" action="AttachParticleEffectToEntity" particle="p_electric_shock" parent_transform="Spine1" local_offset="0,-.2,0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll"/>
+        <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="5" help="any coherent neardeath will do the trick"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKPlayerRagdoll" help="this is essential to make it work properly. a player in ragdoll will NOT teleport!!! to teleport the player must step over first!"/>
+        <triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="iGSKNearDeathRadiationLvl" operation="set" value="0"/>
         <triggered_effect trigger="onSelfBuffRemove" action="RemoveParticleEffectFromEntity" particle="p_electric_shock"/>
         <triggered_effect trigger="onSelfBuffRemove" action="ModifyStats" stat="Health" operation="add" value="-32000"/>
       </effect_group>
