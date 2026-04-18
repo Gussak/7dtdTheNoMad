@@ -57,6 +57,12 @@
         </triggered_effect>
       </effect_group>
       <effect_group>
+        <requirement name="EntityTagCompare" tags="player"/>
+        <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="Equals" value="9" help="to grant explosion happened above"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+        <triggered_effect trigger="onSelfBuffUpdate" action="CallGameEvent" event="eventGSKteleForwardFar"/>
+      </effect_group>
+      <effect_group>
         <requirement name="CVarCompare" cvar=".GSKtelePortalPhaseSO" operation="GTE" value="17" help="OR keeps god mode for extra 17-5=12;12*0.25=3.0s safety in case of gameevent explosion doesnt happen immediately and buffGSKteleportPortalActivated was not called."/>
         <requirement name="!HasBuff" buff="buffGSKteleportPortalActivated" help="or waits that buff end to remove god mode and self"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffGSKteleportPortalStepOver"/>
