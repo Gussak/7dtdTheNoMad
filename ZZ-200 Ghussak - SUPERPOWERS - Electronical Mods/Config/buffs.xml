@@ -123,6 +123,20 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="set" value="@fGSKBatteryChargePerc"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="multiply" value="100"/>
       </effect_group>
+      <effect_group name="HUD highly visible indicators">
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="1.00">
+          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="GT" value="@.fGSKCfgPercAlert"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="0.01">
+          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercAlert" operation="set" value="1.00">
+          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
+        </triggered_effect>
+        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercAlert" operation="set" value="0.01">
+          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="GT" value="@.fGSKCfgPercAlert"/>
+        </triggered_effect>
+      </effect_group>
       <!-- HELPGOOD:_AUTOGENCODE_CREATEENERGYBLINKS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createEnergyBlinks.sh ===== -->
       <effect_group name="KEEP ON good condition for HL">
         <requirement name="CVarCompare" cvar="bGSKEnergyHL" operation="Equals" value="1"/>
@@ -1980,6 +1994,7 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
     </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']/effect_group[@id='GSKConfigConstants']">
+    <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".fGSKCfgPercAlert" operation="set" value="0.33"/>
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantBASE" operation="set" value="55000" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantFIRST" operation="set" value="55001" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".iGSKElctrnTeleQuadrantLAST" operation="set" value="55100" helpgencode="DoNotModify:run:createQuadrantTeleporters.sh"/>
