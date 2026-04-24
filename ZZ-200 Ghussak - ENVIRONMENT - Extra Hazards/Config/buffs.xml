@@ -328,44 +328,6 @@
           <requirement name="CVarCompare" cvar="iGSKNearDeathMiasmaLvl" operation="LT" value="5"/>
         </triggered_effect>
       </effect_group>
-      <effect_group name="HUD highly visible indicators">
-        <!--
-				HELPGOOD: why this doesnt work? the cvar .fGSKMiasmaDirtyPercTmp doesnt show up on cvar debug list with "miasma" filter, not even without the dot. Is because the engine seem to use float instead of double precision and errors on calc?
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="set" value="@fGSKMiasmaDirty" help="prevents rare blinking (needed?) in case of setting fGSKMiasmaDirtyPerc directly"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="divide" value="7200" help="sync with fGSKMiasmaDirty limit. this causes precision error? is the engine working with float than double? :("/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="subtract" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="multiply" value="-1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="set" value="0.0" help="easy safety in case fGSKMiasmaDirty is beyond max limit for a brieth time">
-					<requirement name="CVarCompare" cvar=".fGSKMiasmaDirtyPercTmp" operation="LT" value="0.0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="set" value="@.fGSKMiasmaDirtyPercTmp"/>
--->
-        <!--
-				HELPGOOD: same above problem
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="set" value="@iGSKNearDeathMiasmaLvl" help="prevents rare blinking (needed?) in case of setting fGSKMiasmaDirtyPerc directly"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="divide" value="5"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="subtract" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="multiply" value="-1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".fGSKMiasmaDirtyPercTmp" operation="set" value="0.0" help="easy safety in case fGSKMiasmaDirty is beyond max limit for a brieth time">
-					<requirement name="CVarCompare" cvar=".fGSKMiasmaDirtyPercTmp" operation="LT" value="0.0"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="set" value="@.fGSKMiasmaDirtyPercTmp"/>
--->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="set" value="@fGSKMiasmaDirty"/>
-        <!-- HELPGOOD: float precision errors? the engine dont use double precision??? :(
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="divide" value="7200" help="sync with fGSKMiasmaDirty limit. ISSUE:TODO: this causes precision error? value is always around 0.4 0.5 is the engine working with float than double? :("/>
--->
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="divide" value="100"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="divide" value="72" help="sync with fGSKMiasmaDirty limit divided by 100 :( because of float precision errors? :( :( :("/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="subtract" value="1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="multiply" value="-1.0"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPercWarn" operation="set" value="1.00">
-          <requirement name="CVarCompare" cvar="fGSKMiasmaDirtyPerc" operation="GT" value="@.fGSKCfgPercAlert"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPercWarn" operation="set" value="0.01" help="hides warn color to show alert color">
-          <requirement name="CVarCompare" cvar="fGSKMiasmaDirtyPerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
-        </triggered_effect>
-      </effect_group>
     </buff>
     <buff name="buffGSKHazardousWeather58" icon="7dtdGskHazardWeather" icon_blink="true" hidden="false" remove_on_death="true" description_key="buffGSKHazardousWeatherDesc" name_key="HazardousWeatherAndEnvironment">
       <stack_type value="ignore"/>
@@ -1318,6 +1280,18 @@
     <effect_group help="BLOOD: collect again">
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBloodBagTimeout" operation="add" value="-1">
         <requirement name="CVarCompare" cvar="fGSKBloodBagTimeout" operation="GT" value="0"/>
+      </triggered_effect>
+    </effect_group>
+    <effect_group name="MIASMA: HUD highly visible indicators">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="set" value="@fGSKMiasmaDirty"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="divide" value="7200"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="subtract" value="1.0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPerc" operation="multiply" value="-1.0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPercWarn" operation="set" value="1.00">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirtyPerc" operation="GT" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKMiasmaDirtyPercWarn" operation="set" value="0.01" help="hides warn color to show alert color">
+        <requirement name="CVarCompare" cvar="fGSKMiasmaDirtyPerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
       </triggered_effect>
     </effect_group>
   </append>
