@@ -1045,18 +1045,21 @@ CFGFUNCechoLogPRIVATE "(LIB)PARAMS: $@"
   export strFlGenEnt="Config/entityclasses.xml"
   export strFlGenEve="Config/gameevents.xml"
   export strFlGenRec="Config/recipes.xml"
-  export strFlGenXml="Config/items.xml";strFlGenIte="$strFlGenXml" #TODO change everywhere to strFlGenIte
+  export strFlGenIte="Config/items.xml"
   export strFlGenBuf="Config/buffs.xml"
   export strFlGenBlo="Config/blocks.xml"
+  export strFlGenWin="Config/XUi/windows.xml"
   #ps --no-headers -o cmd $$ $PPID;declare -p bCFGLIBONLYOptgencodeTrashLast;read -p oi
   if $bCFGLIBONLYOptgencodeTrashLast;then
     CFGFUNCtrash "${strFlGenLoc}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenLoa}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenEnt}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenEve}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenRec}${strGenTmpSuffix}"&&:
-    CFGFUNCtrash "${strFlGenXml}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenIte}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenBuf}${strGenTmpSuffix}"&&:
     CFGFUNCtrash "${strFlGenBlo}${strGenTmpSuffix}"&&:
+    CFGFUNCtrash "${strFlGenWin}${strGenTmpSuffix}"&&:
   fi
 #)
 
