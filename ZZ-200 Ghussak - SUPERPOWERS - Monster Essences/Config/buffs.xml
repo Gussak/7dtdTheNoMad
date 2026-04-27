@@ -1340,6 +1340,18 @@
         <requirement name="CVarCompare" cvar=".iGSKShamanPain" operation="GT" value="0"/>
       </triggered_effect>
     </effect_group>
+    <effect_group help="shamanPower:percent on HUD">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="set" value="@iGSKNearDeathShamanPowerLvl"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="divide" value="5.0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="subtract" value="1.0"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="multiply" value="-1"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPercWarn" operation="set" value="1.00">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="GT" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKNearDeathShamanPowerLvlPercWarn" operation="set" value="0.01" help="hides warn color to show alert color">
+        <requirement name="CVarCompare" cvar="iGSKNearDeathShamanPowerLvlPerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
+    </effect_group>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPlayerVomit']/effect_group">
     <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKEssenceMutant" operation="set" value="0"/>

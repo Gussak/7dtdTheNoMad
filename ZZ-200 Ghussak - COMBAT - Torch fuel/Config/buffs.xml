@@ -85,11 +85,12 @@
         <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
       </effect_group>
-      <effect_group help="try douse: armor flame during day">
+      <effect_group help="try douse: armor flame during day and outdoors">
         <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesTorch"/>
         <requirement name="!HasBuff" buff="buffGSKmodActiveFlamesMeleeToolWeapon"/>
         <requirement name="!IsNight"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="Equals" value="0"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKFireDoused" operation="set" value="1"/>
         <triggered_effect trigger="onSelfBuffUpdate" action="ShowToolbeltMessage" message="[TNM] The sun rises, auto dousing armor torch."/>
       </effect_group>
@@ -176,6 +177,11 @@
       <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
         <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
         <requirement name="IsNight"/>
+        <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffGSKFlamesConsumeFuel">
+        <requirement name="HasBuff" buff="buffGSKmodActiveFlamesArmor"/>
+        <requirement name="CVarCompare" cvar="_sheltered" operation="GT" value="0" help="it is totally 100% dark inside buildings during daytime too using low brightness video option"/>
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
       </triggered_effect>
     </effect_group>
