@@ -39,33 +39,86 @@ source "${strBaseLibPath}/libSrcCfgGenericToImport.sh" --LIBgencodeTrashLast
 # TODO: multilines mode
 
 # config each CVar
-astrNameList=(Battery Miasma SpidersSpawnMini FireFuel)
-astrLabelList=(Battery Miasma "Spiders' Repelent" "Torch Fuel")
-astrXUItoolTipIDList=(xuiGSKbatteryPerc xuiGSKmiasmaPerc xuiGSKspiderRepelPerc xuiGSKtorchFuel)
-astrCVarBN=(fGSKBatteryChargePerc fGSKMiasmaDirtyPerc iGSKSpawnSpiderMiniTmoutPerc fGSKFireFuelPercPerc) #requires ...Warn cvar too
-astrColorTextList=("[green]" "80,0,0,255" "255,255,255,255" "255,0,0,255")
-astrColorAlertList=("255,128,128,255" "255,128,128,255" "255,128,128,255" "255,80,0,255")
-astrColorWarnList=("255,255,0,255" "255,255,0,255" "200,200,0,255" "255,128,0,255")
-astrColorGoodList=("0,0,255,255" "0,255,255,255" "0,128,255,255" "255,180,0,255")
+#astrNameList=(Battery Miasma SpidersSpawnMini FireFuel)
+#astrLabelList=(Battery Miasma "Spiders' Repelent" "Torch Fuel")
+#astrXUItoolTipIDList=(xuiGSKbatteryPerc xuiGSKmiasmaPerc xuiGSKspiderRepelPerc xuiGSKtorchFuel)
+#astrCVarBN=(fGSKBatteryChargePerc fGSKMiasmaDirtyPerc iGSKSpawnSpiderMiniTmoutPerc fGSKFireFuelPercPerc) #requires ...Warn cvar too
+#astrColorTextList=("[green]" "80,0,0,255" "255,255,255,255" "255,0,0,255")
+#astrColorAlertList=("255,128,128,255" "255,128,128,255" "255,128,128,255" "255,80,0,255")
+#astrColorWarnList=("255,255,0,255" "255,255,0,255" "200,200,0,255" "255,128,0,255")
+#astrColorGoodList=("0,0,255,255" "0,255,255,255" "0,128,255,255" "255,180,0,255")
+
+## while the entry ID can be ignored, the index will still work
+declare -A astrNameListA astrLabelListA astrXUItoolTipIDListA astrCVarBNA astrColorTextListA astrColorAlertListA astrColorWarnListA astrColorGoodListA
+## KEEP_TEMPLATE !!!!!!!!!!!!!!!
+#astrNameList[]=""
+#astrLabelList[]=""
+#astrXUItoolTipIDListA[]=""
+#astrCVarBNA[]="" #requires ...Warn cvar too
+#astrColorTextListA[]=""
+#astrColorAlertListA[]=""
+#astrColorWarnListA[]=""
+#astrColorGoodListA[]=""
+astrOrder=(Battery Miasma SpidersSM FireFuel)
+# Battery
+astrNameListA[Battery]="Battery"
+astrLabelListA[Battery]="Battery"
+astrXUItoolTipIDListA[Battery]="xuiGSKbatteryPerc"
+astrCVarBNA[Battery]="fGSKBatteryChargePerc"
+astrColorTextListA[Battery]="[green]"
+astrColorAlertListA[Battery]="255,128,128,255"
+astrColorWarnListA[Battery]="255,255,0,255"
+astrColorGoodListA[Battery]="0,0,255,255"
+# Miasma
+astrNameListA[Miasma]="Miasma"
+astrLabelListA[Miasma]="Miasma"
+astrXUItoolTipIDListA[Miasma]="xuiGSKmiasmaPerc"
+astrCVarBNA[Miasma]="fGSKMiasmaDirtyPerc"
+astrColorTextListA[Miasma]="80,0,0,255"
+astrColorAlertListA[Miasma]="255,128,128,255"
+astrColorWarnListA[Miasma]="255,255,0,255"
+astrColorGoodListA[Miasma]="0,255,255,255"
+# SpidersSM
+astrNameListA[SpidersSM]="SpidersSM"
+astrLabelListA[SpidersSM]="Spiders' Repelent"
+astrXUItoolTipIDListA[SpidersSM]="xuiGSKspiderRepelPerc"
+astrCVarBNA[SpidersSM]="iGSKSpawnSpiderMiniTmoutPerc"
+astrColorTextListA[SpidersSM]="255,255,255,255"
+astrColorAlertListA[SpidersSM]="255,128,128,255"
+astrColorWarnListA[SpidersSM]="200,200,0,255"
+astrColorGoodListA[SpidersSM]="0,128,255,255"
+# FireFuel
+astrNameListA[FireFuel]="FireFuel"
+astrLabelListA[FireFuel]="Torch Fuel"
+astrXUItoolTipIDListA[FireFuel]="xuiGSKtorchFuel"
+astrCVarBNA[FireFuel]="fGSKFireFuelPerc"
+astrColorTextListA[FireFuel]="255,255,255,255"
+astrColorAlertListA[FireFuel]="180,0,0,255"
+astrColorWarnListA[FireFuel]="255,80,0,255"
+astrColorGoodListA[FireFuel]="255,180,0,255"
 
 # calc the HUD space
 nTotalWidth=300 # could be 450 but the remaining ammo is at that edge
 nGapBetween=10
-nTot="${#astrCVarBN[@]}"
+nTot="${#astrCVarBNA[@]}"
 nWidth=$(( ((nTotalWidth - (nGapBetween*(nTot-1))) / nTot)  ))
 declare -p nTotalWidth nTot nWidth
 
 nPosX=0
-for((j=0;j<nTot;j++));do
-	strName="StatBarFor_${astrNameList[j]}"
-	strLabel="${astrLabelList[j]}"
-	strXUItt="${astrXUItoolTipIDList[j]}"
-	strCVar="${astrCVarBN[j]}"
+#for((j=0;j<nTot;j++));do
+echo "${!astrCVarBNA[@]}"
+echo "${astrOrder[@]}"
+#for j in "${!astrCVarBNA[@]}";do
+for j in "${astrOrder[@]}";do
+	strName="StatBarFor_${astrNameListA[$j]}"
+	strLabel="${astrLabelListA[$j]}"
+	strXUItt="${astrXUItoolTipIDListA[$j]}"
+	strCVar="${astrCVarBNA[$j]}"
 	
-	strColorText="${astrColorTextList[j]}"
-	strColorAlert="${astrColorAlertList[j]}"
-	strColorWarn="${astrColorWarnList[j]}"
-	strColorGood="${astrColorGoodList[j]}"
+	strColorText="${astrColorTextListA[$j]}"
+	strColorAlert="${astrColorAlertListA[$j]}"
+	strColorWarn="${astrColorWarnListA[$j]}"
+	strColorGood="${astrColorGoodListA[$j]}"
 	
 	echo \
 '					<rect name="'"${strName}"'" pos="'"${nPosX}"',0" rows="1" cols="1" side="left" width="'"${nWidth}"'" height="20">
