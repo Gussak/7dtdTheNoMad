@@ -70,15 +70,19 @@ astrResource=( # material countPerGrowStep
 #if((${#astrMAINMatshape[@]} != ${#astrMaterial[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrMaterial";fi
 if((${#astrMAINMatshape[@]} != ${#astrResource[@]}));then CFGFUNCerrorExit "arrays sizes dont match astrResource";fi
 
-astrVariant=(A B C D E)
+astrVariant=(A B C D E F G S) # new ones shall have unique letters
+#astrVariantWarnMissing=("${astrVariant[@]}") #TODO in case forgetting to code one below
 
-function FUNCshape() {
-	local lstrMatshape="$1";shift
+function FUNCshape() { #FUNCshape_help <liMat> ex.: "@someShapeThatHasFixedMaterial,...,someShapeThatHasFixedMaterial" total is astrMAINMatshape size. This is important because some shapes are too weak to match the structures below it, so other fixed material shapes shall be used.
+	#local lstrMatshape="$1";shift
+	local liMat="$1";shift
 	local lstrShape="$1";shift
 	if [[ "${lstrShape:0:1}" == "@" ]];then # means it is not a subtype is a global type, no variant shape, no ':'
-		lstrShape="${lstrShape:1}"
+		#lstrShape="${lstrShape:1}"
+		lstrShape="$(echo "${lstrShape:1}" |cut -d, -f$((liMat+1)))"
 	else
-		lstrShape="${lstrMatshape}:${lstrShape}"
+		#lstrShape="${lstrMatshape}:${lstrShape}"
+		lstrShape="${astrMAINMatshape[$liMat]}:${lstrShape}"
 	fi
 	echo "${lstrShape}"
 }
@@ -86,13 +90,15 @@ function FUNCshape() {
 #for strVariant in "${astrVariant[@]}";do
 strOutputRecipes=""
 for((j=0;j<${#astrVariant[@]};j++));do
+	bStairsToHeaven=false
+
 	strVariant="${astrVariant[j]}"
 	#iMaxGrow="${astrVarGrowMax[j]}"
 	if [[ "$strVariant" == A ]];then
 		astrShape=(catwalkV2RailSinglePlain railing ladderSquare plateCornerRound1m plateCornerRound1m catwalkPlate) #the base must resist your own shots, so it must cover the ground below! because if the terrain is soft it may destroy everything after a few shotgun shots!
 	fi
 	if [[ "$strVariant" == B ]];then
-		astrShape=(catwalkV2RailSinglePlain railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3")
+		astrShape=(catwalkV2RailSinglePlain railing ladderSquare cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half") # the top ceiling being Loose is only useful against projectiles, if anyone gets over it, it will fall. Also, the wooden one is so weak that all others need to be concrete. Finally, if someone creates the other materials it will be easy to just place them here.
 	fi
 	if [[ "$strVariant" == C ]];then
 		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed ladderSquare)
@@ -100,8 +106,17 @@ for((j=0;j<${#astrVariant[@]};j++));do
 	if [[ "$strVariant" == D ]];then
 		astrShape=(cube3x3x1Destroyed cubeHalf3x3x1DestroyedOffset ladderSquare)
 	fi
-	bStairsToHeaven=false
-	if [[ "$strVariant" == E ]];then # stairs to heaven
+	if [[ "$strVariant" == E ]];then # a fully protective box, no escape no see thru
+		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half") # see at 'B'
+	fi
+	if [[ "$strVariant" == F ]];then # a small gap to see thru on the top, no escape
+		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3HalfOffset,looseConcreteTrapBlock3x3HalfOffset,looseConcreteTrapBlock3x3HalfOffset,looseConcreteTrapBlock3x3HalfOffset,looseConcreteTrapBlock3x3HalfOffset") # see at 'B'
+	fi
+	if [[ "$strVariant" == G ]];then # high tower, no escape
+		astrShape=(cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed cube3x3x1Destroyed "@looseBoardsTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half,looseConcreteTrapBlock3x3Half") # see at 'B'
+	fi
+	
+	if [[ "$strVariant" == S ]];then # stairs to heaven
 		astrShape=(
 			catwalkV2RailSinglePlain railing # these 2 makes make it difficult for zombies to climb, but then they will try to break them making it more difficult to defent this structure
 			$(for((i=2;i<150;i++));do echo ladderSquare;done) 
@@ -111,19 +126,18 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		bStairsToHeaven=true
 	fi
 	
-	iMaxGrow="$((${#astrShape[@]}-1))"
+	iMaxGrow="$((${#astrShape[@]}-1))" # Why it is total shapes -1? because the last shape is set thru property 'PlantGrowing.GrowOnTop'
 	#for strMatshape in "${astrMAINMatshape[@]}";do
-	for((i=0;i<${#astrMAINMatshape[@]};i++));do
-		strMatshape="${astrMAINMatshape[i]}"
-		#strMaterial="${astrMaterial[i]}"
-		strResource="${astrResource[i]}"
-		nEconomicValue="${anEconomicV[i]}"
+	for((iMat=0;iMat<${#astrMAINMatshape[@]};iMat++));do
+		strMatshape="${astrMAINMatshape[iMat]}"
+		#strMaterial="${astrMaterial[iMat]}"
+		strResource="${astrResource[iMat]}"
+		nEconomicValue="${anEconomicV[iMat]}"
 		
-		if $bStairsToHeaven && [[ "${strMatshape}" != cobblestoneShapes ]];then continue;fi
+		if $bStairsToHeaven && [[ "${strMatshape}" != cobblestoneShapes ]];then continue;fi # it shall not be too weak nor too strong to provide some challenge! and there shall have only one type.
 		
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
 		echo "$strCommentMaterial"  >>"${strFlGenBlo}${strGenTmpSuffix}"
-		#iMaxGrow=5
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
 			strBaseContextName="MiniFortress"
 			if $bStairsToHeaven;then strBaseContextName="StairsToHeaven";fi
@@ -151,6 +165,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 				strEconomicValue='
 				<property name="EconomicValue" value="'"$(( (nEconomicValue*iMaxGrow)/10 ))"'"/>'
 			else
+				strDesc=""
 				strCustomIcon=""
 				strCreativeMode="None";
 				strEconomicValue=""
@@ -160,10 +175,10 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			strBlockName="${strBlockBaseName}G$((iGrowIndex))"
 			echo \
 '			<block name="'"$strBlockName"'">
-				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strCustomIcon}${strEconomicValue}"'
+				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strDesc}${strCustomIcon}${strEconomicValue}"'
 				<property name="CreativeMode" value="'"${strCreativeMode}"'"/>
-				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${strMatshape}" "${astrShape[iGrowIndex-1]}")"'"/>
-				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${strMatshape}" "${strGrowOnTop}")"'"/>
+				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${iMat}" "${astrShape[iGrowIndex-1]}")"'"/>
+				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${iMat}" "${strGrowOnTop}")"'"/>
 			</block>' >>"${strFlGenBlo}${strGenTmpSuffix}"
 			
 			if((iGrowIndex==1));then # one recipe per initial block

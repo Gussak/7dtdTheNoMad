@@ -259,6 +259,11 @@
         <requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="0"/>
         <requirement name="EntityHasMovementTag" tags="running"/>
       </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmoutPerc" operation="set" value="@iGSKSpawnSpiderMiniTmout"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmoutPerc" operation="divide" value="@iGSKPoisonMaxRepelentTime"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmoutPercWarn" operation="set" value="0.01">
+        <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmoutPerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar=".iGSKSpawnSpiderMiniCount" operation="set" value="randomInt(1,4)">
         <requirement name="InBiome" biome="3" help="desert5 snow1 forest3 wasteland8"/>
         <requirement name="CVarCompare" cvar="iGSKSpawnSpiderMiniTmout" operation="LTE" value="0"/>
@@ -306,7 +311,7 @@
   <append xpath="/buffs/buff[@name='buffGSKConfigGeneric']">
     <effect_group help="Poisons:Init">
       <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKPoisonMaxRepelentTime" operation="set" value="3600" help="1h real time, shall be enough to remember to use repelent again, like everyday in the morning :). Obs it is like just 30mins in the forest biome tho."/>
-      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="set" value="@iGSKPoisonMaxRepelentTime" help="initial safety"/>
+      <triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="iGSKSpawnSpiderMiniTmout" operation="set" value="@iGSKPoisonMaxRepelentTime" help="initial safety"/>
     </effect_group>
   </append>
 </GhussakTweaks>
