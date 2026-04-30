@@ -136,6 +136,20 @@ for((j=0;j<${#astrVariant[@]};j++));do
 		
 		if $bStairsToHeaven && [[ "${strMatshape}" != cobblestoneShapes ]];then continue;fi # it shall not be too weak nor too strong to provide some challenge! and there shall have only one type.
 		
+		case "${strMatshape}" in #TODO create some gray icon
+			#frameShapes) strCustomIconT="220,180,128";;
+			#woodShapes) strCustomIconT="220,180,80";;
+			#cobblestoneShapes) strCustomIconT="80,80,80";;
+			#concreteShapes) strCustomIconT="180,180,180";;
+			#steelShapes) strCustomIconT="220,220,220";;
+			frameShapes) strCustomIconT="255,255,80";;
+			woodShapes) strCustomIconT="255,80,80";;
+			cobblestoneShapes) strCustomIconT="80,255,80";;
+			concreteShapes) strCustomIconT="255,80,255";;
+			steelShapes) strCustomIconT="255,255,255";;
+			*) strCustomIconT="128,128,128";;
+		esac
+		
 		strCommentMaterial="			<!-- Mini Fortress Pole $strVariant $strMatshape -->"
 		echo "$strCommentMaterial"  >>"${strFlGenBlo}${strGenTmpSuffix}"
 		for((iGrowIndex=1;iGrowIndex<=iMaxGrow;iGrowIndex++));do
@@ -157,17 +171,20 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			fi
 			
 			if((iGrowIndex==1));then
+				strCreativeMode="Player";
 				strDesc='
 				<property name="DescriptionKey" value="dkAutoBuild" />'
 				strCustomIcon='
 				<property name="CustomIcon" value="7dtdShockTip" />'
-				strCreativeMode="Player";
+				strCustomIconTint='
+				<property name="CustomIconTint" value="'"${strCustomIconT}"'"/>'
 				strEconomicValue='
 				<property name="EconomicValue" value="'"$(( (nEconomicValue*iMaxGrow)/10 ))"'"/>'
 			else
+				strCreativeMode="None";
 				strDesc=""
 				strCustomIcon=""
-				strCreativeMode="None";
+				strCustomIconTint=""
 				strEconomicValue=""
 			fi
 			
@@ -175,7 +192,7 @@ for((j=0;j<${#astrVariant[@]};j++));do
 			strBlockName="${strBlockBaseName}G$((iGrowIndex))"
 			echo \
 '			<block name="'"$strBlockName"'">
-				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strDesc}${strCustomIcon}${strEconomicValue}"'
+				<property name="Extends" value="AutoBuild:MiniFortressBase"/>'"${strDesc}${strCustomIcon}${strCustomIconTint}${strEconomicValue}"'
 				<property name="CreativeMode" value="'"${strCreativeMode}"'"/>
 				<property name="PlantGrowing.Next" value="'"$(FUNCshape "${iMat}" "${astrShape[iGrowIndex-1]}")"'"/>
 				<property name="PlantGrowing.GrowOnTop" value="'"$(FUNCshape "${iMat}" "${strGrowOnTop}")"'"/>
