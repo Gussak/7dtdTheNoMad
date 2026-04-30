@@ -118,18 +118,6 @@
         <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryCharges" operation="subtract" value="@fGSKEnWL">
           <requirement name="CVarCompare" cvar="bGSKEnergyWL" operation="Equals" value="1"/>
         </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="set" value="@iGSKBatteryCharges"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="divide" value="@fGSKBattMaxChargeCurrent"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="set" value="@fGSKBatteryChargePerc"/>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="multiply" value="100"/>
-      </effect_group>
-      <effect_group name="HUD highly visible indicators">
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="1.00">
-          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="GT" value="@.fGSKCfgPercAlert"/>
-        </triggered_effect>
-        <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="0.01" help="hides warn color to show alert color">
-          <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
-        </triggered_effect>
       </effect_group>
       <!-- HELPGOOD:_AUTOGENCODE_CREATEENERGYBLINKS_BEGIN BELOW:===== DO NOT MODIFY, USE THE AUTO-GEN SCRIPT: createEnergyBlinks.sh ===== -->
       <effect_group name="KEEP ON good condition for HL">
@@ -1966,6 +1954,18 @@ iIndexCalcChk=$(( (iIndexZ * (iDivMapSizeBy+1)) + (iIndexX) + 1 ))
     </buff>
   </append>
   <append xpath="/buffs/buff[@name='buffGSKPermanentGenericCheck21']">
+    <effect_group name="HUD highly visible indicators">
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="set" value="@iGSKBatteryCharges"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePerc" operation="divide" value="@fGSKBattMaxChargeCurrent"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="1.00">
+        <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="GT" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="fGSKBatteryChargePercWarn" operation="set" value="0.01" help="hides warn color to show alert color">
+        <requirement name="CVarCompare" cvar="fGSKBatteryChargePerc" operation="LTE" value="@.fGSKCfgPercAlert"/>
+      </triggered_effect>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="set" value="@fGSKBatteryChargePerc"/>
+      <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKBatteryChargePercShow" operation="multiply" value="100"/>
+    </effect_group>
     <effect_group help="TODO: this could be in a low priority buff update of 5s or 10s, even 60s could be ok, or triggered when the player rise the perkElectrocutioner lvl">
       <triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="iGSKperkElectrocutionerLvl" operation="set" value="0">
         <requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="Equals" value="0"/>
